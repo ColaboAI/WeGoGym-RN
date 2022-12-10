@@ -27,6 +27,12 @@ sudo gem install ffi --version 1.15.5
 ```
 
 ## Run Project
+
+### Activate virtual environment
+```bash
+uvm use
+```
+
 ### Run instructions for Android:
 - Have an Android emulator running (quickest way to get started), or a device connected.
 - cd "WeGoGym" && yarn android
