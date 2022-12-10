@@ -29,10 +29,10 @@ sudo gem install ffi --version 1.15.5
 ## Run Project
 ### Run instructions for Android:
 - Have an Android emulator running (quickest way to get started), or a device connected.
-- cd "WeGoGym" && npx react-native run-android
+- cd "WeGoGym" && yarn android
 
 ### Run instructions for iOS:
-- cd "WeGoGym" && npx react-native run-ios
+- cd "WeGoGym" && yarn ios
 
 OR run from Xcode:
 
