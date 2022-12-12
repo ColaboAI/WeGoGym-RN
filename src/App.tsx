@@ -12,8 +12,6 @@ import React from 'react';
 import MainNavigator from './navigators/Main';
 
 function App() {
-  // const isDarkMode = useColorScheme() === 'dark';
-
   return <MainNavigator />;
 }
 

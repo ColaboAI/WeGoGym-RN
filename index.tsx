@@ -3,27 +3,69 @@
  */
 
 import * as React from 'react';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, useColorScheme } from 'react-native';
 import { name as appName } from './app.json';
 import App from './src/App';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  adaptNavigationTheme,
+  MD3DarkTheme,
+  MD3LightTheme,
+  Provider as PaperProvider,
+} from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  NavigationContainer,
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
+} from '@react-navigation/native';
 
-const theme = {
-  ...DefaultTheme,
+import customLightColors from './src/theme/customLightColors.json';
+import customDarkColors from './src/theme/customDarkColors.json';
+
+// https://callstack.github.io/react-native-paper/theming.html
+
+const myLightTheme = {
+  ...MD3LightTheme,
+  colors: customLightColors.colors,
+};
+const myDarkTheme = {
+  ...MD3DarkTheme,
+  colors: customDarkColors.colors,
+};
+
+const { LightTheme, DarkTheme } = adaptNavigationTheme({
+  reactNavigationLight: NavigationDefaultTheme,
+  reactNavigationDark: NavigationDarkTheme,
+  materialLight: myLightTheme,
+  materialDark: myDarkTheme,
+});
+
+const CombinedDefaultTheme = {
+  ...myLightTheme,
+  ...LightTheme,
   colors: {
-    ...DefaultTheme.colors,
-    primary: 'tomato',
-    secondary: 'yellow',
+    ...myLightTheme.colors,
+    ...LightTheme.colors,
   },
 };
+const CombinedDarkTheme = {
+  ...myDarkTheme,
+  ...DarkTheme,
+  colors: {
+    ...myDarkTheme.colors,
+    ...DarkTheme.colors,
+  },
+};
+
 export default function Main() {
+  const isDarkMode = useColorScheme() === 'dark';
+  let theme = isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme;
+
   return (
     // Add Store Provider here
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
-        <NavigationContainer>
+        <NavigationContainer theme={theme}>
           <App />
         </NavigationContainer>
       </PaperProvider>

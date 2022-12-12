@@ -27,9 +27,10 @@ const MainNavigator = () => {
           // You can return any component that you like here!
           return <Icon name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
+        // tabBarActiveTintColor: 'tomato',
+        // tabBarInactiveTintColor: 'gray',
       })}>
+      {/* TODO: Add Stack Screens */}
       <Tab.Screen
         name="Main"
         component={HomeStackScreen}
