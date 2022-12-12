@@ -1,17 +1,11 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import { useTheme, Button } from 'react-native-paper';
 
 function Home({ navigation }: any) {
   const theme = useTheme();
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: theme.colors.background,
-      }}>
+    <View style={style.container}>
       <Text style={{ color: theme.colors.onBackground }}>Home Screen</Text>
       <Button
         mode={'elevated'}
@@ -24,5 +18,11 @@ function Home({ navigation }: any) {
     </View>
   );
 }
-
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 export default Home;

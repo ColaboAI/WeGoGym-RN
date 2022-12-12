@@ -2,8 +2,10 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeStackScreen } from '.';
 import Icon from 'react-native-vector-icons/Ionicons';
-const Tab = createBottomTabNavigator();
 
+const Tab = createBottomTabNavigator();
+// Tab Navigator: Main Root Navigator
+// nested Stack Navigator: HomeStackScreen, ChatStackScreen...
 // @refresh reset
 const MainNavigator = () => {
   return (
@@ -27,8 +29,6 @@ const MainNavigator = () => {
           // You can return any component that you like here!
           return <Icon name={iconName} size={size} color={color} />;
         },
-        // tabBarActiveTintColor: 'tomato',
-        // tabBarInactiveTintColor: 'gray',
       })}>
       {/* TODO: Add Stack Screens */}
       <Tab.Screen
