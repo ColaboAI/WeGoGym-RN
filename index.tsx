@@ -8,6 +8,7 @@ import { name as appName } from './app.json';
 import App from './src/App';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const theme = {
   ...DefaultTheme,
@@ -20,11 +21,13 @@ const theme = {
 export default function Main() {
   return (
     // Add Store Provider here
-    <NavigationContainer>
+    <SafeAreaProvider>
       <PaperProvider theme={theme}>
-        <App />
+        <NavigationContainer>
+          <App />
+        </NavigationContainer>
       </PaperProvider>
-    </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 
