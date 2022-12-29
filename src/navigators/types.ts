@@ -8,8 +8,9 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  Main: undefined;
-  Chat: undefined;
+  홈: undefined;
+  채팅: undefined;
+  마이: undefined;
 };
 
 export type ChatStackParamList = {
