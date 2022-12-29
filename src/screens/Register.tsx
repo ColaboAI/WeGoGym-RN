@@ -7,10 +7,20 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-export default function RegisterScreen({ navigation }: any) {
+import auth from '@react-native-firebase/auth';
+
+export default function RegisterScreen() {
   const theme = useTheme();
   const [input, setInput] = React.useState<string>('');
   const [buttonReady, setButtonReady] = React.useState<boolean>(false);
+  // If null, no SMS has been sent
+  // const [confirm, setConfirm] = React.useState(null);
+
+  async function signInWithPhoneNumber(phoneNumber: string) {
+    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+    console.log(confirmation);
+    // setConfirm(confirmation);
+  }
 
   const ButtonChange = (text: string) => {
     setInput(text);
@@ -20,6 +30,7 @@ export default function RegisterScreen({ navigation }: any) {
       setButtonReady(true);
     }
   };
+
   return (
     <View style={style.container}>
       <View style={style.headlineBox}>
@@ -48,7 +59,7 @@ export default function RegisterScreen({ navigation }: any) {
         <Button
           mode="contained"
           disabled={buttonReady ? false : true}
-          onPress={() => navigation.navigate('Login')}>
+          onPress={() => signInWithPhoneNumber('+82 10-4409-5071')}>
           확인
         </Button>
       </View>
