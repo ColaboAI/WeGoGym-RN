@@ -7,6 +7,7 @@ type Props = {
   lastMessage: string;
   profilePic: string | null;
   unreadCount: number;
+  onPress: () => void;
 };
 
 const ChatListItem = ({
@@ -14,6 +15,7 @@ const ChatListItem = ({
   lastMessage,
   profilePic,
   unreadCount,
+  onPress,
 }: Props) => {
   const theme = useTheme();
   return (
@@ -45,7 +47,7 @@ const ChatListItem = ({
         </View>
       )}
       // TODO: Fix this typing error
-      onPress={() => navigation.navigate('ChatDetail')}
+      onPress={onPress}
     />
   );
 };

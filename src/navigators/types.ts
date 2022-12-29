@@ -1,6 +1,11 @@
-// import type { CompositeScreenProps } from '@react-navigation/native';
-// import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-// import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { NavigatorScreenParams } from '@react-navigation/native';
+export type RootStackParamList = {
+  // Auth: undefined;
+  MainNavigator: NavigatorScreenParams<BottomTabParamList>;
+};
 
 export type BottomTabParamList = {
   Main: undefined;
@@ -8,7 +13,7 @@ export type BottomTabParamList = {
 };
 
 export type ChatStackParamList = {
-  Chat: undefined;
+  ChatList: undefined;
   ChatRoom: undefined;
 };
 
@@ -17,14 +22,25 @@ export type HomeStackParamList = {
   Detail: undefined;
 };
 
-// export type ChatStackScreenProps<T extends keyof ChatStackParamList> =
-//   CompositeScreenProps<
-//     NativeStackScreenProps<ChatStackParamList, T>,
-//     BottomTabScreenProps<keyof RootTabParamList>
-//   >;
+export type RootStackScreenProps<T extends keyof RootStackParamList> =
+  NativeStackScreenProps<RootStackParamList, T>;
 
-// declare global {
-//   namespace ReactNavigation {
-//     interface RootParamList extends RootTabParamList {}
-//   }
-// }
+export type CustomTabScreenProps<T extends keyof BottomTabParamList> =
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
+
+export type ChatStackScreenProps<T extends keyof ChatStackParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<ChatStackParamList, T>,
+    CustomTabScreenProps<keyof BottomTabParamList>
+  >;
+
+// export type CustomStackScreenProps
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}

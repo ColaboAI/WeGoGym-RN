@@ -1,8 +1,11 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import { useTheme } from 'react-native-paper';
+import { ChatStackScreenProps } from 'navigators/types';
 
-function ChatDetail() {
+type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
+
+function ChatRoom({ navigation }: ChatRoomScreenProps) {
   const theme = useTheme();
   return (
     <View style={style.container}>
@@ -17,4 +20,4 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-export default ChatDetail;
+export default ChatRoom;

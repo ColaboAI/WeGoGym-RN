@@ -2,8 +2,9 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeStackScreen, ChatStackScreen } from '.';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { BottomTabParamList } from './types';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<BottomTabParamList>();
 // Tab Navigator: Main Root Navigator
 // nested Stack Navigator: HomeStackScreen, ChatStackScreen...
 // @refresh reset

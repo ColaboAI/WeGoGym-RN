@@ -2,7 +2,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ChatListScreen, ChatRoomScreen } from 'screens';
 import CustomNavBarHeader from './CustomNavBarHeader';
-const Stack = createNativeStackNavigator();
+import { ChatStackParamList } from './types';
+const Stack = createNativeStackNavigator<ChatStackParamList>();
+
 function Chat() {
   const headerTitle = '채팅';
   return (
