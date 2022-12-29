@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
-import { Message } from 'src/types';
+import { Message } from 'types';
 import { Text } from 'react-native-paper';
 
 const Bubble = ({ _id, text, createdAt, user, isLeft }: Message) => {

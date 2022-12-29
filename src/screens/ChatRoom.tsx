@@ -5,7 +5,7 @@ import { ChatStackScreenProps } from 'navigators/types';
 
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 
-function ChatRoom({ navigation }: ChatRoomScreenProps) {
+function ChatRoom({}: ChatRoomScreenProps) {
   const theme = useTheme();
   return (
     <View style={style.container}>
