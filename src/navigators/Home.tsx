@@ -1,7 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { HomeScreen } from '../screens';
-import DetailsScreen from '../screens/Details';
+import { HomeScreen, DetailsScreen } from '../screens';
 import CustomNavBarHeader from './CustomNavBarHeader';
 const Stack = createNativeStackNavigator();
 function Home() {

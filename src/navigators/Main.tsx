@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HomeStackScreen } from '.';
+import { HomeStackScreen, UserStackScreen } from '.';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
@@ -15,12 +15,16 @@ const MainNavigator = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Main') {
+          if (route.name === '홈') {
             iconName = focused ? 'ios-home' : 'ios-home-outline';
-          } else if (route.name === 'Details') {
+          } else if (route.name === '마이') {
             iconName = focused
               ? 'person-circle-sharp'
               : 'person-circle-outline';
+          } else if (route.name === '채팅') {
+            iconName = focused
+              ? 'chatbubble-ellipses-sharp'
+              : 'chatbubble-ellipses-outline';
           } else {
             iconName = focused
               ? 'person-circle-sharp'
@@ -32,8 +36,16 @@ const MainNavigator = () => {
       })}>
       {/* TODO: Add Stack Screens */}
       <Tab.Screen
-        name="Main"
+        name="홈"
         component={HomeStackScreen}
+        options={{
+          tabBarIconStyle: { display: 'flex' },
+          tabBarLabelPosition: 'below-icon',
+        }}
+      />
+      <Tab.Screen
+        name="마이"
+        component={UserStackScreen}
         options={{
           tabBarIconStyle: { display: 'flex' },
           tabBarLabelPosition: 'below-icon',
