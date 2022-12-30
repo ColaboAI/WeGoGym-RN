@@ -42,20 +42,26 @@ export default Bubble;
 
 const styles = StyleSheet.create({
   leftBubble: {
+    alignSelf: 'flex-start',
+    marginLeft: 10,
     marginRight: 60,
-    padding: 10,
+    padding: 15,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 20,
+    marginBottom: 10,
   },
 
   rightBubble: {
+    alignSelf: 'flex-end',
     marginLeft: 60,
-    padding: 10,
+    marginRight: 10,
+    padding: 15,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 0,
+    marginBottom: 10,
   },
 });

@@ -1,16 +1,14 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React from 'react';
-import { useTheme } from 'react-native-paper';
 import { ChatStackScreenProps } from 'navigators/types';
 import Bubble from 'component/molecules/Chat/Bubble';
+import ScreenWrapper from 'component/template/Common/ScreenWrapper';
 
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 
 function ChatRoom({}: ChatRoomScreenProps) {
-  const theme = useTheme();
   return (
-    <View style={style.container}>
-      <Text style={{ color: theme.colors.onBackground }}>채팅방 디테일</Text>
+    <ScreenWrapper style={style.ChatRoomContainer}>
       <Bubble
         _id="1"
         text="안녕하세요"
@@ -33,14 +31,10 @@ function ChatRoom({}: ChatRoomScreenProps) {
         }}
         isLeft={false}
       />
-    </View>
+    </ScreenWrapper>
   );
 }
 const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  ChatRoomContainer: {},
 });
 export default ChatRoom;
