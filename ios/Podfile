@@ -3,13 +3,14 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '12.4'
 install! 'cocoapods', :deterministic_uuids => false
+$RNFirebaseAsStaticFramework = true
 
 target 'WeGoGym' do
   config = use_native_modules!
 
   # Flags change depending on the env values.
   flags = get_default_flags()
-
+  use_frameworks! :linkage => :static
   use_react_native!(
     :path => config[:reactNativePath],
     # Hermes is now enabled by default. Disable by setting this flag to false.
@@ -21,7 +22,7 @@ target 'WeGoGym' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    :flipper_configuration => FlipperConfiguration.enabled,
+    # :flipper_configuration => FlipperConfiguration.enabled,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
