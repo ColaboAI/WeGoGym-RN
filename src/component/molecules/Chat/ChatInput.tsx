@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextInput, useTheme } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
+import { Platform } from 'react-native';
 
 // type Props = {};
 
@@ -16,6 +17,7 @@ const ChatInput = () => {
           icon="camera"
           containerColor={theme.colors.secondaryContainer}
           iconColor={theme.colors.onSecondaryContainer}
+          style={{}}
           onPress={() => console.log('Camera Pressed')}
         />
       }
@@ -41,10 +43,10 @@ export default ChatInput;
 
 const styles = StyleSheet.create({
   ChatInputBar: {
-    margin: 5,
     maxHeight: 80,
   },
   Outline: {
-    borderRadius: 30,
+    borderRadius: 25,
+    top: Platform.OS === 'ios' ? 0 : 6,
   },
 });

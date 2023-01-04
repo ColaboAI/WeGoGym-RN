@@ -18,9 +18,7 @@ const TextInputAvoidingView = ({ children }: AvoidingViewProps) => {
       {children}
     </KeyboardAvoidingView>
   ) : (
-    <KeyboardAvoidingView style={styles.wrapper} behavior="position">
-      {children}
-    </KeyboardAvoidingView>
+    <>{children}</>
   );
 };
 
