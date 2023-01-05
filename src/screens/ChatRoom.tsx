@@ -1,9 +1,10 @@
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, InputAccessoryView, StyleSheet, View } from 'react-native';
 import React from 'react';
 import { ChatStackScreenProps } from 'navigators/types';
 import Bubble from 'component/molecules/Chat/Bubble';
 import InputToolbar from 'component/organisms/Chat/InputToolbar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Platform } from 'react-native';
 
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 
@@ -166,8 +167,10 @@ function ChatRoom({}: ChatRoomScreenProps) {
           contentContainerStyle={styles.contentContainer}
           data={messages}
           renderItem={renderItem}
-          keyboardDismissMode="interactive"
           automaticallyAdjustContentInsets={false}
+          inverted={true}
+          keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="handled"
           contentInsetAdjustmentBehavior="never"
           maintainVisibleContentPosition={{
             minIndexForVisible: 0,
@@ -175,7 +178,13 @@ function ChatRoom({}: ChatRoomScreenProps) {
           }}
           automaticallyAdjustKeyboardInsets={true}
         />
-        <InputToolbar />
+        {Platform.OS === 'ios' ? (
+          <InputAccessoryView>
+            <InputToolbar />
+          </InputAccessoryView>
+        ) : (
+          <InputToolbar />
+        )}
       </>
     </View>
   );
