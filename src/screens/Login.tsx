@@ -38,7 +38,7 @@ export default function WelcomeScreen({ navigation }: any) {
         <Button
           icon="phone"
           mode="contained"
-          onPress={() => navigation.navigate('Register')}>
+          onPress={() => navigation.navigate('PhoneNumber')}>
           전화 번호로 시작하기
         </Button>
       </View>
