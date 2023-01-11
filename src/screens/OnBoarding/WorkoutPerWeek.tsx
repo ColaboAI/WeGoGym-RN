@@ -1,19 +1,20 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
+import { save } from '../../store/SecureStoreService';
 
 export default function WorkoutPerWeekScreen({ navigation }: any) {
   const theme = useTheme();
   const buttons = ['1번', '2번', '3번', '4번', '5번', '6번'];
-  const [select, setSelect] = useState<string>('');
+  const [workoutPerWeek, setWorkoutPerWeek] = useState<string>('');
 
   const getButton = (id: number) => {
     return (
       <Button
         style={[style.button]}
-        mode={buttons[id] === select ? 'contained' : 'elevated'}
+        mode={buttons[id] === workoutPerWeek ? 'contained' : 'elevated'}
         onPress={() => {
-          setSelect(buttons[id]);
+          setWorkoutPerWeek(buttons[id]);
         }}>
         {id + 1}번
       </Button>
@@ -47,8 +48,9 @@ export default function WorkoutPerWeekScreen({ navigation }: any) {
       <View style={style.buttonBox}>
         <Button
           mode="contained"
-          disabled={!select}
+          disabled={!workoutPerWeek}
           onPress={() => {
+            save('workout_per_week', workoutPerWeek);
             navigation.navigate('WorkoutLevel');
           }}>
           확인

@@ -2,25 +2,18 @@ import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '../../store/SecureStoreService';
-
-export default function WorkoutPerWeekScreen({ navigation }: any) {
+export default function GenderScreen({ navigation }: any) {
   const theme = useTheme();
-  const buttons = [
-    '입문(1년 미만)',
-    '초급(1년 이상 3년 미만)',
-    '중급(3년 이상 5년 미만)',
-    '고급(5년 이상)',
-    '전문가',
-  ];
-  const [workoutLevel, setWorkoutLevel] = useState<string>('');
+  const buttons = ['🙍‍♂️ 남성', '🙍‍♀️ 여성', '그 외 성별'];
+  const [gender, setGender] = useState<string>('');
 
   const getButton = (id: number) => {
     return (
       <Button
         style={[style.button]}
-        mode={buttons[id] === workoutLevel ? 'contained' : 'elevated'}
+        mode={buttons[id] === gender ? 'contained' : 'elevated'}
         onPress={() => {
-          setWorkoutLevel(buttons[id]);
+          setGender(buttons[id]);
         }}>
         {buttons[id]}
       </Button>
@@ -36,7 +29,7 @@ export default function WorkoutPerWeekScreen({ navigation }: any) {
             fontWeight: 'bold',
             fontSize: 24,
           }}>
-          운동 경력이 어느 정도 되시나요?
+          성별이 어떻게 되시나요?
         </Headline>
       </View>
       <View style={style.workoutLevelBox}>
@@ -44,17 +37,15 @@ export default function WorkoutPerWeekScreen({ navigation }: any) {
           {getButton(0)}
           {getButton(1)}
           {getButton(2)}
-          {getButton(3)}
-          {getButton(4)}
         </View>
       </View>
       <View style={style.buttonBox}>
         <Button
           mode="contained"
-          disabled={!workoutLevel}
+          disabled={!gender}
           onPress={() => {
-            save('workout_level', workoutLevel);
-            navigation.navigate('WorkoutGoal');
+            save('gender', gender);
+            navigation.navigate('BodyInformation');
           }}>
           확인
         </Button>

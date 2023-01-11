@@ -7,10 +7,11 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
+import { save } from '../../store/SecureStoreService';
 
-export default function NicknameScreen({ navigation }: any) {
+export default function UsernameScreen({ navigation }: any) {
   const theme = useTheme();
-  const [nickname, setNickname] = React.useState<string>('');
+  const [username, setUsername] = React.useState<string>('');
 
   return (
     <SafeAreaView style={style.container}>
@@ -32,15 +33,18 @@ export default function NicknameScreen({ navigation }: any) {
         <TextInput
           mode="outlined"
           label="닉네임"
-          value={nickname}
-          onChangeText={value => setNickname(value)}
+          value={username}
+          onChangeText={value => setUsername(value)}
         />
       </View>
       <View style={style.buttonBox}>
         <Button
           mode="contained"
-          disabled={nickname.length < 1}
-          onPress={() => navigation.navigate('BodyInformation')}>
+          disabled={username.length < 1}
+          onPress={() => {
+            save('username', username);
+            navigation.navigate('Gender');
+          }}>
           확인
         </Button>
       </View>

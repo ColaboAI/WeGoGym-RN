@@ -1,6 +1,7 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React from 'react';
 import { Button, Headline, TextInput, useTheme } from 'react-native-paper';
+import { save } from '../../store/SecureStoreService';
 
 export default function BodyInformationScreen({ navigation }: any) {
   const theme = useTheme();
@@ -51,7 +52,12 @@ export default function BodyInformationScreen({ navigation }: any) {
         <Button
           mode="contained"
           disabled={age.length < 1 || height.length < 1 || weight.length < 1}
-          onPress={() => navigation.navigate('WorkoutPerWeek')}>
+          onPress={() => {
+            save('age', age);
+            save('height', height);
+            save('weight', weight);
+            navigation.navigate('WorkoutPerWeek');
+          }}>
           확인
         </Button>
       </View>
