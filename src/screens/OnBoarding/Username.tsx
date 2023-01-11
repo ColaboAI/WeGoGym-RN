@@ -13,7 +13,7 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import { save } from '../../store/SecureStoreService';
+import { save } from '../../store/store';
 
 export default function UsernameScreen({ navigation }: any) {
   const theme = useTheme();
