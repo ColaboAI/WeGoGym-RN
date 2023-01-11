@@ -4,8 +4,8 @@ import {
   WelcomeScreen,
   LoginScreen,
   PhoneNumberScreen,
-  VerifyCodeScreen,
-  NicknameScreen,
+  UsernameScreen,
+  GenderScreen,
   BodyInformationScreen,
   WorkoutPerWeekScreen,
   WorkoutLevelScreen,
@@ -32,8 +32,8 @@ function Auth() {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="PhoneNumber" component={PhoneNumberScreen} />
-      <Stack.Screen name="VerifyCode" component={VerifyCodeScreen} />
-      <Stack.Screen name="Nickname" component={NicknameScreen} />
+      <Stack.Screen name="Nickname" component={UsernameScreen} />
+      <Stack.Screen name="Gender" component={GenderScreen} />
       <Stack.Screen name="BodyInformation" component={BodyInformationScreen} />
       <Stack.Screen name="WorkoutPerWeek" component={WorkoutPerWeekScreen} />
       <Stack.Screen name="WorkoutLevel" component={WorkoutLevelScreen} />
