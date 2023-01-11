@@ -5864,7 +5864,6 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-<<<<<<< HEAD
 pkg-up@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/pkg-up/-/pkg-up-3.1.0.tgz#100ec235cc150e4fd42519412596a28512a0def5"
@@ -5872,8 +5871,6 @@ pkg-up@^3.1.0:
   dependencies:
     find-up "^3.0.0"
 
-||||||| parent of a0f1c31 (etc)
-=======
 plist@^3.0.5:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/plist/-/plist-3.0.6.tgz#7cfb68a856a7834bca6dbfe3218eb9c7740145d3"
@@ -5882,7 +5879,6 @@ plist@^3.0.5:
     base64-js "^1.5.1"
     xmlbuilder "^15.1.1"
 
->>>>>>> a0f1c31 (etc)
 posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
