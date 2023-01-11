@@ -72,7 +72,6 @@ export default function PhoneNumberScreen({ navigation }: any) {
                 color: theme.colors.secondary,
                 fontWeight: 'bold',
                 fontSize: 24,
-                // backgroundColor: '#000000',
               }}>
               휴대폰 번호를 입력해주세요.
             </Headline>
@@ -96,9 +95,7 @@ export default function PhoneNumberScreen({ navigation }: any) {
               disabled={phoneNumberButtonReady ? false : true}
               onPress={() => {
                 save('phone_number', phoneNumber);
-                // console.log('+82 ' + phoneNumber.slice(1));
                 signInWithPhoneNumber('+82' + phoneNumber);
-                // navigation.navigate('VerifyCode');
               }}>
               인증 번호 전송
             </Button>
@@ -119,7 +116,6 @@ export default function PhoneNumberScreen({ navigation }: any) {
               color: theme.colors.secondary,
               fontWeight: 'bold',
               fontSize: 24,
-              // backgroundColor: '#000000',
             }}>
             인증 번호를 입력해주세요.
           </Headline>
