@@ -1,4 +1,10 @@
-import { StyleSheet, View, SafeAreaView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import React from 'react';
 import {
   Button,
@@ -14,41 +20,46 @@ export default function UsernameScreen({ navigation }: any) {
   const [username, setUsername] = React.useState<string>('');
 
   return (
-    <SafeAreaView style={style.container}>
-      <View style={style.headlineBox}>
-        <Headline
-          style={{
-            color: theme.colors.secondary,
-            fontWeight: 'bold',
-            fontSize: 24,
-            // backgroundColor: '#000000',
-          }}>
-          저희가 어떻게 불러드리면 될까요?
-        </Headline>
-        <Text style={{ color: theme.colors.outline, fontWeight: 'bold' }}>
-          닉네임을 입력해주세요.
-        </Text>
-      </View>
-      <View style={style.textInputBox}>
-        <TextInput
-          mode="outlined"
-          label="닉네임"
-          value={username}
-          onChangeText={value => setUsername(value)}
-        />
-      </View>
-      <View style={style.buttonBox}>
-        <Button
-          mode="contained"
-          disabled={username.length < 1}
-          onPress={() => {
-            save('username', username);
-            navigation.navigate('Gender');
-          }}>
-          확인
-        </Button>
-      </View>
-    </SafeAreaView>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}>
+      <SafeAreaView style={style.container}>
+        <View style={style.headlineBox}>
+          <Headline
+            style={{
+              color: theme.colors.secondary,
+              fontWeight: 'bold',
+              fontSize: 24,
+              // backgroundColor: '#000000',
+            }}>
+            저희가 어떻게 불러드리면 될까요?
+          </Headline>
+          <Text style={{ color: theme.colors.outline, fontWeight: 'bold' }}>
+            닉네임을 입력해주세요.
+          </Text>
+        </View>
+        <View style={style.textInputBox}>
+          <TextInput
+            mode="outlined"
+            label="닉네임"
+            value={username}
+            onChangeText={value => setUsername(value)}
+          />
+        </View>
+        <View style={style.buttonBox}>
+          <Button
+            mode="contained"
+            disabled={username.length < 1}
+            onPress={() => {
+              save('username', username);
+              navigation.navigate('Gender');
+            }}>
+            확인
+          </Button>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 const style = StyleSheet.create({
