@@ -1,6 +1,15 @@
 PODS:
   - boost (1.76.0)
   - DoubleConversion (1.1.6)
+  - EXErrorRecovery (4.0.1):
+    - ExpoModulesCore
+  - Expo (47.0.12):
+    - ExpoModulesCore
+  - ExpoModulesCore (1.1.1):
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - EXSecureStore (12.0.0):
+    - ExpoModulesCore
   - FBLazyVector (0.70.6)
   - FBReactNativeSpec (0.70.6):
     - RCT-Folly (= 2021.07.22.00)
@@ -344,6 +353,8 @@ PODS:
     - React-jsi (= 0.70.6)
     - React-logger (= 0.70.6)
     - React-perflogger (= 0.70.6)
+  - RNCAsyncStorage (1.17.11):
+    - React-Core
   - RNFBApp (16.5.0):
     - Firebase/CoreOnly (= 10.3.0)
     - React-Core
@@ -361,6 +372,10 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
+  - Expo (from `../node_modules/expo`)
+  - ExpoModulesCore (from `../node_modules/expo-modules-core`)
+  - EXSecureStore (from `../node_modules/expo-secure-store/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
@@ -395,6 +410,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -418,6 +434,14 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EXErrorRecovery:
+    :path: "../node_modules/expo-error-recovery/ios"
+  Expo:
+    :path: "../node_modules/expo"
+  ExpoModulesCore:
+    :path: "../node_modules/expo-modules-core"
+  EXSecureStore:
+    :path: "../node_modules/expo-secure-store/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -482,6 +506,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
@@ -496,6 +522,10 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  EXErrorRecovery: ae43433feb0608a64dc5b1c8363b3e7769a9ea24
+  Expo: f48d305fda3e4e501d686e6bad7d8c8373828279
+  ExpoModulesCore: 485dff3a59b036a33b6050c0a5aea3cf1037fdd1
+  EXSecureStore: daec0117c922a67c658cb229152a9e252e5c1750
   FBLazyVector: 48289402952f4f7a4e235de70a9a590aa0b79ef4
   FBReactNativeSpec: dd1186fd05255e3457baa2f4ca65e94c2cd1e3ac
   Firebase: f92fc551ead69c94168d36c2b26188263860acd9
@@ -537,12 +567,13 @@ SPEC CHECKSUMS:
   React-RCTVibration: c75ceef7aa60a33b2d5731ebe5800ddde40cefc4
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
+  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNFBApp: 2b3e57f4eecd9cfe8a5dd2ea8ed27a87fbc6eada
   RNFBAuth: 0d480b9223fd9832e8a7ed314fa8c223b7ec8dfd
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
 
-PODFILE CHECKSUM: df9965955f105d2f8009ac92bf6841d789fa94f8
+PODFILE CHECKSUM: 8931e3abe70630145f3ba0f0df024201fee64d0d
 
 COCOAPODS: 1.11.3
