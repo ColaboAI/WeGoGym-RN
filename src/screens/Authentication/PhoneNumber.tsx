@@ -14,7 +14,7 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import { save } from '../../store/SecureStoreService';
+import { save } from '../../store/store';
 import auth from '@react-native-firebase/auth';
 
 export default function PhoneNumberScreen({ navigation }: any) {
@@ -28,7 +28,6 @@ export default function PhoneNumberScreen({ navigation }: any) {
 
   async function signInWithPhoneNumber(_phoneNumber: string) {
     const confirmation = await auth().signInWithPhoneNumber(_phoneNumber);
-    console.log(confirmation.confirm);
     setConfirm(confirmation);
   }
 

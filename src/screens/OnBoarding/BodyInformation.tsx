@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Button, Headline, TextInput, useTheme } from 'react-native-paper';
-import { save } from '../../store/SecureStoreService';
+import { save } from '../../store/store';
 
 export default function BodyInformationScreen({ navigation }: any) {
   const theme = useTheme();

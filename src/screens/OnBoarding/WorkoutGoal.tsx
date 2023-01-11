@@ -1,12 +1,15 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
-import { save } from '../../store/SecureStoreService';
+import { save } from '../../store/store';
 import { WorkoutGoal } from '../../type/types';
-import { getGoal } from '../../utils/util';
+import { getGoal, getInfo } from '../../utils/util';
+import { AuthContext } from '../../App';
+// import { postUser } from '@/api/api';
 
 export default function WorkoutGoalScreen() {
   const theme = useTheme();
+  const { signUp } = useContext(AuthContext);
   const [isSelected, setIsSelected] = useState<WorkoutGoal[]>([
     { id: 0, goal: '💪🏻 근성장', select: false },
     { id: 1, goal: '🚴🏻 체력 증진', select: false },
@@ -59,9 +62,13 @@ export default function WorkoutGoalScreen() {
       <View style={style.buttonBox}>
         <Button
           mode="contained"
-          onPress={() => {
+          onPress={async () => {
             const workoutGoal = getGoal(isSelected);
             save('workout_goal', workoutGoal);
+            getInfo().then(async info => {
+              signUp(info);
+              // postUser(info);
+            });
           }}>
           확인
         </Button>
