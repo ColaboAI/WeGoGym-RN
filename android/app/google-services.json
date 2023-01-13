@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:465388501088:android:6817aad9c77a2baeb42b05",
+        "mobilesdk_app_id": "1:465388501088:android:0bee54d10432a1b6b42b05",
         "android_client_info": {
-          "package_name": "WeGoGym.android.v1"
+          "package_name": "com.wegogym"
         }
       },
       "oauth_client": [
@@ -29,6 +29,13 @@
             {
               "client_id": "465388501088-svdc5qsmvhd0svhinkg24i243htlh96r.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "465388501088-ggbd08jgpi0lpr80tamupukdhesss5of.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "WeGoGym.ios"
+              }
             }
           ]
         }
