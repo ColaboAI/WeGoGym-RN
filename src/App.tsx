@@ -8,29 +8,98 @@
  * @format
  */
 
-import React from 'react';
+import React, { createContext, useEffect } from 'react';
 import Auth from './navigators/Auth';
 import MainNavigator from './navigators/Main';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigators/types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
+import * as SecureStore from 'expo-secure-store';
+// import { postUser } from './api/api';
+
+export const AuthContext = createContext({} as any);
 
 function App() {
-  const isLoggedIn = false;
+  const [state, dispatch] = React.useReducer(
+    (prevState: any, action: any) => {
+      switch (action.type) {
+        case 'RESTORE_TOKEN':
+          return {
+            ...prevState,
+            userToken: action.token,
+            isLoading: false,
+          };
+        case 'SIGN_IN':
+          return {
+            ...prevState,
+            isSignout: false,
+            userToken: action.token,
+          };
+        case 'SIGN_OUT':
+          return {
+            ...prevState,
+            isSignout: true,
+            userToken: null,
+          };
+      }
+    },
+    {
+      isLoading: true,
+      isSignout: false,
+      userToken: null,
+    },
+  );
+
+  useEffect(() => {
+    const bootstrapAsync = async () => {
+      let userToken;
+      try {
+        userToken = await SecureStore.getItemAsync('userToken');
+      } catch (e) {
+        // Restoring token failed
+      }
+      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+    };
+    bootstrapAsync();
+  }, []);
+
+  // const authContext = React.useMemo(
+  //   () => ({
+  //     signIn: async data => {
+  //       dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+  //     },
+  //     signOut: async () => {
+  //       await SecureStore.deleteItemAsync('userToken');
+  //       dispatch({ type: 'SIGN_OUT' });
+  //     },
+  //     signUp: async data => {
+  //       postUser(data).then(response => {
+  //         if (response.onSuccess === 'success') {
+  //           SecureStore.setItemAsync('userToken', response.token);
+  //           dispatch({ type: 'SIGN_IN', token: response.token });
+  //         } else {
+  //           Alert.alert(response.error);
+  //         }
+  //       });
+  //     },
+  //   }),
+  //   [],
+  // );
+
   return (
-    <Stack.Navigator
-      initialRouteName="Auth"
-      screenOptions={() => ({ headerShown: false })}>
-      {isLoggedIn ? (
-        <>
-          <Stack.Screen name="MainNavigator" component={MainNavigator} />
-        </>
-      ) : (
+    // <AuthContext.Provider value={authContext}>
+    <Stack.Navigator screenOptions={() => ({ headerShown: false })}>
+      {state.userToken == null ? (
         <>
           <Stack.Screen name="Auth" component={Auth} />
         </>
+      ) : (
+        <>
+          <Stack.Screen name="MainNavigator" component={MainNavigator} />
+        </>
       )}
     </Stack.Navigator>
+    // </AuthContext.Provider>
   );
 }
 
