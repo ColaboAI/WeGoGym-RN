@@ -9,9 +9,10 @@
     "@image/*": ["components/*"],
     "@navigators/*": ["containers/*"],
     "@screeens/*": ["modules/*"],
-    "@store/*": ["scenes/*"],
-    "@utils/*": ["scenes/*"],
-    "@api/*": ["utils/*"]
+    "@store/*": ["store/*"],
+    "@utils/*": ["utils/*"],
+    "@type/*": ["type/*"],
+    "@api/*": ["api/*"]
   },
     /* Completeness */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
