@@ -40,13 +40,11 @@ export default function WorkoutPerWeekScreen({ navigation }: any) {
         </Headline>
       </View>
       <View style={style.workoutLevelBox}>
-        <View style={style.workoutLevelButtonBox}>
-          {getButton(0)}
-          {getButton(1)}
-          {getButton(2)}
-          {getButton(3)}
-          {getButton(4)}
-        </View>
+        {getButton(0)}
+        {getButton(1)}
+        {getButton(2)}
+        {getButton(3)}
+        {getButton(4)}
       </View>
       <View style={style.buttonBox}>
         <Button
@@ -68,24 +66,22 @@ const style = StyleSheet.create({
   },
   headlineBox: {
     flex: 1,
-    position: 'absolute',
-    top: '15%',
-    left: '5%',
+    margin: '5%',
+    justifyContent: 'flex-end',
   },
   workoutLevelBox: {
-    flex: 1,
-    top: '25%',
-  },
-  workoutLevelButtonBox: {
-    margin: '3%',
+    flex: 2,
+    width: '90%',
+    justifyContent: 'center',
+    margin: '5%',
   },
   button: {
-    margin: '2%',
+    margin: '1%',
   },
   buttonBox: {
+    flex: 2,
     width: '90%',
-    position: 'absolute',
-    top: '70%',
     alignSelf: 'center',
+    margin: '5%',
   },
 });

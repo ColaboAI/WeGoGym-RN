@@ -1,15 +1,12 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '../../store/store';
 import { WorkoutGoal } from '../../type/types';
 import { getGoal, getInfo } from '../../utils/util';
-import { AuthContext } from '../../App';
-// import { postUser } from '@/api/api';
 
 export default function WorkoutGoalScreen() {
   const theme = useTheme();
-  const { signUp } = useContext(AuthContext);
   const [isSelected, setIsSelected] = useState<WorkoutGoal[]>([
     { id: 0, goal: '💪🏻 근성장', select: false },
     { id: 1, goal: '🚴🏻 체력 증진', select: false },
@@ -66,8 +63,7 @@ export default function WorkoutGoalScreen() {
             const workoutGoal = getGoal(isSelected);
             save('workout_goal', workoutGoal);
             getInfo().then(async info => {
-              signUp(info);
-              // postUser(info);
+              console.log(info);
             });
           }}>
           확인
@@ -82,15 +78,14 @@ const style = StyleSheet.create({
   },
   headlineBox: {
     flex: 1,
-    position: 'absolute',
-    top: '15%',
-    left: '5%',
+    margin: '5%',
+    justifyContent: 'flex-end',
   },
   workoutGoalBox: {
-    flex: 1,
+    flex: 2,
     width: '90%',
-    top: '25%',
-    alignSelf: 'center',
+    justifyContent: 'center',
+    margin: '5%',
   },
   workoutGoalButton: {
     flexDirection: 'row',
@@ -101,9 +96,9 @@ const style = StyleSheet.create({
     margin: '2%',
   },
   buttonBox: {
+    flex: 2,
     width: '90%',
-    position: 'absolute',
-    top: '70%',
     alignSelf: 'center',
+    margin: '5%',
   },
 });

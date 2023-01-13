@@ -32,8 +32,8 @@ export default function GenderScreen({ navigation }: any) {
           성별이 어떻게 되시나요?
         </Headline>
       </View>
-      <View style={style.workoutLevelBox}>
-        <View style={style.workoutLevelButtonBox}>
+      <View style={style.genderBox}>
+        <View style={style.genderButtonBox}>
           {getButton(0)}
           {getButton(1)}
           {getButton(2)}
@@ -59,24 +59,25 @@ const style = StyleSheet.create({
   },
   headlineBox: {
     flex: 1,
-    position: 'absolute',
-    top: '15%',
-    left: '5%',
+    margin: '5%',
+    justifyContent: 'flex-end',
   },
-  workoutLevelBox: {
-    flex: 1,
-    top: '25%',
+  genderBox: {
+    flex: 2,
+    width: '90%',
+    justifyContent: 'center',
+    margin: '5%',
   },
-  workoutLevelButtonBox: {
+  genderButtonBox: {
     margin: '3%',
   },
   button: {
     margin: '2%',
   },
   buttonBox: {
+    flex: 2,
     width: '90%',
-    position: 'absolute',
-    top: '70%',
     alignSelf: 'center',
+    margin: '5%',
   },
 });

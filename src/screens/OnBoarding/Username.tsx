@@ -68,21 +68,19 @@ const style = StyleSheet.create({
   },
   headlineBox: {
     flex: 1,
-    position: 'absolute',
-    top: '15%',
-    left: '5%',
+    margin: '5%',
+    justifyContent: 'flex-end',
   },
   textInputBox: {
     flex: 1,
     width: '90%',
-    position: 'absolute',
-    alignSelf: 'center',
-    top: '25%',
+    justifyContent: 'flex-start',
+    margin: '5%',
   },
   buttonBox: {
+    flex: 3,
     width: '90%',
-    position: 'absolute',
-    top: '40%',
-    alignSelf: 'center',
+    justifyContent: 'flex-start',
+    margin: '5%',
   },
 });
