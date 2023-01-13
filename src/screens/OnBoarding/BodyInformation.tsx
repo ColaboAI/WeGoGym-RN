@@ -66,7 +66,7 @@ export default function BodyInformationScreen({ navigation }: any) {
               save('age', age);
               save('height', height);
               save('weight', weight);
-              navigation.navigate('WorkoutPerWeek');
+              navigation.navigate('WorkoutTime');
             }}>
             확인
           </Button>
@@ -81,24 +81,22 @@ const style = StyleSheet.create({
   },
   headlineBox: {
     flex: 1,
-    position: 'absolute',
-    top: '15%',
-    left: '5%',
+    margin: '5%',
+    justifyContent: 'flex-end',
   },
   textInputBox: {
-    flex: 1,
+    flex: 2,
     width: '90%',
-    position: 'absolute',
-    alignSelf: 'center',
-    top: '25%',
+    justifyContent: 'flex-start',
+    margin: '5%',
   },
   textInput: {
-    margin: '1.5%',
+    margin: '1%',
   },
   buttonBox: {
+    flex: 2,
     width: '90%',
-    position: 'absolute',
-    top: '60%',
-    alignSelf: 'center',
+    justifyContent: 'flex-start',
+    margin: '5%',
   },
 });

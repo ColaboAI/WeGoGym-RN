@@ -65,13 +65,14 @@ const style = StyleSheet.create({
   },
   headlineBox: {
     flex: 1,
-    position: 'absolute',
-    top: '15%',
-    left: '5%',
+    margin: '5%',
+    justifyContent: 'flex-end',
   },
   workoutPerWeekBox: {
-    flex: 1,
-    top: '25%',
+    flex: 2,
+    width: '90%',
+    justifyContent: 'center',
+    margin: '5%',
   },
   workoutPerWeekBox1: {
     flexDirection: 'row',
@@ -87,9 +88,9 @@ const style = StyleSheet.create({
     width: 90,
   },
   buttonBox: {
+    flex: 2,
     width: '90%',
-    position: 'absolute',
-    top: '50%',
     alignSelf: 'center',
+    margin: '5%',
   },
 });

@@ -25,7 +25,7 @@ export default function PhoneNumberScreen({ navigation }: any) {
     React.useState<boolean>(false);
   const [codeButtonReady, setCodeButtonReady] = React.useState<boolean>(false);
   const [confirm, setConfirm] = React.useState<any>(null);
-
+  const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
   async function signInWithPhoneNumber(_phoneNumber: string) {
     const confirmation = await auth().signInWithPhoneNumber(_phoneNumber);
     setConfirm(confirmation);
@@ -135,8 +135,10 @@ export default function PhoneNumberScreen({ navigation }: any) {
         <View style={style.buttonBox}>
           <Button
             mode="contained"
+            loading={!isButtonClicked ? false : true}
             disabled={codeButtonReady ? false : true}
             onPress={() => {
+              setIsButtonClicked(true);
               confirmCode();
             }}>
             코드 인증
@@ -152,21 +154,19 @@ const style = StyleSheet.create({
   },
   headlineBox: {
     flex: 1,
-    position: 'absolute',
-    top: '15%',
-    left: '5%',
+    margin: '5%',
+    justifyContent: 'flex-end',
   },
   textInputBox: {
     flex: 1,
     width: '90%',
-    position: 'absolute',
-    alignSelf: 'center',
-    top: '25%',
+    justifyContent: 'flex-start',
+    margin: '5%',
   },
   buttonBox: {
+    flex: 2,
     width: '90%',
-    position: 'absolute',
-    top: '40%',
-    alignSelf: 'center',
+    justifyContent: 'flex-start',
+    margin: '5%',
   },
 });
