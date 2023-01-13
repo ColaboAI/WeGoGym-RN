@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "465388501088",
+    "project_id": "wegogym-687a7",
+    "storage_bucket": "wegogym-687a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465388501088:android:0bee54d10432a1b6b42b05",
+        "android_client_info": {
+          "package_name": "com.wegogym"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "465388501088-svdc5qsmvhd0svhinkg24i243htlh96r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASIFXJWFyVqDWF4uCShtkxdr-0x99FlP0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "465388501088-svdc5qsmvhd0svhinkg24i243htlh96r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "465388501088-ggbd08jgpi0lpr80tamupukdhesss5of.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "WeGoGym.ios"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
