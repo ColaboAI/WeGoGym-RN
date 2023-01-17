@@ -3,6 +3,7 @@ export { default as ChatListScreen } from './ChatList';
 export { default as ChatRoomScreen } from './ChatRoom';
 export { default as UserScreen } from './User';
 export { default as DetailsScreen } from './Details';
+export { default as SplashScreen } from './Splash/Splash';
 export { default as WelcomeScreen } from './Welcome';
 export { default as LoginScreen } from './Login';
 export { default as PhoneNumberScreen } from './Authentication/PhoneNumber';
