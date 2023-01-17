@@ -16,6 +16,8 @@ export async function getInfo() {
   const height = await getValueFor('height');
   const weight = await getValueFor('weight');
   const workout_per_week = await getValueFor('workout_per_week');
+  const workout_time = await getValueFor('workout_time');
+  const workout_time_how_long = await getValueFor('workout_time_how_long');
   const workout_level = await getValueFor('workout_level');
   const workout_goal = await getValueFor('workout_goal');
 
@@ -27,6 +29,8 @@ export async function getInfo() {
     height,
     weight,
     workout_per_week,
+    workout_time,
+    workout_time_how_long,
     workout_level,
     workout_goal,
   };
