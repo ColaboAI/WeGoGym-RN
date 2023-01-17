@@ -1,4 +1,4 @@
-import { StyleSheet, View, Linking, Alert } from 'react-native';
+import { StyleSheet, ScrollView, View, Linking, Alert } from 'react-native';
 import { List, Switch } from 'react-native-paper';
 import React, { useContext } from 'react';
 import { AuthContext } from '@/App';
@@ -48,7 +48,7 @@ export default function SettingScreen() {
   };
 
   return (
-    <View style={style.container}>
+    <ScrollView style={style.container}>
       <List.Section>
         <List.Subheader>약관 및 정책</List.Subheader>
         <View style={style.listContainer}>
@@ -110,7 +110,7 @@ export default function SettingScreen() {
           />
         </View>
       </List.Section>
-    </View>
+    </ScrollView>
   );
 }
 const style = StyleSheet.create({
