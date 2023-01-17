@@ -1,13 +1,12 @@
-// import { StyleSheet } from 'react-native';
 import React from 'react';
-import { Appbar, useTheme, Button } from 'react-native-paper';
+import { Appbar, useTheme } from 'react-native-paper';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 
 interface Props extends NativeStackHeaderProps {
   title: string;
 }
 
-const AuthNavBarHeader = ({ navigation, back, title }: Props) => {
+const UserNavBarHeader = ({ navigation, back, title }: Props) => {
   const theme = useTheme();
   return (
     <>
@@ -20,10 +19,9 @@ const AuthNavBarHeader = ({ navigation, back, title }: Props) => {
           />
         ) : null}
         <Appbar.Content title={title} color={theme.colors.primary} />
-        <Button onPress={navigation.popToTop}>나가기</Button>
       </Appbar.Header>
     </>
   );
 };
 
-export default AuthNavBarHeader;
+export default UserNavBarHeader;
