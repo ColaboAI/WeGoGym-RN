@@ -1,16 +1,33 @@
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { UserScreen } from '../screens';
-import CustomNavBarHeader from './CustomNavBarHeader';
+import { UserScreen, SettingScreen } from '../screens';
+import UserNavBarHeader from './UserNavBarHeader';
+
 const Stack = createNativeStackNavigator();
-function User() {
+
+function User({ navigation, route }: any) {
+  React.useLayoutEffect(() => {
+    const routeName = getFocusedRouteNameFromRoute(route);
+    if (routeName !== 'User' && routeName !== undefined) {
+      navigation.setOptions({ tabBarStyle: { display: 'none' } });
+    } else {
+      navigation.setOptions({ tabBarStyle: { display: undefined } });
+    }
+  }, [navigation, route]);
+
   return (
     <Stack.Navigator
       initialRouteName="User"
       screenOptions={{
-        header: props => <CustomNavBarHeader title={'내 프로필'} {...props} />,
+        header: props => <UserNavBarHeader title="설정" {...props} />,
       }}>
-      <Stack.Screen name="User" component={UserScreen} />
+      <Stack.Screen
+        name="User"
+        component={UserScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="Setting" component={SettingScreen} />
     </Stack.Navigator>
   );
 }
