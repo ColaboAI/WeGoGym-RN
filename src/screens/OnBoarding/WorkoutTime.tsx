@@ -45,7 +45,7 @@ export default function WorkoutTimeScreen({ navigation }: any) {
           mode="contained"
           disabled={!time}
           onPress={() => {
-            save('workout_time_when', time);
+            save('workout_time', time);
             navigation.navigate('WorkoutTimeHowLong');
           }}>
           확인

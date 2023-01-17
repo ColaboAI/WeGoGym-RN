@@ -6,13 +6,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import React from 'react';
-import {
-  Button,
-  Headline,
-  Text,
-  TextInput,
-  useTheme,
-} from 'react-native-paper';
+import { Button, Headline, TextInput, useTheme } from 'react-native-paper';
 import { save } from '../../store/store';
 
 export default function UsernameScreen({ navigation }: any) {
@@ -35,9 +29,6 @@ export default function UsernameScreen({ navigation }: any) {
             }}>
             저희가 어떻게 불러드리면 될까요?
           </Headline>
-          <Text style={{ color: theme.colors.outline, fontWeight: 'bold' }}>
-            닉네임을 입력해주세요.
-          </Text>
         </View>
         <View style={style.textInputBox}>
           <TextInput

@@ -26,6 +26,7 @@ export default function PhoneNumberScreen({ navigation }: any) {
   const [codeButtonReady, setCodeButtonReady] = React.useState<boolean>(false);
   const [confirm, setConfirm] = React.useState<any>(null);
   const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
+
   async function signInWithPhoneNumber(_phoneNumber: string) {
     const confirmation = await auth().signInWithPhoneNumber(_phoneNumber);
     setConfirm(confirmation);
@@ -58,92 +59,85 @@ export default function PhoneNumberScreen({ navigation }: any) {
     }
   };
 
-  if (!confirm) {
-    return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}>
-        <SafeAreaView style={style.container}>
-          <View style={style.headlineBox}>
-            <Headline
-              style={{
-                color: theme.colors.secondary,
-                fontWeight: 'bold',
-                fontSize: 24,
-              }}>
-              휴대폰 번호를 입력해주세요.
-            </Headline>
-            <Text style={{ color: theme.colors.outline, fontWeight: 'bold' }}>
-              본인 인증을 위해 필요합니다.
-            </Text>
-          </View>
-          <View style={style.textInputBox}>
-            <TextInput
-              mode="outlined"
-              keyboardType="numeric"
-              error={phoneNumber.length > 11 ? true : false}
-              label="휴대폰 번호"
-              value={phoneNumber}
-              onChangeText={value => phoneNumberButtonChange(value)}
-            />
-          </View>
-          <View style={style.buttonBox}>
-            <Button
-              mode="contained"
-              disabled={phoneNumberButtonReady ? false : true}
-              onPress={() => {
-                save('phone_number', phoneNumber);
-                signInWithPhoneNumber('+82' + phoneNumber);
-              }}>
-              인증 번호 전송
-            </Button>
-          </View>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
-    );
-  }
   return (
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss();
       }}>
       <SafeAreaView style={style.container}>
-        <View style={style.headlineBox}>
-          <Headline
-            style={{
-              color: theme.colors.secondary,
-              fontWeight: 'bold',
-              fontSize: 24,
-            }}>
-            인증 번호를 입력해주세요.
-          </Headline>
-          <Text style={{ color: theme.colors.outline, fontWeight: 'bold' }}>
-            본인 인증을 위해 필요합니다.
-          </Text>
-        </View>
-        <View style={style.textInputBox}>
-          <TextInput
-            mode="outlined"
-            keyboardType="numeric"
-            error={code.length > 6 ? true : false}
-            label="인증 번호 6자리"
-            value={code}
-            onChangeText={value => codeButtonChange(value)}
-          />
-        </View>
-        <View style={style.buttonBox}>
-          <Button
-            mode="contained"
-            loading={!isButtonClicked ? false : true}
-            disabled={codeButtonReady ? false : true}
-            onPress={() => {
-              setIsButtonClicked(true);
-              confirmCode();
-            }}>
-            코드 인증
-          </Button>
-        </View>
+        {confirm === null ? (
+          <>
+            <View style={style.headlineBox}>
+              <Headline
+                style={{
+                  color: theme.colors.secondary,
+                  fontWeight: 'bold',
+                  fontSize: 24,
+                }}>
+                휴대폰 번호를 입력해주세요.
+              </Headline>
+              <Text style={{ color: theme.colors.outline, fontWeight: 'bold' }}>
+                본인 인증을 위해 필요합니다.
+              </Text>
+            </View>
+            <View style={style.textInputBox}>
+              <TextInput
+                mode="outlined"
+                keyboardType="numeric"
+                error={phoneNumber.length > 11 ? true : false}
+                label="휴대폰 번호"
+                value={phoneNumber}
+                onChangeText={value => phoneNumberButtonChange(value)}
+              />
+            </View>
+            <View style={style.buttonBox}>
+              <Button
+                mode="contained"
+                disabled={phoneNumberButtonReady ? false : true}
+                onPress={() => {
+                  save('phone_number', phoneNumber);
+                  signInWithPhoneNumber('+82' + phoneNumber);
+                }}>
+                인증 번호 전송
+              </Button>
+            </View>
+          </>
+        ) : (
+          <>
+            <View style={style.headlineBox}>
+              <Headline
+                style={{
+                  color: theme.colors.secondary,
+                  fontWeight: 'bold',
+                  fontSize: 24,
+                }}>
+                인증 번호를 입력해주세요.
+              </Headline>
+            </View>
+            <View style={style.textInputBox}>
+              <TextInput
+                mode="outlined"
+                keyboardType="numeric"
+                error={code.length > 6 ? true : false}
+                label="인증 번호 6자리"
+                value={code}
+                onChangeText={value => codeButtonChange(value)}
+              />
+            </View>
+            <View style={style.buttonBox}>
+              <Button
+                mode="contained"
+                loading={!isButtonClicked ? false : true}
+                disabled={codeButtonReady ? false : true}
+                onPress={() => {
+                  setIsButtonClicked(true);
+                  confirmCode();
+                }}>
+                코드 인증
+              </Button>
+            </View>
+          </>
+        )}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

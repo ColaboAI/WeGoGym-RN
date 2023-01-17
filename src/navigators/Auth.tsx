@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
+import React from 'react';
 import {
   WelcomeScreen,
   LoginScreen,
@@ -14,8 +14,8 @@ import {
   WorkoutGoalScreen,
 } from '../screens';
 import AuthNavBarHeader from './AuthNavBarHeader';
-
 const Stack = createNativeStackNavigator();
+
 function Auth() {
   return (
     <Stack.Navigator
@@ -33,7 +33,11 @@ function Auth() {
         component={LoginScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="PhoneNumber" component={PhoneNumberScreen} />
+      <Stack.Screen
+        name="PhoneNumber"
+        component={PhoneNumberScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen name="Nickname" component={UsernameScreen} />
       <Stack.Screen name="Gender" component={GenderScreen} />
       <Stack.Screen name="BodyInformation" component={BodyInformationScreen} />
