@@ -1,6 +1,7 @@
 export { default as HomeScreen } from './Home';
 export { default as UserScreen } from './User';
 export { default as DetailsScreen } from './Details';
+export { default as SplashScreen } from './Splash/Splash';
 export { default as WelcomeScreen } from './Welcome';
 export { default as LoginScreen } from './Login';
 export { default as PhoneNumberScreen } from './Authentication/PhoneNumber';
