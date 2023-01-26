@@ -17,7 +17,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 import * as SecureStore from 'expo-secure-store';
 import { SplashScreen } from './screens';
 import { UserCreate } from './type/types';
-// import { postUser } from './api/api';
 
 export const AuthContext = createContext({});
 
