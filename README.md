@@ -38,7 +38,8 @@ uvm use
 - cd "WeGoGym" && yarn android
 
 ### Run instructions for iOS:
-- cd "WeGoGym" && yarn ios
+1. `npx pod-install` or `cd ios && pod install`
+1. `cd "WeGoGym"` && `yarn ios`
 
 OR run from Xcode:
 

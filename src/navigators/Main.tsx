@@ -1,12 +1,14 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HomeStackScreen } from '.';
+import { HomeStackScreen, ChatStackScreen } from '.';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { BottomTabParamList } from './types';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<BottomTabParamList>();
 // Tab Navigator: Main Root Navigator
 // nested Stack Navigator: HomeStackScreen, ChatStackScreen...
 // @refresh reset
+
 const MainNavigator = () => {
   return (
     <Tab.Navigator
@@ -17,10 +19,8 @@ const MainNavigator = () => {
 
           if (route.name === 'Main') {
             iconName = focused ? 'ios-home' : 'ios-home-outline';
-          } else if (route.name === 'Details') {
-            iconName = focused
-              ? 'person-circle-sharp'
-              : 'person-circle-outline';
+          } else if (route.name === 'Chat') {
+            iconName = focused ? 'chatbubble-sharp' : 'chatbubble-outline';
           } else {
             iconName = focused
               ? 'person-circle-sharp'
@@ -34,6 +34,14 @@ const MainNavigator = () => {
       <Tab.Screen
         name="Main"
         component={HomeStackScreen}
+        options={{
+          tabBarIconStyle: { display: 'flex' },
+          tabBarLabelPosition: 'below-icon',
+        }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={ChatStackScreen}
         options={{
           tabBarIconStyle: { display: 'flex' },
           tabBarLabelPosition: 'below-icon',

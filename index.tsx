@@ -21,6 +21,7 @@ import {
 
 import customLightColors from './src/theme/customLightColors.json';
 import customDarkColors from './src/theme/customDarkColors.json';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // https://callstack.github.io/react-native-paper/theming.html
 
@@ -64,7 +65,11 @@ export default function Main() {
   return (
     // Add Store Provider here
     <SafeAreaProvider>
-      <PaperProvider theme={theme}>
+      <PaperProvider
+        settings={{
+          icon: props => <Ionicons {...props} />,
+        }}
+        theme={theme}>
         <NavigationContainer theme={theme}>
           <App />
         </NavigationContainer>
