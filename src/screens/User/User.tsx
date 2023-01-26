@@ -8,11 +8,11 @@ import {
   List,
   useTheme,
 } from 'react-native-paper';
-import * as React from 'react';
+import React, { useState } from 'react';
 
 export default function UserScreen({ navigation }: any) {
   const theme = useTheme();
-  const [isAuthenticated] = React.useState(true);
+  const [isAuthenticated] = useState(true);
   const data = [
     {
       id: 0,
@@ -75,7 +75,7 @@ export default function UserScreen({ navigation }: any) {
     <SafeAreaView style={style.container}>
       <View style={style.headerContainer}>
         <IconButton
-          icon="cog-outline"
+          icon="settings-outline"
           onPress={() => {
             navigation.navigate('Setting');
           }}
@@ -95,7 +95,7 @@ export default function UserScreen({ navigation }: any) {
           {isAuthenticated ? (
             <>
               <IconButton
-                icon="check-circle-outline"
+                icon="checkmark-circle-outline"
                 iconColor="green"
                 size={18}
                 style={style.icon}

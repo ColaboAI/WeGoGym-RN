@@ -35,7 +35,7 @@ export default function LoginScreen({ navigation }: any) {
       </View>
       <View style={style.buttonBox}>
         <Button
-          icon="phone"
+          icon="call-sharp"
           mode="contained"
           onPress={() => navigation.navigate('PhoneNumber')}>
           전화 번호로 시작하기
