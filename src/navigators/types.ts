@@ -3,13 +3,14 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { NavigatorScreenParams } from '@react-navigation/native';
 export type RootStackParamList = {
-  // Auth: undefined;
+  Auth: undefined;
   MainNavigator: NavigatorScreenParams<BottomTabParamList>;
 };
 
 export type BottomTabParamList = {
-  Main: undefined;
-  Chat: undefined;
+  홈: undefined;
+  채팅: undefined;
+  마이: undefined;
 };
 
 export type ChatStackParamList = {

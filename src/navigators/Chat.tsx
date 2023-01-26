@@ -6,7 +6,7 @@ import { ChatListScreen, ChatRoomScreen } from 'screens';
 import CustomNavBarHeader from './CustomNavBarHeader';
 import { ChatStackParamList, CustomTabScreenProps } from './types';
 const Stack = createNativeStackNavigator<ChatStackParamList>();
-type Props = CustomTabScreenProps<'Chat'>;
+type Props = CustomTabScreenProps<'채팅'>;
 
 function Chat({ navigation, route }: Props) {
   useLayoutEffect(() => {
