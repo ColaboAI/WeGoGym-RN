@@ -7,13 +7,12 @@ import {
   Card,
   List,
   useTheme,
-  ProgressBar,
 } from 'react-native-paper';
 import * as React from 'react';
 
 export default function UserScreen({ navigation }: any) {
   const theme = useTheme();
-  const [isAuthenticated, setIsAuthenticated] = React.useState(true);
+  const [isAuthenticated] = React.useState(true);
   const data = [
     {
       id: 0,
@@ -23,7 +22,7 @@ export default function UserScreen({ navigation }: any) {
     {
       id: 1,
       title: 'uri',
-      value: 'https://i.ibb.co/9rSjLG7/image.png',
+      value: 'https://i.ibb.co/Y725W4C/image.png',
     },
     {
       id: 2,
@@ -87,7 +86,7 @@ export default function UserScreen({ navigation }: any) {
         <View style={style.avatarContainer}>
           <Avatar.Image
             size={64}
-            source={{ uri: 'https://i.ibb.co/9rSjLG7/image.png' }}
+            source={{ uri: 'https://i.ibb.co/Y725W4C/image.png' }}
             style={style.avatar}
           />
         </View>
@@ -120,7 +119,7 @@ export default function UserScreen({ navigation }: any) {
           <Card>
             <Card.Content style={style.card}>
               <Text
-                variant="titleSmall"
+                variant="titleMedium"
                 style={{
                   color: theme.colors.primary,
                 }}>

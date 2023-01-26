@@ -1,7 +1,7 @@
 import { StyleSheet, View, Image } from 'react-native';
 import React from 'react';
 import { Button, Headline, Text, useTheme } from 'react-native-paper';
-export default function WelcomeScreen({ navigation }: any) {
+export default function LoginScreen({ navigation }: any) {
   const theme = useTheme();
   return (
     <View style={style.container}>
@@ -11,7 +11,6 @@ export default function WelcomeScreen({ navigation }: any) {
             color: theme.colors.secondary,
             fontWeight: 'bold',
             fontSize: 28,
-            // backgroundColor: '#000000',
           }}>
           <Headline
             style={{

@@ -1,13 +1,13 @@
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { UserScreen, SettingScreen } from '../screens';
 import UserNavBarHeader from './UserNavBarHeader';
 
 const Stack = createNativeStackNavigator();
 
 function User({ navigation, route }: any) {
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route);
     if (routeName !== 'User' && routeName !== undefined) {
       navigation.setOptions({ tabBarStyle: { display: 'none' } });
