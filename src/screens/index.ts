@@ -4,6 +4,7 @@ export { default as ChatRoomScreen } from './ChatRoom';
 export { default as UserScreen } from './User/User';
 export { default as SettingScreen } from './User/Setting';
 export { default as DetailsScreen } from './Details';
+export { default as NotificationsScreen } from './Notifications';
 export { default as SplashScreen } from './Splash/Splash';
 export { default as WelcomeScreen } from './Welcome';
 export { default as LoginScreen } from './Login';
