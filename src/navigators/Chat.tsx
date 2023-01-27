@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { useLayoutEffect } from 'react';
 import { ChatListScreen, ChatRoomScreen } from 'screens';
-import CustomNavBarHeader from './CustomNavBarHeader';
+import CustomNavBarHeader from './NavBarHeader/CustomNavBarHeader';
 import { ChatStackParamList, CustomTabScreenProps } from './types';
 const Stack = createNativeStackNavigator<ChatStackParamList>();
 type Props = CustomTabScreenProps<'채팅'>;
