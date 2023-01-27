@@ -19,13 +19,6 @@ const HomeNavBarHeader = ({ navigation, back, title }: Props) => {
           />
         ) : null}
         <Appbar.Content title={title} color={theme.colors.primary} />
-        <Appbar.Action
-          icon="notifications-outline"
-          color={theme.colors.onBackground}
-          onPress={() => {
-            navigation.navigate('Notifications');
-          }}
-        />
       </Appbar.Header>
     </>
   );

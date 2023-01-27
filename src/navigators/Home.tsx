@@ -8,13 +8,15 @@ const Stack = createNativeStackNavigator<HomeStackParamList>();
 type Props = CustomTabScreenProps<'홈'>;
 
 function Home({ navigation, route }: Props) {
+  const title = '알림';
   useLayoutEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route);
-    console.log(routeName);
-    if (routeName !== 'Home' && routeName !== undefined) {
-      navigation.setOptions({ tabBarStyle: { display: 'none' } });
+    if (routeName === 'Details') {
+      navigation.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
     } else {
-      navigation.setOptions({ tabBarStyle: { display: 'none' } });
+      navigation.setOptions({ tabBarStyle: { display: 'flex' } });
     }
   }, [navigation, route]);
 
@@ -22,9 +24,13 @@ function Home({ navigation, route }: Props) {
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
-        header: props => <HomeNavBarHeader title={'WeGoGym'} {...props} />,
+        header: props => <HomeNavBarHeader title={title} {...props} />,
       }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen name="Details" component={DetailsScreen} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
     </Stack.Navigator>
