@@ -13,7 +13,7 @@ import {
   WorkoutLevelScreen,
   WorkoutGoalScreen,
 } from '../screens';
-import AuthNavBarHeader from './AuthNavBarHeader';
+import AuthNavBarHeader from './NavBarHeader/AuthNavBarHeader';
 const Stack = createNativeStackNavigator();
 
 function Auth() {
