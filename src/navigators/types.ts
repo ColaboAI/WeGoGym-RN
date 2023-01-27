@@ -44,6 +44,18 @@ export type ChatStackScreenProps<T extends keyof ChatStackParamList> =
     CustomTabScreenProps<keyof BottomTabParamList>
   >;
 
+export type UserStackScreenProps<T extends keyof UserStackParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<UserStackParamList, T>,
+    CustomTabScreenProps<keyof BottomTabParamList>
+  >;
+
+export type HomeStackScreenProps<T extends keyof HomeStackParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<HomeStackParamList, T>,
+    CustomTabScreenProps<keyof BottomTabParamList>
+  >;
+
 // export type CustomStackScreenProps
 
 declare global {

@@ -5,7 +5,7 @@ import { UserScreen, SettingScreen } from '../screens';
 import UserNavBarHeader from './NavBarHeader/UserNavBarHeader';
 import { UserStackParamList, CustomTabScreenProps } from './types';
 const Stack = createNativeStackNavigator<UserStackParamList>();
-type Props = CustomTabScreenProps<'홈'>;
+type Props = CustomTabScreenProps<'마이'>;
 
 function User({ navigation, route }: Props) {
   useLayoutEffect(() => {
@@ -13,7 +13,7 @@ function User({ navigation, route }: Props) {
     if (routeName !== 'User' && routeName !== undefined) {
       navigation.setOptions({ tabBarStyle: { display: 'none' } });
     } else {
-      navigation.setOptions({ tabBarStyle: { display: undefined } });
+      navigation.setOptions({ tabBarStyle: { display: 'flex' } });
     }
   }, [navigation, route]);
 
