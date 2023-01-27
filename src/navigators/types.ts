@@ -20,7 +20,13 @@ export type ChatStackParamList = {
 
 export type HomeStackParamList = {
   Home: undefined;
-  Detail: undefined;
+  Details: undefined;
+  Notifications: undefined;
+};
+
+export type UserStackParamList = {
+  User: undefined;
+  Setting: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
