@@ -2,11 +2,12 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useLayoutEffect } from 'react';
 import { UserScreen, SettingScreen } from '../screens';
-import UserNavBarHeader from './UserNavBarHeader';
+import UserNavBarHeader from './NavBarHeader/UserNavBarHeader';
+import { UserStackParamList, CustomTabScreenProps } from './types';
+const Stack = createNativeStackNavigator<UserStackParamList>();
+type Props = CustomTabScreenProps<'홈'>;
 
-const Stack = createNativeStackNavigator();
-
-function User({ navigation, route }: any) {
+function User({ navigation, route }: Props) {
   useLayoutEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route);
     if (routeName !== 'User' && routeName !== undefined) {
