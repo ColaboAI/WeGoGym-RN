@@ -1,4 +1,4 @@
-import { WorkoutGoal } from '@type/types';
+import { WorkoutGoal } from '../types';
 import { getValueFor } from '@store/store';
 
 export function getGoal(goals: WorkoutGoal[]) {
