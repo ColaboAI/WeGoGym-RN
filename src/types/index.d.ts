@@ -25,6 +25,12 @@ export interface WorkoutGoal {
   select: boolean;
 }
 
+export interface Profile {
+  uri: string;
+  size: number;
+  username: string;
+}
+
 export interface UserBase {
   phone_number: string | null;
 }
