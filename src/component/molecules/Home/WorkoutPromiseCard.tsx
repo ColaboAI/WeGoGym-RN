@@ -18,14 +18,14 @@ const WorkoutPromiseCard = ({
         <Card.Title
           title={title}
           right={props => (
-            <Text variant="bodySmall" {...props}>
+            <Text {...props} variant="bodySmall" style={style.subtitle}>
               {location} · {createdAt}
             </Text>
           )}
         />
         <Card.Content>
-          <Text>📅 {promiseDate}</Text>
-          <Text>📍 {gymName}</Text>
+          <Text style={style.promiseInfo}>📅 {promiseDate}</Text>
+          <Text style={style.promiseInfo}>📍 {gymName}</Text>
           <Text>
             👥 {currentNumberOfPeople}/{limitedNumberOfPeople} 참여
           </Text>
@@ -39,6 +39,8 @@ const style = StyleSheet.create({
   promiseCardContainer: {
     padding: 12,
   },
+  subtitle: { marginRight: 12 },
+  promiseInfo: { marginBottom: 6 },
 });
 
 export default WorkoutPromiseCard;
