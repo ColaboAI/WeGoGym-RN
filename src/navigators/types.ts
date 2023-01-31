@@ -21,6 +21,7 @@ export type ChatStackParamList = {
 export type HomeStackParamList = {
   Home: undefined;
   Details: undefined;
+  Posting: undefined;
   Notifications: undefined;
 };
 

@@ -18,7 +18,11 @@ const HomeNavBarHeader = ({ navigation, back, title }: Props) => {
             }}
           />
         ) : null}
-        <Appbar.Content title={title} color={theme.colors.primary} />
+        <Appbar.Content
+          title={title}
+          titleStyle={{ fontSize: 20, fontWeight: '600' }}
+          color={theme.colors.primary}
+        />
       </Appbar.Header>
     </>
   );

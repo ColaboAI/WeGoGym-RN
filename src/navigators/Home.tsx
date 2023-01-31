@@ -1,7 +1,12 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useLayoutEffect } from 'react';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
-import { HomeScreen, DetailsScreen, NotificationsScreen } from '../screens';
+import {
+  HomeScreen,
+  DetailsScreen,
+  NotificationsScreen,
+  PostingScreen,
+} from '../screens';
 import HomeNavBarHeader from './NavBarHeader/HomeNavBarHeader';
 import DetailsNavBarHeader from './NavBarHeader/DetailsNavBarHeader';
 import { HomeStackParamList, CustomTabScreenProps } from './types';
@@ -9,7 +14,8 @@ const Stack = createNativeStackNavigator<HomeStackParamList>();
 type Props = CustomTabScreenProps<'홈'>;
 
 function Home({ navigation, route }: Props) {
-  const title = '알림';
+  const notificationTitle = '알림';
+  const postingTitle = '게시글 작성';
   useLayoutEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route);
     if (routeName === 'Details') {
@@ -28,6 +34,7 @@ function Home({ navigation, route }: Props) {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name="Details"
         component={DetailsScreen}
@@ -39,7 +46,16 @@ function Home({ navigation, route }: Props) {
         name="Notifications"
         component={NotificationsScreen}
         options={{
-          header: props => <HomeNavBarHeader title={title} {...props} />,
+          header: props => (
+            <HomeNavBarHeader title={notificationTitle} {...props} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Posting"
+        component={PostingScreen}
+        options={{
+          header: props => <HomeNavBarHeader title={postingTitle} {...props} />,
         }}
       />
     </Stack.Navigator>
