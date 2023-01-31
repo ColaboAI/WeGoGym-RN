@@ -3,6 +3,7 @@ import React, { useLayoutEffect } from 'react';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { HomeScreen, DetailsScreen, NotificationsScreen } from '../screens';
 import HomeNavBarHeader from './NavBarHeader/HomeNavBarHeader';
+import DetailsNavBarHeader from './NavBarHeader/DetailsNavBarHeader';
 import { HomeStackParamList, CustomTabScreenProps } from './types';
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 type Props = CustomTabScreenProps<'홈'>;
@@ -21,18 +22,26 @@ function Home({ navigation, route }: Props) {
   }, [navigation, route]);
 
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        header: props => <HomeNavBarHeader title={title} {...props} />,
-      }}>
+    <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
         name="Home"
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Details" component={DetailsScreen} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} />
+      <Stack.Screen
+        name="Details"
+        component={DetailsScreen}
+        options={{
+          header: props => <DetailsNavBarHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{
+          header: props => <HomeNavBarHeader title={title} {...props} />,
+        }}
+      />
     </Stack.Navigator>
   );
 }
