@@ -31,6 +31,17 @@ export interface Profile {
   username: string;
 }
 
+export interface WorkoutPromise {
+  title: string;
+  location: string;
+  createdAt: string;
+  promiseDate: string;
+  gymName: string;
+  currentNumberOfPeople: number;
+  limitedNumberOfPeople: number;
+  onPress: () => void;
+}
+
 export interface UserBase {
   phone_number: string | null;
 }
