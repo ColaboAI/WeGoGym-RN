@@ -10,6 +10,7 @@ import React, { useCallback, useState } from 'react';
 import Profile from '@/component/molecules/Home/FriendProfileCard';
 import WorkoutPromiseCard from '@/component/molecules/Home/WorkoutPromiseCard';
 import { HomeStackScreenProps } from '@/navigators/types';
+import CustomFAB from '@/component/molecules/Home/CustomFAB';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {
@@ -68,7 +69,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     <SafeAreaView style={style.container}>
       <View style={style.headerContainer}>
         <Text variant="titleLarge" style={{ color: theme.colors.primary }}>
-          위고짐
+          WeGoGym
         </Text>
         <IconButton
           icon="notifications-outline"
@@ -128,6 +129,12 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           />
         ))}
       </ScrollView>
+      <CustomFAB
+        icon="barbell-outline"
+        onPress={() => {
+          navigation.navigate('Posting');
+        }}
+      />
     </SafeAreaView>
   );
 }
