@@ -7,6 +7,8 @@ import {
   Card,
   List,
   useTheme,
+  Tooltip,
+  Button,
 } from 'react-native-paper';
 import React, { useState } from 'react';
 
@@ -93,17 +95,19 @@ export default function UserScreen({ navigation }: any) {
         <View style={style.usernameContainer}>
           <Text variant="titleMedium">{data[0].value} 님</Text>
           {isAuthenticated ? (
-            <>
+            <Tooltip
+              title="프로필 인증이 완료된 회원입니다."
+              enterTouchDelay={100}>
               <IconButton
                 icon="checkmark-circle-outline"
                 iconColor="green"
                 size={18}
                 style={style.icon}
-                onPress={() => console.log('Pressed')}
               />
-            </>
+            </Tooltip>
           ) : null}
         </View>
+        <Button onPress={() => {}}>프로필 편집</Button>
       </View>
       <ScrollView>
         <View style={style.title}>
@@ -231,6 +235,7 @@ const style = StyleSheet.create({
   icon: {
     position: 'absolute',
     right: -40,
+    top: -22,
   },
   title: {
     paddingLeft: 12,
