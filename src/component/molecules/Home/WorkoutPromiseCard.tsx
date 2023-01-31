@@ -1,40 +1,43 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
-import { Text, Avatar } from 'react-native-paper';
-import { Profile } from '@/types';
-
-const WorkoutPromiseCard = ({ uri, size, username }: Profile) => {
+import { Text, Card } from 'react-native-paper';
+import { WorkoutPromise } from '@/types';
+const WorkoutPromiseCard = ({
+  title,
+  location,
+  createdAt,
+  promiseDate,
+  gymName,
+  currentNumberOfPeople,
+  limitedNumberOfPeople,
+  onPress,
+}: WorkoutPromise) => {
   return (
-    <View style={styles.profileContainer}>
-      <View style={styles.avatarContainer}>
-        <Avatar.Image size={size} source={{ uri: uri }} style={styles.avatar} />
-      </View>
-      <View style={styles.usernameContainer}>
-        <Text variant="titleMedium">{username}</Text>
-      </View>
+    <View style={style.promiseCardContainer}>
+      <Card onPress={onPress}>
+        <Card.Title
+          title={title}
+          right={props => (
+            <Text variant="bodySmall" {...props}>
+              {location} · {createdAt}
+            </Text>
+          )}
+        />
+        <Card.Content>
+          <Text>📅 {promiseDate}</Text>
+          <Text>📍 {gymName}</Text>
+          <Text>
+            👥 {currentNumberOfPeople}/{limitedNumberOfPeople} 참여
+          </Text>
+        </Card.Content>
+      </Card>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  profileContainer: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 16,
-  },
-  avatarContainer: {
-    marginBottom: 16,
-  },
-  avatar: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
-  },
-  usernameContainer: {
-    position: 'relative',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+const style = StyleSheet.create({
+  promiseCardContainer: {
+    padding: 12,
   },
 });
 
