@@ -1,10 +1,11 @@
-export { default as HomeScreen } from './Home';
+export { default as HomeScreen } from './Home/Home';
 export { default as ChatListScreen } from './ChatList';
 export { default as ChatRoomScreen } from './ChatRoom';
 export { default as UserScreen } from './User/User';
 export { default as SettingScreen } from './User/Setting';
-export { default as DetailsScreen } from './Details';
-export { default as NotificationsScreen } from './Notifications';
+export { default as DetailsScreen } from './Home/Details';
+export { default as NotificationsScreen } from './Home/Notifications';
+export { default as PostingScreen } from './Home/Posting';
 export { default as SplashScreen } from './Splash/Splash';
 export { default as WelcomeScreen } from './Welcome';
 export { default as LoginScreen } from './Login';
