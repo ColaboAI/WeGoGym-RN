@@ -6,7 +6,7 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import { List, Switch } from 'react-native-paper';
+import { List, Switch, Text } from 'react-native-paper';
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '@/App';
 
@@ -58,11 +58,11 @@ export default function SettingScreen() {
     <SafeAreaView style={style.container}>
       <ScrollView>
         <List.Section>
-          <List.Subheader>프로필 설정</List.Subheader>
+          <List.Subheader>내 계정</List.Subheader>
           <View style={style.listContainer}>
             <List.Item
-              title="프로필 편집"
-              onPress={() => console.log('프로필 편집 버튼 클릭됨')}
+              title="전화번호"
+              right={props => <Text {...props}>+82 10-0000-0000</Text>}
             />
           </View>
         </List.Section>
