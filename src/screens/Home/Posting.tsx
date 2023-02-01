@@ -2,7 +2,6 @@ import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
-  SafeAreaView,
   ScrollView,
   Keyboard,
 } from 'react-native';
@@ -14,21 +13,28 @@ import {
   HelperText,
   IconButton,
 } from 'react-native-paper';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, { useState } from 'react';
+import CustomSearchBar from '@/component/molecules/Home/CustomSearchBar';
+
+const MAX_NUMBER = 5;
+const MIN_NUMBER = 1;
+
+type Mode = 'date' | 'time' | 'datetime' | undefined;
 
 export default function PostingScreen() {
   const theme = useTheme();
-  const [title, setTitle] = useState('');
-  const [titleFocus, setTitleFocus] = useState(false);
-  const [contentFocus, setContentFocus] = useState(false);
-  const [content, setContent] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [location, setLocation] = useState('');
-  const [number, setNumber] = useState(3);
-  const [maxNumber, setMaxNumber] = useState(5);
-  const [minNumber, setMinNumber] = useState(2);
-  const [age, setAge] = useState('');
+  const [title, setTitle] = useState<string>('');
+  const [titleFocus, setTitleFocus] = useState<boolean>(false);
+  const [content, setContent] = useState<string>('');
+  const [contentFocus, setContentFocus] = useState<boolean>(false);
+  const [number, setNumber] = useState<number>(3);
+
+  const [date, setDate] = useState<Date>(new Date());
+  const [time, setTime] = useState<Date>(new Date());
+  const [visible, setVisible] = useState<boolean>(false);
+  const [mode, setMode] = useState<Mode>('date');
+  const [location, setLocation] = useState<string>('');
 
   const hasTitleErrors = () => {
     return titleFocus && title.length === 0;
@@ -39,15 +45,54 @@ export default function PostingScreen() {
   };
 
   const onPressPlus = () => {
-    if (number < maxNumber) {
+    if (number < MAX_NUMBER) {
       setNumber(number + 1);
     }
   };
 
   const onPressMinus = () => {
-    if (number > minNumber) {
+    if (number > MIN_NUMBER) {
       setNumber(number - 1);
     }
+  };
+
+  const onPressDate = () => {
+    setMode('date');
+    setVisible(true);
+  };
+
+  const onPressTime = () => {
+    setMode('time');
+    setVisible(true);
+  };
+
+  const onConfirm = (selectedDate: React.SetStateAction<Date>) => {
+    if (mode === 'date') {
+      setDate(selectedDate);
+    } else if (mode === 'time') {
+      setTime(selectedDate);
+    }
+    setVisible(false);
+  };
+
+  const onCancel = () => {
+    setVisible(false);
+  };
+
+  const isToday = () => {
+    return (
+      date.getDate() === new Date().getDate() &&
+      date.getMonth() === new Date().getMonth() &&
+      date.getFullYear() === new Date().getFullYear()
+    );
+  };
+
+  const isSingleDigit = (num: number) => {
+    return num < 10;
+  };
+
+  const onPressLocation = () => {
+    setVisible(true);
   };
 
   return (
@@ -77,7 +122,7 @@ export default function PostingScreen() {
               mode="outlined"
               multiline={true}
               numberOfLines={5}
-              placeholder="날짜, 시간, 장소 등 자세한 내용을 입력해주세요!"
+              placeholder="운동 파트너 모집 글 내용"
               error={hasContentErrors()}
               value={content}
               onFocus={() => setContentFocus(true)}
@@ -87,46 +132,66 @@ export default function PostingScreen() {
           <HelperText type="error" visible={hasContentErrors()}>
             ⚠️ 운동 모집 글의 내용을 입력해주세요!
           </HelperText>
-          <View style={style.numberContainer}>
+          <View style={style.infoContainer}>
             <Text variant="titleMedium">👥 인원</Text>
             <View style={style.numberButtonContainer}>
               <IconButton
                 icon="remove-circle-outline"
-                disabled={number === minNumber}
+                disabled={number === MIN_NUMBER}
                 iconColor={theme.colors.primary}
                 size={20}
                 onPress={onPressMinus}
               />
-              <Text variant="bodyMedium">{number}명</Text>
+              <Text variant="bodyLarge">{number}명</Text>
               <IconButton
                 icon="add-circle-outline"
-                disabled={number === maxNumber}
+                disabled={number === MAX_NUMBER}
                 iconColor={theme.colors.primary}
                 size={20}
                 onPress={onPressPlus}
               />
             </View>
           </View>
-          <View style={style.dateContainer}>
+          <View style={style.infoContainer}>
             <Text variant="titleMedium">🗓️ 날짜</Text>
-            <View style={style.numberButtonContainer}>
-              <IconButton
-                icon="remove-circle-outline"
-                disabled={number === minNumber}
-                iconColor={theme.colors.primary}
-                size={20}
-                onPress={onPressMinus}
-              />
-              <Text variant="bodyMedium">{number}명</Text>
-              <IconButton
-                icon="add-circle-outline"
-                disabled={number === maxNumber}
-                iconColor={theme.colors.primary}
-                size={20}
-                onPress={onPressPlus}
-              />
-            </View>
+            <Button onPress={onPressDate}>
+              <Text variant="bodyLarge">
+                {isToday() ? '오늘' : date.toLocaleDateString('ko-KR')}
+              </Text>
+            </Button>
           </View>
+          <View style={style.infoContainer}>
+            <Text variant="titleMedium">⏰ 시간</Text>
+            <Button onPress={onPressTime}>
+              <Text variant="bodyLarge">
+                {time.getHours()}시{' '}
+                {isSingleDigit(time.getMinutes())
+                  ? '0' + time.getMinutes()
+                  : time.getMinutes()}
+                분
+              </Text>
+            </Button>
+          </View>
+          <View style={style.infoContainer}>
+            <Text variant="titleMedium">📍 위치</Text>
+            <Button onPress={onPressLocation}>
+              <Text
+                variant="bodyLarge"
+                style={{ color: theme.colors.onBackground }}>
+                {location ? location : '위치를 선택해주세요'}
+              </Text>
+            </Button>
+          </View>
+          <DateTimePickerModal
+            date={mode === 'date' ? date : time}
+            isVisible={visible}
+            mode={mode}
+            onConfirm={onConfirm}
+            onCancel={onCancel}
+            cancelTextIOS="취소"
+            confirmTextIOS="확인"
+            buttonTextColorIOS={theme.colors.primary}
+          />
         </ScrollView>
         <View style={style.postingButtonContainer} />
         <Button
@@ -149,7 +214,7 @@ const style = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 12,
   },
-  numberContainer: {
+  infoContainer: {
     flexDirection: 'row',
     paddingHorizontal: 12,
     justifyContent: 'space-between',
@@ -157,12 +222,6 @@ const style = StyleSheet.create({
   },
   numberButtonContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  dateContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 12,
-    justifyContent: 'space-between',
     alignItems: 'center',
   },
   postingButtonContainer: {
