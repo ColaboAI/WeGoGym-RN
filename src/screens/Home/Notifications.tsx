@@ -4,7 +4,7 @@ import React from 'react';
 export default function NotificationssScreen() {
   return (
     <View style={style.container}>
-      <Text>Notifications Screen</Text>
+      <Text>알림이 없습니다!</Text>
     </View>
   );
 }
