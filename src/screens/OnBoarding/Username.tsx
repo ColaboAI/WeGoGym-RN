@@ -25,7 +25,6 @@ export default function UsernameScreen({ navigation }: any) {
               color: theme.colors.secondary,
               fontWeight: 'bold',
               fontSize: 24,
-              // backgroundColor: '#000000',
             }}>
             저희가 어떻게 불러드리면 될까요?
           </Headline>
