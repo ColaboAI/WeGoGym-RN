@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { UserCreate } from '@type/types';
+import { UserCreate } from '../types';
 import FormData from 'form-data';
 
 const api = axios.create({
