@@ -1,3 +1,10 @@
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+  useEffect,
+} from 'react';
 import {
   StyleSheet,
   View,
@@ -14,8 +21,15 @@ import {
   IconButton,
 } from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import React, { useState } from 'react';
-import CustomSearchBar from '@/component/molecules/Home/CustomSearchBar';
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetFlatList,
+  BottomSheetTextInput,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
+import { getGymInfoFromApi } from '@/utils/util';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;
@@ -29,13 +43,15 @@ export default function PostingScreen() {
   const [content, setContent] = useState<string>('');
   const [contentFocus, setContentFocus] = useState<boolean>(false);
   const [number, setNumber] = useState<number>(3);
-
+  // date picker
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<Date>(new Date());
   const [visible, setVisible] = useState<boolean>(false);
   const [mode, setMode] = useState<Mode>('date');
+  // bottom sheet
   const [location, setLocation] = useState<string>('');
-
+  const [searchText, setSearchText] = useState<string>('');
+  const [gymData, setGymData] = useState<any>([]);
   const hasTitleErrors = () => {
     return titleFocus && title.length === 0;
   };
@@ -91,117 +107,192 @@ export default function PostingScreen() {
     return num < 10;
   };
 
-  const onPressLocation = () => {
-    setVisible(true);
+  const onPressLocation = useCallback(() => {
+    bottomSheetRef.current?.expand();
+  }, []);
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ['70%'], []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
+  const renderBackdrop = useCallback(
+    (props: JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps) => (
+      <BottomSheetBackdrop
+        {...props}
+        pressBehavior="close"
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        opacity={0.5}
+      />
+    ),
+    [],
+  );
+  const getData = async () => {
+    const apiData = await getGymInfoFromApi();
+    return apiData;
   };
 
-  return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}>
-      <View style={style.container}>
-        <ScrollView>
-          <View style={style.titleContainer}>
-            <Text variant="titleMedium">제목</Text>
-            <TextInput
-              mode="outlined"
-              placeholder="운동 모집 글 요약"
-              error={hasTitleErrors()}
-              value={title}
-              onFocus={() => setTitleFocus(true)}
-              onChangeText={value => setTitle(value)}
-            />
-          </View>
-          <HelperText type="error" visible={hasTitleErrors()}>
-            ⚠️ 운동 모집 글의 제목을 입력해주세요!
-          </HelperText>
-          <View style={style.contentContainer}>
-            <Text variant="titleMedium">내용</Text>
-            <TextInput
-              mode="outlined"
-              multiline={true}
-              numberOfLines={5}
-              placeholder="운동 파트너 모집 글 내용"
-              error={hasContentErrors()}
-              value={content}
-              onFocus={() => setContentFocus(true)}
-              onChangeText={value => setContent(value)}
-            />
-          </View>
-          <HelperText type="error" visible={hasContentErrors()}>
-            ⚠️ 운동 모집 글의 내용을 입력해주세요!
-          </HelperText>
-          <View style={style.infoContainer}>
-            <Text variant="titleMedium">👥 인원</Text>
-            <View style={style.numberButtonContainer}>
-              <IconButton
-                icon="remove-circle-outline"
-                disabled={number === MIN_NUMBER}
-                iconColor={theme.colors.primary}
-                size={20}
-                onPress={onPressMinus}
-              />
-              <Text variant="bodyLarge">{number}명</Text>
-              <IconButton
-                icon="add-circle-outline"
-                disabled={number === MAX_NUMBER}
-                iconColor={theme.colors.primary}
-                size={20}
-                onPress={onPressPlus}
-              />
-            </View>
-          </View>
-          <View style={style.infoContainer}>
-            <Text variant="titleMedium">🗓️ 날짜</Text>
-            <Button onPress={onPressDate}>
-              <Text variant="bodyLarge">
-                {isToday() ? '오늘' : date.toLocaleDateString('ko-KR')}
-              </Text>
-            </Button>
-          </View>
-          <View style={style.infoContainer}>
-            <Text variant="titleMedium">⏰ 시간</Text>
-            <Button onPress={onPressTime}>
-              <Text variant="bodyLarge">
-                {time.getHours()}시{' '}
-                {isSingleDigit(time.getMinutes())
-                  ? '0' + time.getMinutes()
-                  : time.getMinutes()}
-                분
-              </Text>
-            </Button>
-          </View>
-          <View style={style.infoContainer}>
-            <Text variant="titleMedium">📍 위치</Text>
-            <Button onPress={onPressLocation}>
-              <Text
-                variant="bodyLarge"
-                style={{ color: theme.colors.onBackground }}>
-                {location ? location : '위치를 선택해주세요'}
-              </Text>
-            </Button>
-          </View>
-          <DateTimePickerModal
-            date={mode === 'date' ? date : time}
-            isVisible={visible}
-            mode={mode}
-            onConfirm={onConfirm}
-            onCancel={onCancel}
-            cancelTextIOS="취소"
-            confirmTextIOS="확인"
-            buttonTextColorIOS={theme.colors.primary}
-          />
-        </ScrollView>
-        <View style={style.postingButtonContainer} />
-        <Button
-          mode="contained-tonal"
-          style={style.postingButton}
-          onPress={() => {}}>
-          작성 완료
-        </Button>
+  const renderItem = useCallback(
+    ({ item }: any) => (
+      <View style={style.itemContainer}>
+        <Text>{item.gymName}</Text>
       </View>
-    </TouchableWithoutFeedback>
+    ),
+    [],
+  );
+
+  useEffect(() => {
+    const data = getData();
+    setGymData(data);
+    console.log('gymData', gymData, 'gymData');
+  }, []);
+
+  return (
+    <GestureHandlerRootView style={style.container}>
+      <View style={style.container}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}>
+          <View style={style.container}>
+            <ScrollView>
+              <View style={style.titleContainer}>
+                <Text variant="titleMedium">제목</Text>
+                <TextInput
+                  mode="outlined"
+                  placeholder="운동 모집 글 요약"
+                  error={hasTitleErrors()}
+                  value={title}
+                  onFocus={() => setTitleFocus(true)}
+                  onChangeText={value => setTitle(value)}
+                />
+              </View>
+              <HelperText type="error" visible={hasTitleErrors()}>
+                ⚠️ 운동 모집 글의 제목을 입력해주세요!
+              </HelperText>
+              <View style={style.descriptionContainer}>
+                <Text variant="titleMedium">내용</Text>
+                <TextInput
+                  mode="outlined"
+                  multiline={true}
+                  numberOfLines={5}
+                  placeholder="운동 파트너 모집 글 내용"
+                  error={hasContentErrors()}
+                  value={content}
+                  onFocus={() => setContentFocus(true)}
+                  onChangeText={value => setContent(value)}
+                />
+              </View>
+              <HelperText type="error" visible={hasContentErrors()}>
+                ⚠️ 운동 모집 글의 내용을 입력해주세요!
+              </HelperText>
+              <View style={style.infoContainer}>
+                <Text variant="titleMedium">👥 인원</Text>
+                <View style={style.numberButtonContainer}>
+                  <IconButton
+                    icon="remove-circle-outline"
+                    disabled={number === MIN_NUMBER}
+                    iconColor={theme.colors.primary}
+                    size={20}
+                    onPress={onPressMinus}
+                  />
+                  <Text variant="bodyLarge">{number}명</Text>
+                  <IconButton
+                    icon="add-circle-outline"
+                    disabled={number === MAX_NUMBER}
+                    iconColor={theme.colors.primary}
+                    size={20}
+                    onPress={onPressPlus}
+                  />
+                </View>
+              </View>
+              <View style={style.infoContainer}>
+                <Text variant="titleMedium">🗓️ 날짜</Text>
+                <Button onPress={onPressDate}>
+                  <Text variant="bodyLarge">
+                    {isToday() ? '오늘' : date.toLocaleDateString('ko-KR')}
+                  </Text>
+                </Button>
+              </View>
+              <View style={style.infoContainer}>
+                <Text variant="titleMedium">⏰ 시간</Text>
+                <Button onPress={onPressTime}>
+                  <Text variant="bodyLarge">
+                    {time.getHours()}시{' '}
+                    {isSingleDigit(time.getMinutes())
+                      ? '0' + time.getMinutes()
+                      : time.getMinutes()}
+                    분
+                  </Text>
+                </Button>
+              </View>
+              <View style={style.infoContainer}>
+                <Text variant="titleMedium">📍 위치</Text>
+                <Button onPress={onPressLocation}>
+                  <Text
+                    variant="bodyLarge"
+                    style={{ color: theme.colors.onBackground }}>
+                    {location ? location : '위치를 선택해주세요'}
+                  </Text>
+                </Button>
+              </View>
+            </ScrollView>
+            <Button
+              mode="contained-tonal"
+              style={style.postingButton}
+              onPress={() => {}}>
+              작성 완료
+            </Button>
+            <DateTimePickerModal
+              date={mode === 'date' ? date : time}
+              isVisible={visible}
+              mode={mode}
+              onConfirm={onConfirm}
+              onCancel={onCancel}
+              cancelTextIOS="취소"
+              confirmTextIOS="확인"
+              buttonTextColorIOS={theme.colors.primary}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={-1}
+          snapPoints={snapPoints}
+          backdropComponent={renderBackdrop}
+          onChange={handleSheetChanges}
+          handleStyle={{ backgroundColor: theme.colors.background }}
+          backgroundStyle={{ backgroundColor: theme.colors.background }}
+          enablePanDownToClose={true}
+          android_keyboardInputMode={'adjustResize'}>
+          <BottomSheetView>
+            <BottomSheetTextInput
+              value={searchText}
+              placeholder="주변 헬스장을 검색하세요."
+              onChangeText={value => setSearchText(value)}
+              returnKeyType="search"
+              style={[
+                style.textInput,
+                {
+                  backgroundColor: theme.colors.secondaryContainer,
+                  color: theme.colors.onBackground,
+                },
+              ]}
+            />
+          </BottomSheetView>
+          <BottomSheetFlatList
+            data={gymData}
+            keyExtractor={item => item.id}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={style.contentContainer}
+          />
+        </BottomSheet>
+      </View>
+    </GestureHandlerRootView>
   );
 }
 const style = StyleSheet.create({
@@ -211,7 +302,7 @@ const style = StyleSheet.create({
   titleContainer: {
     paddingHorizontal: 12,
   },
-  contentContainer: {
+  descriptionContainer: {
     paddingHorizontal: 12,
   },
   infoContainer: {
@@ -224,12 +315,26 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  postingButtonContainer: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-  },
   postingButton: {
     borderRadius: 0,
+  },
+  contentContainer: {
+    paddingHorizontal: 12,
+  },
+  textInput: {
+    alignSelf: 'stretch',
+    marginHorizontal: 12,
+    marginBottom: 12,
+    padding: 12,
+    borderRadius: 12,
+    color: 'white',
+    textAlign: 'left',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 12,
+    marginVertical: 4,
   },
 });

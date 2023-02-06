@@ -1,5 +1,6 @@
 import { WorkoutGoal } from '../types';
 import { getValueFor } from '@store/store';
+import { API_KEY } from '@env';
 
 export function getGoal(goals: WorkoutGoal[]) {
   return goals
@@ -36,4 +37,37 @@ export async function getInfo() {
   };
 
   return info;
+}
+
+export async function getGymInfoFromApi() {
+  const index = [
+    { start: 1, end: 1000 },
+    { start: 1001, end: 2000 },
+    { start: 2001, end: 3000 },
+    { start: 3001, end: 4000 },
+    { start: 4001, end: 5000 },
+    { start: 5001, end: 6000 },
+  ];
+  const gym: string | any[] = [];
+  index.map(async rowNum => {
+    const url = `http://openapi.seoul.go.kr:8088/${API_KEY}/json/LOCALDATA_104201/${rowNum.start}/${rowNum.end}/`;
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+      const data = json.LOCALDATA_104201.row;
+      const gymArr = data.map(
+        (item: { MGTNO: string; BPLCNM: string; SITEWHLADDR: string }) => {
+          return {
+            id: item.MGTNO,
+            gymName: item.BPLCNM,
+            gymAddress: item.SITEWHLADDR,
+          };
+        },
+      );
+      gym.push(...gymArr);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  return gym;
 }
