@@ -26,6 +26,7 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
+import CustomContentLoader from '@/component/molecules/Home/CustomContentLoader';
 import { getGymInfoFromApi } from '@/utils/util';
 import { Gym } from '@/types';
 
@@ -49,8 +50,8 @@ export default function PostingScreen() {
   // bottom sheet
   const [location, setLocation] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
-  const [searchFocus, setSearchFocus] = useState<boolean>(false);
   const [gymData, setGymData] = useState<Gym[] | null>(null);
+  const [filteredGymData, setFilteredGymData] = useState<Gym[] | null>(null);
 
   const hasTitleErrors = () => {
     return titleFocus && title.length === 0;
@@ -119,13 +120,6 @@ export default function PostingScreen() {
 
   const snapPoints = useMemo(() => ['70%'], []);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    if (index === -1) {
-      setSearchText('');
-    }
-    // console.log('handleSheetChanges', index);
-  }, []);
-
   const renderBackdrop = useCallback(
     (props: JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps) => (
       <BottomSheetBackdrop
@@ -146,7 +140,12 @@ export default function PostingScreen() {
 
   const renderItem = useCallback(
     ({ item }: { item: Gym }) => (
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          console.log('Pressed!');
+          setLocation(item.name);
+          bottomSheetRef.current?.close();
+        }}>
         <View style={style.itemContainer}>
           <View style={style.item}>
             <Text variant="titleMedium">{item.name}</Text>
@@ -172,6 +171,18 @@ export default function PostingScreen() {
     ),
     [],
   );
+
+  const onSubmitEditing = useCallback(() => {
+    if (searchText.length > 0 && gymData) {
+      console.log('gymData', gymData);
+      const res = gymData.filter(item => {
+        return item.name.includes(searchText);
+      });
+      console.log('filteredData', res);
+      console.log('searchText', searchText);
+      setFilteredGymData(res);
+    }
+  }, [gymData, searchText]);
 
   return (
     <GestureHandlerRootView style={style.container}>
@@ -291,7 +302,6 @@ export default function PostingScreen() {
           index={-1}
           snapPoints={snapPoints}
           backdropComponent={renderBackdrop}
-          onChange={handleSheetChanges}
           handleStyle={{ backgroundColor: theme.colors.background }}
           backgroundStyle={{ backgroundColor: theme.colors.background }}
           enablePanDownToClose={true}
@@ -301,7 +311,7 @@ export default function PostingScreen() {
               value={searchText}
               placeholder="주변 헬스장을 검색하세요."
               onChangeText={value => setSearchText(value)}
-              onFocus={() => setSearchFocus(true)}
+              onSubmitEditing={onSubmitEditing}
               returnKeyType="search"
               style={[
                 style.textInput,
@@ -312,9 +322,9 @@ export default function PostingScreen() {
               ]}
             />
           </BottomSheetView>
-          {searchFocus && gymData !== null ? (
+          {filteredGymData !== null ? (
             <BottomSheetFlatList
-              data={gymData}
+              data={filteredGymData}
               keyExtractor={(item: Gym) => item.id}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
@@ -322,7 +332,7 @@ export default function PostingScreen() {
               contentContainerStyle={style.contentContainer}
             />
           ) : (
-            <Text>로딩중</Text>
+            <CustomContentLoader />
           )}
         </BottomSheet>
       </View>
