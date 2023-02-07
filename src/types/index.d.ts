@@ -42,6 +42,21 @@ export interface WorkoutPromise {
   onPress: () => void;
 }
 
+export interface GymInfo {
+  TRDSTATEGBN: string; // 영업상태코드
+  BPLCNM: string; // 사업자명
+  SITEWHLADDR: string; // 도로명주소
+  RDNPOSTNO: string; // 도로명우편번호
+}
+
+export interface Gym {
+  id: string;
+  status: string;
+  name: string;
+  address: string;
+  zipCode: string;
+}
+
 export interface UserBase {
   phone_number: string | null;
 }

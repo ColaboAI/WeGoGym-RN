@@ -1,6 +1,7 @@
-import { WorkoutGoal } from '../types';
+import { WorkoutGoal, GymInfo, Gym } from '../types';
 import { getValueFor } from '@store/store';
 import { API_KEY } from '@env';
+import { v4 as uuid } from 'uuid';
 
 export function getGoal(goals: WorkoutGoal[]) {
   return goals
@@ -48,23 +49,23 @@ export async function getGymInfoFromApi() {
     { start: 4001, end: 5000 },
     { start: 5001, end: 6000 },
   ];
-  const gym: string | any[] = [];
+  const gym: Gym[] = [];
   index.map(async rowNum => {
     const url = `http://openapi.seoul.go.kr:8088/${API_KEY}/json/LOCALDATA_104201/${rowNum.start}/${rowNum.end}/`;
     try {
       const response = await fetch(url);
       const json = await response.json();
       const data = json.LOCALDATA_104201.row;
-      const gymArr = data.map(
-        (item: { MGTNO: string; BPLCNM: string; SITEWHLADDR: string }) => {
-          return {
-            id: item.MGTNO,
-            gymName: item.BPLCNM,
-            gymAddress: item.SITEWHLADDR,
-          };
-        },
-      );
-      gym.push(...gymArr);
+      const gymArr = data.map((item: GymInfo) => {
+        return {
+          id: uuid(),
+          status: item.TRDSTATEGBN,
+          name: item.BPLCNM,
+          address: item.SITEWHLADDR,
+          zipCode: item.RDNPOSTNO,
+        };
+      });
+      gym.push(...gymArr.filter((item: Gym) => item.status === '01'));
     } catch (error) {
       console.log(error);
     }
