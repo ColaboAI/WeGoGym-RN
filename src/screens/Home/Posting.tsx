@@ -9,8 +9,10 @@ import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   ScrollView,
   Keyboard,
+  Platform,
 } from 'react-native';
 import {
   useTheme,
@@ -19,6 +21,7 @@ import {
   TextInput,
   HelperText,
   IconButton,
+  Chip,
 } from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import BottomSheet, {
@@ -30,6 +33,7 @@ import BottomSheet, {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 import { getGymInfoFromApi } from '@/utils/util';
+import { Gym } from '@/types';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;
@@ -51,7 +55,9 @@ export default function PostingScreen() {
   // bottom sheet
   const [location, setLocation] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
-  const [gymData, setGymData] = useState<any>([]);
+  const [searchFocus, setSearchFocus] = useState<boolean>(false);
+  const [gymData, setGymData] = useState<Gym[] | null>(null);
+
   const hasTitleErrors = () => {
     return titleFocus && title.length === 0;
   };
@@ -83,12 +89,12 @@ export default function PostingScreen() {
   };
 
   const onConfirm = (selectedDate: React.SetStateAction<Date>) => {
+    setVisible(false);
     if (mode === 'date') {
       setDate(selectedDate);
     } else if (mode === 'time') {
       setTime(selectedDate);
     }
-    setVisible(false);
   };
 
   const onCancel = () => {
@@ -130,25 +136,46 @@ export default function PostingScreen() {
     ),
     [],
   );
+
   const getData = async () => {
     const apiData = await getGymInfoFromApi();
     return apiData;
   };
 
+  useEffect(() => {
+    getData().then(data => {
+      setGymData(data);
+    });
+  }, []);
+
   const renderItem = useCallback(
-    ({ item }: any) => (
-      <View style={style.itemContainer}>
-        <Text>{item.gymName}</Text>
-      </View>
+    ({ item }: { item: Gym }) => (
+      <TouchableOpacity>
+        <View style={style.itemContainer}>
+          <View style={style.item}>
+            <Text variant="titleMedium">{item.name}</Text>
+          </View>
+          <View style={style.item}>
+            <Chip style={style.chip} textStyle={{ fontSize: 10 }}>
+              도로명
+            </Chip>
+            <View style={style.container}>
+              <Text variant="bodySmall" numberOfLines={1} ellipsizeMode="tail">
+                {item.address}
+              </Text>
+            </View>
+          </View>
+          <View style={style.item}>
+            <Chip style={style.chip} textStyle={{ fontSize: 10 }}>
+              우편번호
+            </Chip>
+            <Text variant="bodySmall">{item.zipCode}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
     ),
     [],
   );
-
-  useEffect(() => {
-    const data = getData();
-    setGymData(data);
-    console.log('gymData', gymData, 'gymData');
-  }, []);
 
   return (
     <GestureHandlerRootView style={style.container}>
@@ -249,9 +276,14 @@ export default function PostingScreen() {
             <DateTimePickerModal
               date={mode === 'date' ? date : time}
               isVisible={visible}
+              display={
+                Platform.OS === 'ios' && mode === 'date' ? 'inline' : 'spinner'
+              }
+              minuteInterval={10}
               mode={mode}
               onConfirm={onConfirm}
               onCancel={onCancel}
+              locale="ko-KR"
               cancelTextIOS="취소"
               confirmTextIOS="확인"
               buttonTextColorIOS={theme.colors.primary}
@@ -273,6 +305,7 @@ export default function PostingScreen() {
               value={searchText}
               placeholder="주변 헬스장을 검색하세요."
               onChangeText={value => setSearchText(value)}
+              onFocus={() => setSearchFocus(true)}
               returnKeyType="search"
               style={[
                 style.textInput,
@@ -283,13 +316,18 @@ export default function PostingScreen() {
               ]}
             />
           </BottomSheetView>
-          <BottomSheetFlatList
-            data={gymData}
-            keyExtractor={item => item.id}
-            renderItem={renderItem}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={style.contentContainer}
-          />
+          {searchFocus && gymData !== null ? (
+            <BottomSheetFlatList
+              data={gymData}
+              keyExtractor={(item: Gym) => item.id}
+              renderItem={renderItem}
+              showsVerticalScrollIndicator={false}
+              disableVirtualization={false}
+              contentContainerStyle={style.contentContainer}
+            />
+          ) : (
+            <Text>로딩중</Text>
+          )}
         </BottomSheet>
       </View>
     </GestureHandlerRootView>
@@ -331,10 +369,21 @@ const style = StyleSheet.create({
     textAlign: 'left',
   },
   itemContainer: {
+    flex: 1,
+    width: '100%',
+    marginHorizontal: 4,
+    marginVertical: 8,
+  },
+  item: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
-    borderRadius: 12,
-    marginVertical: 4,
+    marginVertical: 2,
+  },
+  chip: {
+    alignItems: 'center',
+    marginRight: 4,
+    width: 75,
+    height: 30,
   },
 });
