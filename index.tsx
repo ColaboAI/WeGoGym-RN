@@ -23,7 +23,7 @@ import customLightColors from './src/theme/customLightColors.json';
 import customDarkColors from './src/theme/customDarkColors.json';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import 'react-native-gesture-handler';
-
+import 'react-native-get-random-values';
 // https://callstack.github.io/react-native-paper/theming.html
 
 const myLightTheme = {
