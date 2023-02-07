@@ -2,7 +2,6 @@ import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState, useContext } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '../../store/store';
-import { WorkoutGoal } from '../../type/types';
 import { getGoal, getInfo } from '../../utils/util';
 import { AuthContext } from '@/App';
 

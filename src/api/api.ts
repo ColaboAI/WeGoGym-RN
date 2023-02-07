@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { UserCreate, WorkoutPromiseBase } from '../types';
 import FormData from 'form-data';
 
 const api = axios.create({

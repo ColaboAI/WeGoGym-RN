@@ -11,12 +11,10 @@
     "@screeens/*": ["modules/*"],
     "@store/*": ["store/*"],
     "@utils/*": ["utils/*"],
-    "@type/*": ["type/*"],
+    "@types/*": ["types/*"],
     "@api/*": ["api/*"]
-  },
+    },
     /* Completeness */
-    "skipLibCheck": true,                               /* Skip type checking all .d.ts files. */
-    "baseUrl": "./src",
-
+    "skipLibCheck": true,                           /* Skip type checking all .d.ts files. */
   }
 }

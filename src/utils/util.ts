@@ -1,4 +1,3 @@
-import { WorkoutGoal, GymInfo, Gym } from '../types';
 import { getValueFor } from '@store/store';
 import { GYM_OPEN_API_KEY } from '@env';
 import { v4 as uuid } from 'uuid';

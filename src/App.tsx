@@ -16,7 +16,6 @@ import { RootStackParamList } from 'navigators/types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 import * as SecureStore from 'expo-secure-store';
 import { SplashScreen } from './screens';
-import { UserCreate } from './types';
 
 export const AuthContext = createContext({});
 
@@ -64,7 +63,7 @@ function App() {
     bootstrapAsync();
   }, []);
 
-  const authContext = React.useMemo(
+  const authActions = React.useMemo(
     () => ({
       signIn: async (data: UserCreate) => {
         console.log('data', data);
@@ -87,7 +86,7 @@ function App() {
   }
 
   return (
-    <AuthContext.Provider value={authContext}>
+    <AuthContext.Provider value={authActions}>
       <Stack.Navigator screenOptions={() => ({ headerShown: false })}>
         {state.userToken == null ? (
           <>
