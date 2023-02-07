@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
-  useEffect,
-} from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import {
   StyleSheet,
   View,
@@ -113,15 +107,23 @@ export default function PostingScreen() {
     return num < 10;
   };
 
-  const onPressLocation = useCallback(() => {
+  const onPressLocation = useCallback(async () => {
     bottomSheetRef.current?.expand();
-  }, []);
+    if (!gymData) {
+      const res = await getData();
+      setGymData(res);
+    }
+  }, [gymData]);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
+
   const snapPoints = useMemo(() => ['70%'], []);
 
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
+    if (index === -1) {
+      setSearchText('');
+    }
+    // console.log('handleSheetChanges', index);
   }, []);
 
   const renderBackdrop = useCallback(
@@ -141,12 +143,6 @@ export default function PostingScreen() {
     const apiData = await getGymInfoFromApi();
     return apiData;
   };
-
-  useEffect(() => {
-    getData().then(data => {
-      setGymData(data);
-    });
-  }, []);
 
   const renderItem = useCallback(
     ({ item }: { item: Gym }) => (
