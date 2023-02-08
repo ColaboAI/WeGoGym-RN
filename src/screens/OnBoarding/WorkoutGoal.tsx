@@ -3,12 +3,9 @@ import React, { useState, useContext } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '../../store/store';
 import { getGoal, getInfo } from '../../utils/util';
-import { AuthContext } from '@/App';
 
 export default function WorkoutGoalScreen() {
   const theme = useTheme();
-  const { signIn } = useContext(AuthContext);
-
   const [isSelected, setIsSelected] = useState<WorkoutGoal[]>([
     { id: 0, goal: '💪🏻 근성장', select: false },
     { id: 1, goal: '🚴🏻 체력 증진', select: false },
@@ -64,8 +61,12 @@ export default function WorkoutGoalScreen() {
           onPress={async () => {
             const workoutGoal = getGoal(isSelected);
             save('workout_goal', workoutGoal);
+            // TODO: not sign in
+            // First sign up in phone number screen
+            // and then put user/me
+
             getInfo().then(async info => {
-              signIn(info);
+              console.log(info);
             });
           }}>
           확인

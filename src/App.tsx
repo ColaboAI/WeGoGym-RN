@@ -16,79 +16,34 @@ import { RootStackParamList } from 'navigators/types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 import * as SecureStore from 'expo-secure-store';
 import { SplashScreen } from './screens';
-
-export const AuthContext = createContext({});
+import AuthProvider from './hooks/context/AuthProvider';
+import { useAuthValue, useAuthActions } from './hooks/context/useAuth';
 
 function App() {
-  const [state, dispatch] = useReducer(
-    (prevState: any, action: any) => {
-      switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...prevState,
-            userToken: action.token,
-            isLoading: false,
-          };
-        case 'SIGN_IN':
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.token,
-          };
-        case 'SIGN_OUT':
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      userToken: null,
-    },
-  );
-
+  const authState = useAuthValue();
+  const authActions = useAuthActions();
   useEffect(() => {
     const bootstrapAsync = async () => {
-      let userToken;
+      let userToken = null;
       try {
         userToken = await SecureStore.getItemAsync('userToken');
       } catch (e) {
-        // Restoring token failed
+        console.log(e);
+      } finally {
+        authActions.signIn(userToken);
       }
-      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
     };
     bootstrapAsync();
   }, []);
 
-  const authActions = React.useMemo(
-    () => ({
-      signIn: async (data: UserCreate) => {
-        console.log('data', data);
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-      },
-      signOut: async () => {
-        await SecureStore.deleteItemAsync('userToken');
-        dispatch({ type: 'SIGN_OUT' });
-      },
-      signUp: async (data: UserCreate) => {
-        console.log(data);
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-      },
-    }),
-    [],
-  );
-
-  if (state.isLoading) {
+  if (authState.isLoading) {
     return <SplashScreen />;
   }
 
   return (
-    <AuthContext.Provider value={authActions}>
+    <AuthProvider>
       <Stack.Navigator screenOptions={() => ({ headerShown: false })}>
-        {state.userToken == null ? (
+        {authState.userToken == null ? (
           <>
             <Stack.Screen name="Auth" component={Auth} />
           </>
@@ -98,7 +53,7 @@ function App() {
           </>
         )}
       </Stack.Navigator>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 }
 
