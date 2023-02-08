@@ -1,34 +1,40 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Text, Card } from 'react-native-paper';
-import { WorkoutPromise } from '@/types';
+import { WorkoutPromiseCreate } from '@/types';
+import { getLocaleDate, getLocaleTime } from '@/utils/util';
+
 const WorkoutPromiseCard = ({
+  user,
   title,
   location,
-  createdAt,
-  promiseDate,
-  gymName,
+  date,
+  time,
   currentNumberOfPeople,
   limitedNumberOfPeople,
-  onPress,
-}: WorkoutPromise) => {
+  createdAt,
+}: WorkoutPromiseCreate) => {
   return (
     <View style={style.promiseCardContainer}>
-      <Card onPress={onPress}>
+      <Card>
         <Card.Title
           title={title}
           right={props => (
             <Text {...props} variant="bodySmall" style={style.subtitle}>
-              {location} · {createdAt}
+              {user.username}님 ∙ {createdAt.getHours()}시간 전
             </Text>
           )}
         />
         <Card.Content>
-          <Text style={style.promiseInfo}>📅 {promiseDate}</Text>
-          <Text style={style.promiseInfo}>📍 {gymName}</Text>
-          <Text>
-            👥 {currentNumberOfPeople}/{limitedNumberOfPeople} 참여
-          </Text>
+          <>
+            <Text style={style.promiseInfo}>
+              📅 {getLocaleDate(date)} {getLocaleTime(time)}분
+            </Text>
+            <Text style={style.promiseInfo}>📍 {location}</Text>
+            <Text>
+              👥 {currentNumberOfPeople}/{limitedNumberOfPeople} 참여
+            </Text>
+          </>
         </Card.Content>
       </Card>
     </View>

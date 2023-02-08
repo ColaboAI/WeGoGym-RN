@@ -1,13 +1,16 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Text, Avatar } from 'react-native-paper';
-import { Profile } from '@/types';
+import { UserCreate } from '@/types';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const FriendProfileCard = ({ uri, size, username }: Profile) => {
+const FriendProfileCard = ({ uri, username }: UserCreate) => {
   return (
     <View style={styles.profileContainer}>
       <View style={styles.avatarContainer}>
-        <Avatar.Image size={size} source={{ uri: uri }} style={styles.avatar} />
+        <TouchableOpacity>
+          <Avatar.Image size={80} source={{ uri: uri }} style={styles.avatar} />
+        </TouchableOpacity>
       </View>
       <View style={styles.usernameContainer}>
         <Text variant="titleMedium">{username}</Text>
