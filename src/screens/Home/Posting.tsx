@@ -26,21 +26,29 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
-import CustomContentLoader from '@/component/molecules/Home/CustomContentLoader';
-import { getGymInfoFromApi } from '@/utils/util';
+import GymInfoLoader from '@/component/molecules/Home/GymInfoLoader';
+import {
+  getGymInfoFromApi,
+  getLocaleDate,
+  getLocaleTime,
+  isToday,
+} from '@/utils/util';
 import { Gym } from '@/types';
+import { postWorkoutPromise } from '@/api/api';
+import { HomeStackScreenProps } from '@/navigators/types';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;
 
 type Mode = 'date' | 'time' | 'datetime' | undefined;
+type HomeScreenProps = HomeStackScreenProps<'Posting'>;
 
-export default function PostingScreen() {
+export default function PostingScreen({ navigation }: HomeScreenProps) {
   const theme = useTheme();
   const [title, setTitle] = useState<string>('');
   const [titleFocus, setTitleFocus] = useState<boolean>(false);
-  const [content, setContent] = useState<string>('');
-  const [contentFocus, setContentFocus] = useState<boolean>(false);
+  const [description, setDescription] = useState<string>('');
+  const [descriptionFocus, setDescriptionFocus] = useState<boolean>(false);
   const [number, setNumber] = useState<number>(3);
   // date picker
   const [date, setDate] = useState<Date>(new Date());
@@ -58,7 +66,7 @@ export default function PostingScreen() {
   };
 
   const hasContentErrors = () => {
-    return contentFocus && content.length === 0;
+    return descriptionFocus && description.length === 0;
   };
 
   const onPressPlus = () => {
@@ -94,18 +102,6 @@ export default function PostingScreen() {
 
   const onCancel = () => {
     setVisible(false);
-  };
-
-  const isToday = () => {
-    return (
-      date.getDate() === new Date().getDate() &&
-      date.getMonth() === new Date().getMonth() &&
-      date.getFullYear() === new Date().getFullYear()
-    );
-  };
-
-  const isSingleDigit = (num: number) => {
-    return num < 10;
   };
 
   const onPressLocation = useCallback(async () => {
@@ -211,9 +207,9 @@ export default function PostingScreen() {
                   numberOfLines={5}
                   placeholder="운동 파트너 모집 글 내용"
                   error={hasContentErrors()}
-                  value={content}
-                  onFocus={() => setContentFocus(true)}
-                  onChangeText={value => setContent(value)}
+                  value={description}
+                  onFocus={() => setDescriptionFocus(true)}
+                  onChangeText={value => setDescription(value)}
                 />
               </View>
               <HelperText type="error" visible={hasContentErrors()}>
@@ -243,20 +239,14 @@ export default function PostingScreen() {
                 <Text variant="titleMedium">🗓️ 날짜</Text>
                 <Button onPress={onPressDate}>
                   <Text variant="bodyLarge">
-                    {isToday() ? '오늘' : date.toLocaleDateString('ko-KR')}
+                    {isToday(date) ? '오늘' : getLocaleDate(date)}
                   </Text>
                 </Button>
               </View>
               <View style={style.infoContainer}>
                 <Text variant="titleMedium">⏰ 시간</Text>
                 <Button onPress={onPressTime}>
-                  <Text variant="bodyLarge">
-                    {time.getHours()}시{' '}
-                    {isSingleDigit(time.getMinutes())
-                      ? '0' + time.getMinutes()
-                      : time.getMinutes()}
-                    분
-                  </Text>
+                  <Text variant="bodyLarge">{getLocaleTime(time)}</Text>
                 </Button>
               </View>
               <View style={style.infoContainer}>
@@ -273,7 +263,18 @@ export default function PostingScreen() {
             <Button
               mode="contained-tonal"
               style={style.postingButton}
-              onPress={() => {}}>
+              disabled={hasTitleErrors() || hasContentErrors() || !location}
+              onPress={() => {
+                postWorkoutPromise({
+                  title: title,
+                  description: description,
+                  location: location,
+                  date: date,
+                  time: time,
+                  limitedNumberOfPeople: number,
+                });
+                navigation.navigate('Home');
+              }}>
               작성 완료
             </Button>
             <DateTimePickerModal
@@ -328,7 +329,7 @@ export default function PostingScreen() {
               contentContainerStyle={style.contentContainer}
             />
           ) : (
-            <CustomContentLoader />
+            <GymInfoLoader />
           )}
         </BottomSheet>
       </View>
@@ -367,7 +368,7 @@ const style = StyleSheet.create({
     marginBottom: 12,
     padding: 12,
     borderRadius: 12,
-    color: 'white',
+    color: 'gray',
     textAlign: 'left',
   },
   itemContainer: {
