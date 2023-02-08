@@ -7,9 +7,9 @@ import {
   NotificationsScreen,
   PostingScreen,
 } from '../screens';
-import HomeNavBarHeader from './NavBarHeader/HomeNavBarHeader';
 import DetailsNavBarHeader from './NavBarHeader/DetailsNavBarHeader';
 import { HomeStackParamList, CustomTabScreenProps } from './types';
+import DefaultNavBarHeader from './NavBarHeader/DefaultNavBarHeader';
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 type Props = CustomTabScreenProps<'홈'>;
 
@@ -47,7 +47,7 @@ function Home({ navigation, route }: Props) {
         component={NotificationsScreen}
         options={{
           header: props => (
-            <HomeNavBarHeader title={notificationTitle} {...props} />
+            <DefaultNavBarHeader title={notificationTitle} {...props} />
           ),
         }}
       />
@@ -55,7 +55,9 @@ function Home({ navigation, route }: Props) {
         name="Posting"
         component={PostingScreen}
         options={{
-          header: props => <HomeNavBarHeader title={postingTitle} {...props} />,
+          header: props => (
+            <DefaultNavBarHeader title={postingTitle} {...props} />
+          ),
         }}
       />
     </Stack.Navigator>

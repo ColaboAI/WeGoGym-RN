@@ -6,7 +6,7 @@ interface Props extends NativeStackHeaderProps {
   title: string;
 }
 
-const HomeNavBarHeader = ({ navigation, back, title }: Props) => {
+const DefaultNavBarHeader = ({ navigation, back, title }: Props) => {
   const theme = useTheme();
   return (
     <>
@@ -28,4 +28,4 @@ const HomeNavBarHeader = ({ navigation, back, title }: Props) => {
   );
 };
 
-export default HomeNavBarHeader;
+export default DefaultNavBarHeader;

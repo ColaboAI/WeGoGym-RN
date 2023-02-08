@@ -2,12 +2,13 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useLayoutEffect } from 'react';
 import { UserScreen, SettingScreen } from '../screens';
-import UserNavBarHeader from './NavBarHeader/UserNavBarHeader';
+import DefaultNavBarHeader from './NavBarHeader/DefaultNavBarHeader';
 import { UserStackParamList, CustomTabScreenProps } from './types';
 const Stack = createNativeStackNavigator<UserStackParamList>();
 type Props = CustomTabScreenProps<'마이'>;
 
 function User({ navigation, route }: Props) {
+  const settingTitle = '설정';
   useLayoutEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route);
     if (routeName !== 'User' && routeName !== undefined) {
@@ -21,7 +22,9 @@ function User({ navigation, route }: Props) {
     <Stack.Navigator
       initialRouteName="User"
       screenOptions={{
-        header: props => <UserNavBarHeader title="설정" {...props} />,
+        header: props => (
+          <DefaultNavBarHeader title={settingTitle} {...props} />
+        ),
       }}>
       <Stack.Screen
         name="User"
