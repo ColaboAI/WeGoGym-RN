@@ -1,5 +1,10 @@
-import { createContext, PropsWithChildren, useMemo, useState } from 'react';
-import SecureStore from 'expo-secure-store';
+import React, {
+  createContext,
+  PropsWithChildren,
+  useMemo,
+  useState,
+} from 'react';
+import * as SecureStore from 'expo-secure-store';
 
 type AuthState = {
   user: any | null;
@@ -45,8 +50,13 @@ function AuthProvider({ children }: AuthProviderProps) {
       signIn: async (phoneNumber: string | null) => {
         setAuthState(prevState => ({
           ...prevState,
-          userToken: 'dummy-auth-token',
+          userToken: phoneNumber,
         }));
+        if (phoneNumber === null) {
+          return;
+        }
+        await SecureStore.setItemAsync('userToken', phoneNumber);
+        console.log('signIn', phoneNumber);
       },
       signOut: async () => {
         await SecureStore.deleteItemAsync('userToken');
@@ -60,8 +70,12 @@ function AuthProvider({ children }: AuthProviderProps) {
         setAuthState(prevState => ({
           ...prevState,
           isSignout: false,
-          userToken: 'dummy-auth-token',
+          userToken: phoneNumber,
         }));
+        if (phoneNumber === null) {
+          return;
+        }
+        await SecureStore.setItemAsync('userToken', phoneNumber);
       },
     }),
     [],
