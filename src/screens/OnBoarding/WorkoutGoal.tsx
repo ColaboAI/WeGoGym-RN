@@ -1,11 +1,13 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '../../store/store';
 import { getGoal, getInfo } from '../../utils/util';
+import { useAuthActions } from '@/hooks/context/useAuth';
 
 export default function WorkoutGoalScreen() {
   const theme = useTheme();
+  const { signIn } = useAuthActions();
   const [isSelected, setIsSelected] = useState<WorkoutGoal[]>([
     { id: 0, goal: '💪🏻 근성장', select: false },
     { id: 1, goal: '🚴🏻 체력 증진', select: false },
@@ -44,6 +46,7 @@ export default function WorkoutGoalScreen() {
           {isSelected.map(button => {
             return (
               <Button
+                key={`select-${button.id}`}
                 style={[style.button]}
                 mode={button.select ? 'contained' : 'elevated'}
                 onPress={() => {
@@ -65,9 +68,10 @@ export default function WorkoutGoalScreen() {
             // First sign up in phone number screen
             // and then put user/me
 
-            getInfo().then(async info => {
-              console.log(info);
-            });
+            const info = await getInfo();
+            if (info) {
+              await signIn(info.phone_number);
+            }
           }}>
           확인
         </Button>
