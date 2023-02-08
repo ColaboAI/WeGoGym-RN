@@ -142,7 +142,6 @@ export default function PostingScreen() {
     ({ item }: { item: Gym }) => (
       <TouchableOpacity
         onPress={() => {
-          console.log('Pressed!');
           setLocation(item.name);
           bottomSheetRef.current?.close();
         }}>
@@ -174,12 +173,9 @@ export default function PostingScreen() {
 
   const onSubmitEditing = useCallback(() => {
     if (searchText.length > 0 && gymData) {
-      console.log('gymData', gymData);
       const res = gymData.filter(item => {
         return item.name.includes(searchText);
       });
-      console.log('filteredData', res);
-      console.log('searchText', searchText);
       setFilteredGymData(res);
     }
   }, [gymData, searchText]);
