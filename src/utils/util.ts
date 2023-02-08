@@ -36,7 +36,7 @@ export async function getInfo() {
     workout_level,
     workout_goal,
   };
-
+  console.log('info', info);
   return info;
 }
 
@@ -71,4 +71,43 @@ export async function getGymInfoFromApi() {
     }
   });
   return gym;
+}
+
+export function getLocaleDate(date: Date) {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}. ${month}. ${day}`;
+}
+
+export function getLocaleTime(date: Date) {
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+
+  if (hour === 0 && minute === 0) {
+    return '오전 12시';
+  } else if (hour === 0 && minute !== 0) {
+    return `오전 ${hour}시 ${minute}분`;
+  } else if (hour < 12 && minute === 0) {
+    return `오전 ${hour}시`;
+  } else if (hour < 12 && minute !== 0) {
+    return `오전 ${hour}시 ${minute}분`;
+  } else if (hour === 12 && minute === 0) {
+    return '오후 12시';
+  } else if (hour === 12 && minute !== 0) {
+    return `오후 ${hour}시 ${minute}분`;
+  } else if (hour > 12 && minute === 0) {
+    return `오후 ${hour - 12}시`;
+  } else if (hour > 12 && minute !== 0) {
+    return `오후 ${hour - 12}시 ${minute}분`;
+  }
+}
+
+export function isToday(date: Date) {
+  const today = new Date();
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
 }
