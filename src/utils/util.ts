@@ -1,6 +1,6 @@
 import { WorkoutGoal, GymInfo, Gym } from '../types';
 import { getValueFor } from '@store/store';
-import { API_KEY } from '@env';
+import { GYM_OPEN_API_KEY } from '@env';
 import { v4 as uuid } from 'uuid';
 
 export function getGoal(goals: WorkoutGoal[]) {
@@ -51,7 +51,7 @@ export async function getGymInfoFromApi() {
   ];
   const gym: Gym[] = [];
   index.map(async rowNum => {
-    const url = `http://openapi.seoul.go.kr:8088/${API_KEY}/json/LOCALDATA_104201/${rowNum.start}/${rowNum.end}/`;
+    const url = `http://openapi.seoul.go.kr:8088/${GYM_OPEN_API_KEY}/json/LOCALDATA_104201/${rowNum.start}/${rowNum.end}/`;
     try {
       const response = await fetch(url);
       const json = await response.json();
