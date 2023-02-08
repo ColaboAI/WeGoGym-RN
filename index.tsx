@@ -24,6 +24,7 @@ import customDarkColors from './src/theme/customDarkColors.json';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
+import AuthProvider from '@/hooks/context/AuthProvider';
 // https://callstack.github.io/react-native-paper/theming.html
 
 const myLightTheme = {
@@ -66,15 +67,17 @@ export default function Main() {
   return (
     // Add Store Provider here
     <SafeAreaProvider>
-      <PaperProvider
-        settings={{
-          icon: props => <Ionicons {...props} />,
-        }}
-        theme={theme}>
-        <NavigationContainer theme={theme}>
-          <App />
-        </NavigationContainer>
-      </PaperProvider>
+      <AuthProvider>
+        <PaperProvider
+          settings={{
+            icon: props => <Ionicons {...props} />,
+          }}
+          theme={theme}>
+          <NavigationContainer theme={theme}>
+            <App />
+          </NavigationContainer>
+        </PaperProvider>
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }
