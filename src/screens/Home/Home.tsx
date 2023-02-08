@@ -1,4 +1,4 @@
-import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
 import {
   IconButton,
   Text,
@@ -6,69 +6,49 @@ import {
   Banner,
   useTheme,
 } from 'react-native-paper';
-import React, { useCallback, useState } from 'react';
-import Profile from '@/component/molecules/Home/FriendProfileCard';
+import React, { useCallback, useEffect, useState } from 'react';
+import FriendProfileCard from '@/component/molecules/Home/FriendProfileCard';
 import WorkoutPromiseCard from '@/component/molecules/Home/WorkoutPromiseCard';
 import { HomeStackScreenProps } from '@/navigators/types';
 import CustomFAB from '@/component/molecules/Home/CustomFAB';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { getFriendList, getWorkoutPromise } from '@/api/api';
+import { UserCreate, WorkoutPromiseCreate } from '@/types';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const theme = useTheme();
   const [visible, setVisible] = useState(true);
+  const [friendList, setFriendList] = useState<UserCreate[]>([]);
+  const [workoutPromise, setWorkoutPromise] = useState<WorkoutPromiseCreate[]>(
+    [],
+  );
   // TODO: PromiseCard ID를 parameter로.
   const navigateToPromiseDetails = useCallback(() => {
     navigation.navigate('Details');
   }, [navigation]);
 
-  const friendData = [
-    {
-      id: 1,
-      uri: 'https://i.ibb.co/Y725W4C/image.png',
-      size: 80,
-      username: '김강민',
-    },
-    {
-      id: 2,
-      uri: 'https://i.ibb.co/Y725W4C/image.png',
-      size: 80,
-      username: '장성엽',
-    },
-    {
-      id: 3,
-      uri: 'https://i.ibb.co/Y725W4C/image.png',
-      size: 80,
-      username: '강경원',
-    },
-  ];
-  const promiseData = [
-    {
-      id: 1,
-      title: '짐박스 봉천점에서 등 운동 하실 분',
-      location: '신림동',
-      createdAt: '3시간 전',
-      promiseDate: '2023. 02. 09 오후 7시',
-      gymName: '짐박스 봉천점',
-      currentNumberOfPeople: 1,
-      limitedNumberOfPeople: 3,
-      uuid: '1',
-    },
-    {
-      id: 2,
-      title: '함서짐에서 어깨 운동',
-      location: '구로동',
-      createdAt: '5시간 전',
-      promiseDate: '2023. 02. 01 오전 10시',
-      gymName: '함서Gym',
-      currentNumberOfPeople: 1,
-      limitedNumberOfPeople: 2,
-      uuid: '2',
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      const friendData = await getFriendList();
+      const workoutPromiseData = await getWorkoutPromise();
+      setFriendList(friendData);
+      setWorkoutPromise(workoutPromiseData);
+    };
+    fetchData();
+  }, []);
+
   return (
     <SafeAreaView style={style.container}>
       <View style={style.headerContainer}>
-        <Text variant="titleLarge" style={{ color: theme.colors.primary }}>
+        <Text
+          variant="titleLarge"
+          style={[
+            style.font,
+            {
+              color: theme.colors.primary,
+            },
+          ]}>
           WeGoGym
         </Text>
         <IconButton
@@ -92,43 +72,74 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           🎉 2023년 3월 1일부터 위고짐 서비스를 시작합니다. 🎉
         </Banner>
       </View>
-      <ScrollView>
-        <View style={style.title}>
-          <Text
-            variant="titleLarge"
-            style={{
+      <View style={style.title}>
+        <Text
+          variant="titleLarge"
+          style={[
+            style.font,
+            {
               color: theme.colors.primary,
-            }}>
-            👍🏻 추천 짐메이트
-          </Text>
-        </View>
-        <View style={style.friendListContainer}>
-          {friendData.map(item => (
-            <Profile uri={item.uri} size={item.size} username={item.username} />
-          ))}
-        </View>
-        <View style={style.title}>
-          <Text
-            variant="titleLarge"
-            style={{
-              color: theme.colors.primary,
-            }}>
-            💪🏻 같이 운동해요!
-          </Text>
-        </View>
-        {promiseData.map(item => (
-          <WorkoutPromiseCard
-            title={item.title}
-            location={item.location}
-            createdAt={item.createdAt}
-            promiseDate={item.promiseDate}
-            gymName={item.gymName}
-            currentNumberOfPeople={item.currentNumberOfPeople}
-            limitedNumberOfPeople={item.limitedNumberOfPeople}
-            onPress={navigateToPromiseDetails}
-          />
-        ))}
-      </ScrollView>
+            },
+          ]}>
+          👍🏻 추천 짐메이트
+        </Text>
+      </View>
+      <View style={style.friendListContainer}>
+        {friendList ? (
+          friendList.map(friend => (
+            <FriendProfileCard
+              _id={friend._id}
+              phone_number={friend.phone_number}
+              uri={friend.uri}
+              username={friend.username}
+              gender={friend.gender}
+              age={friend.age}
+              height={friend.height}
+              weight={friend.weight}
+              workout_per_week={friend.workout_per_week}
+              workout_time={friend.workout_time}
+              workout_time_how_long={friend.workout_time_how_long}
+              workout_level={friend.workout_level}
+              workout_goal={friend.workout_goal}
+            />
+          ))
+        ) : (
+          <></>
+        )}
+      </View>
+      <View style={style.title}>
+        <Text
+          variant="titleLarge"
+          style={{
+            color: theme.colors.primary,
+            fontSize: 20,
+            fontWeight: '600',
+          }}>
+          💪🏻 같이 운동해요!
+        </Text>
+      </View>
+      <FlatList
+        data={workoutPromise}
+        keyExtractor={item => item._id}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={navigateToPromiseDetails}>
+            <WorkoutPromiseCard
+              _id={item._id}
+              user={item.user}
+              title={item.title}
+              description={item.description}
+              location={item.location}
+              date={item.date}
+              time={item.time}
+              currentNumberOfPeople={item.currentNumberOfPeople}
+              limitedNumberOfPeople={item.limitedNumberOfPeople}
+              createdAt={item.createdAt}
+            />
+          </TouchableOpacity>
+        )}
+        showsVerticalScrollIndicator={false}
+        disableVirtualization={false}
+      />
       <CustomFAB
         icon="barbell-outline"
         onPress={() => {
@@ -157,7 +168,6 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   title: {
     padding: 12,
   },
@@ -165,5 +175,9 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 6,
+  },
+  font: {
+    fontSize: 20,
+    fontWeight: '600',
   },
 });

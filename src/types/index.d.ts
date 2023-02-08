@@ -31,15 +31,22 @@ export interface Profile {
   username: string;
 }
 
-export interface WorkoutPromise {
-  title: string;
-  location: string;
-  createdAt: string;
-  promiseDate: string;
-  gymName: string;
-  currentNumberOfPeople: number;
-  limitedNumberOfPeople: number;
-  onPress: () => void;
+export interface WorkoutPromiseBase {
+  title: string; // 제목
+  description: string; // 설명
+  location: string; // 장소
+  date: Date; // 날짜
+  time: Date; // 시간
+  currentNumberOfPeople?: number; // 현재 참여 인원 (default: 1)
+  limitedNumberOfPeople: number; // 제한 인원
+}
+
+export interface WorkoutPromiseCreate extends WorkoutPromiseBase {
+  _id: string; // id
+  user: UserCreate; // 작성자
+  createdAt: Date; // 생성일
+  image?: string; // 이미지
+  // updatedAt: Date; // 수정일
 }
 
 export interface GymInfo {
@@ -58,10 +65,12 @@ export interface Gym {
 }
 
 export interface UserBase {
+  _id: string;
   phone_number: string | null;
 }
 
 export interface UserCreate extends UserBase {
+  uri?: string;
   username: string | null;
   gender: string | null;
   age: string | null;
