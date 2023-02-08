@@ -1,29 +1,27 @@
-import axios from 'axios';
-import FormData from 'form-data';
+import { getValueFor } from '@store/store';
+// TODO: change to https
+const BASE_URL = 'http://127.0.0.1:8000/api/v1';
 
-const api = axios.create({
-  baseURL: 'http://localhost:8000',
-});
-
-const postLogin = async (username: string, password: string) => {
-  const formData = new FormData();
-  formData.append('username', username);
-  formData.append('password', password);
-  const res = await api.post('/auth/jwt/login', formData, {
+// TODO: add param like firebase uid to identify user
+async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
+  const res = await fetch(`${BASE_URL}/user/login`, {
+    method: 'POST',
+    body: JSON.stringify({ phone_number: phoneNumber }),
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
     },
   });
-  return res;
-};
-
-async function postUser(params: UserCreate) {
-  const res = await api.post('/auth/register', params);
-  return res;
+  return res.json();
 }
 
 async function postWorkoutPromise(params: WorkoutPromiseBase) {
-  const res = await api.post('/auth/workout', params);
+  const res = await fetch('/auth/workout', {
+    method: 'POST',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   return res;
 }
 
@@ -216,11 +214,27 @@ async function getFriendList() {
   ];
   return res;
 }
+async function postRegister(params: UserCreate): Promise<UserLoginResponse> {
+  const res = await fetch(`${BASE_URL}/user/register`, {
+    method: 'POST',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return res.json();
+}
 
-export {
-  postLogin,
-  postUser,
-  postWorkoutPromise,
-  getWorkoutPromise,
-  getFriendList,
-};
+async function getMyInfo(): Promise<UserRead> {
+  const token = await getValueFor('token');
+  const res = await fetch(`${BASE_URL}/user/me`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.json();
+}
+
+export { postLogin, postRegister, getMyInfo ,  postWorkoutPromise,getWorkoutPromise,getFriendList,};

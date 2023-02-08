@@ -82,3 +82,12 @@ interface UserCreate extends UserBase {
   workout_level: string | null;
   workout_goal: string | null;
 }
+interface UserRead extends UserCreate {
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+type UserLoginResponse = {
+  token: string;
+  refresh: string;
+};
