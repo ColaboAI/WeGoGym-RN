@@ -14,15 +14,17 @@ import CustomFAB from '@/component/molecules/Home/CustomFAB';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { getFriendList, getWorkoutPromise } from '@/api/api';
 import { UserCreate, WorkoutPromiseCreate } from '@/types';
+import WorkoutPromiseLoader from '@/component/molecules/Home/WorkoutPromiseLoader';
+import FriendListLoader from '@/component/molecules/Home/FriendListLoader';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const theme = useTheme();
   const [visible, setVisible] = useState(true);
-  const [friendList, setFriendList] = useState<UserCreate[]>([]);
-  const [workoutPromise, setWorkoutPromise] = useState<WorkoutPromiseCreate[]>(
-    [],
-  );
+  const [friendList, setFriendList] = useState<UserCreate[] | null>(null);
+  const [workoutPromise, setWorkoutPromise] = useState<
+    WorkoutPromiseCreate[] | null
+  >(null);
   // TODO: PromiseCard ID를 parameter로.
   const navigateToPromiseDetails = useCallback(() => {
     navigation.navigate('Details');
@@ -104,7 +106,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
             />
           ))
         ) : (
-          <></>
+          <FriendListLoader />
         )}
       </View>
       <View style={style.title}>
@@ -118,28 +120,34 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           💪🏻 같이 운동해요!
         </Text>
       </View>
-      <FlatList
-        data={workoutPromise}
-        keyExtractor={item => item._id}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={navigateToPromiseDetails}>
-            <WorkoutPromiseCard
-              _id={item._id}
-              user={item.user}
-              title={item.title}
-              description={item.description}
-              location={item.location}
-              date={item.date}
-              time={item.time}
-              currentNumberOfPeople={item.currentNumberOfPeople}
-              limitedNumberOfPeople={item.limitedNumberOfPeople}
-              createdAt={item.createdAt}
-            />
-          </TouchableOpacity>
+      <View>
+        {workoutPromise ? (
+          <FlatList
+            data={workoutPromise}
+            keyExtractor={item => item._id}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={navigateToPromiseDetails}>
+                <WorkoutPromiseCard
+                  _id={item._id}
+                  user={item.user}
+                  title={item.title}
+                  description={item.description}
+                  location={item.location}
+                  date={item.date}
+                  time={item.time}
+                  currentNumberOfPeople={item.currentNumberOfPeople}
+                  limitedNumberOfPeople={item.limitedNumberOfPeople}
+                  createdAt={item.createdAt}
+                />
+              </TouchableOpacity>
+            )}
+            showsVerticalScrollIndicator={false}
+            disableVirtualization={false}
+          />
+        ) : (
+          <WorkoutPromiseLoader />
         )}
-        showsVerticalScrollIndicator={false}
-        disableVirtualization={false}
-      />
+      </View>
       <CustomFAB
         icon="barbell-outline"
         onPress={() => {
