@@ -2331,6 +2331,11 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@tanstack/eslint-plugin-query@^4.24.5":
+  version "4.24.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/eslint-plugin-query/-/eslint-plugin-query-4.24.5.tgz#dd027da2d01c2e590a9d51ffbb15d0b37186ca3c"
+  integrity sha512-KvuRkA9fYRZF9umwpLpWLcEqAVK7IWK8qjmnR3iwPIpkTFNGzaGogs7YkRCZs6q77QxI+c6MWG4xwjLIK/UmdA==
+
 "@tanstack/query-core@4.22.0":
   version "4.22.0"
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.22.0.tgz#7a786fcea64e229ed5d4308093dd644cdfaa895e"
