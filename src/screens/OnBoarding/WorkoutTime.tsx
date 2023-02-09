@@ -2,7 +2,11 @@ import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '../../store/store';
-export default function WorkoutTimeScreen({ navigation }: any) {
+import { AuthStackScreenProps } from '@/navigators/types';
+
+type Props = AuthStackScreenProps<'WorkoutTime'>;
+
+export default function WorkoutTimeScreen({ navigation }: Props) {
   const theme = useTheme();
   const buttons = ['오전', '오후', '저녁', '새벽'];
   const [time, setTime] = useState<string>('');

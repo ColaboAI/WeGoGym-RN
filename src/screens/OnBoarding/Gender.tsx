@@ -2,7 +2,11 @@ import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '../../store/store';
-export default function GenderScreen({ navigation }: any) {
+import { AuthStackScreenProps } from '@/navigators/types';
+
+type Props = AuthStackScreenProps<'Gender'>;
+
+export default function GenderScreen({ navigation }: Props) {
   const theme = useTheme();
   const buttons = ['🙍‍♂️ 남성', '🙍‍♀️ 여성', '그 외 성별'];
   const [gender, setGender] = useState<string>('');

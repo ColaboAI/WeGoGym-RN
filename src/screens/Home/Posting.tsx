@@ -33,7 +33,6 @@ import {
   getLocaleTime,
   isToday,
 } from '@/utils/util';
-import { Gym } from '@/types';
 import { postWorkoutPromise } from '@/api/api';
 import { HomeStackScreenProps } from '@/navigators/types';
 

@@ -2,8 +2,10 @@ import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '../../store/store';
+import { AuthStackScreenProps } from '@/navigators/types';
 
-export default function WorkoutPerWeekScreen({ navigation }: any) {
+type Props = AuthStackScreenProps<'WorkoutPerWeek'>;
+export default function WorkoutPerWeekScreen({ navigation }: Props) {
   const theme = useTheme();
   const buttons = ['1번', '2번', '3번', '4번', '5번', '6번'];
   const [workoutPerWeek, setWorkoutPerWeek] = useState<string>('');

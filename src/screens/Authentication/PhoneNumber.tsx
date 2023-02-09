@@ -16,8 +16,11 @@ import {
 } from 'react-native-paper';
 import { save } from '../../store/store';
 import auth from '@react-native-firebase/auth';
+import { AuthStackScreenProps } from '@/navigators/types';
 
-export default function PhoneNumberScreen({ navigation }: any) {
+type Props = AuthStackScreenProps<'PhoneNumber'>;
+
+export default function PhoneNumberScreen({ navigation }: Props) {
   const theme = useTheme();
   const [phoneNumber, setPhoneNumber] = React.useState<string>('');
   const [code, setCode] = React.useState<string>('');
@@ -35,7 +38,7 @@ export default function PhoneNumberScreen({ navigation }: any) {
   async function confirmCode() {
     try {
       await confirm.confirm(code);
-      navigation.navigate('Nickname');
+      navigation.navigate('Username');
     } catch (error) {
       Alert.alert('인증 번호가 일치하지 않습니다.');
     }

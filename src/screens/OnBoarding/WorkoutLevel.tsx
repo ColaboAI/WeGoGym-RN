@@ -2,8 +2,10 @@ import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '../../store/store';
+import { AuthStackScreenProps } from '@/navigators/types';
 
-export default function WorkoutPerWeekScreen({ navigation }: any) {
+type Props = AuthStackScreenProps<'WorkoutLevel'>;
+export default function WorkoutLevelScreen({ navigation }: Props) {
   const theme = useTheme();
   const buttons = [
     '입문(1년 미만)',

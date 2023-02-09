@@ -1,8 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Button, Headline, Text, useTheme } from 'react-native-paper';
-
-export default function WelcomeScreen({ navigation }: any) {
+import { AuthStackScreenProps } from '@/navigators/types';
+type Props = AuthStackScreenProps<'Welcome'>;
+export default function WelcomeScreen({ navigation }: Props) {
   const theme = useTheme();
   return (
     <View style={style.container}>

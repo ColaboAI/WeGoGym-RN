@@ -2,7 +2,10 @@ import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '../../store/store';
-export default function WorkoutTimeHowLongScreen({ navigation }: any) {
+import { AuthStackScreenProps } from '@/navigators/types';
+
+type Props = AuthStackScreenProps<'WorkoutTimeHowLong'>;
+export default function WorkoutTimeHowLongScreen({ navigation }: Props) {
   const theme = useTheme();
   const buttons = [
     '1시간 이하',
