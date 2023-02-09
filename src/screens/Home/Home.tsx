@@ -13,7 +13,6 @@ import { HomeStackScreenProps } from '@/navigators/types';
 import CustomFAB from '@/component/molecules/Home/CustomFAB';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { getFriendList, getWorkoutPromise } from '@/api/api';
-import { UserCreate, WorkoutPromiseCreate } from '@/types';
 import WorkoutPromiseLoader from '@/component/molecules/Home/WorkoutPromiseLoader';
 import FriendListLoader from '@/component/molecules/Home/FriendListLoader';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
