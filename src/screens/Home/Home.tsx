@@ -1,4 +1,4 @@
-import { StyleSheet, View, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Platform } from 'react-native';
 import {
   IconButton,
   Text,
@@ -15,6 +15,7 @@ import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { getFriendList, getWorkoutPromise } from '@/api/api';
 import WorkoutPromiseLoader from '@/component/molecules/Home/WorkoutPromiseLoader';
 import FriendListLoader from '@/component/molecules/Home/FriendListLoader';
+import ScreenWrapper from '@/component/template/Common/ScreenWrapper';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {
@@ -27,6 +28,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   // TODO: PromiseCard ID를 parameter로.
   const navigateToPromiseDetails = useCallback(() => {
     navigation.navigate('Details');
+    console.log('navigateToPromiseDetails', Platform.OS);
   }, [navigation]);
 
   useEffect(() => {
@@ -39,121 +41,148 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     fetchData();
   }, []);
 
+  const renderGymMateRecommendation = useCallback(() => {
+    return (
+      <>
+        <View style={style.title}>
+          <Text
+            variant="titleLarge"
+            style={[
+              style.font,
+              {
+                color: theme.colors.primary,
+              },
+            ]}>
+            👍🏻 추천 짐메이트
+          </Text>
+        </View>
+        <View style={style.friendListContainer}>
+          {friendList ? (
+            friendList.map(friend => (
+              <FriendProfileCard
+                key={`User-Reco-${friend._id}`}
+                _id={friend._id}
+                phone_number={friend.phone_number}
+                uri={friend.uri}
+                username={friend.username}
+                gender={friend.gender}
+                age={friend.age}
+                height={friend.height}
+                weight={friend.weight}
+                workout_per_week={friend.workout_per_week}
+                workout_time={friend.workout_time}
+                workout_time_how_long={friend.workout_time_how_long}
+                workout_level={friend.workout_level}
+                workout_goal={friend.workout_goal}
+              />
+            ))
+          ) : (
+            <FriendListLoader />
+          )}
+        </View>
+        <View style={style.title}>
+          <Text
+            variant="titleLarge"
+            style={{
+              color: theme.colors.primary,
+              fontSize: 20,
+              fontWeight: '600',
+            }}>
+            💪🏻 같이 운동해요!
+          </Text>
+        </View>
+      </>
+    );
+  }, [friendList, theme.colors.primary]);
+
+  const renderBanner = useCallback(
+    () =>
+      visible ? (
+        <View style={style.bannerContainer}>
+          <Banner
+            elevation={4}
+            visible={visible}
+            actions={[
+              {
+                label: '닫기',
+                onPress: () => setVisible(false),
+              },
+            ]}
+            contentStyle={style.banner}>
+            🎉 2023년 3월 1일부터 위고짐 서비스를 시작합니다. 🎉
+          </Banner>
+        </View>
+      ) : null,
+    [visible],
+  );
+
   return (
-    <SafeAreaView style={style.container}>
-      <View style={style.headerContainer}>
-        <Text
-          variant="titleLarge"
-          style={[
-            style.font,
-            {
-              color: theme.colors.primary,
-            },
-          ]}>
-          WeGoGym
-        </Text>
-        <IconButton
-          icon="notifications-outline"
-          onPress={() => {
-            navigation.navigate('Notifications');
-          }}
-        />
-      </View>
-      <Divider />
-      <View style={style.bannerContainer}>
-        <Banner
-          visible={visible}
-          actions={[
-            {
-              label: '닫기',
-              onPress: () => setVisible(false),
-            },
-          ]}
-          contentStyle={style.banner}>
-          🎉 2023년 3월 1일부터 위고짐 서비스를 시작합니다. 🎉
-        </Banner>
-      </View>
-      <View style={style.title}>
-        <Text
-          variant="titleLarge"
-          style={[
-            style.font,
-            {
-              color: theme.colors.primary,
-            },
-          ]}>
-          👍🏻 추천 짐메이트
-        </Text>
-      </View>
-      <View style={style.friendListContainer}>
-        {friendList ? (
-          friendList.map(friend => (
-            <FriendProfileCard
-              _id={friend._id}
-              phone_number={friend.phone_number}
-              uri={friend.uri}
-              username={friend.username}
-              gender={friend.gender}
-              age={friend.age}
-              height={friend.height}
-              weight={friend.weight}
-              workout_per_week={friend.workout_per_week}
-              workout_time={friend.workout_time}
-              workout_time_how_long={friend.workout_time_how_long}
-              workout_level={friend.workout_level}
-              workout_goal={friend.workout_goal}
-            />
-          ))
-        ) : (
-          <FriendListLoader />
-        )}
-      </View>
-      <View style={style.title}>
-        <Text
-          variant="titleLarge"
-          style={{
-            color: theme.colors.primary,
-            fontSize: 20,
-            fontWeight: '600',
-          }}>
-          💪🏻 같이 운동해요!
-        </Text>
-      </View>
-      <View>
-        {workoutPromise ? (
-          <FlatList
-            data={workoutPromise}
-            keyExtractor={item => item._id}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={navigateToPromiseDetails}>
-                <WorkoutPromiseCard
-                  _id={item._id}
-                  user={item.user}
-                  title={item.title}
-                  description={item.description}
-                  location={item.location}
-                  date={item.date}
-                  time={item.time}
-                  currentNumberOfPeople={item.currentNumberOfPeople}
-                  limitedNumberOfPeople={item.limitedNumberOfPeople}
-                  createdAt={item.createdAt}
-                />
-              </TouchableOpacity>
-            )}
-            showsVerticalScrollIndicator={false}
-            disableVirtualization={false}
+    <>
+      <ScreenWrapper
+        withScrollView={false}
+        withBottomTab
+        style={style.container}>
+        <View style={style.headerContainer}>
+          <Text
+            variant="titleLarge"
+            style={[
+              style.font,
+              {
+                color: theme.colors.primary,
+              },
+            ]}>
+            WeGoGym
+          </Text>
+          <IconButton
+            icon="notifications-outline"
+            onPress={() => {
+              navigation.navigate('Notifications');
+            }}
           />
-        ) : (
-          <WorkoutPromiseLoader />
-        )}
-      </View>
+        </View>
+        <Divider />
+        {renderBanner()}
+        <View>
+          {workoutPromise ? (
+            <FlatList
+              data={workoutPromise}
+              keyExtractor={item => item._id}
+              contentContainerStyle={style.workoutPromiseContainer}
+              ListHeaderComponent={renderGymMateRecommendation}
+              initialNumToRender={5}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  key={`work-promise-container-${item._id}`}
+                  onPress={navigateToPromiseDetails}>
+                  <WorkoutPromiseCard
+                    key={`work-promise-${item._id}`}
+                    _id={item._id}
+                    user={item.user}
+                    title={item.title}
+                    description={item.description}
+                    location={item.location}
+                    date={item.date}
+                    time={item.time}
+                    currentNumberOfPeople={item.currentNumberOfPeople}
+                    limitedNumberOfPeople={item.limitedNumberOfPeople}
+                    createdAt={item.createdAt}
+                  />
+                </TouchableOpacity>
+              )}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            <WorkoutPromiseLoader />
+          )}
+        </View>
+      </ScreenWrapper>
       <CustomFAB
         icon="barbell-outline"
         onPress={() => {
           navigation.navigate('Posting');
         }}
       />
-    </SafeAreaView>
+    </>
   );
 }
 const style = StyleSheet.create({
@@ -186,5 +215,8 @@ const style = StyleSheet.create({
   font: {
     fontSize: 20,
     fontWeight: '600',
+  },
+  workoutPromiseContainer: {
+    flexGrow: 1,
   },
 });
