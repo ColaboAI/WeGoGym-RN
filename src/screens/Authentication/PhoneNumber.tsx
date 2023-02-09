@@ -5,11 +5,16 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
+  Linking,
+  Platform,
 } from 'react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Button,
+  Checkbox,
   Headline,
+  IconButton,
+  List,
   Text,
   TextInput,
   useTheme,
@@ -17,6 +22,7 @@ import {
 import { save } from '../../store/store';
 import auth from '@react-native-firebase/auth';
 import { AuthStackScreenProps } from '@/navigators/types';
+import CustomToolbar from '@/component/organisms/CustomToolbar';
 
 type Props = AuthStackScreenProps<'PhoneNumber'>;
 
@@ -30,8 +36,13 @@ export default function PhoneNumberScreen({ navigation }: Props) {
   const [confirm, setConfirm] = React.useState<any>(null);
   const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
 
+  const [isAgreedToS, setIsAgreedToS] = React.useState<boolean>(false);
+  const [isAgreedPP, setIsAgreedPP] = React.useState<boolean>(false);
+
   async function signInWithPhoneNumber(_phoneNumber: string) {
-    const confirmation = await auth().signInWithPhoneNumber(_phoneNumber);
+    const confirmation = await auth().signInWithPhoneNumber(
+      '+82' + _phoneNumber,
+    );
     setConfirm(confirmation);
   }
 
@@ -44,14 +55,14 @@ export default function PhoneNumberScreen({ navigation }: Props) {
     }
   }
 
-  const phoneNumberButtonChange = (text: string) => {
+  const phoneNumberButtonChange = useCallback((text: string) => {
     setPhoneNumber(text);
     if (text.length < 11) {
       setPhoneNumberButtonReady(false);
     } else if (text.length === 11) {
       setPhoneNumberButtonReady(true);
     }
-  };
+  }, []);
 
   const codeButtonChange = (text: string) => {
     setCode(text);
@@ -83,27 +94,84 @@ export default function PhoneNumberScreen({ navigation }: Props) {
                 본인 인증을 위해 필요합니다.
               </Text>
             </View>
+            <View style={style.listContainer}>
+              <List.Section
+                title="이용약관 및 개인정보 처리방침"
+                titleStyle={{ fontWeight: 'bold' }}>
+                <List.Item
+                  style={style.listItem}
+                  title="(필수)서비스 이용약관 동의하기"
+                  left={() => (
+                    <Checkbox.Item
+                      label=""
+                      status={isAgreedToS ? 'checked' : 'unchecked'}
+                    />
+                  )}
+                  right={() => (
+                    <IconButton
+                      icon="document-text-outline"
+                      onPress={() =>
+                        Linking.openURL(
+                          'https://colaboai.notion.site/40c14ec8e23f4a37b12d888b1ea69016',
+                        )
+                      }
+                    />
+                  )}
+                  onPress={() => setIsAgreedToS(!isAgreedToS)}
+                />
+                <List.Item
+                  style={style.listItem}
+                  title="(필수)개인정보 처리방침 동의하기"
+                  left={() => (
+                    <Checkbox.Item
+                      label=""
+                      status={isAgreedPP ? 'checked' : 'unchecked'}
+                    />
+                  )}
+                  right={() => (
+                    <IconButton
+                      icon="document-text-outline"
+                      onPress={() =>
+                        Linking.openURL(
+                          'https://colaboai.notion.site/4e4707c4fa45400bac7d206684a9906f',
+                        )
+                      }
+                    />
+                  )}
+                  onPress={() => setIsAgreedPP(!isAgreedPP)}
+                />
+              </List.Section>
+            </View>
+
             <View style={style.textInputBox}>
               <TextInput
                 mode="outlined"
                 keyboardType="numeric"
+                // TODO: when international phone number is supported, change 11 to 13
                 error={phoneNumber.length > 11 ? true : false}
                 label="휴대폰 번호"
                 value={phoneNumber}
                 onChangeText={value => phoneNumberButtonChange(value)}
+                inputAccessoryViewID="sendButton"
               />
             </View>
-            <View style={style.buttonBox}>
-              <Button
-                mode="contained"
-                disabled={phoneNumberButtonReady ? false : true}
-                onPress={() => {
-                  save('phone_number', phoneNumber);
-                  signInWithPhoneNumber('+82' + phoneNumber);
-                }}>
-                인증 번호 전송
-              </Button>
-            </View>
+            <CustomToolbar nativeID="sendButton">
+              <View style={style.buttonBox}>
+                <Button
+                  mode="contained"
+                  disabled={
+                    phoneNumberButtonReady && isAgreedPP && isAgreedToS
+                      ? false
+                      : true
+                  }
+                  onPress={() => {
+                    save('phone_number', phoneNumber);
+                    signInWithPhoneNumber(phoneNumber);
+                  }}>
+                  인증 번호 전송
+                </Button>
+              </View>
+            </CustomToolbar>
           </>
         ) : (
           <>
@@ -125,20 +193,23 @@ export default function PhoneNumberScreen({ navigation }: Props) {
                 label="인증 번호 6자리"
                 value={code}
                 onChangeText={value => codeButtonChange(value)}
+                inputAccessoryViewID="typeCodeButton"
               />
             </View>
-            <View style={style.buttonBox}>
-              <Button
-                mode="contained"
-                loading={!isButtonClicked ? false : true}
-                disabled={codeButtonReady ? false : true}
-                onPress={() => {
-                  setIsButtonClicked(true);
-                  confirmCode();
-                }}>
-                코드 인증
-              </Button>
-            </View>
+            <CustomToolbar nativeID="typeCodeButton">
+              <View style={style.buttonBox}>
+                <Button
+                  mode="contained"
+                  loading={!isButtonClicked ? false : true}
+                  disabled={codeButtonReady ? false : true}
+                  onPress={() => {
+                    setIsButtonClicked(true);
+                    confirmCode();
+                  }}>
+                  코드 인증
+                </Button>
+              </View>
+            </CustomToolbar>
           </>
         )}
       </SafeAreaView>
@@ -152,18 +223,26 @@ const style = StyleSheet.create({
   headlineBox: {
     flex: 1,
     margin: '5%',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
   },
   textInputBox: {
-    flex: 1,
+    flex: 3,
     width: '90%',
     justifyContent: 'flex-start',
     margin: '5%',
   },
   buttonBox: {
+    flex: 1,
+    justifySelf: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: Platform.OS === 'ios' ? '5%' : '0%',
+    paddingBottom: Platform.OS === 'ios' ? 5 : 0,
+  },
+  listContainer: {
     flex: 2,
-    width: '90%',
     justifyContent: 'flex-start',
-    margin: '5%',
+  },
+  listItem: {
+    margin: 0,
   },
 });
