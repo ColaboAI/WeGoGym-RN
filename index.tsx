@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { AppRegistry, useColorScheme } from 'react-native';
+import { AppRegistry, StyleSheet, useColorScheme } from 'react-native';
 import { name as appName } from './app.json';
 import App from './src/App';
 import {
@@ -25,6 +25,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import AuthProvider from '@/hooks/context/AuthProvider';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // https://callstack.github.io/react-native-paper/theming.html
 
 const myLightTheme = {
@@ -66,20 +67,28 @@ export default function Main() {
 
   return (
     // Add Store Provider here
-    <SafeAreaProvider>
-      <AuthProvider>
-        <PaperProvider
-          settings={{
-            icon: props => <Ionicons {...props} />,
-          }}
-          theme={theme}>
-          <NavigationContainer theme={theme}>
-            <App />
-          </NavigationContainer>
-        </PaperProvider>
-      </AuthProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={style.container}>
+      <SafeAreaProvider>
+        <AuthProvider>
+          <PaperProvider
+            settings={{
+              icon: props => <Ionicons {...props} />,
+            }}
+            theme={theme}>
+            <NavigationContainer theme={theme}>
+              <App />
+            </NavigationContainer>
+          </PaperProvider>
+        </AuthProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 AppRegistry.registerComponent(appName, () => Main);
