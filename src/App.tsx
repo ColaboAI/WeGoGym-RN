@@ -6,13 +6,21 @@ import { RootStackParamList } from 'navigators/types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 import { SplashScreen } from './screens';
 import { useAuthValue, useAuthActions } from './hooks/context/useAuth';
+import { getValueFor } from './store/secureStore';
 
 function App() {
   const authState = useAuthValue();
   const authActions = useAuthActions();
   useEffect(() => {
     const bootstrapAsync = async () => {
-      authActions.signIn(authState.userToken);
+      try {
+        const isToken = await authActions.getTokenFromStorage();
+        if (!isToken) {
+          authActions.signIn(await getValueFor('phoneNumber'));
+        }
+      } catch (e) {
+        console.log(e);
+      }
     };
     bootstrapAsync();
   }, [authActions, authState.userToken]);
