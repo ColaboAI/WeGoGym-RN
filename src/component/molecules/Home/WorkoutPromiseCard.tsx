@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Text, Card } from 'react-native-paper';
-import { WorkoutPromiseCreate } from '@/types';
 import { getLocaleDate, getLocaleTime } from '@/utils/util';
 
 const WorkoutPromiseCard = ({
