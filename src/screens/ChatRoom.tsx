@@ -1,10 +1,11 @@
-import { FlatList, InputAccessoryView, StyleSheet, View } from 'react-native';
+import { InputAccessoryView, StyleSheet, View } from 'react-native';
 import React from 'react';
 import { ChatStackScreenProps } from 'navigators/types';
 import Bubble from 'component/molecules/Chat/Bubble';
 import InputToolbar from 'component/organisms/Chat/InputToolbar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 
