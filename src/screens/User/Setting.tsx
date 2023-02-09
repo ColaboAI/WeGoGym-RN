@@ -7,11 +7,11 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { List, Switch, Text } from 'react-native-paper';
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '@/App';
+import React, { useState } from 'react';
+import { useAuthActions } from '@/hooks/context/useAuth';
 
 export default function SettingScreen() {
-  const { signOut } = useContext(AuthContext);
+  const { signOut } = useAuthActions();
 
   const [isPushAlarmSwitchOn, setIsPushAlarmSwitchOn] = useState(false);
   const [isMarketingSwitchOn, setIsMarketingSwitchOn] = useState(false);
