@@ -18,6 +18,7 @@ type AuthActions = {
   signIn: (phoneNumber: string | null) => void;
   signOut: () => void;
   signUp: (phoneNumber: string | null) => void;
+  getTokenFromStorage: () => Promise<boolean>;
 };
 
 const initialAuthState: AuthState = {
@@ -32,6 +33,9 @@ const initialAuthActions: AuthActions = {
   signIn: () => {},
   signOut: () => {},
   signUp: () => {},
+  getTokenFromStorage: async () => {
+    return false;
+  },
   // resetPassword: () => {},
   // confirmSignUp: () => {},
   // resendConfirmationCode: () => {},
@@ -76,6 +80,18 @@ function AuthProvider({ children }: AuthProviderProps) {
           return;
         }
         await SecureStore.setItemAsync('userToken', phoneNumber);
+      },
+      getTokenFromStorage: async () => {
+        const userToken = await SecureStore.getItemAsync('userToken');
+        if (userToken) {
+          setAuthState(prevState => ({
+            ...prevState,
+            userToken: userToken,
+            isSignout: false,
+          }));
+          return true;
+        }
+        return false;
       },
     }),
     [],
