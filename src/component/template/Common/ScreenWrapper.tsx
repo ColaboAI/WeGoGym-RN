@@ -11,12 +11,12 @@ import { useTheme } from 'react-native-paper';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-type Props = ScrollViewProps & {
-  children: React.ReactNode;
-  withScrollView?: boolean;
-  style?: StyleProp<ViewStyle>;
-  contentContainerStyle?: StyleProp<ViewStyle>;
-};
+type Props = ScrollViewProps &
+  React.PropsWithChildren<{
+    withScrollView?: boolean;
+    style?: StyleProp<ViewStyle>;
+    contentContainerStyle?: StyleProp<ViewStyle>;
+  }>;
 
 export default function ScreenWrapper({
   children,
