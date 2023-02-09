@@ -1,4 +1,4 @@
-import { getValueFor } from '@store/store';
+import { getValueFor } from '@/store/secureStore';
 import { GYM_OPEN_API_KEY } from '@env';
 import { v4 as uuid } from 'uuid';
 
@@ -35,7 +35,6 @@ export async function getInfo() {
     workout_level,
     workout_goal,
   };
-  console.log('info', info);
   return info;
 }
 

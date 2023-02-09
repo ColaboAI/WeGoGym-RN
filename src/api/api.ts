@@ -1,4 +1,4 @@
-import { getValueFor } from '@store/store';
+import { getValueFor } from '@/store/secureStore';
 // TODO: change to https
 const BASE_URL = 'http://127.0.0.1:8000/api/v1';
 
@@ -237,4 +237,11 @@ async function getMyInfo(): Promise<UserRead> {
   return res.json();
 }
 
-export { postLogin, postRegister, getMyInfo ,  postWorkoutPromise,getWorkoutPromise,getFriendList,};
+export {
+  postLogin,
+  postRegister,
+  getMyInfo,
+  postWorkoutPromise,
+  getWorkoutPromise,
+  getFriendList,
+};
