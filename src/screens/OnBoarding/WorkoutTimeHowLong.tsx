@@ -1,7 +1,7 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
-import { save } from '../../store/store';
+import { save } from '@store/secureStore';
 import { AuthStackScreenProps } from '@/navigators/types';
 
 type Props = AuthStackScreenProps<'WorkoutTimeHowLong'>;
