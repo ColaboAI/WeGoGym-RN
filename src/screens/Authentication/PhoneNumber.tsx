@@ -19,7 +19,7 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import { save } from '../../store/store';
+import { save } from '@store/secureStore';
 import auth from '@react-native-firebase/auth';
 import { AuthStackScreenProps } from '@/navigators/types';
 import CustomToolbar from '@/component/organisms/CustomToolbar';
@@ -168,7 +168,7 @@ export default function PhoneNumberScreen({ navigation }: Props) {
                     save('phone_number', phoneNumber);
                     signInWithPhoneNumber(phoneNumber);
                   }}>
-                  인증 번호 전송
+                  동의 후 인증 번호 전송
                 </Button>
               </View>
             </CustomToolbar>
