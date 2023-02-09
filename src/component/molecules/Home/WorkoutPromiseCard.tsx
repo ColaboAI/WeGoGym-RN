@@ -27,7 +27,7 @@ const WorkoutPromiseCard = ({
         <Card.Content>
           <>
             <Text style={style.promiseInfo}>
-              📅 {getLocaleDate(date)} {getLocaleTime(time)}분
+              📅 {getLocaleDate(date)} {getLocaleTime(time)}
             </Text>
             <Text style={style.promiseInfo}>📍 {location}</Text>
             <Text>

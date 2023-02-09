@@ -366,7 +366,7 @@ PODS:
     - Firebase/Auth (= 10.3.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.8.0):
+  - RNGestureHandler (2.9.0):
     - React-Core
   - RNReanimated (2.14.4):
     - DoubleConversion
@@ -622,7 +622,7 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 3f32aa2247836c12618d346113e5e82ea60ddd9c
   RNFBApp: 2b3e57f4eecd9cfe8a5dd2ea8ed27a87fbc6eada
   RNFBAuth: 0d480b9223fd9832e8a7ed314fa8c223b7ec8dfd
-  RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
+  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNReanimated: 6668b0587bebd4b15dd849b99e5a9c70fc12ed95
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
