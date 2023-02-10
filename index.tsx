@@ -26,6 +26,7 @@ import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import AuthProvider from '@/hooks/context/AuthProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // https://callstack.github.io/react-native-paper/theming.html
 
 const myLightTheme = {
@@ -60,26 +61,28 @@ const CombinedDarkTheme = {
     ...DarkTheme.colors,
   },
 };
+const queryClient = new QueryClient();
 
 export default function Main() {
   const isDarkMode = useColorScheme() === 'dark';
   let theme = isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme;
-
   return (
     // Add Store Provider here
     <GestureHandlerRootView style={style.container}>
       <SafeAreaProvider>
-        <AuthProvider>
-          <PaperProvider
-            settings={{
-              icon: props => <Ionicons {...props} />,
-            }}
-            theme={theme}>
-            <NavigationContainer theme={theme}>
-              <App />
-            </NavigationContainer>
-          </PaperProvider>
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <PaperProvider
+              settings={{
+                icon: props => <Ionicons {...props} />,
+              }}
+              theme={theme}>
+              <NavigationContainer theme={theme}>
+                <App />
+              </NavigationContainer>
+            </PaperProvider>
+          </AuthProvider>
+        </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
