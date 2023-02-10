@@ -1,14 +1,15 @@
 import React, {
   createContext,
   PropsWithChildren,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
-import * as SecureStore from 'expo-secure-store';
-
+import { useLoginMutation } from '../queries/user.queries';
+import { save, getValueFor, clear } from '@store/secureStore';
 type AuthState = {
   user: any | null;
-  userToken: string | null;
+  token: string | null;
   isLoading: boolean;
   isSignout: boolean;
   error: string | null;
@@ -19,12 +20,13 @@ type AuthActions = {
   signOut: () => void;
   signUp: (phoneNumber: string | null) => void;
   getTokenFromStorage: () => Promise<boolean>;
+  refreshToken: () => void;
 };
 
 const initialAuthState: AuthState = {
   user: null,
-  userToken: null,
-  isLoading: false,
+  token: null,
+  isLoading: true,
   isSignout: false,
   error: null,
 };
@@ -36,9 +38,7 @@ const initialAuthActions: AuthActions = {
   getTokenFromStorage: async () => {
     return false;
   },
-  // resetPassword: () => {},
-  // confirmSignUp: () => {},
-  // resendConfirmationCode: () => {},
+  refreshToken: () => {},
 };
 
 const AuthValueContext = createContext<AuthState>(initialAuthState);
@@ -48,54 +48,93 @@ type AuthProviderProps = PropsWithChildren;
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [authState, setAuthState] = useState<AuthState>(initialAuthState);
+
+  const loginMutation = useLoginMutation();
+
   const authActions = useMemo(
     () => ({
-      // TODO: Fix this
       signIn: async (phoneNumber: string | null) => {
-        setAuthState(prevState => ({
-          ...prevState,
-          userToken: phoneNumber,
-        }));
+        if (phoneNumber === null) {
+          clear('phone_number');
+          return;
+        }
+        await save('phone_number', phoneNumber);
+        loginMutation.mutate(phoneNumber);
+
         if (phoneNumber === null) {
           return;
         }
-        await SecureStore.setItemAsync('userToken', phoneNumber);
+        // TODO: token vs user_token
+        await save('token', phoneNumber);
         console.log('signIn', phoneNumber);
-      },
-      signOut: async () => {
-        await SecureStore.deleteItemAsync('userToken');
         setAuthState(prevState => ({
           ...prevState,
-          userToken: null,
+          token: phoneNumber,
+          isSignout: false,
+          isLoading: false,
+        }));
+      },
+      signOut: async () => {
+        await clear('token');
+        setAuthState(prevState => ({
+          ...prevState,
+          token: null,
           isSignout: true,
+          isLoading: true,
         }));
       },
       signUp: async (phoneNumber: string | null) => {
         setAuthState(prevState => ({
           ...prevState,
           isSignout: false,
-          userToken: phoneNumber,
+          token: phoneNumber,
         }));
         if (phoneNumber === null) {
           return;
         }
-        await SecureStore.setItemAsync('userToken', phoneNumber);
+        await save('token', phoneNumber);
       },
       getTokenFromStorage: async () => {
-        const userToken = await SecureStore.getItemAsync('userToken');
-        if (userToken) {
+        const token = await getValueFor('token');
+        if (token) {
           setAuthState(prevState => ({
             ...prevState,
-            userToken: userToken,
+            token: token,
             isSignout: false,
           }));
           return true;
         }
         return false;
       },
+      refreshToken: () => {
+        console.log('refreshToken');
+      },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+
+  useEffect(() => {
+    const bootstrapAsync = async () => {
+      try {
+        const isToken = await authActions.getTokenFromStorage();
+        const phoneNumber = await getValueFor('phone_number');
+        if (!isToken && !phoneNumber) {
+          authActions.signOut();
+          return;
+        }
+
+        if (isToken) {
+        }
+        if (!isToken && phoneNumber) {
+          authActions.signIn(phoneNumber);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    bootstrapAsync();
+  }, [authActions, authState.token]);
   return (
     <AuthActionsContext.Provider value={authActions}>
       <AuthValueContext.Provider value={authState}>
