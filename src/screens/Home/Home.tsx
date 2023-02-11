@@ -62,18 +62,18 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
               <FriendProfileCard
                 key={`User-Reco-${friend._id}`}
                 _id={friend._id}
-                phone_number={friend.phone_number}
+                phoneNumber={friend.phoneNumber}
                 uri={friend.uri}
                 username={friend.username}
                 gender={friend.gender}
                 age={friend.age}
                 height={friend.height}
                 weight={friend.weight}
-                workout_per_week={friend.workout_per_week}
-                workout_time={friend.workout_time}
-                workout_time_how_long={friend.workout_time_how_long}
-                workout_level={friend.workout_level}
-                workout_goal={friend.workout_goal}
+                workoutPerWeek={friend.workoutPerWeek}
+                workoutTime={friend.workoutTime}
+                workoutTimeHowLong={friend.workoutTimeHowLong}
+                workoutLevel={friend.workoutLevel}
+                workoutGoal={friend.workoutGoal}
               />
             ))
           ) : (

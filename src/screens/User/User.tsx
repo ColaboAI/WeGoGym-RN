@@ -38,7 +38,7 @@ export default function UserScreen({ navigation }: any) {
     },
     {
       id: 4,
-      title: 'workout_level',
+      title: 'workoutLevel',
       value: '중급',
     },
     {
@@ -68,7 +68,7 @@ export default function UserScreen({ navigation }: any) {
     },
     {
       id: 10,
-      title: 'workout_goal',
+      title: 'workoutGoal',
       value: ['다이어트', '근육증가', '체지방 감소'],
     },
   ];

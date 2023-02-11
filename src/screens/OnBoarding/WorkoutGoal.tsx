@@ -63,14 +63,14 @@ export default function WorkoutGoalScreen() {
           mode="contained"
           onPress={async () => {
             const workoutGoal = getGoal(isSelected);
-            save('workout_goal', workoutGoal);
+            save('workoutGoal', workoutGoal);
             // TODO: not sign in
             // First sign up in phone number screen
             // and then put user/me
 
             const info = await getInfo();
             if (info) {
-              await signIn(info.phone_number);
+              await signIn(info.phoneNumber);
             }
           }}>
           확인

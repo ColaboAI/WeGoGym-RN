@@ -49,7 +49,7 @@ export default function WorkoutTimeScreen({ navigation }: Props) {
           mode="contained"
           disabled={!time}
           onPress={() => {
-            save('workout_time', time);
+            save('workoutTime', time);
             navigation.navigate('WorkoutTimeHowLong');
           }}>
           확인

@@ -66,7 +66,7 @@ interface Gym {
 
 interface UserBase {
   _id: string;
-  phone_number: string | null;
+  phoneNumber: string | null;
 }
 
 interface UserCreate extends UserBase {
@@ -76,11 +76,11 @@ interface UserCreate extends UserBase {
   age: string | null;
   height: string | null;
   weight: string | null;
-  workout_per_week: string | null;
-  workout_time: string | null;
-  workout_time_how_long: string | null;
-  workout_level: string | null;
-  workout_goal: string | null;
+  workoutPerWeek: string | null;
+  workoutTime: string | null;
+  workoutTimeHowLong: string | null;
+  workoutLevel: string | null;
+  workoutGoal: string | null;
 }
 interface UserRead extends UserCreate {
   createdAt: Date;
@@ -89,5 +89,10 @@ interface UserRead extends UserCreate {
 
 type UserLoginResponse = {
   token: string;
-  refresh_token: string;
+  refreshToken: string;
+};
+
+type RefreshTokenRequest = {
+  token: string;
+  refreshToken: string;
 };

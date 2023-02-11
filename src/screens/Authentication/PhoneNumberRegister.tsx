@@ -165,7 +165,7 @@ export default function PhoneNumberScreen({ navigation }: Props) {
                       : true
                   }
                   onPress={() => {
-                    save('phone_number', phoneNumber);
+                    save('phoneNumber', phoneNumber);
                     signInWithPhoneNumber(phoneNumber);
                   }}>
                   동의 후 인증 번호 전송

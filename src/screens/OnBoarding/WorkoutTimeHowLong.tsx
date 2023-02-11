@@ -53,7 +53,7 @@ export default function WorkoutTimeHowLongScreen({ navigation }: Props) {
           mode="contained"
           disabled={!howLong}
           onPress={() => {
-            save('workout_time_how_long', howLong);
+            save('workoutTimeHowLong', howLong);
             navigation.navigate('WorkoutPerWeek');
           }}>
           확인

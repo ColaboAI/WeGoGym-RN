@@ -52,7 +52,7 @@ export default function WorkoutPerWeekScreen({ navigation }: Props) {
           mode="contained"
           disabled={!workoutPerWeek}
           onPress={() => {
-            save('workout_per_week', workoutPerWeek);
+            save('workoutPerWeek', workoutPerWeek);
             navigation.navigate('WorkoutLevel');
           }}>
           확인
