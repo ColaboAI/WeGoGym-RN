@@ -1,5 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getMyInfo, postLogin, postRegister, putMyInfo } from '@api/api';
+import {
+  getMyInfo,
+  postLogin,
+  postRegister,
+  putMyInfo,
+  refreshAccessToken,
+} from '@api/api';
 import { Alert } from 'react-native';
 import { save } from '@store/secureStore';
 export function useRegisterMutation() {
@@ -15,7 +21,7 @@ export function useRegisterMutation() {
 }
 
 export function useLoginMutation() {
-  const mutation = useMutation({
+  const q = useMutation({
     mutationFn: postLogin,
     onError: (error: Error) => {
       Alert.alert(`로그인에 실패하였습니다: ${error.message}`);
@@ -23,10 +29,10 @@ export function useLoginMutation() {
     async onSuccess(data) {
       Alert.alert(`로그인에 성공하였습니다!: ${data.token}`);
       await save('token', data.token);
-      await save('refresh_token', data.refresh_token);
+      await save('refreshToken', data.refreshToken);
     },
   });
-  return mutation;
+  return q;
 }
 
 export function useGetMyInfoQuery() {
@@ -50,6 +56,20 @@ export function usePutMyInfoMutation() {
     },
     onSuccess(data) {
       Alert.alert(`내 정보를 수정하는데 성공하였습니다!: ${data}`);
+    },
+  });
+}
+
+export function useRefreshTokenMutation() {
+  return useMutation({
+    mutationFn: refreshAccessToken,
+    onError: (error: Error) => {
+      Alert.alert(`토큰을 갱신하는데 실패하였습니다: ${error.message}`);
+    },
+    async onSuccess(data) {
+      Alert.alert('토큰을 갱신하는데 성공하였습니다!');
+      await save('token', data.token);
+      await save('refreshToken', data.refreshToken);
     },
   });
 }

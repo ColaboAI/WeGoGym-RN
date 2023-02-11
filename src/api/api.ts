@@ -1,5 +1,7 @@
 import { getValueFor } from '@/store/secureStore';
 import { Platform } from 'react-native';
+import { handleNetworkErrorAlert } from './exception';
+import { apiClient } from './client';
 // TODO: change to https
 // TODO: change to real domain
 const BASE_URL =
@@ -9,18 +11,10 @@ const BASE_URL =
 
 // TODO: add param like firebase uid to identify user
 async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
-  try {
-    const res = await fetch(`${BASE_URL}/user/login`, {
-      method: 'POST',
-      body: JSON.stringify(phoneNumber),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return res.json();
-  } catch (e) {
-    throw e;
-  }
+  const res = await apiClient.post(`${BASE_URL}/login`, {
+    phoneNumber,
+  });
+  return res.data;
 }
 
 async function postWorkoutPromise(params: WorkoutPromiseBase) {
@@ -41,18 +35,18 @@ async function getWorkoutPromise() {
       _id: '1',
       user: {
         _id: '1',
-        phone_number: '010-1234-5678',
+        phoneNumber: '010-1234-5678',
         uri: 'https://i.ibb.co/Y725W4C/image.png',
         username: '권민규',
         gender: '남자',
         age: '25',
         height: '180',
         weight: '70',
-        workout_per_week: '3',
-        workout_time: '1',
-        workout_time_how_long: '1',
-        workout_level: '1',
-        workout_goal: '1',
+        workoutPerWeek: '3',
+        workoutTime: '1',
+        workoutTimeHowLong: '1',
+        workoutLevel: '1',
+        workoutGoal: '1',
       },
       title: '짐박스 봉천점에서 등 운동 하실 분',
       description: '짐박스 봉천점에서 등 운동 하실 분 구합니다.',
@@ -67,18 +61,18 @@ async function getWorkoutPromise() {
       _id: '2',
       user: {
         _id: '2',
-        phone_number: '010-1234-5678',
+        phoneNumber: '010-1234-5678',
         uri: 'https://i.ibb.co/VwvkLpy/IMG-3484.jpg',
         username: '공성현',
         gender: '남자',
         age: '25',
         height: '180',
         weight: '70',
-        workout_per_week: '3',
-        workout_time: '1',
-        workout_time_how_long: '1',
-        workout_level: '1',
-        workout_goal: '1',
+        workoutPerWeek: '3',
+        workoutTime: '1',
+        workoutTimeHowLong: '1',
+        workoutLevel: '1',
+        workoutGoal: '1',
       },
       title: '함서짐에서 어깨 운동',
       description: '함서짐에서 어깨 운동 하실 분 구합니다.',
@@ -93,18 +87,18 @@ async function getWorkoutPromise() {
       _id: '3',
       user: {
         _id: '3',
-        phone_number: '010-1234-5678',
+        phoneNumber: '010-1234-5678',
         uri: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
         username: '김도연',
         gender: '남자',
         age: '25',
         height: '180',
         weight: '70',
-        workout_per_week: '3',
-        workout_time: '1',
-        workout_time_how_long: '1',
-        workout_level: '1',
-        workout_goal: '1',
+        workoutPerWeek: '3',
+        workoutTime: '1',
+        workoutTimeHowLong: '1',
+        workoutLevel: '1',
+        workoutGoal: '1',
       },
       title: '함서짐에서 어깨 운동',
       description: '함서짐에서 어깨 운동 하실 분 구합니다.',
@@ -119,18 +113,18 @@ async function getWorkoutPromise() {
       _id: '4',
       user: {
         _id: '4',
-        phone_number: '010-1234-5678',
+        phoneNumber: '010-1234-5678',
         uri: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
         username: '김도연',
         gender: '남자',
         age: '25',
         height: '180',
         weight: '70',
-        workout_per_week: '3',
-        workout_time: '1',
-        workout_time_how_long: '1',
-        workout_level: '1',
-        workout_goal: '1',
+        workoutPerWeek: '3',
+        workoutTime: '1',
+        workoutTimeHowLong: '1',
+        workoutLevel: '1',
+        workoutGoal: '1',
       },
       title: '함서짐에서 어깨 운동',
       description: '함서짐에서 어깨 운동 하실 분 구합니다.',
@@ -145,18 +139,18 @@ async function getWorkoutPromise() {
       _id: '5',
       user: {
         _id: '5',
-        phone_number: '010-1234-5678',
+        phoneNumber: '010-1234-5678',
         uri: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
         username: '김도연',
         gender: '남자',
         age: '25',
         height: '180',
         weight: '70',
-        workout_per_week: '3',
-        workout_time: '1',
-        workout_time_how_long: '1',
-        workout_level: '1',
-        workout_goal: '1',
+        workoutPerWeek: '3',
+        workoutTime: '1',
+        workoutTimeHowLong: '1',
+        workoutLevel: '1',
+        workoutGoal: '1',
       },
       title: '함서짐에서 어깨 운동',
       description: '함서짐에서 어깨 운동 하실 분 구합니다.',
@@ -177,48 +171,48 @@ async function getFriendList() {
   const res = [
     {
       _id: '1',
-      phone_number: '010-1234-5678',
+      phoneNumber: '010-1234-5678',
       uri: 'https://i.ibb.co/Y725W4C/image.png',
       username: '권민규',
       gender: '남자',
       age: '25',
       height: '180',
       weight: '70',
-      workout_per_week: '3',
-      workout_time: '1',
-      workout_time_how_long: '1',
-      workout_level: '1',
-      workout_goal: '1',
+      workoutPerWeek: '3',
+      workoutTime: '1',
+      workoutTimeHowLong: '1',
+      workoutLevel: '1',
+      workoutGoal: '1',
     },
     {
       _id: '2',
-      phone_number: '010-1234-5678',
+      phoneNumber: '010-1234-5678',
       uri: 'https://i.ibb.co/VwvkLpy/IMG-3484.jpg',
       username: '공성현',
       gender: '남자',
       age: '25',
       height: '180',
       weight: '70',
-      workout_per_week: '3',
-      workout_time: '1',
-      workout_time_how_long: '1',
-      workout_level: '1',
-      workout_goal: '1',
+      workoutPerWeek: '3',
+      workoutTime: '1',
+      workoutTimeHowLong: '1',
+      workoutLevel: '1',
+      workoutGoal: '1',
     },
     {
       _id: '3',
-      phone_number: '010-1234-5678',
+      phoneNumber: '010-1234-5678',
       uri: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
       username: '김도연',
       gender: '남자',
       age: '25',
       height: '180',
       weight: '70',
-      workout_per_week: '3',
-      workout_time: '1',
-      workout_time_how_long: '1',
-      workout_level: '1',
-      workout_goal: '1',
+      workoutPerWeek: '3',
+      workoutTime: '1',
+      workoutTimeHowLong: '1',
+      workoutLevel: '1',
+      workoutGoal: '1',
     },
   ];
   return res;
@@ -255,8 +249,33 @@ async function putMyInfo(params: UserCreate): Promise<UserRead> {
       Authorization: `Bearer ${token}`,
     },
   });
+  if (!res.ok) {
+    handleNetworkErrorAlert(res);
+  }
   return res.json();
 }
+
+async function refreshAccessToken(
+  param: RefreshTokenRequest,
+): Promise<UserLoginResponse> {
+  const res = await fetch(`${BASE_URL}/auth/refresh`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      token: param.token,
+      refreshToken: param.refreshToken,
+    }),
+  });
+  if (!res.ok) {
+    handleNetworkErrorAlert(res);
+  }
+
+  return res.json();
+}
+
+// async function verify(token: string): Promise<string> {}
 
 export {
   postLogin,
@@ -266,4 +285,5 @@ export {
   getWorkoutPromise,
   getFriendList,
   putMyInfo,
+  refreshAccessToken,
 };

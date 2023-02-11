@@ -5,8 +5,8 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useLoginMutation } from '../queries/user.queries';
 import { save, getValueFor, clear } from '@store/secureStore';
+import { postLogin } from '@/api/api';
 type AuthState = {
   user: any | null;
   token: string | null;
@@ -20,13 +20,14 @@ type AuthActions = {
   signOut: () => void;
   signUp: (phoneNumber: string | null) => void;
   getTokenFromStorage: () => Promise<boolean>;
-  refreshToken: () => void;
+  refreshToken: (a: string, b: string) => void;
+  setLoading: (b: boolean) => void;
 };
 
 const initialAuthState: AuthState = {
   user: null,
   token: null,
-  isLoading: true,
+  isLoading: false,
   isSignout: false,
   error: null,
 };
@@ -39,6 +40,7 @@ const initialAuthActions: AuthActions = {
     return false;
   },
   refreshToken: () => {},
+  setLoading: () => {},
 };
 
 const AuthValueContext = createContext<AuthState>(initialAuthState);
@@ -49,27 +51,23 @@ type AuthProviderProps = PropsWithChildren;
 function AuthProvider({ children }: AuthProviderProps) {
   const [authState, setAuthState] = useState<AuthState>(initialAuthState);
 
-  const loginMutation = useLoginMutation();
-
   const authActions = useMemo(
     () => ({
       signIn: async (phoneNumber: string | null) => {
         if (phoneNumber === null) {
-          clear('phone_number');
+          clear('phoneNumber');
           return;
         }
-        await save('phone_number', phoneNumber);
-        loginMutation.mutate(phoneNumber);
+        await save('phoneNumber', phoneNumber);
 
-        if (phoneNumber === null) {
-          return;
-        }
-        // TODO: token vs user_token
-        await save('token', phoneNumber);
-        console.log('signIn', phoneNumber);
+        const { token, refreshToken } = await postLogin(phoneNumber);
+
+        await save('token', token);
+        await save('refreshToken', refreshToken);
+
         setAuthState(prevState => ({
           ...prevState,
-          token: phoneNumber,
+          token: token,
           isSignout: false,
           isLoading: false,
         }));
@@ -80,7 +78,7 @@ function AuthProvider({ children }: AuthProviderProps) {
           ...prevState,
           token: null,
           isSignout: true,
-          isLoading: true,
+          isLoading: false,
         }));
       },
       signUp: async (phoneNumber: string | null) => {
@@ -96,6 +94,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       },
       getTokenFromStorage: async () => {
         const token = await getValueFor('token');
+
         if (token) {
           setAuthState(prevState => ({
             ...prevState,
@@ -106,11 +105,22 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
         return false;
       },
-      refreshToken: () => {
-        console.log('refreshToken');
+      refreshToken: async (token: string, refreshToken: string) => {
+        await save('token', token);
+        await save('refreshToken', refreshToken);
+        setAuthState(prevState => ({
+          ...prevState,
+          isLoading: false,
+          token: token,
+        }));
+      },
+      setLoading: (b: boolean) => {
+        setAuthState(prevState => ({
+          ...prevState,
+          isLoading: b,
+        }));
       },
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
@@ -118,16 +128,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     const bootstrapAsync = async () => {
       try {
         const isToken = await authActions.getTokenFromStorage();
-        const phoneNumber = await getValueFor('phone_number');
-        if (!isToken && !phoneNumber) {
-          authActions.signOut();
-          return;
-        }
-
-        if (isToken) {
-        }
-        if (!isToken && phoneNumber) {
-          authActions.signIn(phoneNumber);
+        if (!isToken) {
         }
       } catch (e) {
         console.log(e);
