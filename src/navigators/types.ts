@@ -28,7 +28,8 @@ export type HomeStackParamList = {
 export type AuthStackParamList = {
   Login: undefined;
   Welcome: undefined;
-  PhoneNumber: undefined;
+  PhoneNumberRegister: undefined;
+  PhoneNumberLogin: undefined;
   Username: undefined;
   Gender: undefined;
   BodyInformation: undefined;

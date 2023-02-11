@@ -24,7 +24,7 @@ import auth from '@react-native-firebase/auth';
 import { AuthStackScreenProps } from '@/navigators/types';
 import CustomToolbar from '@/component/organisms/CustomToolbar';
 
-type Props = AuthStackScreenProps<'PhoneNumber'>;
+type Props = AuthStackScreenProps<'PhoneNumberRegister'>;
 
 export default function PhoneNumberScreen({ navigation }: Props) {
   const theme = useTheme();

@@ -3,7 +3,8 @@ import React from 'react';
 import {
   WelcomeScreen,
   LoginScreen,
-  PhoneNumberScreen,
+  PhoneNumberLoginScreen,
+  PhoneNumberRegisterScreen,
   UsernameScreen,
   GenderScreen,
   BodyInformationScreen,
@@ -34,8 +35,13 @@ function Auth() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="PhoneNumber"
-        component={PhoneNumberScreen}
+        name="PhoneNumberRegister"
+        component={PhoneNumberRegisterScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PhoneNumberLogin"
+        component={PhoneNumberLoginScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Username" component={UsernameScreen} />
