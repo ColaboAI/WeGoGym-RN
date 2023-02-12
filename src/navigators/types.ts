@@ -43,6 +43,7 @@ export type AuthStackParamList = {
 export type UserStackParamList = {
   User: undefined;
   Setting: undefined;
+  ProfileEdit: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

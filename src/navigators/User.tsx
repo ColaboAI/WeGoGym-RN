@@ -1,7 +1,7 @@
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useLayoutEffect } from 'react';
-import { UserScreen, SettingScreen } from '../screens';
+import { UserScreen, SettingScreen, ProfileEditScreen } from '../screens';
 import DefaultNavBarHeader from './NavBarHeader/DefaultNavBarHeader';
 import { UserStackParamList, CustomTabScreenProps } from './types';
 const Stack = createNativeStackNavigator<UserStackParamList>();
@@ -32,6 +32,11 @@ function User({ navigation, route }: Props) {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Setting" component={SettingScreen} />
+      <Stack.Screen
+        name="ProfileEdit"
+        component={ProfileEditScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }

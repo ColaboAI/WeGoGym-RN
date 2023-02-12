@@ -2,6 +2,7 @@ export { default as HomeScreen } from './Home/Home';
 export { default as ChatListScreen } from './ChatList';
 export { default as ChatRoomScreen } from './ChatRoom';
 export { default as UserScreen } from './User/User';
+export { default as ProfileEditScreen } from './User/ProfileEdit';
 export { default as SettingScreen } from './User/Setting';
 export { default as DetailsScreen } from './Home/Details';
 export { default as NotificationsScreen } from './Home/Notifications';

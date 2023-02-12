@@ -1,4 +1,4 @@
-import { StyleSheet, View, Platform } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   IconButton,
   Text,
@@ -28,7 +28,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   // TODO: PromiseCard ID를 parameter로.
   const navigateToPromiseDetails = useCallback(() => {
     navigation.navigate('Details');
-    console.log('navigateToPromiseDetails', Platform.OS);
   }, [navigation]);
 
   useEffect(() => {
@@ -63,15 +62,15 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
                 key={`User-Reco-${friend._id}`}
                 _id={friend._id}
                 phoneNumber={friend.phoneNumber}
-                uri={friend.uri}
+                profilePic={friend.profilePic}
                 username={friend.username}
                 gender={friend.gender}
                 age={friend.age}
                 height={friend.height}
                 weight={friend.weight}
                 workoutPerWeek={friend.workoutPerWeek}
-                workoutTime={friend.workoutTime}
-                workoutTimeHowLong={friend.workoutTimeHowLong}
+                workoutTimePeriod={friend.workoutTimePeriod}
+                workoutTimePerDay={friend.workoutTimePerDay}
                 workoutLevel={friend.workoutLevel}
                 workoutGoal={friend.workoutGoal}
               />

@@ -12,7 +12,7 @@ import {
 } from 'react-native-paper';
 import React, { useState } from 'react';
 
-export default function UserScreen({ navigation }: any) {
+export default function ProfileEdit({ navigation }: any) {
   const theme = useTheme();
   const [isAuthenticated] = useState(true);
   const data = [
@@ -84,6 +84,7 @@ export default function UserScreen({ navigation }: any) {
         />
       </View>
       <Divider />
+      {/* Profile picture upload */}
       <View style={style.profileContainer}>
         <View style={style.avatarContainer}>
           <Avatar.Image
