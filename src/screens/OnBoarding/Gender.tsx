@@ -8,18 +8,20 @@ type Props = AuthStackScreenProps<'Gender'>;
 
 export default function GenderScreen({ navigation }: Props) {
   const theme = useTheme();
-  const buttons = ['🙍‍♂️ 남성', '🙍‍♀️ 여성', '그 외 성별'];
+  const buttonText = ['🙍‍♂️ 남성', '🙍‍♀️ 여성', '그 외 성별'];
+  const genders = ['male', 'female', 'other'];
   const [gender, setGender] = useState<string>('');
-
+  const [selectedId, setSelectedId] = useState<number>(-1);
   const getButton = (id: number) => {
     return (
       <Button
         style={[style.button]}
-        mode={buttons[id] === gender ? 'contained' : 'elevated'}
+        mode={id === selectedId ? 'contained' : 'elevated'}
         onPress={() => {
-          setGender(buttons[id]);
+          setGender(genders[id]);
+          setSelectedId(id);
         }}>
-        {buttons[id]}
+        {buttonText[id]}
       </Button>
     );
   };
@@ -47,8 +49,8 @@ export default function GenderScreen({ navigation }: Props) {
         <Button
           mode="contained"
           disabled={!gender}
-          onPress={() => {
-            save('gender', gender);
+          onPress={async () => {
+            await save('gender', gender);
             navigation.navigate('BodyInformation');
           }}>
           확인

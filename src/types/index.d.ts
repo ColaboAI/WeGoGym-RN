@@ -65,22 +65,24 @@ interface Gym {
 }
 
 interface UserBase {
-  _id: string;
   phoneNumber: string | null;
+  profilePic?: string;
 }
 
 interface UserCreate extends UserBase {
-  uri?: string;
-  username: string | null;
-  gender: string | null;
-  age: string | null;
-  height: string | null;
-  weight: string | null;
-  workoutPerWeek: string | null;
-  workoutTime: string | null;
-  workoutTimeHowLong: string | null;
-  workoutLevel: string | null;
-  workoutGoal: string | null;
+  _id?: string;
+  username: string;
+  gender: string;
+  age: int;
+  height: int;
+  weight: int;
+  workoutPerWeek: number;
+  // 오전 오후 저녁
+  workoutTimePeriod: string;
+  // 한번 운동하면 몇시간?
+  workoutTimePerDay: string;
+  workoutLevel: string;
+  workoutGoal: string;
 }
 interface UserRead extends UserCreate {
   createdAt: Date;

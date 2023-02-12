@@ -6,7 +6,8 @@ import React, {
   useState,
 } from 'react';
 import { save, getValueFor, clear } from '@store/secureStore';
-import { postLogin } from '@/api/api';
+import { postLogin, postRegister } from '@/api/api';
+import { Alert } from 'react-native';
 type AuthState = {
   user: any | null;
   token: string | null;
@@ -18,7 +19,7 @@ type AuthState = {
 type AuthActions = {
   signIn: (phoneNumber: string | null) => void;
   signOut: () => void;
-  signUp: (phoneNumber: string | null) => void;
+  signUp: (userInfo: UserCreate) => void;
   getTokenFromStorage: () => Promise<boolean>;
   refreshToken: (a: string, b: string) => void;
   setLoading: (b: boolean) => void;
@@ -74,6 +75,9 @@ function AuthProvider({ children }: AuthProviderProps) {
       },
       signOut: async () => {
         await clear('token');
+        await clear('refreshToken');
+        await clear('phoneNumber');
+
         setAuthState(prevState => ({
           ...prevState,
           token: null,
@@ -81,16 +85,25 @@ function AuthProvider({ children }: AuthProviderProps) {
           isLoading: false,
         }));
       },
-      signUp: async (phoneNumber: string | null) => {
-        setAuthState(prevState => ({
-          ...prevState,
-          isSignout: false,
-          token: phoneNumber,
+      signUp: async (userInfo: UserCreate) => {
+        setAuthState(prev => ({
+          ...prev,
+          isLoading: true,
         }));
-        if (phoneNumber === null) {
-          return;
+        try {
+          const { token, refreshToken } = await postRegister(userInfo);
+          await save('token', token);
+          await save('refreshToken', refreshToken);
+          setAuthState(prevState => ({
+            ...prevState,
+            isLoading: false,
+            isSignout: false,
+            token: token,
+          }));
+        } catch (e) {
+          const err = e as Error;
+          Alert.alert('회원가입 실패', `${err.name}: ${err.message}`);
         }
-        await save('token', phoneNumber);
       },
       getTokenFromStorage: async () => {
         const token = await getValueFor('token');
@@ -126,12 +139,22 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const bootstrapAsync = async () => {
+      authActions.setLoading(true);
       try {
         const isToken = await authActions.getTokenFromStorage();
+        const phoneNumber = await getValueFor('phoneNumber');
         if (!isToken) {
+          if (phoneNumber) {
+            authActions.signIn(phoneNumber);
+          } else {
+            authActions.signOut();
+          }
         }
       } catch (e) {
-        console.log(e);
+        const err = e as Error;
+        Alert.alert('인증 오류가 발생했습니다.', `${err.name}: ${err.message}`);
+      } finally {
+        authActions.setLoading(false);
       }
     };
     bootstrapAsync();

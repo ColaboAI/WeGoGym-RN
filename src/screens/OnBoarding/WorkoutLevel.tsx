@@ -52,8 +52,8 @@ export default function WorkoutLevelScreen({ navigation }: Props) {
         <Button
           mode="contained"
           disabled={!workoutLevel}
-          onPress={() => {
-            save('workoutLevel', workoutLevel);
+          onPress={async () => {
+            await save('workoutLevel', workoutLevel);
             navigation.navigate('WorkoutGoal');
           }}>
           확인

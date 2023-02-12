@@ -17,5 +17,5 @@ export { default as BodyInformationScreen } from './OnBoarding/BodyInformation';
 export { default as WorkoutPerWeekScreen } from './OnBoarding/WorkoutPerWeek';
 export { default as WorkoutGoalScreen } from './OnBoarding/WorkoutGoal';
 export { default as WorkoutLevelScreen } from './OnBoarding/WorkoutLevel';
-export { default as WorkoutTimeScreen } from './OnBoarding/WorkoutTime';
-export { default as WorkoutTimeHowLongScreen } from './OnBoarding/WorkoutTimeHowLong';
+export { default as WorkoutTimePeriodScreen } from './OnBoarding/WorkoutTimePeriod';
+export { default as WorkoutTimePerDayScreen } from './OnBoarding/WorkoutTimePerDay';

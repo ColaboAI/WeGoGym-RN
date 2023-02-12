@@ -7,7 +7,7 @@ import { AuthStackScreenProps } from '@/navigators/types';
 type Props = AuthStackScreenProps<'WorkoutPerWeek'>;
 export default function WorkoutPerWeekScreen({ navigation }: Props) {
   const theme = useTheme();
-  const buttons = ['1번', '2번', '3번', '4번', '5번', '6번'];
+  const buttons = ['1', '2', '3', '4', '5', '6'];
   const [workoutPerWeek, setWorkoutPerWeek] = useState<string>('');
 
   const getButton = (id: number) => {
@@ -51,8 +51,8 @@ export default function WorkoutPerWeekScreen({ navigation }: Props) {
         <Button
           mode="contained"
           disabled={!workoutPerWeek}
-          onPress={() => {
-            save('workoutPerWeek', workoutPerWeek);
+          onPress={async () => {
+            await save('workoutPerWeek', workoutPerWeek);
             navigation.navigate('WorkoutLevel');
           }}>
           확인

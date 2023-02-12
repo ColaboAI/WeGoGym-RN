@@ -4,9 +4,9 @@ import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '@store/secureStore';
 import { AuthStackScreenProps } from '@/navigators/types';
 
-type Props = AuthStackScreenProps<'WorkoutTime'>;
+type Props = AuthStackScreenProps<'WorkoutTimePeriod'>;
 
-export default function WorkoutTimeScreen({ navigation }: Props) {
+export default function WorkoutTimePeriodScreen({ navigation }: Props) {
   const theme = useTheme();
   const buttons = ['오전', '오후', '저녁', '새벽'];
   const [time, setTime] = useState<string>('');
@@ -48,9 +48,9 @@ export default function WorkoutTimeScreen({ navigation }: Props) {
         <Button
           mode="contained"
           disabled={!time}
-          onPress={() => {
-            save('workoutTime', time);
-            navigation.navigate('WorkoutTimeHowLong');
+          onPress={async () => {
+            await save('workoutTimePeriod', time);
+            navigation.navigate('WorkoutTimePerDay');
           }}>
           확인
         </Button>

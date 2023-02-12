@@ -3,12 +3,16 @@ import React from 'react';
 import { Text, Avatar } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const FriendProfileCard = ({ uri, username }: UserCreate) => {
+const FriendProfileCard = ({ profilePic, username }: UserCreate) => {
   return (
     <View style={styles.profileContainer}>
       <View style={styles.avatarContainer}>
         <TouchableOpacity onPress={() => console.warn('Profile Clicked')}>
-          <Avatar.Image size={80} source={{ uri: uri }} style={styles.avatar} />
+          <Avatar.Image
+            size={80}
+            source={{ uri: profilePic }}
+            style={styles.avatar}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.usernameContainer}>

@@ -8,7 +8,7 @@ import {
   Linking,
   Platform,
 } from 'react-native';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   Button,
   Checkbox,
@@ -20,7 +20,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { save } from '@store/secureStore';
-import auth from '@react-native-firebase/auth';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { AuthStackScreenProps } from '@/navigators/types';
 import CustomToolbar from '@/component/organisms/CustomToolbar';
 
@@ -39,19 +39,52 @@ export default function PhoneNumberScreen({ navigation }: Props) {
   const [isAgreedToS, setIsAgreedToS] = React.useState<boolean>(false);
   const [isAgreedPP, setIsAgreedPP] = React.useState<boolean>(false);
 
+  // clean up
+  useEffect(() => {
+    return () => {
+      setPhoneNumber('');
+      setCode('');
+      setPhoneNumberButtonReady(false);
+      setCodeButtonReady(false);
+      setConfirm(null);
+      setIsButtonClicked(false);
+      setIsAgreedToS(false);
+      setIsAgreedPP(false);
+    };
+  }, []);
+
   async function signInWithPhoneNumber(_phoneNumber: string) {
-    const confirmation = await auth().signInWithPhoneNumber(
-      '+82' + _phoneNumber,
-    );
-    setConfirm(confirmation);
+    await save('phoneNumber', phoneNumber);
+    const fbAuth = auth();
+    try {
+      const confirmation = await fbAuth.signInWithPhoneNumber(
+        '+82' + _phoneNumber,
+      );
+      setConfirm(confirmation);
+    } catch (error) {
+      const err = error as FirebaseAuthTypes.NativeFirebaseAuthError;
+      if (err.code === 'auth/invalid-phone-number') {
+        Alert.alert('잘못된 휴대폰 번호입니다.', err.message);
+        setIsButtonClicked(false);
+      } else {
+        Alert.alert('오류가 발생했습니다.', err.message);
+        setIsButtonClicked(false);
+      }
+    }
   }
 
   async function confirmCode() {
+    setIsButtonClicked(true);
     try {
       await confirm.confirm(code);
+      Alert.alert('인증이 완료되었습니다.');
       navigation.navigate('Username');
     } catch (error) {
-      Alert.alert('인증 번호가 일치하지 않습니다.');
+      const err = error as FirebaseAuthTypes.NativeFirebaseAuthError;
+      Alert.alert('인증 번호가 일치하지 않습니다.', err.message);
+      setIsButtonClicked(false);
+      setCodeButtonReady(false);
+      setCode('');
     }
   }
 
@@ -151,11 +184,12 @@ export default function PhoneNumberScreen({ navigation }: Props) {
                 error={phoneNumber.length > 11 ? true : false}
                 label="휴대폰 번호"
                 value={phoneNumber}
+                placeholder="ex) 01012345678"
                 onChangeText={value => phoneNumberButtonChange(value)}
-                inputAccessoryViewID="sendButton"
+                inputAccessoryViewID="authSMSsendButton"
               />
             </View>
-            <CustomToolbar nativeID="sendButton">
+            <CustomToolbar nativeID="authSMSsendButton">
               <View style={style.buttonBox}>
                 <Button
                   mode="contained"
@@ -165,7 +199,6 @@ export default function PhoneNumberScreen({ navigation }: Props) {
                       : true
                   }
                   onPress={() => {
-                    save('phoneNumber', phoneNumber);
                     signInWithPhoneNumber(phoneNumber);
                   }}>
                   동의 후 인증 번호 전송
@@ -193,17 +226,17 @@ export default function PhoneNumberScreen({ navigation }: Props) {
                 label="인증 번호 6자리"
                 value={code}
                 onChangeText={value => codeButtonChange(value)}
-                inputAccessoryViewID="typeCodeButton"
+                inputAccessoryViewID="typeAuthCodeButton"
+                placeholder="ex) 123456"
               />
             </View>
-            <CustomToolbar nativeID="typeCodeButton">
+            <CustomToolbar nativeID="typeAuthCodeButton">
               <View style={style.buttonBox}>
                 <Button
                   mode="contained"
                   loading={!isButtonClicked ? false : true}
                   disabled={codeButtonReady ? false : true}
                   onPress={() => {
-                    setIsButtonClicked(true);
                     confirmCode();
                   }}>
                   코드 인증

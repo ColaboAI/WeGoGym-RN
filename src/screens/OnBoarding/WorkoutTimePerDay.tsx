@@ -4,8 +4,8 @@ import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '@store/secureStore';
 import { AuthStackScreenProps } from '@/navigators/types';
 
-type Props = AuthStackScreenProps<'WorkoutTimeHowLong'>;
-export default function WorkoutTimeHowLongScreen({ navigation }: Props) {
+type Props = AuthStackScreenProps<'WorkoutTimePerDay'>;
+export default function WorkoutTimePerDayScreen({ navigation }: Props) {
   const theme = useTheme();
   const buttons = [
     '1시간 이하',
@@ -40,8 +40,8 @@ export default function WorkoutTimeHowLongScreen({ navigation }: Props) {
           보통 운동을 몇 시간 정도 하시나요?
         </Headline>
       </View>
-      <View style={style.workoutTimeHowLongBox}>
-        <View style={style.workoutTimeHowLongButtonBox}>
+      <View style={style.workoutTimePerDayBox}>
+        <View style={style.workoutTimePerDayButtonBox}>
           {getButton(0)}
           {getButton(1)}
           {getButton(2)}
@@ -52,8 +52,8 @@ export default function WorkoutTimeHowLongScreen({ navigation }: Props) {
         <Button
           mode="contained"
           disabled={!howLong}
-          onPress={() => {
-            save('workoutTimeHowLong', howLong);
+          onPress={async () => {
+            await save('workoutTimePerDay', howLong);
             navigation.navigate('WorkoutPerWeek');
           }}>
           확인
@@ -71,13 +71,13 @@ const style = StyleSheet.create({
     margin: '5%',
     justifyContent: 'flex-end',
   },
-  workoutTimeHowLongBox: {
+  workoutTimePerDayBox: {
     flex: 2,
     width: '90%',
     justifyContent: 'center',
     margin: '5%',
   },
-  workoutTimeHowLongButtonBox: {
+  workoutTimePerDayButtonBox: {
     margin: '3%',
   },
   button: {

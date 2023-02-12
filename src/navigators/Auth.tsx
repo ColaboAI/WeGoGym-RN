@@ -8,8 +8,8 @@ import {
   UsernameScreen,
   GenderScreen,
   BodyInformationScreen,
-  WorkoutTimeScreen,
-  WorkoutTimeHowLongScreen,
+  WorkoutTimePeriodScreen,
+  WorkoutTimePerDayScreen,
   WorkoutPerWeekScreen,
   WorkoutLevelScreen,
   WorkoutGoalScreen,
@@ -47,10 +47,13 @@ function Auth() {
       <Stack.Screen name="Username" component={UsernameScreen} />
       <Stack.Screen name="Gender" component={GenderScreen} />
       <Stack.Screen name="BodyInformation" component={BodyInformationScreen} />
-      <Stack.Screen name="WorkoutTime" component={WorkoutTimeScreen} />
       <Stack.Screen
-        name="WorkoutTimeHowLong"
-        component={WorkoutTimeHowLongScreen}
+        name="WorkoutTimePeriod"
+        component={WorkoutTimePeriodScreen}
+      />
+      <Stack.Screen
+        name="WorkoutTimePerDay"
+        component={WorkoutTimePerDayScreen}
       />
       <Stack.Screen name="WorkoutPerWeek" component={WorkoutPerWeekScreen} />
       <Stack.Screen name="WorkoutLevel" component={WorkoutLevelScreen} />

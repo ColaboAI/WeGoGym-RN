@@ -1,4 +1,4 @@
-import { StyleSheet, View, SafeAreaView } from 'react-native';
+import { StyleSheet, View, SafeAreaView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '@store/secureStore';
@@ -7,7 +7,7 @@ import { useAuthActions } from '@/hooks/context/useAuth';
 
 export default function WorkoutGoalScreen() {
   const theme = useTheme();
-  const { signIn } = useAuthActions();
+  const { signUp } = useAuthActions();
   const [isSelected, setIsSelected] = useState<WorkoutGoal[]>([
     { id: 0, goal: '💪🏻 근성장', select: false },
     { id: 1, goal: '🚴🏻 체력 증진', select: false },
@@ -63,14 +63,13 @@ export default function WorkoutGoalScreen() {
           mode="contained"
           onPress={async () => {
             const workoutGoal = getGoal(isSelected);
-            save('workoutGoal', workoutGoal);
-            // TODO: not sign in
-            // First sign up in phone number screen
-            // and then put user/me
+            await save('workoutGoal', workoutGoal);
 
             const info = await getInfo();
             if (info) {
-              await signIn(info.phoneNumber);
+              signUp(info);
+            } else {
+              Alert.alert('회원가입에 실패했습니다.', '다시 시도해주세요.');
             }
           }}>
           확인

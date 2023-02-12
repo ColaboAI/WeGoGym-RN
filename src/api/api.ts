@@ -1,7 +1,8 @@
 import { getValueFor } from '@/store/secureStore';
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { handleNetworkErrorAlert } from './exception';
 import { apiClient } from './client';
+import { AxiosError } from 'axios';
 // TODO: change to https
 // TODO: change to real domain
 const BASE_URL =
@@ -11,10 +12,17 @@ const BASE_URL =
 
 // TODO: add param like firebase uid to identify user
 async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
-  const res = await apiClient.post(`${BASE_URL}/login`, {
-    phoneNumber,
-  });
-  return res.data;
+  try {
+    const res = await apiClient.post(`${BASE_URL}/user/login`, {
+      phoneNumber,
+    });
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
 }
 
 async function postWorkoutPromise(params: WorkoutPromiseBase) {
@@ -36,15 +44,15 @@ async function getWorkoutPromise() {
       user: {
         _id: '1',
         phoneNumber: '010-1234-5678',
-        uri: 'https://i.ibb.co/Y725W4C/image.png',
+        profilePic: 'https://i.ibb.co/Y725W4C/image.png',
         username: '권민규',
         gender: '남자',
         age: '25',
         height: '180',
         weight: '70',
         workoutPerWeek: '3',
-        workoutTime: '1',
-        workoutTimeHowLong: '1',
+        workoutTimePeriod: '1',
+        workoutTimePerDay: '1',
         workoutLevel: '1',
         workoutGoal: '1',
       },
@@ -62,15 +70,15 @@ async function getWorkoutPromise() {
       user: {
         _id: '2',
         phoneNumber: '010-1234-5678',
-        uri: 'https://i.ibb.co/VwvkLpy/IMG-3484.jpg',
+        profilePic: 'https://i.ibb.co/VwvkLpy/IMG-3484.jpg',
         username: '공성현',
         gender: '남자',
         age: '25',
         height: '180',
         weight: '70',
         workoutPerWeek: '3',
-        workoutTime: '1',
-        workoutTimeHowLong: '1',
+        workoutTimePeriod: '1',
+        workoutTimePerDay: '1',
         workoutLevel: '1',
         workoutGoal: '1',
       },
@@ -88,15 +96,15 @@ async function getWorkoutPromise() {
       user: {
         _id: '3',
         phoneNumber: '010-1234-5678',
-        uri: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
+        profilePic: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
         username: '김도연',
         gender: '남자',
         age: '25',
         height: '180',
         weight: '70',
         workoutPerWeek: '3',
-        workoutTime: '1',
-        workoutTimeHowLong: '1',
+        workoutTimePeriod: '1',
+        workoutTimePerDay: '1',
         workoutLevel: '1',
         workoutGoal: '1',
       },
@@ -114,15 +122,15 @@ async function getWorkoutPromise() {
       user: {
         _id: '4',
         phoneNumber: '010-1234-5678',
-        uri: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
+        profilePic: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
         username: '김도연',
         gender: '남자',
         age: '25',
         height: '180',
         weight: '70',
         workoutPerWeek: '3',
-        workoutTime: '1',
-        workoutTimeHowLong: '1',
+        workoutTimePeriod: '1',
+        workoutTimePerDay: '1',
         workoutLevel: '1',
         workoutGoal: '1',
       },
@@ -140,15 +148,15 @@ async function getWorkoutPromise() {
       user: {
         _id: '5',
         phoneNumber: '010-1234-5678',
-        uri: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
+        profilePic: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
         username: '김도연',
         gender: '남자',
         age: '25',
         height: '180',
         weight: '70',
         workoutPerWeek: '3',
-        workoutTime: '1',
-        workoutTimeHowLong: '1',
+        workoutTimePeriod: '1',
+        workoutTimePerDay: '1',
         workoutLevel: '1',
         workoutGoal: '1',
       },
@@ -172,45 +180,45 @@ async function getFriendList() {
     {
       _id: '1',
       phoneNumber: '010-1234-5678',
-      uri: 'https://i.ibb.co/Y725W4C/image.png',
+      profilePic: 'https://i.ibb.co/Y725W4C/image.png',
       username: '권민규',
       gender: '남자',
       age: '25',
       height: '180',
       weight: '70',
       workoutPerWeek: '3',
-      workoutTime: '1',
-      workoutTimeHowLong: '1',
+      workoutTimePeriod: '1',
+      workoutTimePerDay: '1',
       workoutLevel: '1',
       workoutGoal: '1',
     },
     {
       _id: '2',
       phoneNumber: '010-1234-5678',
-      uri: 'https://i.ibb.co/VwvkLpy/IMG-3484.jpg',
+      profilePic: 'https://i.ibb.co/VwvkLpy/IMG-3484.jpg',
       username: '공성현',
       gender: '남자',
       age: '25',
       height: '180',
       weight: '70',
       workoutPerWeek: '3',
-      workoutTime: '1',
-      workoutTimeHowLong: '1',
+      workoutTimePeriod: '1',
+      workoutTimePerDay: '1',
       workoutLevel: '1',
       workoutGoal: '1',
     },
     {
       _id: '3',
       phoneNumber: '010-1234-5678',
-      uri: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
+      profilePic: 'https://i.ibb.co/hYd43VG/IMG-3486.jpg',
       username: '김도연',
       gender: '남자',
       age: '25',
       height: '180',
       weight: '70',
       workoutPerWeek: '3',
-      workoutTime: '1',
-      workoutTimeHowLong: '1',
+      workoutTimePeriod: '1',
+      workoutTimePerDay: '1',
       workoutLevel: '1',
       workoutGoal: '1',
     },
@@ -218,14 +226,15 @@ async function getFriendList() {
   return res;
 }
 async function postRegister(params: UserCreate): Promise<UserLoginResponse> {
-  const res = await fetch(`${BASE_URL}/user/register`, {
-    method: 'POST',
-    body: JSON.stringify(params),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return res.json();
+  try {
+    const res = await apiClient.post(`${BASE_URL}/user/register`, params);
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
 }
 
 async function getMyInfo(): Promise<UserRead> {
@@ -258,21 +267,8 @@ async function putMyInfo(params: UserCreate): Promise<UserRead> {
 async function refreshAccessToken(
   param: RefreshTokenRequest,
 ): Promise<UserLoginResponse> {
-  const res = await fetch(`${BASE_URL}/auth/refresh`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      token: param.token,
-      refreshToken: param.refreshToken,
-    }),
-  });
-  if (!res.ok) {
-    handleNetworkErrorAlert(res);
-  }
-
-  return res.json();
+  const res = await apiClient.post('/auth/refresh', param);
+  return res.data;
 }
 
 // async function verify(token: string): Promise<string> {}

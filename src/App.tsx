@@ -6,9 +6,11 @@ import { RootStackParamList } from 'navigators/types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 import { SplashScreen } from './screens';
 import { useAuthValue } from './hooks/context/useAuth';
-
+import { useAxiosInterceptor } from './api/client';
 function App() {
   const authState = useAuthValue();
+
+  useAxiosInterceptor();
 
   if (authState.isLoading) {
     return <SplashScreen />;

@@ -33,8 +33,8 @@ export type AuthStackParamList = {
   Username: undefined;
   Gender: undefined;
   BodyInformation: undefined;
-  WorkoutTime: undefined;
-  WorkoutTimeHowLong: undefined;
+  WorkoutTimePeriod: undefined;
+  WorkoutTimePerDay: undefined;
   WorkoutGoal: undefined;
   WorkoutPerWeek: undefined;
   WorkoutLevel: undefined;
