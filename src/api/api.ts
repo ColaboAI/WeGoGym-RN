@@ -1,19 +1,13 @@
-import { getValueFor } from '@/store/secureStore';
-import { Alert, Platform } from 'react-native';
-import { handleNetworkErrorAlert } from './exception';
+import { Alert } from 'react-native';
 import { apiClient } from './client';
 import { AxiosError } from 'axios';
 // TODO: change to https
 // TODO: change to real domain
-const BASE_URL =
-  Platform.OS === 'ios'
-    ? 'http://127.0.0.1:8000/api/v1'
-    : 'http://10.0.2.2:8000/api/v1';
 
 // TODO: add param like firebase uid to identify user
 async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
   try {
-    const res = await apiClient.post(`${BASE_URL}/user/login`, {
+    const res = await apiClient.post('/user/login', {
       phoneNumber,
     });
     return res.data;
@@ -227,7 +221,7 @@ async function getFriendList() {
 }
 async function postRegister(params: UserCreate): Promise<UserLoginResponse> {
   try {
-    const res = await apiClient.post(`${BASE_URL}/user/register`, params);
+    const res = await apiClient.post('w/user/register', params);
     return res.data;
   } catch (e) {
     if (e instanceof AxiosError) {
@@ -237,31 +231,30 @@ async function postRegister(params: UserCreate): Promise<UserLoginResponse> {
   }
 }
 
-async function getMyInfo(): Promise<UserRead> {
-  const token = await getValueFor('token');
-  const res = await fetch(`${BASE_URL}/user/me`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return res.json();
-}
-async function putMyInfo(params: UserCreate): Promise<UserRead> {
-  const token = await getValueFor('token');
-  const res = await fetch(`${BASE_URL}/user/me`, {
-    method: 'PUT',
-    body: JSON.stringify(params),
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (!res.ok) {
-    handleNetworkErrorAlert(res);
+async function getMyInfo(): Promise<MyInfoRead> {
+  try {
+    const res = await apiClient.get('/user/me');
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
   }
-  return res.json();
+}
+async function putMyInfo(params: UserCreate): Promise<MyInfoRead> {
+  try {
+    const res = await apiClient.put('/user/me', {
+      method: 'PUT',
+      body: JSON.stringify(params),
+    });
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
 }
 
 async function refreshAccessToken(
