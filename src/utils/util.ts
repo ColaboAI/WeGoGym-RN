@@ -1,4 +1,4 @@
-import { getValueFor } from '@/store/secureStore';
+import { getValueFor } from 'store/secureStore';
 import { GYM_OPEN_API_KEY } from '@env';
 import { v4 as uuid } from 'uuid';
 
@@ -54,7 +54,7 @@ export async function getGymInfoFromApi() {
       const response = await fetch(url);
       const json = await response.json();
       const data = json.LOCALDATA_104201.row;
-      const gymArr = data.map((item: GymInfo) => {
+      const gymArr = data.map((item: GymInfoOpenAPI) => {
         return {
           id: uuid(),
           status: item.TRDSTATEGBN,
