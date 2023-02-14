@@ -25,15 +25,15 @@ import BottomSheet, {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
-import GymInfoLoader from '@/component/molecules/Home/GymInfoLoader';
+import GymInfoLoader from '/components/molecules/Home/GymInfoLoader';
 import {
   getGymInfoFromApi,
   getLocaleDate,
   getLocaleTime,
   isToday,
-} from '@/utils/util';
-import { postWorkoutPromise } from '@/api/api';
-import { HomeStackScreenProps } from '@/navigators/types';
+} from 'utils/util';
+import { postWorkoutPromise } from 'api/api';
+import { HomeStackScreenProps } from 'navigators/types';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;

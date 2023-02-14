@@ -2,7 +2,7 @@ import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { save } from '@store/secureStore';
-import { AuthStackScreenProps } from '@/navigators/types';
+import { AuthStackScreenProps } from 'navigators/types';
 
 type Props = AuthStackScreenProps<'WorkoutPerWeek'>;
 export default function WorkoutPerWeekScreen({ navigation }: Props) {

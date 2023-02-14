@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { save, getValueFor, clear } from '@store/secureStore';
-import { postLogin, postRegister } from '@/api/api';
+import { postLogin, postRegister } from 'api/api';
 import { Alert } from 'react-native';
 type AuthState = {
   user: any | null;
@@ -65,7 +65,8 @@ function AuthProvider({ children }: AuthProviderProps) {
 
         await save('token', token);
         await save('refreshToken', refreshToken);
-
+        console.log('token: ', token);
+        console.log('refreshToken: ', refreshToken);
         setAuthState(prevState => ({
           ...prevState,
           token: token,
@@ -112,7 +113,6 @@ function AuthProvider({ children }: AuthProviderProps) {
           setAuthState(prevState => ({
             ...prevState,
             token: token,
-            isSignout: false,
           }));
           return true;
         }
@@ -139,10 +139,10 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const bootstrapAsync = async () => {
-      authActions.setLoading(true);
       try {
         const isToken = await authActions.getTokenFromStorage();
         const phoneNumber = await getValueFor('phoneNumber');
+        console.log('phoneNumber: ', phoneNumber);
         if (!isToken) {
           if (phoneNumber) {
             authActions.signIn(phoneNumber);
@@ -153,12 +153,10 @@ function AuthProvider({ children }: AuthProviderProps) {
       } catch (e) {
         const err = e as Error;
         Alert.alert('인증 오류가 발생했습니다.', `${err.name}: ${err.message}`);
-      } finally {
-        authActions.setLoading(false);
       }
     };
     bootstrapAsync();
-  }, [authActions, authState.token]);
+  }, [authActions]);
   return (
     <AuthActionsContext.Provider value={authActions}>
       <AuthValueContext.Provider value={authState}>

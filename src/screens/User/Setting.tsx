@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { List, Switch, Text } from 'react-native-paper';
 import React, { useState } from 'react';
-import { useAuthActions } from '@/hooks/context/useAuth';
+import { useAuthActions } from 'hooks/context/useAuth';
 
 export default function SettingScreen() {
   const { signOut } = useAuthActions();

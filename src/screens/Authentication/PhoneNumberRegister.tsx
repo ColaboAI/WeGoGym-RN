@@ -21,8 +21,8 @@ import {
 } from 'react-native-paper';
 import { save } from '@store/secureStore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { AuthStackScreenProps } from '@/navigators/types';
-import CustomToolbar from '@/component/organisms/CustomToolbar';
+import { AuthStackScreenProps } from 'navigators/types';
+import CustomToolbar from 'components/organisms/CustomToolbar';
 
 type Props = AuthStackScreenProps<'PhoneNumberRegister'>;
 

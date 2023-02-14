@@ -9,7 +9,7 @@ import React from 'react';
 import { Button, Headline, TextInput, useTheme } from 'react-native-paper';
 import { save } from '@store/secureStore';
 
-import { AuthStackScreenProps } from '@/navigators/types';
+import { AuthStackScreenProps } from 'navigators/types';
 type Props = AuthStackScreenProps<'Username'>;
 export default function UsernameScreen({ navigation }: Props) {
   const theme = useTheme();

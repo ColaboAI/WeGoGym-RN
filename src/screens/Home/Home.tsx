@@ -7,15 +7,15 @@ import {
   useTheme,
 } from 'react-native-paper';
 import React, { useCallback, useEffect, useState } from 'react';
-import FriendProfileCard from '@/component/molecules/Home/FriendProfileCard';
-import WorkoutPromiseCard from '@/component/molecules/Home/WorkoutPromiseCard';
-import { HomeStackScreenProps } from '@/navigators/types';
-import CustomFAB from '@/component/molecules/Home/CustomFAB';
+import FriendProfileCard from 'components/molecules/Home/FriendProfileCard';
+import WorkoutPromiseCard from 'components/molecules/Home/WorkoutPromiseCard';
+import { HomeStackScreenProps } from 'navigators/types';
+import CustomFAB from 'components/molecules/Home/CustomFAB';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import { getFriendList, getWorkoutPromise } from '@/api/api';
-import WorkoutPromiseLoader from '@/component/molecules/Home/WorkoutPromiseLoader';
-import FriendListLoader from '@/component/molecules/Home/FriendListLoader';
-import ScreenWrapper from '@/component/template/Common/ScreenWrapper';
+import { getFriendList, getWorkoutPromise } from 'api/api';
+import WorkoutPromiseLoader from 'components/molecules/Home/WorkoutPromiseLoader';
+import FriendListLoader from 'components/molecules/Home/FriendListLoader';
+import ScreenWrapper from 'components/template/Common/ScreenWrapper';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {

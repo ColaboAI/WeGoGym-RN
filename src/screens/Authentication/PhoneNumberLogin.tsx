@@ -14,8 +14,8 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import CustomToolbar from '@/component/organisms/CustomToolbar';
-import { useAuthActions } from '@/hooks/context/useAuth';
+import CustomToolbar from 'components/organisms/CustomToolbar';
+import { useAuthActions } from 'hooks/context/useAuth';
 // type Props = AuthStackScreenProps<'PhoneNumberLogin'>;
 
 export default function PhoneNumberScreen() {
