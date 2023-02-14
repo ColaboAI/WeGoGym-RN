@@ -49,7 +49,7 @@ interface WorkoutPromiseCreate extends WorkoutPromiseBase {
   // updatedAt: Date; // 수정일
 }
 
-interface GymInfo {
+interface GymInfoOpenAPI {
   TRDSTATEGBN: string; // 영업상태코드
   BPLCNM: string; // 사업자명
   SITEWHLADDR: string; // 도로명주소
@@ -70,6 +70,7 @@ interface UserBase {
 }
 
 interface UserCreate extends UserBase {
+  // TODO: remove ID
   _id?: string;
   username: string;
   gender: string;
@@ -84,9 +85,32 @@ interface UserCreate extends UserBase {
   workoutLevel: string;
   workoutGoal: string;
 }
+
+interface UserUpdate extends UserBase {
+  username?: string;
+  age?: int;
+  height?: int;
+  weight?: int;
+  workoutPerWeek?: number;
+  workoutTimePeriod?: string;
+  workoutTimePerDay?: string;
+  workoutLevel?: string;
+  workoutGoal?: string;
+  address?: string;
+  gym?: string;
+}
+
 interface UserRead extends UserCreate {
   createdAt: Date;
   updatedAt: Date;
+}
+
+interface MyInfoRead extends UserCreate {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  gym: string;
+  address: string;
 }
 
 type UserLoginResponse = {
@@ -95,6 +119,6 @@ type UserLoginResponse = {
 };
 
 type RefreshTokenRequest = {
-  token: string;
-  refreshToken: string;
+  token: string | null;
+  refreshToken: string | null;
 };
