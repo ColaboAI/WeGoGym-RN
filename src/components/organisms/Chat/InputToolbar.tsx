@@ -1,5 +1,5 @@
 import React from 'react';
-import ChatInput from 'component/molecules/Chat/ChatInput';
+import ChatInput from '/components/molecules/Chat/ChatInput';
 import { StyleSheet, View } from 'react-native';
 
 const InputToolbar = () => {
