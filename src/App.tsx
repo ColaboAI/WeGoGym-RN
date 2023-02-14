@@ -7,6 +7,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 import { SplashScreen } from './screens';
 import { useAuthValue } from './hooks/context/useAuth';
 import { useAxiosInterceptor } from './api/client';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 function App() {
   const authState = useAuthValue();
 
@@ -17,18 +18,20 @@ function App() {
   }
 
   return (
-    <Stack.Navigator screenOptions={() => ({ headerShown: false })}>
-      {/* TODO: Check phone number and Token */}
-      {authState.token === null ? (
-        <>
-          <Stack.Screen name="Auth" component={Auth} />
-        </>
-      ) : (
-        <>
-          <Stack.Screen name="MainNavigator" component={MainNavigator} />
-        </>
-      )}
-    </Stack.Navigator>
+    <QueryErrorResetBoundary>
+      <Stack.Navigator screenOptions={() => ({ headerShown: false })}>
+        {/* TODO: Check phone number and Token */}
+        {authState.token === null ? (
+          <>
+            <Stack.Screen name="Auth" component={Auth} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="MainNavigator" component={MainNavigator} />
+          </>
+        )}
+      </Stack.Navigator>
+    </QueryErrorResetBoundary>
   );
 }
 

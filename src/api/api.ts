@@ -244,10 +244,7 @@ async function getMyInfo(): Promise<MyInfoRead> {
 }
 async function putMyInfo(params: UserCreate): Promise<MyInfoRead> {
   try {
-    const res = await apiClient.put('/user/me', {
-      method: 'PUT',
-      body: JSON.stringify(params),
-    });
+    const res = await apiClient.put('/user/me', params);
     return res.data;
   } catch (e) {
     if (e instanceof AxiosError) {

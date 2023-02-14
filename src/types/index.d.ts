@@ -109,8 +109,8 @@ interface MyInfoRead extends UserCreate {
   id: string;
   createdAt: Date;
   updatedAt: Date;
-  gym: string;
-  address: string;
+  gym?: string;
+  address?: string;
 }
 
 type UserLoginResponse = {
