@@ -43,7 +43,7 @@ export type AuthStackParamList = {
 export type UserStackParamList = {
   User: undefined;
   Setting: undefined;
-  ProfileEdit: undefined;
+  ProfileEdit: { myInfo: MyInfoRead };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

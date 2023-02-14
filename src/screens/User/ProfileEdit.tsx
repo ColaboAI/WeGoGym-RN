@@ -11,67 +11,28 @@ import {
   Button,
 } from 'react-native-paper';
 import React, { useState } from 'react';
+import { UserStackScreenProps } from '/navigators/types';
+import {
+  ImageLibraryOptions,
+  launchImageLibrary,
+} from 'react-native-image-picker';
+type Props = UserStackScreenProps<'ProfileEdit'>;
 
-export default function ProfileEdit({ navigation }: any) {
+export default function ProfileEdit({ navigation, route }: Props) {
   const theme = useTheme();
   const [isAuthenticated] = useState(true);
-  const data = [
-    {
-      id: 0,
-      title: 'username',
-      value: '스근하이',
-    },
-    {
-      id: 1,
-      title: 'profilePic',
-      value: 'https://i.ibb.co/Y725W4C/image.png',
-    },
-    {
-      id: 2,
-      title: 'height',
-      value: '174',
-    },
-    {
-      id: 3,
-      title: 'weight',
-      value: '73',
-    },
-    {
-      id: 4,
-      title: 'workoutLevel',
-      value: '중급',
-    },
-    {
-      id: 5,
-      title: 'age',
-      value: '25',
-    },
-    {
-      id: 6,
-      title: 'location',
-      value: '서울시 관악구 서원동',
-    },
-    {
-      id: 7,
-      title: 'my_gym',
-      value: '짐박스 봉천점',
-    },
-    {
-      id: 8,
-      title: 'appointed_number',
-      value: '9',
-    },
-    {
-      id: 9,
-      title: 'present_number',
-      value: '80',
-    },
-    {
-      id: 10,
-      title: 'workoutGoal',
-      value: ['다이어트', '근육증가', '체지방 감소'],
-    },
-  ];
+  const myInfo = route.params.myInfo;
+  const onPressProfilePic = async () => {
+    const options: ImageLibraryOptions = {
+      mediaType: 'photo',
+      includeBase64: true,
+      presentationStyle: 'popover',
+      selectionLimit: 1,
+    };
+
+    const res = await launchImageLibrary(options);
+    console.log(res);
+  };
 
   return (
     <SafeAreaView style={style.container}>
@@ -87,14 +48,18 @@ export default function ProfileEdit({ navigation }: any) {
       {/* Profile picture upload */}
       <View style={style.profileContainer}>
         <View style={style.avatarContainer}>
-          <Avatar.Image
-            size={64}
-            source={{ uri: 'https://i.ibb.co/Y725W4C/image.png' }}
-            style={style.avatar}
-          />
+          {myInfo.profilePic ? (
+            <Avatar.Image
+              size={64}
+              source={{ uri: myInfo.profilePic }}
+              style={style.avatar}
+            />
+          ) : (
+            <Avatar.Text size={64} label={myInfo.username[0] ?? 'User'} />
+          )}
         </View>
         <View style={style.usernameContainer}>
-          <Text variant="titleMedium">{data[0].value} 님</Text>
+          <Text variant="titleMedium">{myInfo.username} 님</Text>
           {isAuthenticated ? (
             <Tooltip
               title="프로필 인증이 완료된 회원입니다."
@@ -108,12 +73,7 @@ export default function ProfileEdit({ navigation }: any) {
             </Tooltip>
           ) : null}
         </View>
-        <Button
-          onPress={() => {
-            navigation.navigate('ProfileEdit');
-          }}>
-          프로필 편집
-        </Button>
+        <Button onPress={onPressProfilePic}>프로필 사진 수정</Button>
       </View>
       <ScrollView>
         <View style={style.title}>
@@ -133,7 +93,7 @@ export default function ProfileEdit({ navigation }: any) {
                 style={{
                   color: theme.colors.primary,
                 }}>
-                {data[2].value}cm
+                {myInfo.height}cm
               </Text>
               <Text variant="bodySmall">키</Text>
             </Card.Content>
@@ -145,7 +105,7 @@ export default function ProfileEdit({ navigation }: any) {
                 style={{
                   color: theme.colors.primary,
                 }}>
-                {data[3].value}kg
+                {myInfo.weight}kg
               </Text>
               <Text variant="bodySmall">몸무게</Text>
             </Card.Content>
@@ -157,7 +117,7 @@ export default function ProfileEdit({ navigation }: any) {
                 style={{
                   color: theme.colors.primary,
                 }}>
-                {data[4].value}
+                {myInfo.workoutLevel.split('(')[0]}
               </Text>
               <Text variant="bodySmall">운동 경력</Text>
             </Card.Content>
@@ -169,7 +129,7 @@ export default function ProfileEdit({ navigation }: any) {
                 style={{
                   color: theme.colors.primary,
                 }}>
-                {data[5].value}세
+                {myInfo.age}세
               </Text>
               <Text variant="bodySmall">나이</Text>
             </Card.Content>
@@ -189,19 +149,27 @@ export default function ProfileEdit({ navigation }: any) {
             <Card.Content>
               <List.Item
                 title="동네"
-                right={() => <Text variant="bodySmall">{data[6].value}</Text>}
+                right={() => (
+                  <Text variant="bodySmall">
+                    {myInfo.address ?? '동네를 등록하고 친구를 찾아보세요!'}
+                  </Text>
+                )}
               />
               <List.Item
                 title="헬스장"
-                right={() => <Text variant="bodySmall">{data[7].value}</Text>}
+                right={() => (
+                  <Text variant="bodySmall">
+                    {myInfo.gym ?? '어떤 헬스장을 다니시나요?'}
+                  </Text>
+                )}
               />
               <List.Item
                 title="출석률"
-                right={() => <Text variant="bodySmall">{data[9].value}%</Text>}
+                right={() => <Text variant="bodySmall">80%</Text>}
               />
               <List.Item
                 title="운동 약속"
-                right={() => <Text variant="bodySmall">{data[8].value}회</Text>}
+                right={() => <Text variant="bodySmall">??회</Text>}
               />
             </Card.Content>
           </Card>
