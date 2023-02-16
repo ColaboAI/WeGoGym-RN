@@ -1,14 +1,12 @@
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 import {
-  Platform,
-  ScrollView,
   ScrollViewProps,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'react-native-paper';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,7 +14,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 type Props = ScrollViewProps &
   React.PropsWithChildren<{
     withScrollView: boolean;
-    withBottomTab: boolean;
     style?: StyleProp<ViewStyle>;
     contentContainerStyle?: StyleProp<ViewStyle>;
   }>;
@@ -24,7 +21,6 @@ type Props = ScrollViewProps &
 export default function ScreenWrapper({
   children,
   withScrollView,
-  withBottomTab,
   style,
   contentContainerStyle,
   ...rest
@@ -32,16 +28,11 @@ export default function ScreenWrapper({
   const theme = useTheme();
 
   const insets = useSafeAreaInsets();
-  const tabBarHeight = useBottomTabBarHeight();
-
-  const iosPaddingBottom = withBottomTab ? tabBarHeight : 0;
-  const androidPaddingBottom = withBottomTab ? tabBarHeight + insets.bottom : 0;
   const containerStyle = [
     styles.container,
     {
       backgroundColor: theme.colors.background,
-      paddingBottom:
-        Platform.OS === 'ios' ? iosPaddingBottom : androidPaddingBottom,
+      paddingBottom: insets.bottom,
       paddingLeft: insets.left,
       paddingRight: insets.right,
       paddingTop: insets.top,
