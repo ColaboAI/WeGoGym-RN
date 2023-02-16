@@ -166,7 +166,9 @@ export default function UserScreen({ navigation }: Props) {
                 horizontal
                 nestedScrollEnabled
                 showsHorizontalScrollIndicator={false}>
-                {data && data.workoutGoal.split(',').length > 0 ? (
+                {data &&
+                data.workoutGoal &&
+                data.workoutGoal.split(',').length > 0 ? (
                   data.workoutGoal.split(',').map((goal, index) => (
                     <Chip
                       key={`workoutGoal-${index}`}

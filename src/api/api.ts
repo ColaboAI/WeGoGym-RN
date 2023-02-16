@@ -222,12 +222,21 @@ async function getFriendList() {
 }
 async function postRegister(params: UserCreate): Promise<UserLoginResponse> {
   try {
-    const res = await apiClient.post('w/user/register', params);
+    const res = await apiClient.post('/user/register', params);
     return res.data;
   } catch (e) {
     if (e instanceof AxiosError) {
       Alert.alert(e.response?.data.message);
     }
+    throw e;
+  }
+}
+
+async function deleteUser(): Promise<void> {
+  try {
+    const res = await apiClient.delete('/user/unregister');
+    return res.data;
+  } catch (e) {
     throw e;
   }
 }
@@ -291,4 +300,5 @@ export {
   getFriendList,
   putMyInfo,
   refreshAccessToken,
+  deleteUser,
 };

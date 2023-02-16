@@ -14,25 +14,6 @@ export function useRegisterMutation() {
 }
 
 export function useGetMyInfoQuery() {
-  const placeholderData: MyInfoRead = {
-    id: '',
-    bio: '',
-    username: '',
-    phoneNumber: '',
-    workoutLevel: '',
-    workoutGoal: '',
-    age: 0,
-    height: 0,
-    weight: 0,
-    workoutPerWeek: 0,
-    workoutTimePeriod: '',
-    workoutTimePerDay: '0',
-    gym: '',
-    gymAddress: '',
-    address: '',
-    gender: '',
-  };
-
   return useQuery({
     queryKey: ['getMyInfo'],
     queryFn: getMyInfo,
@@ -41,7 +22,6 @@ export function useGetMyInfoQuery() {
       console.log(error);
     },
     // Type myInfoRead
-    placeholderData,
     suspense: true,
   });
 }

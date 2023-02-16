@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { save, getValueFor, clear } from '@store/secureStore';
-import { postLogin, postRegister } from 'api/api';
+import { postLogin, postRegister, deleteUser } from 'api/api';
 import { Alert } from 'react-native';
 type AuthState = {
   user: any | null;
@@ -14,6 +14,7 @@ type AuthState = {
   isLoading: boolean;
   isSignout: boolean;
   error: string | null;
+  phoneNumber: string | null;
 };
 
 type AuthActions = {
@@ -23,6 +24,8 @@ type AuthActions = {
   getTokenFromStorage: () => Promise<boolean>;
   refreshToken: (a: string, b: string) => void;
   setLoading: (b: boolean) => void;
+  getPhoneNumFromStorage: () => Promise<boolean>;
+  unRegister: () => Promise<void>;
 };
 
 const initialAuthState: AuthState = {
@@ -31,6 +34,7 @@ const initialAuthState: AuthState = {
   isLoading: false,
   isSignout: false,
   error: null,
+  phoneNumber: null,
 };
 
 const initialAuthActions: AuthActions = {
@@ -42,6 +46,10 @@ const initialAuthActions: AuthActions = {
   },
   refreshToken: () => {},
   setLoading: () => {},
+  getPhoneNumFromStorage: async () => {
+    return false;
+  },
+  unRegister: async () => {},
 };
 
 const AuthValueContext = createContext<AuthState>(initialAuthState);
@@ -133,6 +141,31 @@ function AuthProvider({ children }: AuthProviderProps) {
           isLoading: b,
         }));
       },
+      getPhoneNumFromStorage: async () => {
+        const phoneNumber = await getValueFor('phoneNumber');
+        if (phoneNumber) {
+          setAuthState(prevState => ({
+            ...prevState,
+            phoneNumber: phoneNumber,
+          }));
+          return true;
+        }
+        return false;
+      },
+      unRegister: async () => {
+        const res = await deleteUser();
+        await clear('token');
+        await clear('refreshToken');
+        await clear('phoneNumber');
+        console.log('unRegister', res);
+
+        setAuthState(prevState => ({
+          ...prevState,
+          token: null,
+          isSignout: true,
+          isLoading: false,
+        }));
+      },
     }),
     [],
   );
@@ -145,9 +178,9 @@ function AuthProvider({ children }: AuthProviderProps) {
         console.log('phoneNumber: ', phoneNumber);
         if (!isToken) {
           if (phoneNumber) {
-            authActions.signIn(phoneNumber);
+            await authActions.signIn(phoneNumber);
           } else {
-            authActions.signOut();
+            await authActions.signOut();
           }
         }
       } catch (e) {

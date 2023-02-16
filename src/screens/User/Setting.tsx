@@ -7,14 +7,25 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { List, Switch, Text } from 'react-native-paper';
-import React, { useState } from 'react';
-import { useAuthActions } from 'hooks/context/useAuth';
+import React, { useEffect, useState } from 'react';
+import { useAuthActions, useAuthValue } from 'hooks/context/useAuth';
 
 export default function SettingScreen() {
-  const { signOut } = useAuthActions();
+  const authState = useAuthValue();
+  const { unRegister, signOut, getPhoneNumFromStorage } = useAuthActions();
+
+  useEffect(() => {
+    async function getPhoneNumber() {
+      await getPhoneNumFromStorage();
+    }
+    getPhoneNumber();
+  }, [getPhoneNumFromStorage]);
 
   const [isPushAlarmSwitchOn, setIsPushAlarmSwitchOn] = useState(false);
   const [isMarketingSwitchOn, setIsMarketingSwitchOn] = useState(false);
+  // const [myPhoneNumber, setMyPhoneNumber] = useState(
+  //   await getValueFor('phoneNumber'),
+  // );
 
   const onTogglePushAlarmSwitch = () =>
     setIsPushAlarmSwitchOn(!isPushAlarmSwitchOn);
@@ -30,8 +41,8 @@ export default function SettingScreen() {
       },
       {
         text: '확인',
-        onPress: () => {
-          signOut();
+        onPress: async () => {
+          await signOut();
         },
         style: 'destructive',
       },
@@ -46,8 +57,8 @@ export default function SettingScreen() {
       },
       {
         text: '확인',
-        onPress: () => {
-          signOut();
+        onPress: async () => {
+          await unRegister();
         },
         style: 'destructive',
       },
@@ -62,7 +73,7 @@ export default function SettingScreen() {
           <View style={style.listContainer}>
             <List.Item
               title="전화번호"
-              right={props => <Text {...props}>+82 10-0000-0000</Text>}
+              right={props => <Text {...props}>{authState.phoneNumber}</Text>}
             />
           </View>
         </List.Section>
