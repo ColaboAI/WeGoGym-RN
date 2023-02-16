@@ -61,7 +61,7 @@ export default function ProfileEdit({ navigation, route }: Props) {
   };
 
   const [myWorkoutGoalState, setMyWorkoutGoalState] = useState(
-    initWorkoutGoal(myInfo.workoutGoal.split(',')),
+    initWorkoutGoal(myInfo.workoutGoal ? myInfo.workoutGoal.split(',') : []),
   );
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
@@ -87,7 +87,6 @@ export default function ProfileEdit({ navigation, route }: Props) {
         }
       })
       .filter(item => item !== undefined);
-    console.log(newMyGoal);
     const myInfoUpdate: UserUpdate = {
       ...myInfoState,
       workoutGoal: newMyGoal.join(','),
@@ -344,25 +343,47 @@ export default function ProfileEdit({ navigation, route }: Props) {
                   }}
                   blurOnSubmit={true}
                 />
-                <List.Item
-                  title="헬스장"
-                  right={() => (
-                    <Button
-                      mode="contained-tonal"
-                      onPress={() => {
-                        setIsBottomSheetOpen(prev => !prev);
-                      }}
-                      onLongPress={() => {
-                        setMyInfoState(prev => ({
-                          ...prev,
-                          gym: null,
-                        }));
-                        Alert.alert('헬스장 정보가 삭제되었습니다.');
-                      }}>
-                      {myInfoState.gym ?? '헬스장 선택'}
-                    </Button>
-                  )}
-                />
+                {myInfoState.gymInfo !== null ? (
+                  <List.Item
+                    title="헬스장"
+                    right={() => (
+                      <Button
+                        mode="contained-tonal"
+                        onPress={() => {
+                          setIsBottomSheetOpen(prev => !prev);
+                        }}
+                        onLongPress={() => {
+                          setMyInfoState(prev => ({
+                            ...prev,
+                            gym: null,
+                          }));
+                          Alert.alert('헬스장 정보가 삭제되었습니다.');
+                        }}>
+                        {myInfoState.gymInfo.name ?? '헬스장 선택'}
+                      </Button>
+                    )}
+                  />
+                ) : (
+                  <List.Item
+                    title="헬스장"
+                    right={() => (
+                      <Button
+                        mode="contained-tonal"
+                        onPress={() => {
+                          setIsBottomSheetOpen(prev => !prev);
+                        }}
+                        onLongPress={() => {
+                          setMyInfoState(prev => ({
+                            ...prev,
+                            gym: null,
+                          }));
+                          Alert.alert('헬스장 정보가 삭제되었습니다.');
+                        }}>
+                        {'헬스장 선택'}
+                      </Button>
+                    )}
+                  />
+                )}
                 <List.Item
                   title="출석률"
                   right={() => <Text variant="bodySmall">80%</Text>}

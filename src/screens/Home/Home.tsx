@@ -117,10 +117,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
   return (
     <>
-      <ScreenWrapper
-        withScrollView={false}
-        withBottomTab
-        style={style.container}>
+      <ScreenWrapper withScrollView={false} style={style.container}>
         <View style={style.headerContainer}>
           <Text
             variant="titleLarge"

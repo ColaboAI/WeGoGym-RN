@@ -87,7 +87,7 @@ interface UserCreate extends UserBase {
 }
 
 interface UserUpdate extends UserBase {
-  [key: string]: string | number | null | undefined;
+  [key: string]: string | number | null | undefined | Gym;
   username?: string;
   bio: string | null;
   age?: number;
@@ -100,8 +100,7 @@ interface UserUpdate extends UserBase {
   gender?: string;
   workoutGoal: string | null;
   address: string | null;
-  gym: string | null;
-  gymAddress: string | null;
+  gymInfo: Gym | null;
 }
 
 interface UserRead extends UserCreate {
@@ -112,8 +111,7 @@ interface UserRead extends UserCreate {
 interface MyInfoRead extends UserCreate {
   id: string;
   bio: string | null;
-  gym: string | null;
-  gymAddress: string | null;
+  gymInfo: Gym;
   address: string | null;
 }
 

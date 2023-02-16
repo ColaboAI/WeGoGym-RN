@@ -66,8 +66,7 @@ const GymBottomSheet = (props: Props) => {
         onPress={() => {
           props.setMyInfoState(prevState => ({
             ...prevState,
-            gym: item.name,
-            gymAddress: item.address,
+            gymInfo: item,
           }));
           props.setIsBottomSheetOpen(false);
           bottomSheetRef.current?.close();

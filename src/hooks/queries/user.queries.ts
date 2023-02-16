@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMyInfo, postRegister, putMyInfo } from '@api/api';
 import { Alert } from 'react-native';
+import { AxiosError } from 'axios';
+import { clear } from '/store/secureStore';
 export function useRegisterMutation() {
   return useMutation({
     mutationFn: postRegister,
@@ -17,8 +19,16 @@ export function useGetMyInfoQuery() {
   return useQuery({
     queryKey: ['getMyInfo'],
     queryFn: getMyInfo,
-    onError: (error: Error) => {
+    retry: 1,
+    onError: async (error: AxiosError) => {
       Alert.alert(`내 정보를 가져오는데 실패하였습니다: ${error.message}`);
+      // TODO: Refactor this
+      if (error.response?.status === 404 || error.response?.status === 500) {
+        await clear('token');
+        await clear('refreshToken');
+        await clear('phoneNumber');
+      }
+
       console.log(error);
     },
     // Type myInfoRead

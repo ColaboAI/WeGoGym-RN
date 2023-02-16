@@ -214,14 +214,24 @@ export default function UserScreen({ navigation }: Props) {
                         </Text>
                       )}
                     />
-                    <List.Item
-                      title="헬스장"
-                      right={() => (
-                        <Text variant="bodySmall">
-                          {data?.gym ?? '어떤 헬스장을 다니시나요?'}
-                        </Text>
-                      )}
-                    />
+                    {/* GymInfo는 nullable */}
+                    {data?.gymInfo !== null ? (
+                      <List.Item
+                        title="헬스장"
+                        right={() => (
+                          <Text variant="bodySmall">{data?.gymInfo.name}</Text>
+                        )}
+                      />
+                    ) : (
+                      <List.Item
+                        title="헬스장"
+                        right={() => (
+                          <Text variant="bodySmall">
+                            {'어떤 헬스장을 다니시나요?'}
+                          </Text>
+                        )}
+                      />
+                    )}
 
                     <List.Item
                       title="주당 운동"

@@ -57,10 +57,10 @@ export async function getGymInfoFromApi() {
       const gymArr = data.map((item: GymInfoOpenAPI) => {
         return {
           id: uuid(),
-          status: item.TRDSTATEGBN,
-          name: item.BPLCNM,
-          address: item.SITEWHLADDR,
-          zipCode: item.RDNPOSTNO,
+          status: item.TRDSTATEGBN.trim(),
+          name: item.BPLCNM.trim(),
+          address: item.SITEWHLADDR.trim(),
+          zipCode: item.RDNPOSTNO.trim(),
         };
       });
       gym.push(...gymArr.filter((item: Gym) => item.status === '01'));
