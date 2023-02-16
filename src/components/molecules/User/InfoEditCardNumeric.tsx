@@ -16,8 +16,8 @@ function InfoEditCardNumeric(props: Props) {
     marginBottom: 5,
   };
   const [text, setText] = React.useState(props.textContent.toString());
-  const numericTitleList = ['height', 'weight', 'age'];
-  const numericTitleKorList = ['키', '몸무게', '나이(만)'];
+  const numericTitleList = ['height', 'weight', 'age', 'workoutPerWeek'];
+  const numericTitleKorList = ['키', '몸무게', '나이(만)', '운동 횟수/주'];
 
   const numericTitleListIndex = numericTitleList.indexOf(props.textTitle);
   return (

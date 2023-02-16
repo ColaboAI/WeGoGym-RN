@@ -3,51 +3,52 @@ import React, { useState } from 'react';
 import { Button, Menu, Surface, Text } from 'react-native-paper';
 
 type Props = {
-  workoutLevel: string;
+  selectedValue: string;
   title: string;
+  titleKorean: string;
+  valueList: string[];
+  valueListKorean?: string[];
   setMyInfoState: React.Dispatch<React.SetStateAction<MyInfoRead>>;
 };
 
-const WorkoutLevelMenu = (props: Props) => {
+const StringMenu = (props: Props) => {
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
-  const workoutLevelList = [
-    '입문(1년 미만)',
-    '초급(1년 이상 3년 미만)',
-    '중급(3년 이상 5년 미만)',
-    '고급(5년 이상)',
-    '전문가',
-  ];
-  const [selectedworkoutLevel, setSelectedworkoutLevel] = useState(
-    props.workoutLevel,
+  const listKorean = props.valueListKorean ?? props.valueList;
+  const list = props.valueList;
+  const [selectedIndex, setSelectedIndex] = useState(
+    list.indexOf(props.selectedValue),
   );
 
   return (
     <View style={styles.menuContainer}>
       <Surface elevation={4} style={styles.surface}>
-        <Text variant="labelLarge">{props.title}</Text>
+        <Text variant="labelLarge">{props.titleKorean}</Text>
         <Menu
           visible={visible}
           onDismiss={closeMenu}
           style={styles.menu}
           anchor={
-            <Button mode="contained-tonal" onPress={openMenu}>
-              {selectedworkoutLevel.split('(')[0]}
+            <Button
+              disabled={props.title === 'gender'}
+              mode="contained-tonal"
+              onPress={openMenu}>
+              {listKorean[selectedIndex]}
             </Button>
           }>
-          {workoutLevelList.map((item, _) => (
+          {list.map((item, idx) => (
             <Menu.Item
               key={item}
               onPress={() => {
-                setSelectedworkoutLevel(item);
+                setSelectedIndex(idx);
                 props.setMyInfoState(prevState => ({
                   ...prevState,
-                  workoutLevel: item,
+                  [props.title]: item,
                 }));
                 closeMenu();
               }}
-              title={item}
+              title={listKorean[idx]}
             />
           ))}
         </Menu>
@@ -56,7 +57,7 @@ const WorkoutLevelMenu = (props: Props) => {
   );
 };
 
-export default WorkoutLevelMenu;
+export default StringMenu;
 
 const styles = StyleSheet.create({
   menuContainer: {

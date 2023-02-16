@@ -21,11 +21,10 @@ import {
 
 import { ScrollView } from 'react-native-gesture-handler';
 import InfoEditCardNumeric from '../../components/molecules/User/InfoEditCardNumeric';
-import GenderMenu from '/components/molecules/User/GenderMenu';
-import WorkoutLevelMenu from '/components/molecules/User/WorkoutLevelMenu';
 import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
 import ScreenWrapper from '/components/template/Common/ScreenWrapper';
 import { usePutMyInfoMutation } from '/hooks/queries/user.queries';
+import StringMenu from '/components/molecules/User/StringMenu';
 
 // TODO: bio
 type Props = UserStackScreenProps<'ProfileEdit'>;
@@ -202,17 +201,50 @@ export default function ProfileEdit({ navigation, route }: Props) {
               contentColor={theme.colors.primary}
               setMyInfoState={setMyInfoState}
             />
-
-            <WorkoutLevelMenu
-              title={'운동 경력'}
-              workoutLevel={myInfoState.workoutLevel}
+            <InfoEditCardNumeric
+              textTitle="workoutPerWeek"
+              textContent={myInfoState.workoutPerWeek}
+              contentColor={theme.colors.primary}
+              unit="회 / 1주일"
               setMyInfoState={setMyInfoState}
             />
-            {/* 성별 menu */}
-            <GenderMenu
-              title={'성별'}
-              gender={myInfoState.gender}
+
+            <StringMenu
+              title="workoutLevel"
+              titleKorean="운동 경력"
+              selectedValue={myInfoState.workoutLevel}
               setMyInfoState={setMyInfoState}
+              valueList={['입문', '초급', '중급', '고급', '전문가']}
+              valueListKorean={[
+                '입문(1년 미만)',
+                '초급(1년 이상 3년 미만)',
+                '중급(3년 이상 5년 미만)',
+                '고급(5년 이상)',
+                '전문가',
+              ]}
+            />
+            <StringMenu
+              title="workoutTimePeriod"
+              titleKorean="운동 시간대"
+              selectedValue={myInfoState.workoutTimePeriod}
+              setMyInfoState={setMyInfoState}
+              valueList={['오전', '오후', '저녁', '새벽']}
+            />
+            <StringMenu
+              title="workoutTimePerDay"
+              titleKorean="일일 운동 시간(강도)"
+              selectedValue={myInfoState.workoutTimePerDay}
+              setMyInfoState={setMyInfoState}
+              valueList={['0 ~ 1시간', '1 ~ 2시간', '2 ~ 3시간', '3시간 이상']}
+            />
+            {/* Disabled Now */}
+            <StringMenu
+              title="gender"
+              titleKorean="성별"
+              setMyInfoState={setMyInfoState}
+              selectedValue={myInfoState.gender}
+              valueList={['male', 'female', 'other']}
+              valueListKorean={['남성', '여성', '그 외']}
             />
 
             {/* TODO: 체지방률, 인바디 정보 등 다양한 신체 정보 추가 */}

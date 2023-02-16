@@ -122,28 +122,18 @@ export default function UserScreen({ navigation }: Props) {
                   style.horizontalScrollViewContentContainer
                 }
                 style={style.physicalContainer}>
-                <InfoCard
-                  textTitle="키"
-                  textContent={`${data?.height}cm`}
-                  contentColor={theme.colors.primary}
-                />
+                <InfoCard textTitle="키" textContent={`${data?.height}cm`} />
                 <InfoCard
                   textTitle="몸무게"
                   textContent={`${data?.weight}kg`}
-                  contentColor={theme.colors.primary}
                 />
                 <InfoCard
                   textTitle="운동 경력"
                   textContent={
                     data ? data.workoutLevel.split('(')[0] : '정보 없음'
                   }
-                  contentColor={theme.colors.primary}
                 />
-                <InfoCard
-                  textTitle="나이"
-                  textContent={`${data?.age}세`}
-                  contentColor={theme.colors.primary}
-                />
+                <InfoCard textTitle="나이" textContent={`${data?.age}세`} />
                 <InfoCard
                   textTitle="성별"
                   textContent={`${
@@ -151,12 +141,12 @@ export default function UserScreen({ navigation }: Props) {
                       ? '남성'
                       : data?.gender === 'female'
                       ? '여성'
-                      : 'LGBTQ'
+                      : '그 외'
                   }`}
-                  contentColor={theme.colors.primary}
                 />
+                {/* work out per week */}
 
-                {/* TODO: 체지방률, 인바디 정보 등 다양한 신체 정보 추가 */}
+                {/* TODO: 체지방률, 인바디, 분할 정보 등 다양한 신체 정보 추가 */}
               </ScrollView>
             </View>
 
@@ -232,8 +222,26 @@ export default function UserScreen({ navigation }: Props) {
                     />
 
                     <List.Item
-                      title="운동 약속"
-                      right={() => <Text variant="bodySmall">??회</Text>}
+                      title="주당 운동"
+                      right={() => (
+                        <Text variant="bodySmall">{`${data?.workoutPerWeek}회`}</Text>
+                      )}
+                    />
+                    <List.Item
+                      title="활동 시간대"
+                      right={() => (
+                        <Text variant="bodySmall">
+                          {data?.workoutTimePeriod}
+                        </Text>
+                      )}
+                    />
+                    <List.Item
+                      title="일일 운동시간(강도)"
+                      right={() => (
+                        <Text variant="bodySmall">
+                          {data?.workoutTimePerDay}
+                        </Text>
+                      )}
                     />
                   </Card.Content>
                 </Card>

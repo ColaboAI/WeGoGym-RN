@@ -1,16 +1,16 @@
 import { StyleSheet } from 'react-native';
 import React from 'react';
-import { Card, Text } from 'react-native-paper';
+import { Card, Text, useTheme } from 'react-native-paper';
 
 type Props = {
   textContent: string | number;
   textTitle: string;
-  contentColor: string;
 };
 
 function InfoCard(props: Props) {
+  const theme = useTheme();
   const textContentStyle = {
-    color: props.contentColor,
+    color: theme.colors.primary,
     marginBottom: 5,
   };
   return (
@@ -39,5 +39,6 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'column',
     alignItems: 'center',
+    overflow: 'hidden',
   },
 });

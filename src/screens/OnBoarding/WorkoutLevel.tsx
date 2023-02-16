@@ -14,6 +14,7 @@ export default function WorkoutLevelScreen({ navigation }: Props) {
     '고급(5년 이상)',
     '전문가',
   ];
+
   const [workoutLevel, setWorkoutLevel] = useState<string>('');
 
   const getButton = (id: number) => {
@@ -22,7 +23,7 @@ export default function WorkoutLevelScreen({ navigation }: Props) {
         style={[style.button]}
         mode={buttons[id] === workoutLevel ? 'contained' : 'elevated'}
         onPress={() => {
-          setWorkoutLevel(buttons[id]);
+          setWorkoutLevel(buttons[id].split('(')[0]);
         }}>
         {buttons[id]}
       </Button>

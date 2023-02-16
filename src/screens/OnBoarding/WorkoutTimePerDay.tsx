@@ -7,12 +7,7 @@ import { AuthStackScreenProps } from 'navigators/types';
 type Props = AuthStackScreenProps<'WorkoutTimePerDay'>;
 export default function WorkoutTimePerDayScreen({ navigation }: Props) {
   const theme = useTheme();
-  const buttons = [
-    '1시간 이하',
-    '1시간 이상 2시간 미만',
-    '2시간 이상 3시간 미만',
-    '3시간 이상',
-  ];
+  const buttons = ['0 ~ 1시간', '1 ~ 2시간', '2 ~ 3시간', '3시간 이상'];
   const [howLong, setHowLong] = useState<string>('');
 
   const getButton = (id: number) => {
