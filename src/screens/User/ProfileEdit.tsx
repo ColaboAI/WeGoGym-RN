@@ -1,4 +1,4 @@
-import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, Platform, Alert } from 'react-native';
 import {
   IconButton,
   Text,
@@ -7,22 +7,107 @@ import {
   Card,
   List,
   useTheme,
-  Tooltip,
   Button,
+  Chip,
+  TextInput,
 } from 'react-native-paper';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { UserStackScreenProps } from '/navigators/types';
 import {
+  Asset,
   ImageLibraryOptions,
   launchImageLibrary,
 } from 'react-native-image-picker';
-type Props = UserStackScreenProps<'ProfileEdit'>;
 
+import { ScrollView } from 'react-native-gesture-handler';
+import InfoEditCardNumeric from '../../components/molecules/User/InfoEditCardNumeric';
+import GenderMenu from '/components/molecules/User/GenderMenu';
+import WorkoutLevelMenu from '/components/molecules/User/WorkoutLevelMenu';
+import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
+import ScreenWrapper from '/components/template/Common/ScreenWrapper';
+import { usePutMyInfoMutation } from '/hooks/queries/user.queries';
+
+// TODO: bio
+type Props = UserStackScreenProps<'ProfileEdit'>;
+// Platform.OS === 'android' ? selectedImage.uri : selectedImage.uri.replace('file://', '')
 export default function ProfileEdit({ navigation, route }: Props) {
   const theme = useTheme();
-  const [isAuthenticated] = useState(true);
   const myInfo = route.params.myInfo;
-  const onPressProfilePic = async () => {
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<Asset | null>(null);
+  const [myInfoState, setMyInfoState] = useState(myInfo);
+  const workoutGoalList = [
+    { id: 0, goal: '💪🏻 근성장', select: false },
+    { id: 1, goal: '🚴🏻 체력 증진', select: false },
+    { id: 2, goal: '🏋🏻‍♂️ 벌크업', select: false },
+    { id: 3, goal: '🏃🏻 다이어트', select: false },
+    { id: 4, goal: '🤼 운동 파트너 만들기', select: false },
+    { id: 5, goal: '👩🏻‍⚕️ 영양 정보', select: false },
+    { id: 6, goal: '🥗 식단 관리', select: false },
+    { id: 7, goal: '🤽🏻‍♂️ 복근 만들기', select: false },
+    { id: 8, goal: '🧍🏻 마른 몸 벗어나기', select: false },
+    { id: 9, goal: '🍎 애플힙 만들기', select: false },
+  ];
+
+  const initWorkoutGoal = (goals: string[]) => {
+    const newWorkoutGoalList = workoutGoalList.map(item => {
+      if (goals.includes(item.goal)) {
+        return { ...item, select: true };
+      } else {
+        return { ...item, select: false };
+      }
+    });
+    return newWorkoutGoalList;
+  };
+
+  const [myWorkoutGoalState, setMyWorkoutGoalState] = useState(
+    initWorkoutGoal(myInfo.workoutGoal.split(',')),
+  );
+
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
+  const makeImageUri = useCallback((uri: string): string => {
+    return Platform.OS === 'android' ? uri : uri.replace('file://', '');
+  }, []);
+  const putMyInfoMutation = usePutMyInfoMutation();
+  const onSaveButtonClicked = useCallback(() => {
+    setIsLoading(true);
+    const data = new FormData();
+    if (selectedImage && myInfoState.profilePic !== myInfo.profilePic) {
+      data.append('file', {
+        uri: myInfoState.profilePic,
+        type: selectedImage.type,
+        name: selectedImage.fileName,
+      });
+    }
+    const newMyGoal = myWorkoutGoalState
+      .map(item => {
+        if (item.select === true) {
+          return item.goal;
+        }
+      })
+      .filter(item => item !== undefined);
+    console.log(newMyGoal);
+    const myInfoUpdate: UserUpdate = {
+      ...myInfoState,
+      workoutGoal: newMyGoal.join(','),
+    };
+
+    putMyInfoMutation.mutate({
+      user: myInfoUpdate,
+      img: data,
+    });
+    setIsLoading(false);
+  }, [
+    myInfo.profilePic,
+    myInfoState,
+    myWorkoutGoalState,
+    putMyInfoMutation,
+    selectedImage,
+  ]);
+
+  const onPressProfilePic = useCallback(async () => {
     const options: ImageLibraryOptions = {
       mediaType: 'photo',
       includeBase64: true,
@@ -31,11 +116,25 @@ export default function ProfileEdit({ navigation, route }: Props) {
     };
 
     const res = await launchImageLibrary(options);
-    console.log(res);
-  };
+    if (res.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (res.errorCode) {
+      console.log('ImagePicker Error: ', res.errorCode);
+      throw new Error(res.errorMessage);
+    } else {
+      if (res.assets && res.assets.length > 0 && res.assets[0].uri) {
+        const uri = makeImageUri(res.assets[0].uri);
+        setSelectedImage(res.assets[0]);
+        setMyInfoState(prev => ({
+          ...prev,
+          profilePic: uri,
+        }));
+      }
+    }
+  }, [makeImageUri]);
 
   return (
-    <SafeAreaView style={style.container}>
+    <ScreenWrapper style={style.container} withScrollView={false}>
       <View style={style.headerContainer}>
         <IconButton
           icon="settings-outline"
@@ -45,137 +144,219 @@ export default function ProfileEdit({ navigation, route }: Props) {
         />
       </View>
       <Divider />
-      {/* Profile picture upload */}
-      <View style={style.profileContainer}>
-        <View style={style.avatarContainer}>
-          {myInfo.profilePic ? (
-            <Avatar.Image
-              size={64}
-              source={{ uri: myInfo.profilePic }}
-              style={style.avatar}
+      {/* Profile picture Pick */}
+      <ScrollView
+        style={style.container}
+        keyboardDismissMode="interactive"
+        contentContainerStyle={style.scrollViewContentContainer}
+        automaticallyAdjustKeyboardInsets={true}
+        nativeID="userInfoUpdateScroll">
+        <View style={style.profileContainer}>
+          <View style={style.avatarContainer}>
+            {myInfoState.profilePic ? (
+              <Avatar.Image
+                size={64}
+                source={{
+                  uri: myInfoState.profilePic,
+                }}
+                style={style.avatar}
+              />
+            ) : (
+              <Avatar.Text size={64} label={myInfo.username[0] ?? 'User'} />
+            )}
+          </View>
+          <View style={style.usernameContainer}>
+            <Text variant="titleMedium">{myInfo.username} 님</Text>
+          </View>
+          <Button onPress={onPressProfilePic}>프로필 사진 수정</Button>
+        </View>
+        {/* 신체 정보 */}
+        <View style={style.myBodySection}>
+          <View style={style.title}>
+            <Text
+              variant="titleMedium"
+              style={{
+                color: theme.colors.primary,
+              }}>
+              🏋🏻 나의 피지컬
+            </Text>
+          </View>
+          <View style={style.physicalContainer}>
+            <InfoEditCardNumeric
+              textTitle="height"
+              textContent={myInfoState.height}
+              contentColor={theme.colors.primary}
+              unit="cm"
+              setMyInfoState={setMyInfoState}
             />
-          ) : (
-            <Avatar.Text size={64} label={myInfo.username[0] ?? 'User'} />
-          )}
+            <InfoEditCardNumeric
+              textTitle="weight"
+              textContent={myInfoState.weight}
+              contentColor={theme.colors.primary}
+              unit="kg"
+              setMyInfoState={setMyInfoState}
+            />
+            <InfoEditCardNumeric
+              textTitle="age"
+              textContent={myInfoState.age}
+              contentColor={theme.colors.primary}
+              setMyInfoState={setMyInfoState}
+            />
+
+            <WorkoutLevelMenu
+              title={'운동 경력'}
+              workoutLevel={myInfoState.workoutLevel}
+              setMyInfoState={setMyInfoState}
+            />
+            {/* 성별 menu */}
+            <GenderMenu
+              title={'성별'}
+              gender={myInfoState.gender}
+              setMyInfoState={setMyInfoState}
+            />
+
+            {/* TODO: 체지방률, 인바디 정보 등 다양한 신체 정보 추가 */}
+          </View>
         </View>
-        <View style={style.usernameContainer}>
-          <Text variant="titleMedium">{myInfo.username} 님</Text>
-          {isAuthenticated ? (
-            <Tooltip
-              title="프로필 인증이 완료된 회원입니다."
-              enterTouchDelay={100}>
-              <IconButton
-                icon="checkmark-circle-outline"
-                iconColor="green"
-                size={18}
-                style={style.icon}
-              />
-            </Tooltip>
-          ) : null}
+
+        {/* 운동 목표 */}
+        <View style={style.myGoalSection}>
+          <View style={style.title}>
+            <Text
+              variant="titleMedium"
+              style={{
+                color: theme.colors.primary,
+              }}>
+              🏃🏻‍♀️ 나의 운동 목표
+            </Text>
+          </View>
+          <ScrollView
+            style={style.horizontalChipContainer}
+            horizontal
+            nestedScrollEnabled
+            showsHorizontalScrollIndicator={false}>
+            {myWorkoutGoalState.map((item, index) => (
+              <Chip
+                key={item.id}
+                selected={item.select}
+                selectedColor={theme.colors.primary}
+                onPress={() => {
+                  setMyWorkoutGoalState(prev => {
+                    const newWorkoutGoalList = [...prev];
+                    newWorkoutGoalList[index].select = !item.select;
+                    return newWorkoutGoalList;
+                  });
+                }}
+                style={style.chip}>
+                {item.goal}
+              </Chip>
+            ))}
+          </ScrollView>
         </View>
-        <Button onPress={onPressProfilePic}>프로필 사진 수정</Button>
-      </View>
-      <ScrollView>
-        <View style={style.title}>
-          <Text
-            variant="titleMedium"
-            style={{
-              color: theme.colors.primary,
-            }}>
-            🏋🏻 나의 피지컬
-          </Text>
-        </View>
-        <View style={style.physicalContainer}>
-          <Card>
-            <Card.Content style={style.card}>
-              <Text
-                variant="titleMedium"
-                style={{
-                  color: theme.colors.primary,
-                }}>
-                {myInfo.height}cm
-              </Text>
-              <Text variant="bodySmall">키</Text>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content style={style.card}>
-              <Text
-                variant="titleMedium"
-                style={{
-                  color: theme.colors.primary,
-                }}>
-                {myInfo.weight}kg
-              </Text>
-              <Text variant="bodySmall">몸무게</Text>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content style={style.card}>
-              <Text
-                variant="titleMedium"
-                style={{
-                  color: theme.colors.primary,
-                }}>
-                {myInfo.workoutLevel.split('(')[0]}
-              </Text>
-              <Text variant="bodySmall">운동 경력</Text>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content style={style.card}>
-              <Text
-                variant="titleMedium"
-                style={{
-                  color: theme.colors.primary,
-                }}>
-                {myInfo.age}세
-              </Text>
-              <Text variant="bodySmall">나이</Text>
-            </Card.Content>
-          </Card>
-        </View>
-        <View style={style.title}>
-          <Text
-            variant="titleMedium"
-            style={{
-              color: theme.colors.primary,
-            }}>
-            ℹ️ 나의 정보
-          </Text>
-        </View>
-        <View style={style.infoContainer}>
-          <Card>
-            <Card.Content>
-              <List.Item
-                title="동네"
-                right={() => (
-                  <Text variant="bodySmall">
-                    {myInfo.address ?? '동네를 등록하고 친구를 찾아보세요!'}
-                  </Text>
-                )}
-              />
-              <List.Item
-                title="헬스장"
-                right={() => (
-                  <Text variant="bodySmall">
-                    {myInfo.gym ?? '어떤 헬스장을 다니시나요?'}
-                  </Text>
-                )}
-              />
-              <List.Item
-                title="출석률"
-                right={() => <Text variant="bodySmall">80%</Text>}
-              />
-              <List.Item
-                title="운동 약속"
-                right={() => <Text variant="bodySmall">??회</Text>}
-              />
-            </Card.Content>
-          </Card>
+
+        {/* 기타 개인 정보 */}
+        <View style={style.myInfoSection}>
+          <View style={style.title}>
+            <Text
+              variant="titleMedium"
+              style={{
+                color: theme.colors.primary,
+              }}>
+              ℹ️ 나의 정보
+            </Text>
+          </View>
+          <View style={style.infoContainer}>
+            <Card>
+              <Card.Content>
+                <TextInput
+                  mode="outlined"
+                  label={'내 소개'}
+                  placeholder={'안녕하세요!'}
+                  value={myInfoState.bio ?? undefined}
+                  onChangeText={text => {
+                    setMyInfoState(prev => ({
+                      ...prev,
+                      bio: text,
+                    }));
+                  }}
+                  onEndEditing={() => {
+                    if (myInfoState.bio?.length === 0) {
+                      setMyInfoState(prev => ({
+                        ...prev,
+                        bio: null,
+                      }));
+                      return;
+                    }
+                  }}
+                  blurOnSubmit={true}
+                />
+
+                <TextInput
+                  mode="outlined"
+                  label={'동네'}
+                  placeholder={'서울특별시 관악구'}
+                  value={myInfoState.address ?? undefined}
+                  onChangeText={text => {
+                    setMyInfoState(prev => ({
+                      ...prev,
+                      address: text,
+                    }));
+                  }}
+                  onEndEditing={() => {
+                    if (myInfoState.address?.length === 0) {
+                      setMyInfoState(prev => ({
+                        ...prev,
+                        address: null,
+                      }));
+                    }
+                  }}
+                  blurOnSubmit={true}
+                />
+                <List.Item
+                  title="헬스장"
+                  right={() => (
+                    <Button
+                      mode="contained-tonal"
+                      onPress={() => {
+                        setIsBottomSheetOpen(prev => !prev);
+                      }}
+                      onLongPress={() => {
+                        setMyInfoState(prev => ({
+                          ...prev,
+                          gym: null,
+                        }));
+                        Alert.alert('헬스장 정보가 삭제되었습니다.');
+                      }}>
+                      {myInfoState.gym ?? '헬스장 선택'}
+                    </Button>
+                  )}
+                />
+                <List.Item
+                  title="출석률"
+                  right={() => <Text variant="bodySmall">80%</Text>}
+                />
+                <List.Item
+                  title="운동 약속"
+                  right={() => <Text variant="bodySmall">??회</Text>}
+                />
+              </Card.Content>
+            </Card>
+          </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+      <Button
+        nativeID="updateMyInfoButton"
+        mode="elevated"
+        loading={isBottomSheetOpen || isLoading}
+        onPress={onSaveButtonClicked}>
+        저장하기
+      </Button>
+      <GymBottomSheet
+        isBottomSheetOpen={isBottomSheetOpen}
+        setIsBottomSheetOpen={setIsBottomSheetOpen}
+        setMyInfoState={setMyInfoState}
+      />
+    </ScreenWrapper>
   );
 }
 const style = StyleSheet.create({
@@ -215,22 +396,52 @@ const style = StyleSheet.create({
     paddingLeft: 12,
   },
   physicalContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flex: 1,
+    flexDirection: 'column',
     padding: 12,
+    alignItems: 'center',
   },
   infoContainer: {
     padding: 12,
   },
-  card: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: 85,
-    height: 80,
-  },
   chip: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    maxHeight: 50,
+    padding: 5,
+    marginHorizontal: 5,
+    borderRadius: 20,
+  },
+  horizontalChipContainer: {
+    flexDirection: 'row',
+    marginBottom: 16,
+    paddingTop: 12,
+    // 칩 양 옆 여백
+    marginHorizontal: 12,
+  },
+  myBodySection: {
+    flex: 1,
+    marginBottom: 16,
+    flexDirection: 'column',
+  },
+
+  myGoalSection: {
+    flex: 2,
+    marginBottom: 16,
+  },
+
+  myInfoSection: {
+    flex: 2,
+  },
+  scrollViewContentContainer: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
+
+  horizontalScrollViewContentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    padding: 12,
   },
 });

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMyInfo, postRegister, putMyInfo } from '@api/api';
 import { Alert } from 'react-native';
 export function useRegisterMutation() {
@@ -16,6 +16,7 @@ export function useRegisterMutation() {
 export function useGetMyInfoQuery() {
   const placeholderData: MyInfoRead = {
     id: '',
+    bio: '',
     username: '',
     phoneNumber: '',
     workoutLevel: '',
@@ -26,9 +27,8 @@ export function useGetMyInfoQuery() {
     workoutPerWeek: 0,
     workoutTimePeriod: '',
     workoutTimePerDay: '0',
-    createdAt: new Date(),
-    updatedAt: new Date(),
     gym: '',
+    gymAddress: '',
     address: '',
     gender: '',
   };
@@ -47,13 +47,19 @@ export function useGetMyInfoQuery() {
 }
 
 export function usePutMyInfoMutation() {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: putMyInfo,
+    mutationFn: ({ user, img }: { user: UserUpdate; img: FormData }) =>
+      putMyInfo(user, img),
     onError: (error: Error) => {
       Alert.alert(`내 정보를 수정하는데 실패하였습니다: ${error.message}`);
+      console.log(error);
     },
     onSuccess(data) {
-      Alert.alert(`내 정보를 수정하는데 성공하였습니다!: ${data}`);
+      Alert.alert('내 정보를 수정하는데 성공하였습니다!');
+      console.log(data);
+      // invalidate the query to refetch the data
+      queryClient.invalidateQueries({ queryKey: ['getMyInfo'] });
     },
   });
 }

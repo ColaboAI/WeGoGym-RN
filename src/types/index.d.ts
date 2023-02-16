@@ -74,9 +74,9 @@ interface UserCreate extends UserBase {
   _id?: string;
   username: string;
   gender: string;
-  age: int;
-  height: int;
-  weight: int;
+  age: number;
+  height: number;
+  weight: number;
   workoutPerWeek: number;
   // 오전 오후 저녁
   workoutTimePeriod: string;
@@ -87,17 +87,21 @@ interface UserCreate extends UserBase {
 }
 
 interface UserUpdate extends UserBase {
+  [key: string]: string | number | null | undefined;
   username?: string;
-  age?: int;
-  height?: int;
-  weight?: int;
+  bio: string | null;
+  age?: number;
+  height?: number;
+  weight?: number;
   workoutPerWeek?: number;
   workoutTimePeriod?: string;
   workoutTimePerDay?: string;
   workoutLevel?: string;
-  workoutGoal?: string;
-  address?: string;
-  gym?: string;
+  gender?: string;
+  workoutGoal: string | null;
+  address: string | null;
+  gym: string | null;
+  gymAddress: string | null;
 }
 
 interface UserRead extends UserCreate {
@@ -107,10 +111,10 @@ interface UserRead extends UserCreate {
 
 interface MyInfoRead extends UserCreate {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  gym?: string;
-  address?: string;
+  bio: string | null;
+  gym: string | null;
+  gymAddress: string | null;
+  address: string | null;
 }
 
 type UserLoginResponse = {

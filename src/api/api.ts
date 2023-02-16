@@ -1,6 +1,7 @@
 import { Alert } from 'react-native';
 import { apiClient } from './client';
 import { AxiosError } from 'axios';
+import { snakeCase } from 'snake-case';
 // TODO: change to https
 // TODO: change to real domain
 
@@ -242,14 +243,32 @@ async function getMyInfo(): Promise<MyInfoRead> {
     throw e;
   }
 }
-async function putMyInfo(params: UserCreate): Promise<MyInfoRead> {
+async function putMyInfo(
+  params: UserUpdate,
+  formData: FormData,
+): Promise<MyInfoRead> {
+  // TODO: Refactor
+  const data = {} as UserUpdate;
   try {
-    const res = await apiClient.put('/user/me', params);
+    Object.keys(params).forEach(key => {
+      if (params[key] !== undefined && params[key] !== null) {
+        const value = params[key];
+        const newKey = snakeCase(key);
+        if (typeof value === 'string') {
+          data[newKey] = value.trim();
+        } else {
+          data[newKey] = value;
+        }
+      }
+    });
+    formData.append('data', JSON.stringify(data));
+    const res = await apiClient.patch('/user/me', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
