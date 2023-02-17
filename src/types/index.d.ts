@@ -52,7 +52,7 @@ interface WorkoutPromiseCreate extends WorkoutPromiseBase {
 interface GymInfoOpenAPI {
   TRDSTATEGBN: string; // 영업상태코드
   BPLCNM: string; // 사업자명
-  SITEWHLADDR: string; // 도로명주소
+  RDNWHLADDR: string; // 도로명주소
   RDNPOSTNO: string; // 도로명우편번호
 }
 

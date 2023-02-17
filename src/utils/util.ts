@@ -59,7 +59,7 @@ export async function getGymInfoFromApi() {
           id: uuid(),
           status: item.TRDSTATEGBN.trim(),
           name: item.BPLCNM.trim(),
-          address: item.SITEWHLADDR.trim(),
+          address: item.RDNWHLADDR.trim(),
           zipCode: item.RDNPOSTNO.trim(),
         };
       });
