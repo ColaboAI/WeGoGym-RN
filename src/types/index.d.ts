@@ -111,7 +111,7 @@ interface UserRead extends UserCreate {
 interface MyInfoRead extends UserCreate {
   id: string;
   bio: string | null;
-  gymInfo: Gym;
+  gymInfo: Gym | null;
   address: string | null;
 }
 

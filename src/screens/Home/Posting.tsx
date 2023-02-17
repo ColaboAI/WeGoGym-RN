@@ -1,9 +1,8 @@
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
-  TouchableOpacity,
   ScrollView,
   Keyboard,
   Platform,
@@ -15,25 +14,13 @@ import {
   TextInput,
   HelperText,
   IconButton,
-  Chip,
 } from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetFlatList,
-  BottomSheetTextInput,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
-import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
-import GymInfoLoader from '/components/molecules/Home/GymInfoLoader';
-import {
-  getGymInfoFromApi,
-  getLocaleDate,
-  getLocaleTime,
-  isToday,
-} from 'utils/util';
+
+import { getLocaleDate, getLocaleTime, isToday } from 'utils/util';
 import { postWorkoutPromise } from 'api/api';
 import { HomeStackScreenProps } from 'navigators/types';
+import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;
@@ -54,125 +41,58 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
   const [visible, setVisible] = useState<boolean>(false);
   const [mode, setMode] = useState<Mode>('date');
   // bottom sheet
-  const [location, setLocation] = useState<string>('');
-  const [searchText, setSearchText] = useState<string>('');
-  const [gymData, setGymData] = useState<Gym[] | null>(null);
-  const [filteredGymData, setFilteredGymData] = useState<Gym[] | null>(null);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
+  const [gymInfo, setGymInfo] = useState<Gym | null>(null);
 
-  const hasTitleErrors = () => {
+  const hasTitleErrors = useCallback(() => {
     return titleFocus && title.length === 0;
-  };
+  }, [titleFocus, title]);
 
-  const hasContentErrors = () => {
+  const hasContentErrors = useCallback(() => {
     return descriptionFocus && description.length === 0;
-  };
+  }, [descriptionFocus, description]);
 
-  const onPressPlus = () => {
+  const onPressPlus = useCallback(() => {
     if (number < MAX_NUMBER) {
       setNumber(number + 1);
     }
-  };
+  }, [number]);
 
-  const onPressMinus = () => {
+  const onPressMinus = useCallback(() => {
     if (number > MIN_NUMBER) {
       setNumber(number - 1);
     }
-  };
+  }, [number]);
 
-  const onPressDate = () => {
+  const onPressDate = useCallback(() => {
     setMode('date');
     setVisible(true);
-  };
+  }, []);
 
-  const onPressTime = () => {
+  const onPressTime = useCallback(() => {
     setMode('time');
     setVisible(true);
-  };
+  }, []);
 
-  const onConfirm = (selectedDate: React.SetStateAction<Date>) => {
-    setVisible(false);
-    if (mode === 'date') {
-      setDate(selectedDate);
-    } else if (mode === 'time') {
-      setTime(selectedDate);
-    }
-  };
+  const onConfirm = useCallback(
+    (selectedDate: React.SetStateAction<Date>) => {
+      setVisible(false);
+      if (mode === 'date') {
+        setDate(selectedDate);
+      } else if (mode === 'time') {
+        setTime(selectedDate);
+      }
+    },
+    [mode],
+  );
 
-  const onCancel = () => {
+  const onCancel = useCallback(() => {
     setVisible(false);
-  };
+  }, []);
 
   const onPressLocation = useCallback(async () => {
-    bottomSheetRef.current?.expand();
-    if (!gymData) {
-      const res = await getData();
-      setGymData(res);
-    }
-  }, [gymData]);
-
-  const bottomSheetRef = useRef<BottomSheet>(null);
-
-  const snapPoints = useMemo(() => ['70%'], []);
-
-  const renderBackdrop = useCallback(
-    (props: JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        pressBehavior="close"
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-        opacity={0.5}
-      />
-    ),
-    [],
-  );
-
-  const getData = async () => {
-    const apiData = await getGymInfoFromApi();
-    return apiData;
-  };
-
-  const renderItem = useCallback(
-    ({ item }: { item: Gym }) => (
-      <TouchableOpacity
-        onPress={() => {
-          setLocation(item.name);
-          bottomSheetRef.current?.close();
-        }}>
-        <View style={style.itemContainer}>
-          <View style={style.item}>
-            <Text variant="titleMedium">{item.name}</Text>
-          </View>
-          <View style={style.item}>
-            <Chip style={style.chip} textStyle={{ fontSize: 10 }}>
-              도로명
-            </Chip>
-            <View style={style.container}>
-              <Text variant="bodySmall" numberOfLines={1} ellipsizeMode="tail">
-                {item.address}
-              </Text>
-            </View>
-          </View>
-          <View style={style.item}>
-            <Chip style={style.chip} textStyle={{ fontSize: 10 }}>
-              우편번호
-            </Chip>
-            <Text variant="bodySmall">{item.zipCode}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    ),
-    [],
-  );
-
-  const onSubmitEditing = useCallback(() => {
-    if (searchText.length > 0 && gymData) {
-      const res = gymData.filter(item => {
-        return item.name.includes(searchText);
-      });
-      setFilteredGymData(res);
-    }
-  }, [gymData, searchText]);
+    setIsBottomSheetOpen(true);
+  }, []);
 
   return (
     <View style={style.container}>
@@ -252,7 +172,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                 <Text
                   variant="bodyLarge"
                   style={{ color: theme.colors.onBackground }}>
-                  {location ? location : '위치를 선택해주세요'}
+                  {gymInfo ? gymInfo.name : '위치를 선택해주세요'}
                 </Text>
               </Button>
             </View>
@@ -260,12 +180,12 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
           <Button
             mode="contained-tonal"
             style={style.postingButton}
-            disabled={hasTitleErrors() || hasContentErrors() || !location}
+            disabled={hasTitleErrors() || hasContentErrors() || !gymInfo}
             onPress={() => {
               postWorkoutPromise({
                 title: title,
                 description: description,
-                location: location,
+                location: gymInfo?.address || '',
                 date: date,
                 time: time,
                 limitedNumberOfPeople: number,
@@ -280,55 +200,23 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
             display={
               Platform.OS === 'ios' && mode === 'date' ? 'inline' : 'spinner'
             }
+            isDarkModeEnabled={theme.dark}
             minuteInterval={10}
             mode={mode}
             onConfirm={onConfirm}
             onCancel={onCancel}
-            locale="ko-KR"
             cancelTextIOS="취소"
             confirmTextIOS="확인"
             buttonTextColorIOS={theme.colors.primary}
           />
         </View>
       </TouchableWithoutFeedback>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        snapPoints={snapPoints}
-        backdropComponent={renderBackdrop}
-        handleStyle={{ backgroundColor: theme.colors.background }}
-        backgroundStyle={{ backgroundColor: theme.colors.background }}
-        enablePanDownToClose={true}
-        android_keyboardInputMode={'adjustResize'}>
-        <BottomSheetView>
-          <BottomSheetTextInput
-            value={searchText}
-            placeholder="주변 헬스장을 검색하세요."
-            onChangeText={value => setSearchText(value)}
-            onSubmitEditing={onSubmitEditing}
-            returnKeyType="search"
-            style={[
-              style.textInput,
-              {
-                backgroundColor: theme.colors.secondaryContainer,
-                color: theme.colors.onBackground,
-              },
-            ]}
-          />
-        </BottomSheetView>
-        {filteredGymData !== null ? (
-          <BottomSheetFlatList
-            data={filteredGymData}
-            keyExtractor={(item: Gym) => item.id}
-            renderItem={renderItem}
-            showsVerticalScrollIndicator={false}
-            disableVirtualization={false}
-            contentContainerStyle={style.contentContainer}
-          />
-        ) : (
-          <GymInfoLoader />
-        )}
-      </BottomSheet>
+      <GymBottomSheet
+        isBottomSheetOpen={isBottomSheetOpen}
+        setIsBottomSheetOpen={setIsBottomSheetOpen}
+        gymInfo={gymInfo}
+        setGymInfo={setGymInfo}
+      />
     </View>
   );
 }

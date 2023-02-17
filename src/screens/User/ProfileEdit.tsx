@@ -1,4 +1,4 @@
-import { StyleSheet, View, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Platform } from 'react-native';
 import {
   IconButton,
   Text,
@@ -32,6 +32,8 @@ type Props = UserStackScreenProps<'ProfileEdit'>;
 export default function ProfileEdit({ navigation, route }: Props) {
   const theme = useTheme();
   const myInfo = route.params.myInfo;
+
+  const [gymInfo, setGymInfo] = useState(myInfo.gymInfo);
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<Asset | null>(null);
@@ -90,6 +92,7 @@ export default function ProfileEdit({ navigation, route }: Props) {
     const myInfoUpdate: UserUpdate = {
       ...myInfoState,
       workoutGoal: newMyGoal.join(','),
+      gymInfo: gymInfo,
     };
 
     putMyInfoMutation.mutate({
@@ -98,6 +101,7 @@ export default function ProfileEdit({ navigation, route }: Props) {
     });
     setIsLoading(false);
   }, [
+    gymInfo,
     myInfo.profilePic,
     myInfoState,
     myWorkoutGoalState,
@@ -343,7 +347,7 @@ export default function ProfileEdit({ navigation, route }: Props) {
                   }}
                   blurOnSubmit={true}
                 />
-                {myInfoState.gymInfo !== null ? (
+                {gymInfo !== null ? (
                   <List.Item
                     title="헬스장"
                     right={() => (
@@ -353,13 +357,9 @@ export default function ProfileEdit({ navigation, route }: Props) {
                           setIsBottomSheetOpen(prev => !prev);
                         }}
                         onLongPress={() => {
-                          setMyInfoState(prev => ({
-                            ...prev,
-                            gym: null,
-                          }));
-                          Alert.alert('헬스장 정보가 삭제되었습니다.');
+                          setGymInfo(null);
                         }}>
-                        {myInfoState.gymInfo.name ?? '헬스장 선택'}
+                        {gymInfo.name ?? '헬스장 선택'}
                       </Button>
                     )}
                   />
@@ -373,17 +373,14 @@ export default function ProfileEdit({ navigation, route }: Props) {
                           setIsBottomSheetOpen(prev => !prev);
                         }}
                         onLongPress={() => {
-                          setMyInfoState(prev => ({
-                            ...prev,
-                            gym: null,
-                          }));
-                          Alert.alert('헬스장 정보가 삭제되었습니다.');
+                          setGymInfo(null);
                         }}>
                         {'헬스장 선택'}
                       </Button>
                     )}
                   />
                 )}
+                {/* TODO: replace this  */}
                 <List.Item
                   title="출석률"
                   right={() => <Text variant="bodySmall">80%</Text>}
@@ -407,7 +404,8 @@ export default function ProfileEdit({ navigation, route }: Props) {
       <GymBottomSheet
         isBottomSheetOpen={isBottomSheetOpen}
         setIsBottomSheetOpen={setIsBottomSheetOpen}
-        setMyInfoState={setMyInfoState}
+        gymInfo={gymInfo}
+        setGymInfo={setGymInfo}
       />
     </ScreenWrapper>
   );

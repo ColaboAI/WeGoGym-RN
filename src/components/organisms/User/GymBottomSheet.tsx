@@ -15,7 +15,8 @@ import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typesc
 type Props = {
   isBottomSheetOpen: boolean;
   setIsBottomSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setMyInfoState: React.Dispatch<React.SetStateAction<MyInfoRead>>;
+  gymInfo: Gym | null;
+  setGymInfo: React.Dispatch<React.SetStateAction<Gym | null>>;
 };
 const GymBottomSheet = (props: Props) => {
   const theme = useTheme();
@@ -41,10 +42,10 @@ const GymBottomSheet = (props: Props) => {
     [],
   );
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     const apiData = await getGymInfoFromApi();
     return apiData;
-  };
+  }, []);
 
   const onOpenBottomSheet = useCallback(async () => {
     bottomSheetRef.current?.expand();
@@ -52,22 +53,23 @@ const GymBottomSheet = (props: Props) => {
       const res = await getData();
       setGymData(res);
     }
-  }, [gymData]);
+  }, [getData, gymData]);
 
   useEffect(() => {
     if (props.isBottomSheetOpen) {
       onOpenBottomSheet();
     }
+    return () => {
+      setSearchText('');
+      setFilteredGymData(null);
+    };
   }, [props.isBottomSheetOpen, onOpenBottomSheet]);
 
   const renderItem = useCallback(
     ({ item }: { item: Gym }) => (
       <TouchableOpacity
         onPress={() => {
-          props.setMyInfoState(prevState => ({
-            ...prevState,
-            gymInfo: item,
-          }));
+          props.setGymInfo(item);
           props.setIsBottomSheetOpen(false);
           bottomSheetRef.current?.close();
         }}>
@@ -100,7 +102,11 @@ const GymBottomSheet = (props: Props) => {
   const onSubmitEditing = useCallback(() => {
     if (searchText.length > 0 && gymData) {
       const res = gymData.filter(item => {
-        return item.name.includes(searchText);
+        return (
+          item.name.includes(searchText) ||
+          item.address.includes(searchText) ||
+          item.zipCode.includes(searchText)
+        );
       });
       setFilteredGymData(res);
     }
@@ -122,7 +128,7 @@ const GymBottomSheet = (props: Props) => {
       <BottomSheetView>
         <BottomSheetTextInput
           value={searchText}
-          placeholder="주변 헬스장을 검색하세요."
+          placeholder="주변 헬스장을 검색하세요.(도로명, 우편번호, 헬스장 이름)"
           onChangeText={value => setSearchText(value)}
           onSubmitEditing={onSubmitEditing}
           returnKeyType="search"
