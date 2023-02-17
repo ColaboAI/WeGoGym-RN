@@ -320,7 +320,6 @@ const style = StyleSheet.create({
   },
   horizontalChipContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 12,
     paddingTop: 12,
     marginBottom: 16,
   },
