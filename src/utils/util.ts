@@ -60,7 +60,7 @@ export async function getGymInfoFromApi() {
           status: item.TRDSTATEGBN.trim(),
           name: item.BPLCNM.trim(),
           address: item.RDNWHLADDR.trim(),
-          zipCode: item.RDNPOSTNO.trim(),
+          zip_code: item.RDNPOSTNO.trim(),
         };
       });
       gym.push(...gymArr.filter((item: Gym) => item.status === '01'));

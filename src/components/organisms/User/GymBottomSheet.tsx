@@ -91,7 +91,7 @@ const GymBottomSheet = (props: Props) => {
             <Chip style={styles.chip} textStyle={{ fontSize: 10 }}>
               우편번호
             </Chip>
-            <Text variant="bodySmall">{item.zipCode}</Text>
+            <Text variant="bodySmall">{item.zip_code}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -105,7 +105,7 @@ const GymBottomSheet = (props: Props) => {
         return (
           item.name.includes(searchText) ||
           item.address.includes(searchText) ||
-          item.zipCode.includes(searchText)
+          item.zip_code.includes(searchText)
         );
       });
       setFilteredGymData(res);

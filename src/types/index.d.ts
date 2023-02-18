@@ -61,7 +61,7 @@ interface Gym {
   status: string;
   name: string;
   address: string;
-  zipCode: string;
+  zip_code: string;
 }
 
 interface UserBase {
