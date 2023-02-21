@@ -61,6 +61,7 @@ interface Gym {
   status: string;
   name: string;
   address: string;
+  // FormData에서 자동으로 case-convert 불가능해서 직접 지정(snake_case)
   zip_code: string;
 }
 
