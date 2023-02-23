@@ -6,93 +6,83 @@ import {
   Banner,
   useTheme,
 } from 'react-native-paper';
-import React, { useCallback, useEffect, useState } from 'react';
-import FriendProfileCard from 'components/molecules/Home/FriendProfileCard';
+import React, { Suspense, useCallback, useState } from 'react';
 import WorkoutPromiseCard from 'components/molecules/Home/WorkoutPromiseCard';
 import { HomeStackScreenProps } from 'navigators/types';
 import CustomFAB from 'components/molecules/Home/CustomFAB';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import { getFriendList, getWorkoutPromise } from 'api/api';
 import WorkoutPromiseLoader from 'components/molecules/Home/WorkoutPromiseLoader';
-import FriendListLoader from 'components/molecules/Home/FriendListLoader';
 import ScreenWrapper from 'components/template/Common/ScreenWrapper';
+import { useGetWorkoutQuery } from '/hooks/queries/workout.queries';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
-
+// TODO:
+// 추천 짐메이트의 경우 일단 백엔드 구현 없으므로. 추후에 구현.
+// 페이지네이션 구현.(당겨서 새로고침?, 무한 스크롤)
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const theme = useTheme();
+  const [limit, setLimit] = useState<number>(10);
+  const [offset, setOffset] = useState<number>(1);
+
+  const query = useGetWorkoutQuery(limit, offset);
   const [visible, setVisible] = useState(true);
-  const [friendList, setFriendList] = useState<UserCreate[] | null>(null);
-  const [workoutPromise, setWorkoutPromise] = useState<
-    WorkoutPromiseCreate[] | null
-  >(null);
   // TODO: PromiseCard ID를 parameter로.
   const navigateToPromiseDetails = useCallback(() => {
     navigation.navigate('Details');
   }, [navigation]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const friendData = await getFriendList();
-      const workoutPromiseData = await getWorkoutPromise();
-      setFriendList(friendData);
-      setWorkoutPromise(workoutPromiseData);
-    };
-    fetchData();
-  }, []);
-
-  const renderGymMateRecommendation = useCallback(() => {
-    return (
-      <>
-        <View style={style.title}>
-          <Text
-            variant="titleLarge"
-            style={[
-              style.font,
-              {
-                color: theme.colors.primary,
-              },
-            ]}>
-            👍🏻 추천 짐메이트
-          </Text>
-        </View>
-        <View style={style.friendListContainer}>
-          {friendList ? (
-            friendList.map(friend => (
-              <FriendProfileCard
-                key={`User-Reco-${friend._id}`}
-                _id={friend._id}
-                phoneNumber={friend.phoneNumber}
-                profilePic={friend.profilePic}
-                username={friend.username}
-                gender={friend.gender}
-                age={friend.age}
-                height={friend.height}
-                weight={friend.weight}
-                workoutPerWeek={friend.workoutPerWeek}
-                workoutTimePeriod={friend.workoutTimePeriod}
-                workoutTimePerDay={friend.workoutTimePerDay}
-                workoutLevel={friend.workoutLevel}
-                workoutGoal={friend.workoutGoal}
-              />
-            ))
-          ) : (
-            <FriendListLoader />
-          )}
-        </View>
-        <View style={style.title}>
-          <Text
-            variant="titleLarge"
-            style={{
-              color: theme.colors.primary,
-              fontSize: 20,
-              fontWeight: '600',
-            }}>
-            💪🏻 같이 운동해요!
-          </Text>
-        </View>
-      </>
-    );
-  }, [friendList, theme.colors.primary]);
+  // const renderGymMateRecommendation = useCallback(() => {
+  //   return (
+  //     <>
+  //       <View style={style.title}>
+  //         <Text
+  //           variant="titleLarge"
+  //           style={[
+  //             style.font,
+  //             {
+  //               color: theme.colors.primary,
+  //             },
+  //           ]}>
+  //           👍🏻 추천 짐메이트
+  //         </Text>
+  //       </View>
+  //       <View style={style.friendListContainer}>
+  //         {friendList ? (
+  //           friendList.map(friend => (
+  //             <FriendProfileCard
+  //               key={`User-Reco-${friend._id}`}
+  //               _id={friend._id}
+  //               phoneNumber={friend.phoneNumber}
+  //               profilePic={friend.profilePic}
+  //               username={friend.username}
+  //               gender={friend.gender}
+  //               age={friend.age}
+  //               height={friend.height}
+  //               weight={friend.weight}
+  //               workoutPerWeek={friend.workoutPerWeek}
+  //               workoutTimePeriod={friend.workoutTimePeriod}
+  //               workoutTimePerDay={friend.workoutTimePerDay}
+  //               workoutLevel={friend.workoutLevel}
+  //               workoutGoal={friend.workoutGoal}
+  //             />
+  //           ))
+  //         ) : (
+  //           <FriendListLoader />
+  //         )}
+  //       </View>
+  //       <View style={style.title}>
+  //         <Text
+  //           variant="titleLarge"
+  //           style={{
+  //             color: theme.colors.primary,
+  //             fontSize: 20,
+  //             fontWeight: '600',
+  //           }}>
+  //           💪🏻 같이 운동해요!
+  //         </Text>
+  //       </View>
+  //     </>
+  //   );
+  // }, [friendList, theme.colors.primary]);
 
   const renderBanner = useCallback(
     () =>
@@ -138,39 +128,42 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         </View>
         <Divider />
         {renderBanner()}
-        <View>
-          {workoutPromise ? (
-            <FlatList
-              data={workoutPromise}
-              keyExtractor={item => item._id}
-              contentContainerStyle={style.workoutPromiseContainer}
-              ListHeaderComponent={renderGymMateRecommendation}
-              initialNumToRender={5}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  key={`work-promise-container-${item._id}`}
-                  onPress={navigateToPromiseDetails}>
-                  <WorkoutPromiseCard
-                    key={`work-promise-${item._id}`}
-                    _id={item._id}
-                    user={item.user}
-                    title={item.title}
-                    description={item.description}
-                    location={item.location}
-                    date={item.date}
-                    time={item.time}
-                    currentNumberOfPeople={item.currentNumberOfPeople}
-                    limitedNumberOfPeople={item.limitedNumberOfPeople}
-                    createdAt={item.createdAt}
-                  />
-                </TouchableOpacity>
-              )}
-              showsVerticalScrollIndicator={false}
-            />
-          ) : (
-            <WorkoutPromiseLoader />
-          )}
+        <View style={style.title}>
+          <Text
+            variant="titleLarge"
+            style={{
+              color: theme.colors.primary,
+              fontSize: 20,
+              fontWeight: '600',
+            }}>
+            💪🏻 같이 운동해요!
+          </Text>
         </View>
+        <Suspense fallback={<WorkoutPromiseLoader />}>
+          <View>
+            {query.data ? (
+              <FlatList
+                data={query.data.items}
+                keyExtractor={item => item.id}
+                contentContainerStyle={style.workoutPromiseContainer}
+                initialNumToRender={5}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    key={`work-promise-container-${item.id}`}
+                    onPress={navigateToPromiseDetails}>
+                    <WorkoutPromiseCard
+                      key={`work-promise-${item.id}`}
+                      {...item}
+                    />
+                  </TouchableOpacity>
+                )}
+                showsVerticalScrollIndicator={false}
+              />
+            ) : (
+              <WorkoutPromiseLoader />
+            )}
+          </View>
+        </Suspense>
       </ScreenWrapper>
       <CustomFAB
         icon="barbell-outline"

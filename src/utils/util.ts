@@ -72,15 +72,28 @@ export async function getGymInfoFromApi() {
 }
 
 export function getLocaleDate(date: Date) {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  let newDate: Date;
+  if (typeof date === 'string') {
+    newDate = new Date(date);
+  } else {
+    newDate = date;
+  }
+
+  const year = newDate.getFullYear();
+  const month = newDate.getMonth() + 1;
+  const day = newDate.getDate();
   return `${year}. ${month}. ${day}`;
 }
 
-export function getLocaleTime(date: Date) {
-  const hour = date.getHours();
-  const minute = date.getMinutes();
+export function getLocaleTime(date: Date | string) {
+  let newDate: Date;
+  if (typeof date === 'string') {
+    newDate = new Date(date);
+  } else {
+    newDate = date;
+  }
+  const hour = newDate.getHours();
+  const minute = newDate.getMinutes();
 
   if (hour === 0 && minute === 0) {
     return '오전 12시';
@@ -103,9 +116,49 @@ export function getLocaleTime(date: Date) {
 
 export function isToday(date: Date) {
   const today = new Date();
+  let newDate: Date;
+  if (typeof date === 'string') {
+    newDate = new Date(date);
+  } else {
+    newDate = date;
+  }
+
   return (
-    date.getFullYear() === today.getFullYear() &&
-    date.getMonth() === today.getMonth() &&
-    date.getDate() === today.getDate()
+    newDate.getFullYear() === today.getFullYear() &&
+    newDate.getMonth() === today.getMonth() &&
+    newDate.getDate() === today.getDate()
   );
+}
+
+export function getRelativeTime(date: Date | string) {
+  let result = null;
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+  const today = new Date();
+  const delta = today.getTime() - date.getTime();
+
+  let differSec = delta / 1000;
+
+  if (differSec < 1) {
+    return (result = 'right now');
+  }
+  if (differSec < 60) {
+    return (result = `${Math.floor(differSec)} 초 전`);
+  }
+  if (differSec < 3600) {
+    return (result = `${Math.floor(differSec / 60)} 분 전`);
+  }
+  if (differSec < 24 * 3600) {
+    return (result = `${Math.floor(differSec / 3600)} 시간 전`);
+  }
+  if (differSec >= 24 * 3600) {
+    return date
+      .toLocaleString('ko-KR', {
+        timeZone: 'Asia/Seoul',
+      })
+      .slice(0, 10);
+  }
+
+  return result;
 }

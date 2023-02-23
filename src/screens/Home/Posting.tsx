@@ -5,7 +5,6 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Keyboard,
-  Platform,
 } from 'react-native';
 import {
   useTheme,
@@ -14,32 +13,48 @@ import {
   TextInput,
   HelperText,
   IconButton,
+  Switch,
 } from 'react-native-paper';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
+import DateTimeModal, {
+  DatePickerState,
+} from 'components/organisms/Common/DateTimeModal';
 import { getLocaleDate, getLocaleTime, isToday } from 'utils/util';
-import { postWorkoutPromise } from 'api/api';
 import { HomeStackScreenProps } from 'navigators/types';
 import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
+import { useWorkoutMutation } from '/hooks/queries/workout.queries';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;
 
-type Mode = 'date' | 'time' | 'datetime' | undefined;
 type HomeScreenProps = HomeStackScreenProps<'Posting'>;
 
 export default function PostingScreen({ navigation }: HomeScreenProps) {
+  const workoutMutation = useWorkoutMutation();
+  const initialDatePickerState: DatePickerState = {
+    visible: false,
+    mode: 'date',
+    date: new Date(),
+  };
   const theme = useTheme();
   const [title, setTitle] = useState<string>('');
   const [titleFocus, setTitleFocus] = useState<boolean>(false);
   const [description, setDescription] = useState<string>('');
   const [descriptionFocus, setDescriptionFocus] = useState<boolean>(false);
   const [number, setNumber] = useState<number>(3);
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+
   // date picker
-  const [date, setDate] = useState<Date>(new Date());
-  const [time, setTime] = useState<Date>(new Date());
-  const [visible, setVisible] = useState<boolean>(false);
-  const [mode, setMode] = useState<Mode>('date');
+  const [promiseDateState, setPromiseDateState] = useState<DatePickerState>(
+    initialDatePickerState,
+  );
+  const [recruitEndDateState, setRecruitEndDateState] =
+    useState<DatePickerState>({
+      visible: false,
+      date: new Date(new Date().setDate(new Date().getDate() + 1)),
+      mode: 'datetime',
+    });
+
   // bottom sheet
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
   const [gymInfo, setGymInfo] = useState<Gym | null>(null);
@@ -53,47 +68,55 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
   }, [descriptionFocus, description]);
 
   const onPressPlus = useCallback(() => {
-    if (number < MAX_NUMBER) {
-      setNumber(number + 1);
-    }
-  }, [number]);
+    setNumber(prev => {
+      if (prev < MAX_NUMBER) {
+        return prev + 1;
+      } else {
+        return prev;
+      }
+    });
+  }, []);
 
   const onPressMinus = useCallback(() => {
-    if (number > MIN_NUMBER) {
-      setNumber(number - 1);
-    }
-  }, [number]);
-
-  const onPressDate = useCallback(() => {
-    setMode('date');
-    setVisible(true);
-  }, []);
-
-  const onPressTime = useCallback(() => {
-    setMode('time');
-    setVisible(true);
-  }, []);
-
-  const onConfirm = useCallback(
-    (selectedDate: React.SetStateAction<Date>) => {
-      setVisible(false);
-      if (mode === 'date') {
-        setDate(selectedDate);
-      } else if (mode === 'time') {
-        setTime(selectedDate);
+    setNumber(prev => {
+      if (prev > MIN_NUMBER) {
+        return prev - 1;
+      } else {
+        return prev;
       }
-    },
-    [mode],
-  );
-
-  const onCancel = useCallback(() => {
-    setVisible(false);
+    });
   }, []);
 
   const onPressLocation = useCallback(async () => {
     setIsBottomSheetOpen(true);
   }, []);
 
+  const onPressPosting = useCallback(async () => {
+    const data = {
+      workoutPromise: {
+        title,
+        description,
+        isPrivate: isPrivate,
+        maxParticipants: number,
+        promise_time: promiseDateState.date,
+        recruit_end_time: recruitEndDateState.date,
+      },
+      gymInfo,
+    };
+    workoutMutation.mutate(data);
+
+    navigation.navigate('Home');
+  }, [
+    title,
+    description,
+    isPrivate,
+    number,
+    promiseDateState.date,
+    recruitEndDateState.date,
+    gymInfo,
+    workoutMutation,
+    navigation,
+  ]);
   return (
     <View style={style.container}>
       <TouchableWithoutFeedback
@@ -152,20 +175,59 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                 />
               </View>
             </View>
+            {/* 운동 날짜 */}
             <View style={style.infoContainer}>
-              <Text variant="titleMedium">🗓️ 날짜</Text>
-              <Button onPress={onPressDate}>
+              <Text variant="titleMedium">🗓️ 약속 날짜</Text>
+              <Button
+                onPress={() => {
+                  setPromiseDateState(prev => ({
+                    ...prev,
+                    visible: true,
+                    mode: 'date',
+                  }));
+                }}>
                 <Text variant="bodyLarge">
-                  {isToday(date) ? '오늘' : getLocaleDate(date)}
+                  {isToday(promiseDateState.date)
+                    ? '오늘'
+                    : getLocaleDate(promiseDateState.date)}
                 </Text>
               </Button>
             </View>
             <View style={style.infoContainer}>
-              <Text variant="titleMedium">⏰ 시간</Text>
-              <Button onPress={onPressTime}>
-                <Text variant="bodyLarge">{getLocaleTime(time)}</Text>
+              <Text variant="titleMedium">⏰ 약속 시간</Text>
+              <Button
+                onPress={() => {
+                  setPromiseDateState(prev => ({
+                    ...prev,
+                    visible: true,
+                    mode: 'time',
+                  }));
+                }}>
+                <Text variant="bodyLarge">
+                  {getLocaleTime(promiseDateState.date)}
+                </Text>
               </Button>
             </View>
+            {/* 모집 기한 */}
+            <View style={style.infoContainer}>
+              <Text variant="titleMedium">🎯 모집 기한</Text>
+              <Button
+                onPress={() => {
+                  setRecruitEndDateState(prev => ({
+                    ...prev,
+                    visible: true,
+                  }));
+                }}>
+                <Text variant="bodyLarge">
+                  {isToday(recruitEndDateState.date)
+                    ? '오늘'
+                    : getLocaleDate(recruitEndDateState.date) +
+                      ' ' +
+                      getLocaleTime(recruitEndDateState.date)}
+                </Text>
+              </Button>
+            </View>
+
             <View style={style.infoContainer}>
               <Text variant="titleMedium">📍 위치</Text>
               <Button onPress={onPressLocation}>
@@ -176,41 +238,31 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                 </Text>
               </Button>
             </View>
+            {/* 공개 여부 */}
+            <View style={style.infoContainer}>
+              <Text variant="titleMedium">🔒 비공개 여부</Text>
+              <Switch
+                value={isPrivate}
+                onValueChange={value => setIsPrivate(value)}
+              />
+            </View>
           </ScrollView>
           <Button
             mode="contained-tonal"
             style={style.postingButton}
             disabled={hasTitleErrors() || hasContentErrors() || !gymInfo}
             onPress={() => {
-              postWorkoutPromise({
-                title: title,
-                description: description,
-                location: gymInfo?.address || '',
-                date: date,
-                time: time,
-                limitedNumberOfPeople: number,
-              });
-              navigation.navigate('Home');
+              onPressPosting();
             }}>
             작성 완료
           </Button>
-          <DateTimePickerModal
-            date={mode === 'date' ? date : time}
-            isVisible={visible}
-            display={
-              Platform.OS === 'ios' && mode === 'date' ? 'inline' : 'spinner'
-            }
-            isDarkModeEnabled={theme.dark}
-            minuteInterval={10}
-            mode={mode}
-            onConfirm={onConfirm}
-            onCancel={onCancel}
-            cancelTextIOS="취소"
-            confirmTextIOS="확인"
-            buttonTextColorIOS={theme.colors.primary}
-          />
         </View>
       </TouchableWithoutFeedback>
+      <DateTimeModal state={promiseDateState} setState={setPromiseDateState} />
+      <DateTimeModal
+        state={recruitEndDateState}
+        setState={setRecruitEndDateState}
+      />
       <GymBottomSheet
         isBottomSheetOpen={isBottomSheetOpen}
         setIsBottomSheetOpen={setIsBottomSheetOpen}
@@ -220,6 +272,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
     </View>
   );
 }
+
 const style = StyleSheet.create({
   container: {
     flex: 1,

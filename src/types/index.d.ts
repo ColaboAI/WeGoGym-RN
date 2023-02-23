@@ -1,7 +1,14 @@
+type DatePickerMode = 'date' | 'time' | 'datetime';
+
 interface User {
   _id: string | number;
   name?: string;
   profilePic?: string;
+}
+
+interface timestampMixin {
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface Message {
@@ -40,13 +47,55 @@ interface WorkoutPromiseBase {
   currentNumberOfPeople?: number; // 현재 참여 인원 (default: 1)
   limitedNumberOfPeople: number; // 제한 인원
 }
+interface WorkoutPromiseCreate {
+  title: string;
+  description: string;
+  promise_time: Date;
+  recruit_end_time: Date | null;
+  maxParticipants: number;
+  isPrivate: boolean;
+}
+interface GymCreate {
+  status: string;
+  name: string;
+  address: string;
+  // FormData에서 자동으로 case-convert 불가능해서 직접 지정(snake_case)
+  zip_code: string;
+}
+interface Gym extends GymCreate {
+  id: string;
+  // TODO: fix
+  zipCode: string;
+}
 
-interface WorkoutPromiseCreate extends WorkoutPromiseBase {
-  _id: string; // id
-  user: UserCreate; // 작성자
-  createdAt: Date; // 생성일
-  image?: string; // 이미지
-  // updatedAt: Date; // 수정일
+interface WorkoutPromiseRead extends timestampMixin {
+  id: string;
+  title: string;
+  description: string;
+  maxParticipants: number;
+
+  promiseTime: Date;
+  recruitEndTime: Date | null;
+  // chatRoomId: string | null;
+  // chatRoom: ChatRoom | null;
+  isPrivate: boolean;
+
+  gymInfo: Gym | null;
+  participants: WorkoutParicipantsRead[];
+}
+interface WorkoutPromiseListRead {
+  total: number;
+  items: WorkoutPromiseRead[];
+}
+
+interface WorkoutParicipantsRead extends timestampMixin {
+  id: string;
+  status: string;
+  statusMessage: string;
+  isAdmin: boolean;
+  userId: string;
+  workoutPromiseId: string;
+  chatRoomMemberId: string | null;
 }
 
 interface GymInfoOpenAPI {
@@ -54,15 +103,6 @@ interface GymInfoOpenAPI {
   BPLCNM: string; // 사업자명
   RDNWHLADDR: string; // 도로명주소
   RDNPOSTNO: string; // 도로명우편번호
-}
-
-interface Gym {
-  id: string;
-  status: string;
-  name: string;
-  address: string;
-  // FormData에서 자동으로 case-convert 불가능해서 직접 지정(snake_case)
-  zip_code: string;
 }
 
 interface UserBase {
