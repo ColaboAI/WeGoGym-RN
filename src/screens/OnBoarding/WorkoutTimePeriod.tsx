@@ -1,8 +1,12 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
-import { save } from '../../store/store';
-export default function WorkoutTimeScreen({ navigation }: any) {
+import { save } from '@store/secureStore';
+import { AuthStackScreenProps } from 'navigators/types';
+
+type Props = AuthStackScreenProps<'WorkoutTimePeriod'>;
+
+export default function WorkoutTimePeriodScreen({ navigation }: Props) {
   const theme = useTheme();
   const buttons = ['오전', '오후', '저녁', '새벽'];
   const [time, setTime] = useState<string>('');
@@ -44,9 +48,9 @@ export default function WorkoutTimeScreen({ navigation }: any) {
         <Button
           mode="contained"
           disabled={!time}
-          onPress={() => {
-            save('workout_time', time);
-            navigation.navigate('WorkoutTimeHowLong');
+          onPress={async () => {
+            await save('workoutTimePeriod', time);
+            navigation.navigate('WorkoutTimePerDay');
           }}>
           확인
         </Button>

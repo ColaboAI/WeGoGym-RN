@@ -1,95 +1,27 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React, { createContext, useEffect, useReducer } from 'react';
+import React from 'react';
 import Auth from './navigators/Auth';
 import MainNavigator from './navigators/Main';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigators/types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
-import * as SecureStore from 'expo-secure-store';
 import { SplashScreen } from './screens';
-import { UserCreate } from './types';
-
-export const AuthContext = createContext({});
-
+import { useAuthValue } from './hooks/context/useAuth';
+import { useAxiosInterceptor } from './api/client';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 function App() {
-  const [state, dispatch] = useReducer(
-    (prevState: any, action: any) => {
-      switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...prevState,
-            userToken: action.token,
-            isLoading: false,
-          };
-        case 'SIGN_IN':
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.token,
-          };
-        case 'SIGN_OUT':
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      userToken: null,
-    },
-  );
+  const authState = useAuthValue();
 
-  useEffect(() => {
-    const bootstrapAsync = async () => {
-      let userToken;
-      try {
-        userToken = await SecureStore.getItemAsync('userToken');
-      } catch (e) {
-        // Restoring token failed
-      }
-      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
-    };
-    bootstrapAsync();
-  }, []);
+  useAxiosInterceptor();
 
-  const authContext = React.useMemo(
-    () => ({
-      signIn: async (data: UserCreate) => {
-        console.log('data', data);
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-      },
-      signOut: async () => {
-        await SecureStore.deleteItemAsync('userToken');
-        dispatch({ type: 'SIGN_OUT' });
-      },
-      signUp: async (data: UserCreate) => {
-        console.log(data);
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-      },
-    }),
-    [],
-  );
-
-  if (state.isLoading) {
+  if (authState.isLoading) {
     return <SplashScreen />;
   }
 
   return (
-    <AuthContext.Provider value={authContext}>
+    <QueryErrorResetBoundary>
       <Stack.Navigator screenOptions={() => ({ headerShown: false })}>
-        {state.userToken == null ? (
+        {/* TODO: Check phone number and Token */}
+        {authState.token === null ? (
           <>
             <Stack.Screen name="Auth" component={Auth} />
           </>
@@ -99,7 +31,7 @@ function App() {
           </>
         )}
       </Stack.Navigator>
-    </AuthContext.Provider>
+    </QueryErrorResetBoundary>
   );
 }
 

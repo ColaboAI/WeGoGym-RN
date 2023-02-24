@@ -3,19 +3,20 @@ import React from 'react';
 import {
   WelcomeScreen,
   LoginScreen,
-  PhoneNumberScreen,
+  PhoneNumberLoginScreen,
+  PhoneNumberRegisterScreen,
   UsernameScreen,
   GenderScreen,
   BodyInformationScreen,
-  WorkoutTimeScreen,
-  WorkoutTimeHowLongScreen,
+  WorkoutTimePeriodScreen,
+  WorkoutTimePerDayScreen,
   WorkoutPerWeekScreen,
   WorkoutLevelScreen,
   WorkoutGoalScreen,
 } from '../screens';
 import AuthNavBarHeader from './NavBarHeader/AuthNavBarHeader';
-const Stack = createNativeStackNavigator();
-
+import { AuthStackParamList } from './types';
+const Stack = createNativeStackNavigator<AuthStackParamList>();
 function Auth() {
   return (
     <Stack.Navigator
@@ -34,17 +35,25 @@ function Auth() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="PhoneNumber"
-        component={PhoneNumberScreen}
+        name="PhoneNumberRegister"
+        component={PhoneNumberRegisterScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Nickname" component={UsernameScreen} />
+      <Stack.Screen
+        name="PhoneNumberLogin"
+        component={PhoneNumberLoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="Username" component={UsernameScreen} />
       <Stack.Screen name="Gender" component={GenderScreen} />
       <Stack.Screen name="BodyInformation" component={BodyInformationScreen} />
-      <Stack.Screen name="WorkoutTime" component={WorkoutTimeScreen} />
       <Stack.Screen
-        name="WorkoutTimeHowLong"
-        component={WorkoutTimeHowLongScreen}
+        name="WorkoutTimePeriod"
+        component={WorkoutTimePeriodScreen}
+      />
+      <Stack.Screen
+        name="WorkoutTimePerDay"
+        component={WorkoutTimePerDayScreen}
       />
       <Stack.Screen name="WorkoutPerWeek" component={WorkoutPerWeekScreen} />
       <Stack.Screen name="WorkoutLevel" component={WorkoutLevelScreen} />

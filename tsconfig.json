@@ -5,18 +5,18 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     "baseUrl": "./src",
     "paths": {
-    "@/*":["./*"],
+    "/*":["./*"],
     "@image/*": ["components/*"],
     "@navigators/*": ["containers/*"],
+    "@components/*": ["components/*"],
     "@screeens/*": ["modules/*"],
     "@store/*": ["store/*"],
     "@utils/*": ["utils/*"],
-    "@type/*": ["type/*"],
-    "@api/*": ["api/*"]
-  },
+    "@types/*": ["types/*"],
+    "@api/*": ["api/*"],
+    "@hooks/*": ["hooks/*"]
+    },
     /* Completeness */
-    "skipLibCheck": true,                               /* Skip type checking all .d.ts files. */
-    "baseUrl": "./src",
-
+    "skipLibCheck": true,                           /* Skip type checking all .d.ts files. */
   }
 }

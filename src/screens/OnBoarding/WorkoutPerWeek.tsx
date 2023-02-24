@@ -1,11 +1,13 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
-import { save } from '../../store/store';
+import { save } from '@store/secureStore';
+import { AuthStackScreenProps } from 'navigators/types';
 
-export default function WorkoutPerWeekScreen({ navigation }: any) {
+type Props = AuthStackScreenProps<'WorkoutPerWeek'>;
+export default function WorkoutPerWeekScreen({ navigation }: Props) {
   const theme = useTheme();
-  const buttons = ['1번', '2번', '3번', '4번', '5번', '6번'];
+  const buttons = ['1', '2', '3', '4', '5', '6'];
   const [workoutPerWeek, setWorkoutPerWeek] = useState<string>('');
 
   const getButton = (id: number) => {
@@ -49,8 +51,8 @@ export default function WorkoutPerWeekScreen({ navigation }: any) {
         <Button
           mode="contained"
           disabled={!workoutPerWeek}
-          onPress={() => {
-            save('workout_per_week', workoutPerWeek);
+          onPress={async () => {
+            await save('workoutPerWeek', workoutPerWeek);
             navigation.navigate('WorkoutLevel');
           }}>
           확인

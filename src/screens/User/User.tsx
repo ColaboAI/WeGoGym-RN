@@ -1,4 +1,4 @@
-import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, SafeAreaView, Alert } from 'react-native';
 import {
   IconButton,
   Text,
@@ -9,199 +9,260 @@ import {
   useTheme,
   Tooltip,
   Button,
+  Headline,
+  Chip,
 } from 'react-native-paper';
-import React, { useState } from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
 
-export default function UserScreen({ navigation }: any) {
+import React, { Suspense, useState } from 'react';
+import { useGetMyInfoQuery } from 'hooks/queries/user.queries';
+import GymInfoLoader from 'components/molecules/Home/GymInfoLoader';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import { UserStackScreenProps } from '/navigators/types';
+import InfoCard from 'components/molecules/User/InfoCard';
+type Props = UserStackScreenProps<'User'>;
+export default function UserScreen({ navigation }: Props) {
   const theme = useTheme();
   const [isAuthenticated] = useState(true);
-  const data = [
-    {
-      id: 0,
-      title: 'username',
-      value: '스근하이',
-    },
-    {
-      id: 1,
-      title: 'uri',
-      value: 'https://i.ibb.co/Y725W4C/image.png',
-    },
-    {
-      id: 2,
-      title: 'height',
-      value: '174',
-    },
-    {
-      id: 3,
-      title: 'weight',
-      value: '73',
-    },
-    {
-      id: 4,
-      title: 'workout_level',
-      value: '중급',
-    },
-    {
-      id: 5,
-      title: 'age',
-      value: '25',
-    },
-    {
-      id: 6,
-      title: 'location',
-      value: '서울시 관악구 서원동',
-    },
-    {
-      id: 7,
-      title: 'my_gym',
-      value: '짐박스 봉천점',
-    },
-    {
-      id: 8,
-      title: 'appointed_number',
-      value: '9',
-    },
-    {
-      id: 9,
-      title: 'present_number',
-      value: '80',
-    },
-    {
-      id: 10,
-      title: 'workout_goal',
-      value: ['다이어트', '근육증가', '체지방 감소'],
-    },
-  ];
+  const { data } = useGetMyInfoQuery();
+  const { reset } = useQueryErrorResetBoundary();
 
   return (
-    <SafeAreaView style={style.container}>
-      <View style={style.headerContainer}>
-        <IconButton
-          icon="settings-outline"
-          onPress={() => {
-            navigation.navigate('Setting');
-          }}
-        />
-      </View>
-      <Divider />
-      <View style={style.profileContainer}>
-        <View style={style.avatarContainer}>
-          <Avatar.Image
-            size={64}
-            source={{ uri: 'https://i.ibb.co/Y725W4C/image.png' }}
-            style={style.avatar}
-          />
-        </View>
-        <View style={style.usernameContainer}>
-          <Text variant="titleMedium">{data[0].value} 님</Text>
-          {isAuthenticated ? (
-            <Tooltip
-              title="프로필 인증이 완료된 회원입니다."
-              enterTouchDelay={100}>
-              <IconButton
-                icon="checkmark-circle-outline"
-                iconColor="green"
-                size={18}
-                style={style.icon}
-              />
-            </Tooltip>
-          ) : null}
-        </View>
-        <Button onPress={() => {}}>프로필 편집</Button>
-      </View>
-      <ScrollView>
-        <View style={style.title}>
-          <Text
-            variant="titleMedium"
-            style={{
-              color: theme.colors.primary,
-            }}>
-            🏋🏻 나의 피지컬
-          </Text>
-        </View>
-        <View style={style.physicalContainer}>
-          <Card>
-            <Card.Content style={style.card}>
-              <Text
-                variant="titleMedium"
-                style={{
-                  color: theme.colors.primary,
+    <Suspense fallback={<GymInfoLoader />}>
+      <ErrorBoundary
+        onReset={reset}
+        fallbackRender={({ resetErrorBoundary }) => (
+          <Headline>
+            There was an error!
+            <Button
+              onPress={() => {
+                resetErrorBoundary();
+                Alert.alert("I'm error boundary");
+              }}>
+              Try again
+            </Button>
+          </Headline>
+        )}>
+        <SafeAreaView style={style.container}>
+          <View style={style.headerContainer}>
+            <IconButton
+              icon="settings-outline"
+              onPress={() => {
+                navigation.navigate('Setting');
+              }}
+            />
+          </View>
+          <Divider />
+          <ScrollView
+            style={style.container}
+            contentContainerStyle={style.scrollViewContentContainer}>
+            {/* 프로필 정보 */}
+            <View style={style.profileContainer}>
+              <View style={style.avatarContainer}>
+                {data && data.profilePic ? (
+                  <Avatar.Image
+                    size={64}
+                    source={{
+                      uri: data.profilePic,
+                    }}
+                    style={style.avatar}
+                  />
+                ) : (
+                  <Avatar.Text
+                    size={64}
+                    label={data?.username[0] ?? 'User'}
+                    // style={style.avatar}
+                  />
+                )}
+              </View>
+              <View style={style.usernameContainer}>
+                <Text variant="titleMedium">{data?.username} 님</Text>
+                {isAuthenticated ? (
+                  <Tooltip
+                    title="프로필 인증이 완료된 회원입니다."
+                    enterTouchDelay={100}>
+                    <IconButton
+                      icon="checkmark-circle-outline"
+                      iconColor="green"
+                      size={18}
+                      style={style.icon}
+                    />
+                  </Tooltip>
+                ) : null}
+              </View>
+              <Button
+                onPress={() => {
+                  if (data) {
+                    navigation.navigate('ProfileEdit', {
+                      myInfo: data,
+                    });
+                  } else {
+                    throw new Error('MyInfoData is undefined');
+                  }
                 }}>
-                {data[2].value}cm
-              </Text>
-              <Text variant="bodySmall">키</Text>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content style={style.card}>
-              <Text
-                variant="titleMedium"
-                style={{
-                  color: theme.colors.primary,
-                }}>
-                {data[3].value}kg
-              </Text>
-              <Text variant="bodySmall">몸무게</Text>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content style={style.card}>
-              <Text
-                variant="titleMedium"
-                style={{
-                  color: theme.colors.primary,
-                }}>
-                {data[4].value}
-              </Text>
-              <Text variant="bodySmall">운동 경력</Text>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content style={style.card}>
-              <Text
-                variant="titleMedium"
-                style={{
-                  color: theme.colors.primary,
-                }}>
-                {data[5].value}세
-              </Text>
-              <Text variant="bodySmall">나이</Text>
-            </Card.Content>
-          </Card>
-        </View>
-        <View style={style.title}>
-          <Text
-            variant="titleMedium"
-            style={{
-              color: theme.colors.primary,
-            }}>
-            ℹ️ 나의 정보
-          </Text>
-        </View>
-        <View style={style.infoContainer}>
-          <Card>
-            <Card.Content>
-              <List.Item
-                title="동네"
-                right={() => <Text variant="bodySmall">{data[6].value}</Text>}
-              />
-              <List.Item
-                title="헬스장"
-                right={() => <Text variant="bodySmall">{data[7].value}</Text>}
-              />
-              <List.Item
-                title="출석률"
-                right={() => <Text variant="bodySmall">{data[9].value}%</Text>}
-              />
-              <List.Item
-                title="운동 약속"
-                right={() => <Text variant="bodySmall">{data[8].value}회</Text>}
-              />
-            </Card.Content>
-          </Card>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+                프로필 편집
+              </Button>
+            </View>
+            {/* 신체 정보 */}
+            <View style={style.myBodySection}>
+              <View style={style.title}>
+                <Text
+                  variant="titleMedium"
+                  style={{
+                    color: theme.colors.primary,
+                  }}>
+                  🏋🏻 나의 피지컬
+                </Text>
+              </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={
+                  style.horizontalScrollViewContentContainer
+                }
+                style={style.physicalContainer}>
+                <InfoCard textTitle="키" textContent={`${data?.height}cm`} />
+                <InfoCard
+                  textTitle="몸무게"
+                  textContent={`${data?.weight}kg`}
+                />
+                <InfoCard
+                  textTitle="운동 경력"
+                  textContent={
+                    data ? data.workoutLevel.split('(')[0] : '정보 없음'
+                  }
+                />
+                <InfoCard textTitle="나이" textContent={`${data?.age}세`} />
+                <InfoCard
+                  textTitle="성별"
+                  textContent={`${
+                    data?.gender === 'male'
+                      ? '남성'
+                      : data?.gender === 'female'
+                      ? '여성'
+                      : '그 외'
+                  }`}
+                />
+                {/* work out per week */}
+
+                {/* TODO: 체지방률, 인바디, 분할 정보 등 다양한 신체 정보 추가 */}
+              </ScrollView>
+            </View>
+
+            {/* 운동 목표 */}
+            <View style={style.myGoalSection}>
+              <View style={style.title}>
+                <Text
+                  variant="titleMedium"
+                  style={{
+                    color: theme.colors.primary,
+                  }}>
+                  🏃🏻‍♀️ 나의 운동 목표
+                </Text>
+              </View>
+              <ScrollView
+                style={style.horizontalChipContainer}
+                horizontal
+                nestedScrollEnabled
+                showsHorizontalScrollIndicator={false}>
+                {data &&
+                data.workoutGoal &&
+                data.workoutGoal.split(',').length > 0 ? (
+                  data.workoutGoal.split(',').map((goal, index) => (
+                    <Chip
+                      key={`workoutGoal-${index}`}
+                      icon="checkmark-circle-outline"
+                      style={style.chip}>
+                      {goal}
+                    </Chip>
+                  ))
+                ) : (
+                  <Text variant="bodySmall">운동 목표를 등록해보세요!</Text>
+                )}
+              </ScrollView>
+            </View>
+
+            {/* 기타 개인 정보 */}
+            <View style={style.myInfoSection}>
+              <View style={style.title}>
+                <Text
+                  variant="titleMedium"
+                  style={{
+                    color: theme.colors.primary,
+                  }}>
+                  ℹ️ 나의 정보
+                </Text>
+              </View>
+              <View style={style.infoContainer}>
+                <Card>
+                  <Card.Content>
+                    <List.Item
+                      title="내 소개"
+                      right={() => (
+                        <Text variant="bodySmall">
+                          {data?.bio ?? '자기 소개를 추가해보세요.'}
+                        </Text>
+                      )}
+                    />
+                    <List.Item
+                      title="동네"
+                      right={() => (
+                        <Text variant="bodySmall">
+                          {data?.address ??
+                            '동네를 등록하고 친구를 찾아보세요!'}
+                        </Text>
+                      )}
+                    />
+                    {/* GymInfo는 nullable */}
+                    {data?.gymInfo !== null ? (
+                      <List.Item
+                        title="헬스장"
+                        right={() => (
+                          <Text variant="bodySmall">{data?.gymInfo.name}</Text>
+                        )}
+                      />
+                    ) : (
+                      <List.Item
+                        title="헬스장"
+                        right={() => (
+                          <Text variant="bodySmall">
+                            {'어떤 헬스장을 다니시나요?'}
+                          </Text>
+                        )}
+                      />
+                    )}
+
+                    <List.Item
+                      title="주당 운동"
+                      right={() => (
+                        <Text variant="bodySmall">{`${data?.workoutPerWeek}회`}</Text>
+                      )}
+                    />
+                    <List.Item
+                      title="활동 시간대"
+                      right={() => (
+                        <Text variant="bodySmall">
+                          {data?.workoutTimePeriod}
+                        </Text>
+                      )}
+                    />
+                    <List.Item
+                      title="일일 운동시간(강도)"
+                      right={() => (
+                        <Text variant="bodySmall">
+                          {data?.workoutTimePerDay}
+                        </Text>
+                      )}
+                    />
+                  </Card.Content>
+                </Card>
+              </View>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      </ErrorBoundary>
+    </Suspense>
   );
 }
 const style = StyleSheet.create({
@@ -242,21 +303,48 @@ const style = StyleSheet.create({
   },
   physicalContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     padding: 12,
   },
   infoContainer: {
     padding: 12,
   },
-  card: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: 85,
-    height: 80,
-  },
+
   chip: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    maxHeight: 50,
+    padding: 5,
+    marginHorizontal: 5,
+    borderRadius: 20,
+  },
+  horizontalChipContainer: {
+    flexDirection: 'row',
+    paddingTop: 12,
+    marginBottom: 16,
+  },
+  myBodySection: {
+    flex: 1,
+    marginBottom: 16,
+  },
+
+  myGoalSection: {
+    flex: 2,
+    marginBottom: 16,
+  },
+
+  myInfoSection: {
+    flex: 2,
+  },
+  scrollViewContentContainer: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
+
+  horizontalScrollViewContentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    padding: 12,
   },
 });

@@ -18,7 +18,7 @@ module.exports = {
         ],
         alias: {
           underscore: 'lodash',
-          '@': './src',
+          '': './src',
           '@image': './src/image',
           '@navigators': './src/navigators',
           '@screens': './src/screens',
@@ -26,6 +26,8 @@ module.exports = {
           '@store': './src/store',
           '@type': './src/type',
           '@api': './src/api',
+          '@hooks': './src/hooks',
+          '@components': './src/components',
         },
       },
     ],

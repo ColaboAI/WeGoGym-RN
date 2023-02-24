@@ -25,9 +25,25 @@ export type HomeStackParamList = {
   Notifications: undefined;
 };
 
+export type AuthStackParamList = {
+  Login: undefined;
+  Welcome: undefined;
+  PhoneNumberRegister: undefined;
+  PhoneNumberLogin: undefined;
+  Username: undefined;
+  Gender: undefined;
+  BodyInformation: undefined;
+  WorkoutTimePeriod: undefined;
+  WorkoutTimePerDay: undefined;
+  WorkoutGoal: undefined;
+  WorkoutPerWeek: undefined;
+  WorkoutLevel: undefined;
+};
+
 export type UserStackParamList = {
   User: undefined;
   Setting: undefined;
+  ProfileEdit: { myInfo: MyInfoRead };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
@@ -57,6 +73,11 @@ export type HomeStackScreenProps<T extends keyof HomeStackParamList> =
     CustomTabScreenProps<keyof BottomTabParamList>
   >;
 
+export type AuthStackScreenProps<T extends keyof AuthStackParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<AuthStackParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
 // export type CustomStackScreenProps
 
 declare global {

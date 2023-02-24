@@ -7,9 +7,12 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Button, Headline, TextInput, useTheme } from 'react-native-paper';
-import { save } from '../../store/store';
+import { save } from '@store/secureStore';
+import { AuthStackScreenProps } from 'navigators/types';
 
-export default function BodyInformationScreen({ navigation }: any) {
+type Props = AuthStackScreenProps<'BodyInformation'>;
+
+export default function BodyInformationScreen({ navigation }: Props) {
   const theme = useTheme();
   const [age, setAge] = React.useState<string>('');
   const [height, setHeight] = React.useState<string>('');
@@ -62,11 +65,11 @@ export default function BodyInformationScreen({ navigation }: any) {
           <Button
             mode="contained"
             disabled={age.length < 1 || height.length < 1 || weight.length < 1}
-            onPress={() => {
-              save('age', age);
-              save('height', height);
-              save('weight', weight);
-              navigation.navigate('WorkoutTime');
+            onPress={async () => {
+              await save('age', age);
+              await save('height', height);
+              await save('weight', weight);
+              navigation.navigate('WorkoutTimePeriod');
             }}>
             확인
           </Button>

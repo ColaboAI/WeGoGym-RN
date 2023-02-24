@@ -1,26 +1,26 @@
 import * as React from 'react';
 import {
-  ScrollView,
   ScrollViewProps,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'react-native-paper';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-type Props = ScrollViewProps & {
-  children: React.ReactNode;
-  withScrollView?: boolean;
-  style?: StyleProp<ViewStyle>;
-  contentContainerStyle?: StyleProp<ViewStyle>;
-};
+type Props = ScrollViewProps &
+  React.PropsWithChildren<{
+    withScrollView: boolean;
+    style?: StyleProp<ViewStyle>;
+    contentContainerStyle?: StyleProp<ViewStyle>;
+  }>;
 
 export default function ScreenWrapper({
   children,
-  withScrollView = true,
+  withScrollView,
   style,
   contentContainerStyle,
   ...rest
@@ -28,14 +28,14 @@ export default function ScreenWrapper({
   const theme = useTheme();
 
   const insets = useSafeAreaInsets();
-
   const containerStyle = [
     styles.container,
     {
       backgroundColor: theme.colors.background,
       paddingBottom: insets.bottom,
       paddingLeft: insets.left,
-      paddingRight: insets.left,
+      paddingRight: insets.right,
+      paddingTop: insets.top,
     },
   ];
 

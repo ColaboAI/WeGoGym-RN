@@ -1,7 +1,10 @@
 import { StyleSheet, View, Image } from 'react-native';
 import React from 'react';
 import { Button, Headline, Text, useTheme } from 'react-native-paper';
-export default function LoginScreen({ navigation }: any) {
+import { AuthStackScreenProps } from 'navigators/types';
+
+type Props = AuthStackScreenProps<'Login'>;
+export default function LoginScreen({ navigation }: Props) {
   const theme = useTheme();
   return (
     <View style={style.container}>
@@ -37,8 +40,14 @@ export default function LoginScreen({ navigation }: any) {
         <Button
           icon="call-sharp"
           mode="contained"
-          onPress={() => navigation.navigate('PhoneNumber')}>
-          전화 번호로 시작하기
+          onPress={() => navigation.navigate('PhoneNumberRegister')}>
+          가입하기
+        </Button>
+        <Button
+          icon="call-sharp"
+          mode="contained"
+          onPress={() => navigation.navigate('PhoneNumberLogin')}>
+          로그인
         </Button>
       </View>
     </View>
@@ -47,22 +56,25 @@ export default function LoginScreen({ navigation }: any) {
 const style = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   headlineBox: {
     flex: 1,
-    position: 'absolute',
-    top: '15%',
     left: '5%',
+    top: '5%',
+    alignSelf: 'flex-start',
+    justifyContent: 'flex-end',
   },
   imageBox: {
-    flex: 1,
+    flexGrow: 2,
     justifyContent: 'center',
-    alignSelf: 'center',
   },
   buttonBox: {
+    flex: 1,
     width: '80%',
-    position: 'absolute',
-    bottom: 100,
-    alignSelf: 'center',
+    justifyContent: 'space-evenly',
+    bottom: '5%',
   },
+  button: { paddingVertical: 10 },
 });

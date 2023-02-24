@@ -1,12 +1,10 @@
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
-  TouchableOpacity,
   ScrollView,
   Keyboard,
-  Platform,
 } from 'react-native';
 import {
   useTheme,
@@ -15,327 +13,266 @@ import {
   TextInput,
   HelperText,
   IconButton,
-  Chip,
+  Switch,
 } from 'react-native-paper';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetFlatList,
-  BottomSheetTextInput,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
-import GymInfoLoader from '@/component/molecules/Home/GymInfoLoader';
-import {
-  getGymInfoFromApi,
-  getLocaleDate,
-  getLocaleTime,
-  isToday,
-} from '@/utils/util';
-import { Gym } from '@/types';
-import { postWorkoutPromise } from '@/api/api';
-import { HomeStackScreenProps } from '@/navigators/types';
+
+import DateTimeModal, {
+  DatePickerState,
+} from 'components/organisms/Common/DateTimeModal';
+import { getLocaleDate, getLocaleTime, isToday } from 'utils/util';
+import { HomeStackScreenProps } from 'navigators/types';
+import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
+import { useWorkoutMutation } from '/hooks/queries/workout.queries';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;
 
-type Mode = 'date' | 'time' | 'datetime' | undefined;
 type HomeScreenProps = HomeStackScreenProps<'Posting'>;
 
 export default function PostingScreen({ navigation }: HomeScreenProps) {
+  const workoutMutation = useWorkoutMutation();
+  const initialDatePickerState: DatePickerState = {
+    visible: false,
+    mode: 'date',
+    date: new Date(),
+  };
   const theme = useTheme();
   const [title, setTitle] = useState<string>('');
   const [titleFocus, setTitleFocus] = useState<boolean>(false);
   const [description, setDescription] = useState<string>('');
   const [descriptionFocus, setDescriptionFocus] = useState<boolean>(false);
   const [number, setNumber] = useState<number>(3);
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+
   // date picker
-  const [date, setDate] = useState<Date>(new Date());
-  const [time, setTime] = useState<Date>(new Date());
-  const [visible, setVisible] = useState<boolean>(false);
-  const [mode, setMode] = useState<Mode>('date');
+  const [promiseDateState, setPromiseDateState] = useState<DatePickerState>(
+    initialDatePickerState,
+  );
+  const [recruitEndDateState, setRecruitEndDateState] =
+    useState<DatePickerState>({
+      visible: false,
+      date: new Date(new Date().setDate(new Date().getDate() + 1)),
+      mode: 'datetime',
+    });
+
   // bottom sheet
-  const [location, setLocation] = useState<string>('');
-  const [searchText, setSearchText] = useState<string>('');
-  const [gymData, setGymData] = useState<Gym[] | null>(null);
-  const [filteredGymData, setFilteredGymData] = useState<Gym[] | null>(null);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
+  const [gymInfo, setGymInfo] = useState<Gym | null>(null);
 
-  const hasTitleErrors = () => {
+  const hasTitleErrors = useCallback(() => {
     return titleFocus && title.length === 0;
-  };
+  }, [titleFocus, title]);
 
-  const hasContentErrors = () => {
+  const hasContentErrors = useCallback(() => {
     return descriptionFocus && description.length === 0;
-  };
+  }, [descriptionFocus, description]);
 
-  const onPressPlus = () => {
-    if (number < MAX_NUMBER) {
-      setNumber(number + 1);
-    }
-  };
+  const onPressPlus = useCallback(() => {
+    setNumber(prev => {
+      if (prev < MAX_NUMBER) {
+        return prev + 1;
+      } else {
+        return prev;
+      }
+    });
+  }, []);
 
-  const onPressMinus = () => {
-    if (number > MIN_NUMBER) {
-      setNumber(number - 1);
-    }
-  };
-
-  const onPressDate = () => {
-    setMode('date');
-    setVisible(true);
-  };
-
-  const onPressTime = () => {
-    setMode('time');
-    setVisible(true);
-  };
-
-  const onConfirm = (selectedDate: React.SetStateAction<Date>) => {
-    setVisible(false);
-    if (mode === 'date') {
-      setDate(selectedDate);
-    } else if (mode === 'time') {
-      setTime(selectedDate);
-    }
-  };
-
-  const onCancel = () => {
-    setVisible(false);
-  };
+  const onPressMinus = useCallback(() => {
+    setNumber(prev => {
+      if (prev > MIN_NUMBER) {
+        return prev - 1;
+      } else {
+        return prev;
+      }
+    });
+  }, []);
 
   const onPressLocation = useCallback(async () => {
-    bottomSheetRef.current?.expand();
-    if (!gymData) {
-      const res = await getData();
-      setGymData(res);
-    }
-  }, [gymData]);
+    setIsBottomSheetOpen(true);
+  }, []);
 
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const onPressPosting = useCallback(async () => {
+    const data = {
+      workoutPromise: {
+        title,
+        description,
+        isPrivate: isPrivate,
+        maxParticipants: number,
+        promise_time: promiseDateState.date,
+        recruit_end_time: recruitEndDateState.date,
+      },
+      gymInfo,
+    };
+    workoutMutation.mutate(data);
 
-  const snapPoints = useMemo(() => ['70%'], []);
-
-  const renderBackdrop = useCallback(
-    (props: JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        pressBehavior="close"
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-        opacity={0.5}
-      />
-    ),
-    [],
-  );
-
-  const getData = async () => {
-    const apiData = await getGymInfoFromApi();
-    return apiData;
-  };
-
-  const renderItem = useCallback(
-    ({ item }: { item: Gym }) => (
-      <TouchableOpacity
-        onPress={() => {
-          setLocation(item.name);
-          bottomSheetRef.current?.close();
-        }}>
-        <View style={style.itemContainer}>
-          <View style={style.item}>
-            <Text variant="titleMedium">{item.name}</Text>
-          </View>
-          <View style={style.item}>
-            <Chip style={style.chip} textStyle={{ fontSize: 10 }}>
-              도로명
-            </Chip>
-            <View style={style.container}>
-              <Text variant="bodySmall" numberOfLines={1} ellipsizeMode="tail">
-                {item.address}
-              </Text>
-            </View>
-          </View>
-          <View style={style.item}>
-            <Chip style={style.chip} textStyle={{ fontSize: 10 }}>
-              우편번호
-            </Chip>
-            <Text variant="bodySmall">{item.zipCode}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    ),
-    [],
-  );
-
-  const onSubmitEditing = useCallback(() => {
-    if (searchText.length > 0 && gymData) {
-      const res = gymData.filter(item => {
-        return item.name.includes(searchText);
-      });
-      setFilteredGymData(res);
-    }
-  }, [gymData, searchText]);
-
+    navigation.navigate('Home');
+  }, [
+    title,
+    description,
+    isPrivate,
+    number,
+    promiseDateState.date,
+    recruitEndDateState.date,
+    gymInfo,
+    workoutMutation,
+    navigation,
+  ]);
   return (
-    <GestureHandlerRootView style={style.container}>
-      <View style={style.container}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss();
-          }}>
-          <View style={style.container}>
-            <ScrollView>
-              <View style={style.titleContainer}>
-                <Text variant="titleMedium">제목</Text>
-                <TextInput
-                  mode="outlined"
-                  placeholder="운동 모집 글 요약"
-                  error={hasTitleErrors()}
-                  value={title}
-                  onFocus={() => setTitleFocus(true)}
-                  onChangeText={value => setTitle(value)}
+    <View style={style.container}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}>
+        <View style={style.container}>
+          <ScrollView>
+            <View style={style.titleContainer}>
+              <Text variant="titleMedium">제목</Text>
+              <TextInput
+                mode="outlined"
+                placeholder="운동 모집 글 요약"
+                error={hasTitleErrors()}
+                value={title}
+                onFocus={() => setTitleFocus(true)}
+                onChangeText={value => setTitle(value)}
+              />
+            </View>
+            <HelperText type="error" visible={hasTitleErrors()}>
+              ⚠️ 운동 모집 글의 제목을 입력해주세요!
+            </HelperText>
+            <View style={style.descriptionContainer}>
+              <Text variant="titleMedium">내용</Text>
+              <TextInput
+                mode="outlined"
+                multiline={true}
+                numberOfLines={5}
+                placeholder="운동 파트너 모집 글 내용"
+                error={hasContentErrors()}
+                value={description}
+                onFocus={() => setDescriptionFocus(true)}
+                onChangeText={value => setDescription(value)}
+              />
+            </View>
+            <HelperText type="error" visible={hasContentErrors()}>
+              ⚠️ 운동 모집 글의 내용을 입력해주세요!
+            </HelperText>
+            <View style={style.infoContainer}>
+              <Text variant="titleMedium">👥 인원</Text>
+              <View style={style.numberButtonContainer}>
+                <IconButton
+                  icon="remove-circle-outline"
+                  disabled={number === MIN_NUMBER}
+                  iconColor={theme.colors.primary}
+                  size={20}
+                  onPress={onPressMinus}
+                />
+                <Text variant="bodyLarge">{number}명</Text>
+                <IconButton
+                  icon="add-circle-outline"
+                  disabled={number === MAX_NUMBER}
+                  iconColor={theme.colors.primary}
+                  size={20}
+                  onPress={onPressPlus}
                 />
               </View>
-              <HelperText type="error" visible={hasTitleErrors()}>
-                ⚠️ 운동 모집 글의 제목을 입력해주세요!
-              </HelperText>
-              <View style={style.descriptionContainer}>
-                <Text variant="titleMedium">내용</Text>
-                <TextInput
-                  mode="outlined"
-                  multiline={true}
-                  numberOfLines={5}
-                  placeholder="운동 파트너 모집 글 내용"
-                  error={hasContentErrors()}
-                  value={description}
-                  onFocus={() => setDescriptionFocus(true)}
-                  onChangeText={value => setDescription(value)}
-                />
-              </View>
-              <HelperText type="error" visible={hasContentErrors()}>
-                ⚠️ 운동 모집 글의 내용을 입력해주세요!
-              </HelperText>
-              <View style={style.infoContainer}>
-                <Text variant="titleMedium">👥 인원</Text>
-                <View style={style.numberButtonContainer}>
-                  <IconButton
-                    icon="remove-circle-outline"
-                    disabled={number === MIN_NUMBER}
-                    iconColor={theme.colors.primary}
-                    size={20}
-                    onPress={onPressMinus}
-                  />
-                  <Text variant="bodyLarge">{number}명</Text>
-                  <IconButton
-                    icon="add-circle-outline"
-                    disabled={number === MAX_NUMBER}
-                    iconColor={theme.colors.primary}
-                    size={20}
-                    onPress={onPressPlus}
-                  />
-                </View>
-              </View>
-              <View style={style.infoContainer}>
-                <Text variant="titleMedium">🗓️ 날짜</Text>
-                <Button onPress={onPressDate}>
-                  <Text variant="bodyLarge">
-                    {isToday(date) ? '오늘' : getLocaleDate(date)}
-                  </Text>
-                </Button>
-              </View>
-              <View style={style.infoContainer}>
-                <Text variant="titleMedium">⏰ 시간</Text>
-                <Button onPress={onPressTime}>
-                  <Text variant="bodyLarge">{getLocaleTime(time)}</Text>
-                </Button>
-              </View>
-              <View style={style.infoContainer}>
-                <Text variant="titleMedium">📍 위치</Text>
-                <Button onPress={onPressLocation}>
-                  <Text
-                    variant="bodyLarge"
-                    style={{ color: theme.colors.onBackground }}>
-                    {location ? location : '위치를 선택해주세요'}
-                  </Text>
-                </Button>
-              </View>
-            </ScrollView>
-            <Button
-              mode="contained-tonal"
-              style={style.postingButton}
-              disabled={hasTitleErrors() || hasContentErrors() || !location}
-              onPress={() => {
-                postWorkoutPromise({
-                  title: title,
-                  description: description,
-                  location: location,
-                  date: date,
-                  time: time,
-                  limitedNumberOfPeople: number,
-                });
-                navigation.navigate('Home');
-              }}>
-              작성 완료
-            </Button>
-            <DateTimePickerModal
-              date={mode === 'date' ? date : time}
-              isVisible={visible}
-              display={
-                Platform.OS === 'ios' && mode === 'date' ? 'inline' : 'spinner'
-              }
-              minuteInterval={10}
-              mode={mode}
-              onConfirm={onConfirm}
-              onCancel={onCancel}
-              locale="ko-KR"
-              cancelTextIOS="취소"
-              confirmTextIOS="확인"
-              buttonTextColorIOS={theme.colors.primary}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-        <BottomSheet
-          ref={bottomSheetRef}
-          index={-1}
-          snapPoints={snapPoints}
-          backdropComponent={renderBackdrop}
-          handleStyle={{ backgroundColor: theme.colors.background }}
-          backgroundStyle={{ backgroundColor: theme.colors.background }}
-          enablePanDownToClose={true}
-          android_keyboardInputMode={'adjustResize'}>
-          <BottomSheetView>
-            <BottomSheetTextInput
-              value={searchText}
-              placeholder="주변 헬스장을 검색하세요."
-              onChangeText={value => setSearchText(value)}
-              onSubmitEditing={onSubmitEditing}
-              returnKeyType="search"
-              style={[
-                style.textInput,
-                {
-                  backgroundColor: theme.colors.secondaryContainer,
-                  color: theme.colors.onBackground,
-                },
-              ]}
-            />
-          </BottomSheetView>
-          {filteredGymData !== null ? (
-            <BottomSheetFlatList
-              data={filteredGymData}
-              keyExtractor={(item: Gym) => item.id}
-              renderItem={renderItem}
-              showsVerticalScrollIndicator={false}
-              disableVirtualization={false}
-              contentContainerStyle={style.contentContainer}
-            />
-          ) : (
-            <GymInfoLoader />
-          )}
-        </BottomSheet>
-      </View>
-    </GestureHandlerRootView>
+            </View>
+            {/* 운동 날짜 */}
+            <View style={style.infoContainer}>
+              <Text variant="titleMedium">🗓️ 약속 날짜</Text>
+              <Button
+                onPress={() => {
+                  setPromiseDateState(prev => ({
+                    ...prev,
+                    visible: true,
+                    mode: 'date',
+                  }));
+                }}>
+                <Text variant="bodyLarge">
+                  {isToday(promiseDateState.date)
+                    ? '오늘'
+                    : getLocaleDate(promiseDateState.date)}
+                </Text>
+              </Button>
+            </View>
+            <View style={style.infoContainer}>
+              <Text variant="titleMedium">⏰ 약속 시간</Text>
+              <Button
+                onPress={() => {
+                  setPromiseDateState(prev => ({
+                    ...prev,
+                    visible: true,
+                    mode: 'time',
+                  }));
+                }}>
+                <Text variant="bodyLarge">
+                  {getLocaleTime(promiseDateState.date)}
+                </Text>
+              </Button>
+            </View>
+            {/* 모집 기한 */}
+            <View style={style.infoContainer}>
+              <Text variant="titleMedium">🎯 모집 기한</Text>
+              <Button
+                onPress={() => {
+                  setRecruitEndDateState(prev => ({
+                    ...prev,
+                    visible: true,
+                  }));
+                }}>
+                <Text variant="bodyLarge">
+                  {isToday(recruitEndDateState.date)
+                    ? '오늘'
+                    : getLocaleDate(recruitEndDateState.date) +
+                      ' ' +
+                      getLocaleTime(recruitEndDateState.date)}
+                </Text>
+              </Button>
+            </View>
+
+            <View style={style.infoContainer}>
+              <Text variant="titleMedium">📍 위치</Text>
+              <Button onPress={onPressLocation}>
+                <Text
+                  variant="bodyLarge"
+                  style={{ color: theme.colors.onBackground }}>
+                  {gymInfo ? gymInfo.name : '위치를 선택해주세요'}
+                </Text>
+              </Button>
+            </View>
+            {/* 공개 여부 */}
+            <View style={style.infoContainer}>
+              <Text variant="titleMedium">🔒 비공개 여부</Text>
+              <Switch
+                value={isPrivate}
+                onValueChange={value => setIsPrivate(value)}
+              />
+            </View>
+          </ScrollView>
+          <Button
+            mode="contained-tonal"
+            style={style.postingButton}
+            disabled={hasTitleErrors() || hasContentErrors() || !gymInfo}
+            onPress={() => {
+              onPressPosting();
+            }}>
+            작성 완료
+          </Button>
+        </View>
+      </TouchableWithoutFeedback>
+      <DateTimeModal state={promiseDateState} setState={setPromiseDateState} />
+      <DateTimeModal
+        state={recruitEndDateState}
+        setState={setRecruitEndDateState}
+      />
+      <GymBottomSheet
+        isBottomSheetOpen={isBottomSheetOpen}
+        setIsBottomSheetOpen={setIsBottomSheetOpen}
+        gymInfo={gymInfo}
+        setGymInfo={setGymInfo}
+      />
+    </View>
   );
 }
+
 const style = StyleSheet.create({
   container: {
     flex: 1,

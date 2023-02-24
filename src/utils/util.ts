@@ -1,5 +1,4 @@
-import { WorkoutGoal, GymInfo, Gym } from '../types';
-import { getValueFor } from '@store/store';
+import { getValueFor } from 'store/secureStore';
 import { GYM_OPEN_API_KEY } from '@env';
 import { v4 as uuid } from 'uuid';
 
@@ -7,36 +6,35 @@ export function getGoal(goals: WorkoutGoal[]) {
   return goals
     .filter(goal => goal.select === true)
     .map(goal => goal.goal)
-    .toString();
+    .join(',');
 }
 
-export async function getInfo() {
-  const phone_number = await getValueFor('phone_number');
-  const username = await getValueFor('username');
-  const gender = await getValueFor('gender');
-  const age = await getValueFor('age');
-  const height = await getValueFor('height');
-  const weight = await getValueFor('weight');
-  const workout_per_week = await getValueFor('workout_per_week');
-  const workout_time = await getValueFor('workout_time');
-  const workout_time_how_long = await getValueFor('workout_time_how_long');
-  const workout_level = await getValueFor('workout_level');
-  const workout_goal = await getValueFor('workout_goal');
+export async function getInfo(): Promise<UserCreate> {
+  const phoneNumber = (await getValueFor('phoneNumber')) ?? '';
+  const username = (await getValueFor('username')) ?? '';
+  const gender = (await getValueFor('gender')) ?? '';
+  const age = (await getValueFor('age')) ?? '0';
+  const height = (await getValueFor('height')) ?? '0';
+  const weight = (await getValueFor('weight')) ?? '0';
+  const workoutPerWeek = (await getValueFor('workoutPerWeek')) ?? '0';
+  const workoutTimePeriod = (await getValueFor('workoutTimePeriod')) ?? '';
+  const workoutTimePerDay = (await getValueFor('workoutTimePerDay')) ?? '';
+  const workoutLevel = (await getValueFor('workoutLevel')) ?? '';
+  const workoutGoal = (await getValueFor('workoutGoal')) ?? '';
 
   const info = {
-    phone_number,
+    phoneNumber,
     username,
     gender,
-    age,
-    height,
-    weight,
-    workout_per_week,
-    workout_time,
-    workout_time_how_long,
-    workout_level,
-    workout_goal,
+    age: parseInt(age, 10),
+    height: parseInt(height, 10),
+    weight: parseInt(weight, 10),
+    workoutPerWeek: parseInt(workoutPerWeek, 10),
+    workoutTimePeriod,
+    workoutTimePerDay,
+    workoutLevel,
+    workoutGoal,
   };
-  console.log('info', info);
   return info;
 }
 
@@ -56,13 +54,13 @@ export async function getGymInfoFromApi() {
       const response = await fetch(url);
       const json = await response.json();
       const data = json.LOCALDATA_104201.row;
-      const gymArr = data.map((item: GymInfo) => {
+      const gymArr = data.map((item: GymInfoOpenAPI) => {
         return {
           id: uuid(),
-          status: item.TRDSTATEGBN,
-          name: item.BPLCNM,
-          address: item.SITEWHLADDR,
-          zipCode: item.RDNPOSTNO,
+          status: item.TRDSTATEGBN.trim(),
+          name: item.BPLCNM.trim(),
+          address: item.RDNWHLADDR.trim(),
+          zip_code: item.RDNPOSTNO.trim(),
         };
       });
       gym.push(...gymArr.filter((item: Gym) => item.status === '01'));
@@ -74,15 +72,28 @@ export async function getGymInfoFromApi() {
 }
 
 export function getLocaleDate(date: Date) {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  let newDate: Date;
+  if (typeof date === 'string') {
+    newDate = new Date(date);
+  } else {
+    newDate = date;
+  }
+
+  const year = newDate.getFullYear();
+  const month = newDate.getMonth() + 1;
+  const day = newDate.getDate();
   return `${year}. ${month}. ${day}`;
 }
 
-export function getLocaleTime(date: Date) {
-  const hour = date.getHours();
-  const minute = date.getMinutes();
+export function getLocaleTime(date: Date | string) {
+  let newDate: Date;
+  if (typeof date === 'string') {
+    newDate = new Date(date);
+  } else {
+    newDate = date;
+  }
+  const hour = newDate.getHours();
+  const minute = newDate.getMinutes();
 
   if (hour === 0 && minute === 0) {
     return '오전 12시';
@@ -105,9 +116,49 @@ export function getLocaleTime(date: Date) {
 
 export function isToday(date: Date) {
   const today = new Date();
+  let newDate: Date;
+  if (typeof date === 'string') {
+    newDate = new Date(date);
+  } else {
+    newDate = date;
+  }
+
   return (
-    date.getFullYear() === today.getFullYear() &&
-    date.getMonth() === today.getMonth() &&
-    date.getDate() === today.getDate()
+    newDate.getFullYear() === today.getFullYear() &&
+    newDate.getMonth() === today.getMonth() &&
+    newDate.getDate() === today.getDate()
   );
+}
+
+export function getRelativeTime(date: Date | string) {
+  let result = null;
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+  const today = new Date();
+  const delta = today.getTime() - date.getTime();
+
+  let differSec = delta / 1000;
+
+  if (differSec < 1) {
+    return (result = 'right now');
+  }
+  if (differSec < 60) {
+    return (result = `${Math.floor(differSec)} 초 전`);
+  }
+  if (differSec < 3600) {
+    return (result = `${Math.floor(differSec / 60)} 분 전`);
+  }
+  if (differSec < 24 * 3600) {
+    return (result = `${Math.floor(differSec / 3600)} 시간 전`);
+  }
+  if (differSec >= 24 * 3600) {
+    return date
+      .toLocaleString('ko-KR', {
+        timeZone: 'Asia/Seoul',
+      })
+      .slice(0, 10);
+  }
+
+  return result;
 }

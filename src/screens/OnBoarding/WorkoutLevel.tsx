@@ -1,9 +1,11 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme } from 'react-native-paper';
-import { save } from '../../store/store';
+import { save } from '@store/secureStore';
+import { AuthStackScreenProps } from 'navigators/types';
 
-export default function WorkoutPerWeekScreen({ navigation }: any) {
+type Props = AuthStackScreenProps<'WorkoutLevel'>;
+export default function WorkoutLevelScreen({ navigation }: Props) {
   const theme = useTheme();
   const buttons = [
     '입문(1년 미만)',
@@ -12,6 +14,7 @@ export default function WorkoutPerWeekScreen({ navigation }: any) {
     '고급(5년 이상)',
     '전문가',
   ];
+
   const [workoutLevel, setWorkoutLevel] = useState<string>('');
 
   const getButton = (id: number) => {
@@ -20,7 +23,7 @@ export default function WorkoutPerWeekScreen({ navigation }: any) {
         style={[style.button]}
         mode={buttons[id] === workoutLevel ? 'contained' : 'elevated'}
         onPress={() => {
-          setWorkoutLevel(buttons[id]);
+          setWorkoutLevel(buttons[id].split('(')[0]);
         }}>
         {buttons[id]}
       </Button>
@@ -50,8 +53,8 @@ export default function WorkoutPerWeekScreen({ navigation }: any) {
         <Button
           mode="contained"
           disabled={!workoutLevel}
-          onPress={() => {
-            save('workout_level', workoutLevel);
+          onPress={async () => {
+            await save('workoutLevel', workoutLevel);
             navigation.navigate('WorkoutGoal');
           }}>
           확인
