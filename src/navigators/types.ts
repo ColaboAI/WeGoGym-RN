@@ -20,7 +20,7 @@ export type ChatStackParamList = {
 
 export type HomeStackParamList = {
   Home: undefined;
-  Details: undefined;
+  Details: { id: string };
   Posting: undefined;
   Notifications: undefined;
 } & UserStackParamList;

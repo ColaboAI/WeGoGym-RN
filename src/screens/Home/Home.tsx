@@ -27,9 +27,12 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const query = useGetWorkoutQuery(limit, offset);
   const [visible, setVisible] = useState(true);
   // TODO: PromiseCard ID를 parameter로.
-  const navigateToPromiseDetails = useCallback(() => {
-    navigation.navigate('Details');
-  }, [navigation]);
+  const navigateToPromiseDetails = useCallback(
+    (postingId: string) => {
+      navigation.navigate('Details', { id: postingId });
+    },
+    [navigation],
+  );
 
   const navigateToUserDetails = useCallback(
     (id: string) => {
