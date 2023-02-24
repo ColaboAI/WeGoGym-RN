@@ -21,7 +21,7 @@ export default function WorkoutLevelScreen({ navigation }: Props) {
     return (
       <Button
         style={[style.button]}
-        mode={buttons[id] === workoutLevel ? 'contained' : 'elevated'}
+        mode={buttons[id].split('(')[0] === workoutLevel ? 'contained' : 'elevated'}
         onPress={() => {
           setWorkoutLevel(buttons[id].split('(')[0]);
         }}>
