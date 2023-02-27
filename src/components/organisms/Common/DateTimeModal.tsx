@@ -58,6 +58,7 @@ const DateTimeModal = ({ state, setState }: Props) => {
       cancelTextIOS="취소"
       confirmTextIOS="확인"
       buttonTextColorIOS={theme.colors.primary}
+      minimumDate={new Date()}
     />
   );
 };
