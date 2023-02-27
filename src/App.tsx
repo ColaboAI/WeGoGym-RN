@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Auth from './navigators/Auth';
 import MainNavigator from './navigators/Main';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -8,9 +8,15 @@ import { SplashScreen } from './screens';
 import { useAuthValue } from './hooks/context/useAuth';
 import { useAxiosInterceptor } from './api/client';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { Platform } from 'react-native';
+import { enableScreens } from 'react-native-screens';
 function App() {
   const authState = useAuthValue();
-
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      enableScreens(false);
+    }
+  }, []);
   useAxiosInterceptor();
 
   if (authState.isLoading) {
