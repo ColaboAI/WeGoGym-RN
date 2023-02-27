@@ -20,9 +20,7 @@ function Home({ navigation, route }: Props) {
   useLayoutEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route);
     if (routeName === 'Details') {
-      navigation.setOptions({
-        tabBarStyle: { display: 'none' },
-      });
+      navigation.setOptions({ tabBarStyle: { display: 'none' } });
     } else {
       navigation.setOptions({ tabBarStyle: { display: 'flex' } });
     }
