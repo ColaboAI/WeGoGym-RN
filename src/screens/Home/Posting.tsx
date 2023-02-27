@@ -23,6 +23,7 @@ import { getLocaleDate, getLocaleTime, isToday } from 'utils/util';
 import { HomeStackScreenProps } from 'navigators/types';
 import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
 import { useWorkoutMutation } from '/hooks/queries/workout.queries';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;
@@ -43,6 +44,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
   const [descriptionFocus, setDescriptionFocus] = useState<boolean>(false);
   const [number, setNumber] = useState<number>(3);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const inset = useSafeAreaInsets();
 
   // date picker
   const [promiseDateState, setPromiseDateState] = useState<DatePickerState>(
@@ -118,7 +120,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
     navigation,
   ]);
   return (
-    <View style={style.container}>
+    <View style={[style.container, { marginBottom: inset.bottom }]}>
       <TouchableWithoutFeedback
         onPress={() => {
           Keyboard.dismiss();

@@ -18,8 +18,8 @@ function Home({ navigation, route }: Props) {
   const notificationTitle = '알림';
   const postingTitle = '게시글 작성';
   useLayoutEffect(() => {
-    const routeName = getFocusedRouteNameFromRoute(route);
-    if (routeName === 'Details') {
+    const routeName = getFocusedRouteNameFromRoute(route) || 'Home';
+    if (routeName !== 'Home') {
       navigation.setOptions({ tabBarStyle: { display: 'none' } });
     } else {
       navigation.setOptions({ tabBarStyle: { display: 'flex' } });

@@ -32,7 +32,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { reset } = useQueryErrorResetBoundary();
 
   const [visible, setVisible] = useState(true);
-  // TODO: PromiseCard ID를 parameter로.
   const navigateToPromiseDetails = useCallback(
     (id: string) => {
       navigation.navigate('Details', { workoutPromiseId: id });
