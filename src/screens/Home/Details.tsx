@@ -1,32 +1,21 @@
 import { StyleSheet, ScrollView, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { HomeStackScreenProps } from '@/navigators/types';
+import { HomeStackScreenProps } from 'navigators/types';
 import { useRoute } from '@react-navigation/native';
-import { WorkoutPromiseCreate } from '@/types';
-import WorkoutPromiseLoader from '@/component/molecules/Home/WorkoutPromiseLoader';
 import { Text, Chip, useTheme } from 'react-native-paper';
-import { getLocaleDate, getLocaleTime } from '@/utils/util';
-import { getWorkoutPromise } from '@/api/api';
+import { getLocaleDate, getLocaleTime } from 'utils/util';
+import { getWorkoutPromise } from 'api/api';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 
 export default function DetailsScreen({ navigation }: HomeScreenProps) {
   const theme = useTheme();
   const [workoutPromise, setWorkoutPromise] =
-    useState<WorkoutPromiseCreate | null>(null);
+    useState<WorkoutPromiseRead | null>(null);
 
   // TODO: 운동 약속 id props로 전달 받아서 react-query로 운동 약속 상세 정보 불러오기
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getWorkoutPromise();
-      setWorkoutPromise(data);
-    };
-    fetchData();
-  }, []);
 
   // TODO: 정보 불러오기 전까지 skeleton-view 표시
-  if (!workoutPromise) {
-    return <WorkoutPromiseLoader />;
-  }
+
 
   return (
     <ScrollView style={style.container}>
@@ -44,23 +33,22 @@ export default function DetailsScreen({ navigation }: HomeScreenProps) {
       </View>
       <View style={style.workoutPromiseInfo}>
         <Text variant="bodyMedium" style={{ marginBottom: 6 }}>
-          📅 {getLocaleDate(workoutPromise.date)}{' '}
-          {getLocaleTime(workoutPromise.time)}
+          📅 
         </Text>
         <Text variant="bodyMedium" style={{ marginBottom: 6 }}>
-          📍 {workoutPromise.location}
+          📍 
         </Text>
         <Text variant="bodyMedium" style={{ marginBottom: 12 }}>
-          👥 {workoutPromise.currentNumberOfPeople}/
-          {workoutPromise.limitedNumberOfPeople} 참여
+          👥 /
+           참여
         </Text>
         <Text variant="bodyLarge" style={{ marginBottom: 6 }}>
-          {workoutPromise.description}
+          내용
         </Text>
         <View style={style.participant}>
           <Text variant="labelLarge">
-            참여중인 짐메이트 {workoutPromise.currentNumberOfPeople}/
-            {workoutPromise.limitedNumberOfPeople}
+            참여중인 짐메이트 1/
+            5
           </Text>
           {/* // TODO: 프로필 사진 */}
         </View>
