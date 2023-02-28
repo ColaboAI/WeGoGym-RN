@@ -31,7 +31,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const theme = useTheme();
   const { workoutPromiseId } = route.params;
   const query = useGetWorkoutByIdQuery(workoutPromiseId);
-  const { data } = useGetUserInfoQuery('me');
+  const { data: myInfo } = useGetUserInfoQuery('me');
   const { reset } = useQueryErrorResetBoundary();
   const inset = useSafeAreaInsets();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
@@ -144,13 +144,12 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
               </Button>
             </View>
           </TouchableWithoutFeedback>
-          {data ? (
+          {myInfo ? (
             <ParticipationBottomSheet
               isBottomSheetOpen={isBottomSheetOpen}
               setIsBottomSheetOpen={setIsBottomSheetOpen}
               workoutPromiseId={workoutPromiseId}
-              userId={data.id}
-              username={data.username}
+              username={myInfo.username}
               navigationToHome={navigationToHome}
             />
           ) : (

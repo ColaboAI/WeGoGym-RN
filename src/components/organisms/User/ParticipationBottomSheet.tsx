@@ -14,11 +14,16 @@ type Props = {
   setIsBottomSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
   workoutPromiseId: string;
   username: string;
-  userId: string;
   navigationToHome: () => void;
 };
 
-const ParticipationBottomSheet = (props: Props) => {
+const ParticipationBottomSheet = ({
+  isBottomSheetOpen,
+  setIsBottomSheetOpen,
+  workoutPromiseId,
+  username,
+  navigationToHome,
+}: Props) => {
   const theme = useTheme();
   const workoutParticipantMutation = useWorkoutParticipantMutation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
@@ -42,7 +47,7 @@ const ParticipationBottomSheet = (props: Props) => {
   );
 
   useEffect(() => {
-    if (props.isBottomSheetOpen) {
+    if (isBottomSheetOpen) {
       bottomSheetRef.current?.expand();
     } else {
       bottomSheetRef.current?.close();
@@ -50,25 +55,18 @@ const ParticipationBottomSheet = (props: Props) => {
     return () => {
       setRequestMessage('');
     };
-  }, [props.isBottomSheetOpen]);
+  }, [isBottomSheetOpen]);
 
   const onPressPostParticipation = useCallback(async () => {
     const _data = {
       workoutParticipant: {
-        name: props.username,
+        name: username,
         statusMessage: requestMessage,
-        userId: props.userId,
       },
-      workoutPromiseId: props.workoutPromiseId,
+      workoutPromiseId: workoutPromiseId,
     };
     workoutParticipantMutation.mutate(_data);
-  }, [
-    props.workoutPromiseId,
-    props.userId,
-    props.username,
-    requestMessage,
-    workoutParticipantMutation,
-  ]);
+  }, [workoutPromiseId, username, requestMessage, workoutParticipantMutation]);
 
   return (
     <BottomSheet
@@ -78,7 +76,7 @@ const ParticipationBottomSheet = (props: Props) => {
       backdropComponent={renderBackdrop}
       enablePanDownToClose={true}
       onClose={() => {
-        props.setIsBottomSheetOpen(false);
+        setIsBottomSheetOpen(false);
       }}
       android_keyboardInputMode={'adjustResize'}>
       <BottomSheetView style={styles.container}>
@@ -90,7 +88,7 @@ const ParticipationBottomSheet = (props: Props) => {
             icon="close"
             size={24}
             onPress={() => {
-              props.setIsBottomSheetOpen(false);
+              setIsBottomSheetOpen(false);
             }}
           />
         </View>
@@ -122,10 +120,10 @@ const ParticipationBottomSheet = (props: Props) => {
         mode="contained"
         style={styles.buttonBox}
         onPress={() => {
-          props.setIsBottomSheetOpen(false);
+          setIsBottomSheetOpen(false);
           Keyboard.dismiss();
           onPressPostParticipation();
-          props.navigationToHome();
+          navigationToHome();
         }}>
         참여하기
       </Button>
