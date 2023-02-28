@@ -141,6 +141,7 @@ export default function DetailsScreen({ route }: HomeScreenProps) {
       <ParticipationBottomSheet
         isBottomSheetOpen={isBottomSheetOpen}
         setIsBottomSheetOpen={setIsBottomSheetOpen}
+        workoutPromiseId={workoutPromiseId}
       />
     </View>
   );

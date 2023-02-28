@@ -47,6 +47,7 @@ interface WorkoutPromiseBase {
   currentNumberOfPeople?: number; // 현재 참여 인원 (default: 1)
   limitedNumberOfPeople: number; // 제한 인원
 }
+
 interface WorkoutPromiseCreate {
   title: string;
   description: string;
@@ -55,6 +56,7 @@ interface WorkoutPromiseCreate {
   maxParticipants: number;
   isPrivate: boolean;
 }
+
 interface GymCreate {
   status: string;
   name: string;
@@ -62,6 +64,7 @@ interface GymCreate {
   // FormData에서 자동으로 case-convert 불가능해서 직접 지정(snake_case)
   zip_code: string;
 }
+
 interface Gym extends GymCreate {
   id: string;
   // TODO: fix
@@ -81,19 +84,26 @@ interface WorkoutPromiseRead extends timestampMixin {
   isPrivate: boolean;
 
   gymInfo: Gym | null;
-  participants: WorkoutParicipantsRead[];
+  participants: WorkoutParticipantsRead[];
 }
+
 interface WorkoutPromiseListRead {
   total: number;
   items: WorkoutPromiseRead[];
 }
 
-interface WorkoutParicipantsRead extends timestampMixin {
-  id: string;
-  status: string;
+interface WorkoutParictipantBase {
+  name: string;
+  status?: string;
   statusMessage: string;
-  isAdmin: boolean;
+  isAdmin?: boolean;
   userId: string;
+}
+
+interface WorkoutParictipantsRead
+  extends WorkoutParictipantBase,
+    timestampMixin {
+  id: string;
   workoutPromiseId: string;
   chatRoomMemberId: string | null;
 }
