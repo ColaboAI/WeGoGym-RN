@@ -21,6 +21,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { UserStackScreenProps } from '/navigators/types';
 import InfoCard from 'components/molecules/User/InfoCard';
+import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 type Props = UserStackScreenProps<'User'>;
 export default function UserScreen({ navigation, route }: Props) {
   const theme = useTheme();
@@ -79,19 +80,13 @@ export default function UserScreen({ navigation, route }: Props) {
             {/* 프로필 정보 */}
             <View style={style.profileContainer}>
               <View style={style.avatarContainer}>
-                {data && data.profilePic ? (
-                  <Avatar.Image
+                {data && (
+                  <CustomAvatar
+                    userId={data?.id}
                     size={64}
-                    source={{
-                      uri: data.profilePic,
-                    }}
+                    profilePic={data?.profilePic}
+                    username={data?.username}
                     style={style.avatar}
-                  />
-                ) : (
-                  <Avatar.Text
-                    size={64}
-                    label={data?.username[0] ?? 'User'}
-                    // style={style.avatar}
                   />
                 )}
               </View>
