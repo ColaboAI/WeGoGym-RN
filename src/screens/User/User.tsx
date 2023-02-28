@@ -219,7 +219,10 @@ export default function UserScreen({ navigation }: Props) {
                       <List.Item
                         title="헬스장"
                         right={() => (
-                          <Text variant="bodySmall">{data?.gymInfo.name}</Text>
+                          <Text variant="bodySmall">
+                            {data?.gymInfo?.name ??
+                              '헬스장 정보를 불러 올 수 없습니다.'}
+                          </Text>
                         )}
                       />
                     ) : (
