@@ -49,11 +49,12 @@ async function postWorkoutParticipant({
   workoutPromiseId: string;
 }): Promise<WorkoutParictipantBase> {
   try {
-    console.log(workoutParticipant);
     const res = await apiClient.post(
       `/workout-promise/${workoutPromiseId}/participants`,
       {
-        workoutParticipant,
+        user_id: workoutParticipant.userId,
+        status_message: workoutParticipant.statusMessage,
+        name: workoutParticipant.name,
       },
     );
     return res.data;
