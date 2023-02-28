@@ -6,6 +6,7 @@ import {
   DetailsScreen,
   NotificationsScreen,
   PostingScreen,
+  UserScreen,
 } from '../screens';
 import DetailsNavBarHeader from './NavBarHeader/DetailsNavBarHeader';
 import { HomeStackParamList, CustomTabScreenProps } from './types';
@@ -59,6 +60,11 @@ function Home({ navigation, route }: Props) {
             <DefaultNavBarHeader title={postingTitle} {...props} />
           ),
         }}
+      />
+      <Stack.Screen
+        name="User"
+        component={UserScreen}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

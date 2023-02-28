@@ -84,9 +84,9 @@ async function deleteUser(): Promise<void> {
   }
 }
 
-async function getMyInfo(): Promise<MyInfoRead> {
+async function getUserInfo(id: string): Promise<MyInfoRead> {
   try {
-    const res = await apiClient.get('/user/me');
+    const res = await apiClient.get(`/user/${id}`);
     return res.data;
   } catch (e) {
     if (e instanceof AxiosError) {
@@ -135,13 +135,26 @@ async function refreshAccessToken(
   return res.data;
 }
 
+async function getRecommendedMates(limit: number): Promise<RecommendedMate[]> {
+  try {
+    const res = await apiClient.get('/user/recommended-mates?limit=' + limit);
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
 export {
   postLogin,
   postRegister,
-  getMyInfo,
   postWorkoutPromise,
   getWorkoutPromise,
   putMyInfo,
   refreshAccessToken,
   deleteUser,
+  getRecommendedMates,
+  getUserInfo,
 };
