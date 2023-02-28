@@ -8,21 +8,22 @@ import BottomSheet, {
 import { Button, IconButton, Text, useTheme } from 'react-native-paper';
 
 import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
+import { useWorkoutParticipantMutation } from '/hooks/queries/workout.queries';
+import { useGetMyInfoQuery } from '/hooks/queries/user.queries';
 
 type Props = {
   isBottomSheetOpen: boolean;
   setIsBottomSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  workoutPromiseId: string;
 };
 const ParticipationBottomSheet = (props: Props) => {
   const theme = useTheme();
-
+  const workoutParticipantMutation = useWorkoutParticipantMutation();
+  const { data } = useGetMyInfoQuery();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const [requestText, setRequestText] = useState<string>('');
-  //   const [gymData, setGymData] = useState<Gym[] | null>(null);
-  //   const [filteredGymData, setFilteredGymData] = useState<Gym[] | null>(null);
-
   const iosSnapPoints = React.useMemo(() => ['50%'], []);
   const androidSnapPoints = React.useMemo(() => ['90%'], []);
+  const [requestText, setRequestText] = useState<string>('');
 
   const renderBackdrop = useCallback(
     (
@@ -45,11 +46,28 @@ const ParticipationBottomSheet = (props: Props) => {
     } else {
       bottomSheetRef.current?.close();
     }
-
     return () => {
       setRequestText('');
     };
   }, [props.isBottomSheetOpen]);
+
+  const onPressPostParticipation = useCallback(async () => {
+    const _data = {
+      workoutParticipant: {
+        name: data?.username as string,
+        statusMessage: requestText,
+        userId: data?._id as string,
+      },
+      workoutPromiseId: props.workoutPromiseId,
+    };
+    workoutParticipantMutation.mutate(_data);
+  }, [
+    data?._id,
+    data?.username,
+    props.workoutPromiseId,
+    requestText,
+    workoutParticipantMutation,
+  ]);
 
   return (
     <BottomSheet
@@ -62,21 +80,9 @@ const ParticipationBottomSheet = (props: Props) => {
         props.setIsBottomSheetOpen(false);
       }}
       android_keyboardInputMode={'adjustResize'}>
-      <BottomSheetView style={{ flex: 1 }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginHorizontal: 12,
-            marginVertical: 12,
-          }}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              lineHeight: 24,
-            }}>
+      <BottomSheetView style={styles.container}>
+        <View style={styles.titleBox}>
+          <Text style={styles.title}>
             운동 파트너에게 보낼 메세지를{'\n'}작성해주세요
           </Text>
           <IconButton
@@ -87,7 +93,7 @@ const ParticipationBottomSheet = (props: Props) => {
             }}
           />
         </View>
-        <View style={{ marginBottom: 12 }}>
+        <View>
           <BottomSheetTextInput
             value={requestText}
             placeholder="ex) 같이 운동해요!"
@@ -103,14 +109,21 @@ const ParticipationBottomSheet = (props: Props) => {
               },
             ]}
           />
+          <View style={styles.textLimitBox}>
+            <Text style={{ color: theme.colors.primary }}>
+              {requestText.length}
+            </Text>
+            <Text> / 50</Text>
+          </View>
         </View>
       </BottomSheetView>
       <Button
         mode="contained"
-        style={{ margin: 12, borderRadius: 10 }}
+        style={styles.buttonBox}
         onPress={() => {
           props.setIsBottomSheetOpen(false);
           Keyboard.dismiss();
+          onPressPostParticipation();
         }}>
         참여하기
       </Button>
@@ -127,6 +140,24 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 12,
   },
+  titleBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 12,
+    marginVertical: 12,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    lineHeight: 24,
+  },
+  textLimitBox: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end',
+    marginRight: 12,
+  },
   textInput: {
     alignSelf: 'stretch',
     marginHorizontal: 12,
@@ -139,5 +170,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 24,
     textAlign: 'left',
+  },
+  buttonBox: {
+    margin: 12,
+    borderRadius: 10,
   },
 });
