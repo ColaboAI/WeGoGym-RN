@@ -24,18 +24,19 @@ import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ParticipationBottomSheet from '/components/organisms/User/ParticipationBottomSheet';
+import { useGetUserInfoQuery } from '/hooks/queries/user.queries';
 type HomeScreenProps = HomeStackScreenProps<'Details'>;
 
 export default function DetailsScreen({ route }: HomeScreenProps) {
   const theme = useTheme();
   const { workoutPromiseId } = route.params;
   const query = useGetWorkoutByIdQuery(workoutPromiseId);
+  const { data } = useGetUserInfoQuery('me');
   const { reset } = useQueryErrorResetBoundary();
   const inset = useSafeAreaInsets();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
 
   const onPressParticipation = useCallback(async () => {
-    console.log('참여 요청');
     setIsBottomSheetOpen(true);
   }, []);
 
@@ -142,6 +143,8 @@ export default function DetailsScreen({ route }: HomeScreenProps) {
         isBottomSheetOpen={isBottomSheetOpen}
         setIsBottomSheetOpen={setIsBottomSheetOpen}
         workoutPromiseId={workoutPromiseId}
+        userId={data.id}
+        username={data.username}
       />
     </View>
   );

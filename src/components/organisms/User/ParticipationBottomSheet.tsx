@@ -9,21 +9,22 @@ import { Button, IconButton, Text, useTheme } from 'react-native-paper';
 
 import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 import { useWorkoutParticipantMutation } from '/hooks/queries/workout.queries';
-import { useGetMyInfoQuery } from '/hooks/queries/user.queries';
 
 type Props = {
   isBottomSheetOpen: boolean;
   setIsBottomSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
   workoutPromiseId: string;
+  username: string;
+  userId: string;
 };
 const ParticipationBottomSheet = (props: Props) => {
   const theme = useTheme();
   const workoutParticipantMutation = useWorkoutParticipantMutation();
-  const { data } = useGetMyInfoQuery();
+
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const iosSnapPoints = React.useMemo(() => ['50%'], []);
   const androidSnapPoints = React.useMemo(() => ['90%'], []);
-  const [requestText, setRequestText] = useState<string>('');
+  const [requestMessage, setRequestMessage] = useState<string>('');
 
   const renderBackdrop = useCallback(
     (
@@ -47,25 +48,25 @@ const ParticipationBottomSheet = (props: Props) => {
       bottomSheetRef.current?.close();
     }
     return () => {
-      setRequestText('');
+      setRequestMessage('');
     };
   }, [props.isBottomSheetOpen]);
 
   const onPressPostParticipation = useCallback(async () => {
     const _data = {
       workoutParticipant: {
-        name: data?.username as string,
-        statusMessage: requestText,
-        userId: data?._id as string,
+        name: props.username,
+        statusMessage: requestMessage,
+        userId: props.userId,
       },
       workoutPromiseId: props.workoutPromiseId,
     };
     workoutParticipantMutation.mutate(_data);
   }, [
-    data?._id,
-    data?.username,
     props.workoutPromiseId,
-    requestText,
+    props.userId,
+    props.username,
+    requestMessage,
     workoutParticipantMutation,
   ]);
 
@@ -95,9 +96,9 @@ const ParticipationBottomSheet = (props: Props) => {
         </View>
         <View>
           <BottomSheetTextInput
-            value={requestText}
+            value={requestMessage}
             placeholder="ex) 같이 운동해요!"
-            onChangeText={value => setRequestText(value)}
+            onChangeText={value => setRequestMessage(value)}
             returnKeyType="done"
             maxLength={50}
             multiline={true}
@@ -111,7 +112,7 @@ const ParticipationBottomSheet = (props: Props) => {
           />
           <View style={styles.textLimitBox}>
             <Text style={{ color: theme.colors.primary }}>
-              {requestText.length}
+              {requestMessage.length}
             </Text>
             <Text> / 50</Text>
           </View>
