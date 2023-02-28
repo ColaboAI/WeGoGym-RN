@@ -41,6 +41,30 @@ async function postWorkoutPromise({
   }
 }
 
+async function postWorkoutParticipant({
+  workoutParticipant,
+  workoutPromiseId,
+}: {
+  workoutParticipant: WorkoutParictipantBase;
+  workoutPromiseId: string;
+}): Promise<WorkoutParictipantBase> {
+  try {
+    console.log(workoutParticipant);
+    const res = await apiClient.post(
+      `/workout-promise/${workoutPromiseId}/participants`,
+      {
+        workoutParticipant,
+      },
+    );
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
 async function getWorkoutPromise({
   limit = 10,
   offset = null,
@@ -164,6 +188,7 @@ export {
   postLogin,
   postRegister,
   postWorkoutPromise,
+  postWorkoutParticipant,
   getWorkoutPromise,
   getWorkoutPromiseById,
   putMyInfo,

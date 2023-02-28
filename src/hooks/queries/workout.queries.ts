@@ -3,6 +3,7 @@ import {
   getWorkoutPromise,
   getWorkoutPromiseById,
   postWorkoutPromise,
+  postWorkoutParticipant,
 } from '@api/api';
 import { Alert } from 'react-native';
 
@@ -18,6 +19,22 @@ export function useWorkoutMutation() {
       Alert.alert('운동 약속을 만들었어요!');
       // invalidate the query to refetch the data
       queryClient.invalidateQueries(['getWorkout']);
+    },
+  });
+}
+
+export function useWorkoutParticipantMutation() {
+  // const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: postWorkoutParticipant,
+    onError: (error: Error) => {
+      Alert.alert(`운동 약속에 참가할 수 없어요: ${error.message}`);
+    },
+    onSuccess(data) {
+      console.log(data);
+      Alert.alert('운동 약속에 참가 신청을 완료하였어요! 승인을 기다려주세요.');
+      // invalidate the query to refetch the data
+      // queryClient.invalidateQueries(['getWorkout']);
     },
   });
 }
