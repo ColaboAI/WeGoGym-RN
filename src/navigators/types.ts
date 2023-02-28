@@ -23,7 +23,7 @@ export type HomeStackParamList = {
   Details: undefined;
   Posting: undefined;
   Notifications: undefined;
-};
+} & UserStackParamList;
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -40,8 +40,9 @@ export type AuthStackParamList = {
   WorkoutLevel: undefined;
 };
 
+// TODO: Refactor this to myinfo type
 export type UserStackParamList = {
-  User: undefined;
+  User: { userId?: string };
   Setting: undefined;
   ProfileEdit: { myInfo: MyInfoRead };
 };
@@ -78,7 +79,6 @@ export type AuthStackScreenProps<T extends keyof AuthStackParamList> =
     NativeStackScreenProps<AuthStackParamList, T>,
     RootStackScreenProps<keyof RootStackParamList>
   >;
-// export type CustomStackScreenProps
 
 declare global {
   namespace ReactNavigation {

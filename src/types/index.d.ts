@@ -165,3 +165,9 @@ type RefreshTokenRequest = {
   token: string | null;
   refreshToken: string | null;
 };
+
+type RecommendedMate = {
+  id: string;
+  username: string;
+  profilePic?: string;
+};

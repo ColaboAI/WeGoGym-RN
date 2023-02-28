@@ -15,17 +15,19 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 
 import React, { Suspense, useState } from 'react';
-import { useGetMyInfoQuery } from 'hooks/queries/user.queries';
+import { useGetUserInfoQuery } from 'hooks/queries/user.queries';
 import GymInfoLoader from 'components/molecules/Home/GymInfoLoader';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { UserStackScreenProps } from '/navigators/types';
 import InfoCard from 'components/molecules/User/InfoCard';
 type Props = UserStackScreenProps<'User'>;
-export default function UserScreen({ navigation }: Props) {
+export default function UserScreen({ navigation, route }: Props) {
   const theme = useTheme();
+  const id: string =
+    route.params && route.params.userId ? route.params.userId : 'me';
   const [isAuthenticated] = useState(true);
-  const { data } = useGetMyInfoQuery();
+  const { data } = useGetUserInfoQuery(id);
   const { reset } = useQueryErrorResetBoundary();
 
   return (
@@ -45,6 +47,7 @@ export default function UserScreen({ navigation }: Props) {
           </Headline>
         )}>
         <SafeAreaView style={style.container}>
+          {/* TODO: 다른 유저 프로필과 내 프로필에서의 action이 달라야함. */}
           <View style={style.headerContainer}>
             <IconButton
               icon="settings-outline"
@@ -91,18 +94,31 @@ export default function UserScreen({ navigation }: Props) {
                   </Tooltip>
                 ) : null}
               </View>
-              <Button
-                onPress={() => {
-                  if (data) {
-                    navigation.navigate('ProfileEdit', {
-                      myInfo: data,
-                    });
-                  } else {
-                    throw new Error('MyInfoData is undefined');
-                  }
-                }}>
-                프로필 편집
-              </Button>
+              {id === 'me' ? (
+                <Button
+                  onPress={() => {
+                    if (data) {
+                      navigation.navigate('ProfileEdit', {
+                        myInfo: data,
+                      });
+                    } else {
+                      throw new Error('MyInfoData is undefined');
+                    }
+                  }}>
+                  프로필 편집
+                </Button>
+              ) : (
+                <Button
+                // onPress={() => {
+                //   navigation.navigate('Chat', {
+                //     userId: data?.id,
+                //     username: data?.username,
+                //   });
+                // }}
+                >
+                  채팅하기
+                </Button>
+              )}
             </View>
             {/* 신체 정보 */}
             <View style={style.myBodySection}>
@@ -112,7 +128,7 @@ export default function UserScreen({ navigation }: Props) {
                   style={{
                     color: theme.colors.primary,
                   }}>
-                  🏋🏻 나의 피지컬
+                  🏋🏻 피지컬
                 </Text>
               </View>
               <ScrollView
@@ -158,7 +174,7 @@ export default function UserScreen({ navigation }: Props) {
                   style={{
                     color: theme.colors.primary,
                   }}>
-                  🏃🏻‍♀️ 나의 운동 목표
+                  🏃🏻‍♀️ 운동 목표
                 </Text>
               </View>
               <ScrollView
@@ -191,14 +207,14 @@ export default function UserScreen({ navigation }: Props) {
                   style={{
                     color: theme.colors.primary,
                   }}>
-                  ℹ️ 나의 정보
+                  ℹ️ 정보
                 </Text>
               </View>
               <View style={style.infoContainer}>
                 <Card>
                   <Card.Content>
                     <List.Item
-                      title="내 소개"
+                      title="소개"
                       right={() => (
                         <Text variant="bodySmall">
                           {data?.bio ?? '자기 소개를 추가해보세요.'}
