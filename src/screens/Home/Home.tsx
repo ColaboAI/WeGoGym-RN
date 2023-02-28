@@ -19,6 +19,7 @@ import { useGetWorkoutQuery } from '/hooks/queries/workout.queries';
 import GymMateRecommendation from '/components/organisms/User/GymMateRecommend';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import GymMateRecommendation from '/components/organisms/User/GymMateRecommend';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 // TODO:
 // 추천 짐메이트의 경우 일단 백엔드 구현 없으므로. 추후에 구현.
