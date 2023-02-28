@@ -24,7 +24,6 @@ export function useWorkoutMutation() {
 }
 
 export function useWorkoutParticipantMutation() {
-  // const queryClient = useQueryClient();
   return useMutation({
     mutationFn: postWorkoutParticipant,
     onError: (error: Error) => {
@@ -33,8 +32,6 @@ export function useWorkoutParticipantMutation() {
     onSuccess(data) {
       console.log(data);
       Alert.alert('운동 약속에 참가 신청을 완료하였어요! 승인을 기다려주세요.');
-      // invalidate the query to refetch the data
-      // queryClient.invalidateQueries(['getWorkout']);
     },
   });
 }

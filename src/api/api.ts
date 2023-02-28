@@ -52,7 +52,7 @@ async function postWorkoutParticipant({
     const res = await apiClient.post(
       `/workout-promise/${workoutPromiseId}/participants`,
       {
-        user_id: workoutParticipant.userId,
+        // user_id: workoutParticipant.userId,
         status_message: workoutParticipant.statusMessage,
         name: workoutParticipant.name,
       },

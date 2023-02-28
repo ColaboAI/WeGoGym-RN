@@ -97,13 +97,13 @@ interface WorkoutParictipantBase {
   status?: string;
   statusMessage: string;
   isAdmin?: boolean;
-  userId: string;
 }
 
 interface WorkoutParictipantsRead
   extends WorkoutParictipantBase,
     timestampMixin {
   id: string;
+  userId: string;
   workoutPromiseId: string;
   chatRoomMemberId: string | null;
 }
