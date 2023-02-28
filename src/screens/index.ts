@@ -1,6 +1,6 @@
 export { default as HomeScreen } from './Home/Home';
-export { default as ChatListScreen } from './ChatList';
-export { default as ChatRoomScreen } from './ChatRoom';
+export { default as ChatListScreen } from './Chat/ChatList';
+export { default as ChatRoomScreen } from './Chat/ChatRoom';
 export { default as UserScreen } from './User/User';
 export { default as ProfileEditScreen } from './User/ProfileEdit';
 export { default as SettingScreen } from './User/Setting';

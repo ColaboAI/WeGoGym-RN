@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import React, { useCallback } from 'react';
-import ChatListItem from '../components/organisms/Chat/ChatListItem';
+import ChatListItem from '../../components/organisms/Chat/ChatListItem';
 import { ChatStackScreenProps } from 'navigators/types';
 type ChatListScreenProps = ChatStackScreenProps<'ChatList'>;
 function ChatList({ navigation }: ChatListScreenProps) {
