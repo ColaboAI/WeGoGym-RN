@@ -6,7 +6,6 @@ import BottomSheet, {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import { Button, IconButton, Text, useTheme } from 'react-native-paper';
-
 import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 import { useWorkoutParticipantMutation } from '/hooks/queries/workout.queries';
 
@@ -16,11 +15,12 @@ type Props = {
   workoutPromiseId: string;
   username: string;
   userId: string;
+  navigationToHome: () => void;
 };
+
 const ParticipationBottomSheet = (props: Props) => {
   const theme = useTheme();
   const workoutParticipantMutation = useWorkoutParticipantMutation();
-
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const iosSnapPoints = React.useMemo(() => ['50%'], []);
   const androidSnapPoints = React.useMemo(() => ['90%'], []);
@@ -125,6 +125,7 @@ const ParticipationBottomSheet = (props: Props) => {
           props.setIsBottomSheetOpen(false);
           Keyboard.dismiss();
           onPressPostParticipation();
+          props.navigationToHome();
         }}>
         참여하기
       </Button>

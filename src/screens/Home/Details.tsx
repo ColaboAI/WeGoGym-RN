@@ -27,7 +27,7 @@ import ParticipationBottomSheet from '/components/organisms/User/ParticipationBo
 import { useGetUserInfoQuery } from '/hooks/queries/user.queries';
 type HomeScreenProps = HomeStackScreenProps<'Details'>;
 
-export default function DetailsScreen({ route }: HomeScreenProps) {
+export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const theme = useTheme();
   const { workoutPromiseId } = route.params;
   const query = useGetWorkoutByIdQuery(workoutPromiseId);
@@ -40,28 +40,32 @@ export default function DetailsScreen({ route }: HomeScreenProps) {
     setIsBottomSheetOpen(true);
   }, []);
 
+  const navigationToHome = useCallback(() => {
+    navigation.navigate('Home');
+  }, [navigation]);
+
   return (
-    <View style={[style.container, { marginBottom: inset.bottom }]}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}>
-        <View style={style.container}>
-          <Suspense fallback={<WorkoutPromiseLoader />}>
-            <ErrorBoundary
-              onReset={reset}
-              fallbackRender={({ resetErrorBoundary }) => (
-                <Headline>
-                  There was an error!
-                  <Button
-                    onPress={() => {
-                      resetErrorBoundary();
-                      Alert.alert("I'm error boundary");
-                    }}>
-                    Try again
-                  </Button>
-                </Headline>
-              )}>
+    <Suspense fallback={<WorkoutPromiseLoader />}>
+      <ErrorBoundary
+        onReset={reset}
+        fallbackRender={({ resetErrorBoundary }) => (
+          <Headline>
+            There was an error!
+            <Button
+              onPress={() => {
+                resetErrorBoundary();
+                Alert.alert("I'm error boundary");
+              }}>
+              Try again
+            </Button>
+          </Headline>
+        )}>
+        <View style={[style.container, { marginBottom: inset.bottom }]}>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
+            }}>
+            <View style={style.container}>
               <ScrollView>
                 {query.data ? (
                   <>
@@ -120,7 +124,10 @@ export default function DetailsScreen({ route }: HomeScreenProps) {
                         </Text>
                       </View>
                       <View style={style.participant}>
-                        <Text variant="bodyLarge">참여중인 짐메이트 1 / 5</Text>
+                        <Text variant="bodyLarge">
+                          참여중인 짐메이트 {query.data.participants.length} /{' '}
+                          {query.data.maxParticipants}
+                        </Text>
                         {/* // TODO: 프로필 사진 */}
                       </View>
                     </View>
@@ -129,24 +136,29 @@ export default function DetailsScreen({ route }: HomeScreenProps) {
                   <WorkoutPromiseLoader />
                 )}
               </ScrollView>
-            </ErrorBoundary>
-          </Suspense>
-          <Button
-            mode="contained"
-            onPress={onPressParticipation}
-            style={style.button}>
-            참여 요청
-          </Button>
+              <Button
+                mode="contained"
+                onPress={onPressParticipation}
+                style={style.button}>
+                참여 요청
+              </Button>
+            </View>
+          </TouchableWithoutFeedback>
+          {data ? (
+            <ParticipationBottomSheet
+              isBottomSheetOpen={isBottomSheetOpen}
+              setIsBottomSheetOpen={setIsBottomSheetOpen}
+              workoutPromiseId={workoutPromiseId}
+              userId={data.id}
+              username={data.username}
+              navigationToHome={navigationToHome}
+            />
+          ) : (
+            <></>
+          )}
         </View>
-      </TouchableWithoutFeedback>
-      <ParticipationBottomSheet
-        isBottomSheetOpen={isBottomSheetOpen}
-        setIsBottomSheetOpen={setIsBottomSheetOpen}
-        workoutPromiseId={workoutPromiseId}
-        userId={data.id}
-        username={data.username}
-      />
-    </View>
+      </ErrorBoundary>
+    </Suspense>
   );
 }
 const style = StyleSheet.create({
