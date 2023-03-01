@@ -1,9 +1,7 @@
 import { StyleSheet, View, Platform } from 'react-native';
 import {
-  IconButton,
   Text,
   Avatar,
-  Divider,
   Card,
   List,
   useTheme,
@@ -22,15 +20,16 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import InfoEditCardNumeric from '../../components/molecules/User/InfoEditCardNumeric';
 import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
-import ScreenWrapper from '/components/template/Common/ScreenWrapper';
 import { usePutMyInfoMutation } from '/hooks/queries/user.queries';
 import StringMenu from '/components/molecules/User/StringMenu';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // TODO: bio
 type Props = UserStackScreenProps<'ProfileEdit'>;
 // Platform.OS === 'android' ? selectedImage.uri : selectedImage.uri.replace('file://', '')
 export default function ProfileEdit({ navigation, route }: Props) {
   const theme = useTheme();
+  const inset = useSafeAreaInsets();
   const myInfo = route.params.myInfo;
 
   const [gymInfo, setGymInfo] = useState(myInfo.gymInfo);
@@ -100,11 +99,13 @@ export default function ProfileEdit({ navigation, route }: Props) {
       img: data,
     });
     setIsLoading(false);
+    navigation.goBack();
   }, [
     gymInfo,
     myInfo.profilePic,
     myInfoState,
     myWorkoutGoalState,
+    navigation,
     putMyInfoMutation,
     selectedImage,
   ]);
@@ -136,16 +137,7 @@ export default function ProfileEdit({ navigation, route }: Props) {
   }, [makeImageUri]);
 
   return (
-    <ScreenWrapper style={style.container} withScrollView={false}>
-      <View style={style.headerContainer}>
-        <IconButton
-          icon="settings-outline"
-          onPress={() => {
-            navigation.navigate('Setting');
-          }}
-        />
-      </View>
-      <Divider />
+    <View style={[style.container, { marginBottom: inset.bottom }]}>
       {/* Profile picture Pick */}
       <ScrollView
         style={style.container}
@@ -325,7 +317,6 @@ export default function ProfileEdit({ navigation, route }: Props) {
                   }}
                   blurOnSubmit={true}
                 />
-
                 <TextInput
                   mode="outlined"
                   label={'동네'}
@@ -407,7 +398,7 @@ export default function ProfileEdit({ navigation, route }: Props) {
         gymInfo={gymInfo}
         setGymInfo={setGymInfo}
       />
-    </ScreenWrapper>
+    </View>
   );
 }
 const style = StyleSheet.create({

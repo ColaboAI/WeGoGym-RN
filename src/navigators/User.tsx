@@ -9,21 +9,26 @@ type Props = CustomTabScreenProps<'마이'>;
 
 function User({ navigation, route }: Props) {
   const settingTitle = '설정';
+  const profileEditTitle = '프로필 수정';
+  const routeName = getFocusedRouteNameFromRoute(route);
+
   useLayoutEffect(() => {
-    const routeName = getFocusedRouteNameFromRoute(route);
     if (routeName !== 'User' && routeName !== undefined) {
       navigation.setOptions({ tabBarStyle: { display: 'none' } });
     } else {
       navigation.setOptions({ tabBarStyle: { display: 'flex' } });
     }
-  }, [navigation, route]);
+  }, [navigation, route, routeName]);
 
   return (
     <Stack.Navigator
       initialRouteName="User"
       screenOptions={{
         header: props => (
-          <DefaultNavBarHeader title={settingTitle} {...props} />
+          <DefaultNavBarHeader
+            title={routeName === 'Setting' ? settingTitle : profileEditTitle}
+            {...props}
+          />
         ),
       }}>
       <Stack.Screen
@@ -32,11 +37,7 @@ function User({ navigation, route }: Props) {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Setting" component={SettingScreen} />
-      <Stack.Screen
-        name="ProfileEdit"
-        component={ProfileEditScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
     </Stack.Navigator>
   );
 }
