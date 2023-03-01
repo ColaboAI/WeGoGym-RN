@@ -83,12 +83,20 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
             ]}>
             WeGoGym
           </Text>
-          <IconButton
-            icon="notifications-outline"
-            onPress={() => {
-              navigation.navigate('Notifications');
-            }}
-          />
+          <View style={style.iconContainer}>
+            <IconButton
+              icon="document-text-outline"
+              onPress={() => {
+                navigation.navigate('MyWorkoutPromises');
+              }}
+            />
+            <IconButton
+              icon="notifications-outline"
+              onPress={() => {
+                navigation.navigate('Notifications');
+              }}
+            />
+          </View>
         </View>
         <Divider />
         {renderBanner()}
@@ -158,6 +166,11 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingLeft: 12,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   bannerContainer: {
     justifyContent: 'center',
