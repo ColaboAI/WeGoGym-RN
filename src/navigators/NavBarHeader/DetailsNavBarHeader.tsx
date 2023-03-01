@@ -14,7 +14,6 @@ const DetailsNavBarHeader = ({ navigation, back }: NativeStackHeaderProps) => {
           />
         ) : null}
         <Appbar.Content title="" />
-        <Appbar.Action icon="ellipsis-vertical-outline" onPress={() => {}} />
       </Appbar.Header>
     </>
   );
