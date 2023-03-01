@@ -48,15 +48,31 @@ export default function UserScreen({ navigation, route }: Props) {
         )}>
         <SafeAreaView style={style.container}>
           {/* TODO: 다른 유저 프로필과 내 프로필에서의 action이 달라야함. */}
-          <View style={style.headerContainer}>
-            <IconButton
-              icon="settings-outline"
-              onPress={() => {
-                navigation.navigate('Setting');
-              }}
-            />
-          </View>
-          <Divider />
+          {id === 'me' ? (
+            <>
+              <View style={style.myHeaderContainer}>
+                <IconButton
+                  icon="settings-outline"
+                  onPress={() => {
+                    navigation.navigate('Setting');
+                  }}
+                />
+              </View>
+              <Divider />
+            </>
+          ) : (
+            <>
+              <View style={style.otherHeaderContainer}>
+                <IconButton
+                  icon="chevron-back-outline"
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
+                />
+              </View>
+              <Divider />
+            </>
+          )}
           <ScrollView
             style={style.container}
             contentContainerStyle={style.scrollViewContentContainer}>
@@ -288,10 +304,15 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerContainer: {
+  myHeaderContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  otherHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   profileContainer: {
     alignItems: 'center',
