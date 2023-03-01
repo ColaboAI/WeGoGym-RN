@@ -1,8 +1,8 @@
 type DatePickerMode = 'date' | 'time' | 'datetime';
 
 interface User {
-  _id: string | number;
-  name?: string;
+  id: string;
+  username: string;
   profilePic?: string;
 }
 
@@ -170,4 +170,34 @@ type RecommendedMate = {
   id: string;
   username: string;
   profilePic?: string;
+};
+
+type ChatRoom = {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  lastMessageText: string;
+  lastMessageCreatedAt: Date;
+  members: ChatRoomMember[];
+};
+
+type ChatRoomMember = {
+  id: string;
+  createdAt: Date;
+  userId: string;
+  chatRoomId: string;
+  user: User;
+  lastReadAt: Date;
+};
+
+type ChatRoomMemberListResponse = {
+  total: number;
+  items: ChatRoomMember[];
+};
+
+type ChatRoomListResponse = {
+  total: number;
+  items: ChatRoom[];
 };

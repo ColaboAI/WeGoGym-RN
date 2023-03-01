@@ -147,6 +147,20 @@ async function getRecommendedMates(limit: number): Promise<RecommendedMate[]> {
   }
 }
 
+async function getMyChatList(param: {
+  limit: number;
+  offset: number;
+}): Promise<ChatRoomListResponse> {
+  try {
+    const res = await apiClient.get(
+      `/chat/rooms/me?limit=${param.limit}&offset=${param.offset}`,
+    );
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export {
   postLogin,
   postRegister,
@@ -157,4 +171,5 @@ export {
   deleteUser,
   getRecommendedMates,
   getUserInfo,
+  getMyChatList,
 };
