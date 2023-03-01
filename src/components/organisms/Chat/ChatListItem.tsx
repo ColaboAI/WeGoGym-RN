@@ -4,24 +4,30 @@ import { Avatar, Badge, List, Text, useTheme } from 'react-native-paper';
 
 type Props = {
   name: string;
-  lastMessage: string;
-  profilePic: string | null;
-  unreadCount: number;
+  description: string;
+  createdAt: Date;
+  lastMessageText: string;
+  lastMessageCreatedAt: Date;
+  members: ChatRoomMember[];
   onPress: () => void;
 };
 
 const ChatListItem = ({
   name,
-  lastMessage,
-  profilePic,
-  unreadCount,
+  description,
+  createdAt,
+  lastMessageText,
+  lastMessageCreatedAt,
+  members,
   onPress,
 }: Props) => {
   const theme = useTheme();
+  const profilePic = members[0].user.profilePic;
+  const unreadCount = 13;
   return (
     <List.Item
       title={name}
-      description={lastMessage}
+      description={lastMessageText ?? description}
       style={{
         backgroundColor: theme.colors.background,
       }}
@@ -35,7 +41,7 @@ const ChatListItem = ({
           <Avatar.Text
             {...props}
             size={48}
-            label={name[0]}
+            label={name}
             labelStyle={{ color: theme.colors.onPrimary }}
           />
         )
