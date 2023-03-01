@@ -44,6 +44,16 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
     navigation.navigate('Home');
   }, [navigation]);
 
+  const isAcceptedParticipant = useCallback(
+    (paticipants: WorkoutParictipantsRead[]) => {
+      const acceptedParticipants = paticipants.filter(
+        participant => participant.status === 'ACCEPTED',
+      );
+      return acceptedParticipants.length;
+    },
+    [],
+  );
+
   return (
     <Suspense fallback={<WorkoutPromiseLoader />}>
       <ErrorBoundary
@@ -113,7 +123,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                           style={style.icon}
                         />
                         <Text variant="bodyLarge" style={style.body}>
-                          {query.data.participants.length}/
+                          {isAcceptedParticipant(query.data.participants)}/
                           {query.data.maxParticipants} 참여
                         </Text>
                       </View>
@@ -124,11 +134,21 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                         </Text>
                       </View>
                       <View style={style.participant}>
-                        <Text variant="bodyLarge">
-                          참여중인 짐메이트 {query.data.participants.length} /{' '}
-                          {query.data.maxParticipants}
+                        <Text variant="bodyLarge">참여중인 짐메이트</Text>
+                        <Text
+                          variant="bodyLarge"
+                          style={{ color: theme.colors.primary }}>
+                          {' '}
+                          {isAcceptedParticipant(query.data.participants)}
                         </Text>
-                        {/* // TODO: 프로필 사진 */}
+                        <Text variant="bodyLarge">
+                          /{query.data.maxParticipants}
+                        </Text>
+                        {/* {query.data.participants.map(participant => (
+                          <Text variant="bodyLarge" key={participant.id}>
+                            {participant.user.username}
+                          </Text>
+                        ))} */}
                       </View>
                     </View>
                   </>
@@ -197,5 +217,7 @@ const style = StyleSheet.create({
   button: {
     borderRadius: 0,
   },
-  participant: {},
+  participant: {
+    flexDirection: 'row',
+  },
 });
