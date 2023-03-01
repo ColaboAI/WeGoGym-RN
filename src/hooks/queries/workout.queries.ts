@@ -60,11 +60,10 @@ export function useGetWorkoutByIdQuery(id: string) {
     queryFn: () => getWorkoutPromiseById(id),
     retry: 1,
     onError: (error: Error) => {
-      Alert.alert(`운동 약속을 가져오는데 실패하였습니다: ${error.message}`);
+      Alert.alert(
+        `운동 약속 정보를 가져오는데 실패하였습니다: ${error.message}`,
+      );
       console.log(error);
-    },
-    onSuccess(data) {
-      console.log(data);
     },
     suspense: true,
   });
