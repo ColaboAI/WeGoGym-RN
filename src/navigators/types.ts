@@ -2,20 +2,19 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { NavigatorScreenParams } from '@react-navigation/native';
-export type RootStackParamList = {
-  Auth: undefined;
-  MainNavigator: NavigatorScreenParams<BottomTabParamList>;
-};
 
-export type BottomTabParamList = {
-  홈: undefined;
-  채팅: undefined;
-  마이: undefined;
+export type ChatParamList = {
+  userId?: string;
+  chatRoomId?: string;
+  chatRoomName?: string;
+  chatRoomImage?: string;
+  chatRoomType?: string;
+  chatRoomUserIds?: string[];
 };
 
 export type ChatStackParamList = {
   ChatList: undefined;
-  ChatRoom: undefined;
+  ChatRoom: ChatParamList;
 };
 
 export type HomeStackParamList = {
@@ -47,6 +46,17 @@ export type UserStackParamList = {
   User: { userId?: string };
   Setting: undefined;
   ProfileEdit: { myInfo: MyInfoRead };
+};
+
+export type RootStackParamList = {
+  Auth: undefined;
+  MainNavigator: NavigatorScreenParams<BottomTabParamList>;
+};
+
+export type BottomTabParamList = {
+  홈: NavigatorScreenParams<HomeStackParamList>;
+  채팅: NavigatorScreenParams<ChatStackParamList>;
+  마이: NavigatorScreenParams<UserStackParamList>;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

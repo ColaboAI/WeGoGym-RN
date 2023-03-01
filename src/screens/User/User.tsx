@@ -2,7 +2,6 @@ import { StyleSheet, View, SafeAreaView, Alert } from 'react-native';
 import {
   IconButton,
   Text,
-  Avatar,
   Divider,
   Card,
   List,
@@ -105,31 +104,41 @@ export default function UserScreen({ navigation, route }: Props) {
                   </Tooltip>
                 ) : null}
               </View>
-              {id === 'me' ? (
-                <Button
-                  onPress={() => {
-                    if (data) {
-                      navigation.navigate('ProfileEdit', {
-                        myInfo: data,
+              <View style={style.chatAndImageBtn}>
+                {id === 'me' ? (
+                  <Button
+                    onPress={() => {
+                      if (data) {
+                        navigation.navigate('ProfileEdit', {
+                          myInfo: data,
+                        });
+                      } else {
+                        throw new Error('MyInfoData is undefined');
+                      }
+                    }}>
+                    프로필 편집
+                  </Button>
+                ) : (
+                  <Button
+                    mode="contained"
+                    onPress={() => {
+                      navigation.navigate('MainNavigator', {
+                        screen: '채팅',
+                        params: {
+                          screen: 'ChatRoom',
+                          params: {
+                            userId: data?.id,
+                            chatRoomName: data?.username,
+                            chatRoomType: '1:1',
+                            chatRoomUserIds: [data?.id ?? '알 수 없음', 'me'],
+                          },
+                        },
                       });
-                    } else {
-                      throw new Error('MyInfoData is undefined');
-                    }
-                  }}>
-                  프로필 편집
-                </Button>
-              ) : (
-                <Button
-                // onPress={() => {
-                //   navigation.navigate('Chat', {
-                //     userId: data?.id,
-                //     username: data?.username,
-                //   });
-                // }}
-                >
-                  채팅하기
-                </Button>
-              )}
+                    }}>
+                    채팅하기
+                  </Button>
+                )}
+              </View>
             </View>
             {/* 신체 정보 */}
             <View style={style.myBodySection}>
@@ -380,6 +389,9 @@ const style = StyleSheet.create({
   horizontalScrollViewContentContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    padding: 12,
+  },
+  chatAndImageBtn: {
     padding: 12,
   },
 });
