@@ -23,6 +23,7 @@ export type HomeStackParamList = {
   Details: { workoutPromiseId: string };
   Posting: undefined;
   Notifications: undefined;
+  MyWorkoutPromises: undefined;
 } & UserStackParamList;
 
 export type AuthStackParamList = {

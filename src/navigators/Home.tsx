@@ -11,12 +11,14 @@ import {
 import DetailsNavBarHeader from './NavBarHeader/DetailsNavBarHeader';
 import { HomeStackParamList, CustomTabScreenProps } from './types';
 import DefaultNavBarHeader from './NavBarHeader/DefaultNavBarHeader';
+import MyWorkoutPromisesScreen from '/screens/Home/MyWorkoutPromises';
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 type Props = CustomTabScreenProps<'홈'>;
 
 function Home({ navigation, route }: Props) {
   const notificationTitle = '알림';
   const postingTitle = '게시글 작성';
+  const myWorkoutPromisesTitle = '내가 쓴 글';
   useLayoutEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route) || 'Home';
     if (routeName !== 'Home') {
@@ -47,6 +49,15 @@ function Home({ navigation, route }: Props) {
         options={{
           header: props => (
             <DefaultNavBarHeader title={notificationTitle} {...props} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="MyWorkoutPromises"
+        component={MyWorkoutPromisesScreen}
+        options={{
+          header: props => (
+            <DefaultNavBarHeader title={myWorkoutPromisesTitle} {...props} />
           ),
         }}
       />
