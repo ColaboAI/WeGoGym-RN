@@ -5,7 +5,6 @@ import { Avatar } from 'react-native-paper';
 interface Props {
   profilePic?: string;
   username: string;
-  userId: string;
   size: number;
   style?: StyleProp<ViewStyle>;
 }
