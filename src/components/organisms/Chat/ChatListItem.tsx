@@ -1,59 +1,71 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Avatar, Badge, List, Text, useTheme } from 'react-native-paper';
+import { Badge, List, Text, useTheme } from 'react-native-paper';
+import ChatListAvatar from '/components/molecules/Chat/ChatListAvatar';
+import { useAuthValue } from '/hooks/context/useAuth';
+import { ChatParamList } from '/navigators/types';
+import { getRelativeTime } from '/utils/util';
 
 type Props = {
+  id: string;
   name: string;
   description: string;
   createdAt: Date;
   lastMessageText: string;
   lastMessageCreatedAt: Date;
   members: ChatRoomMember[];
-  onPress: () => void;
+  unreadCount: number;
+  onPress: (params: ChatParamList) => void;
 };
 
 const ChatListItem = ({
+  id,
   name,
   description,
-  createdAt,
   lastMessageText,
   lastMessageCreatedAt,
   members,
+  unreadCount,
   onPress,
 }: Props) => {
   const theme = useTheme();
-  const profilePic = members[0].user.profilePic;
-  const unreadCount = 13;
+  const authState = useAuthValue();
+  const chatMems = members.filter(mem => mem.user.id !== authState.userId);
+
+  const title = name ? name : chatMems.map(mem => mem.user.username).join(', ');
   return (
     <List.Item
-      title={name}
+      title={title}
       description={lastMessageText ?? description}
       style={{
         backgroundColor: theme.colors.background,
       }}
       titleStyle={{
         color: theme.colors.onBackground,
+        fontWeight: '600',
       }}
-      left={props =>
-        profilePic ? (
-          <Avatar.Image {...props} size={48} source={{ uri: profilePic }} />
-        ) : (
-          <Avatar.Text
-            {...props}
-            size={48}
-            label={name}
-            labelStyle={{ color: theme.colors.onPrimary }}
-          />
-        )
-      }
+      left={() => {
+        return (
+          chatMems.length > 0 && (
+            <ChatListAvatar members={chatMems.slice(0, 3)} />
+          )
+        );
+      }}
       right={() => (
         <View style={styles.rightContainer}>
-          <Text variant={'labelSmall'}>어제</Text>
-          {unreadCount > 0 && <Badge>{unreadCount}</Badge>}
+          <Text variant={'labelSmall'}>
+            {lastMessageCreatedAt ? getRelativeTime(lastMessageCreatedAt) : ''}
+          </Text>
+          {unreadCount && <Badge>{unreadCount}</Badge>}
         </View>
       )}
       // TODO: Fix this typing error
-      onPress={onPress}
+      onPress={() =>
+        onPress({
+          chatRoomId: id,
+          chatRoomName: title,
+        } as ChatParamList)
+      }
     />
   );
 };

@@ -159,6 +159,7 @@ interface MyInfoRead extends UserCreate {
 type UserLoginResponse = {
   token: string;
   refreshToken: string;
+  userId: string;
 };
 
 type RefreshTokenRequest = {
@@ -180,13 +181,13 @@ type ChatRoom = {
   updatedAt: Date;
   lastMessageText: string;
   lastMessageCreatedAt: Date;
+  unreadCount: number;
   members: ChatRoomMember[];
 };
 
 type ChatRoomMember = {
   id: string;
   createdAt: Date;
-  userId: string;
   chatRoomId: string;
   user: User;
   lastReadAt: Date;
