@@ -81,7 +81,6 @@ export default function UserScreen({ navigation, route }: Props) {
               <View style={style.avatarContainer}>
                 {data && (
                   <CustomAvatar
-                    userId={data?.id}
                     size={64}
                     profilePic={data?.profilePic}
                     username={data?.username}

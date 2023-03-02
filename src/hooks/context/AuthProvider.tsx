@@ -9,12 +9,12 @@ import { save, getValueFor, clear } from '@store/secureStore';
 import { postLogin, postRegister, deleteUser } from 'api/api';
 import { Alert } from 'react-native';
 type AuthState = {
-  user: any | null;
   token: string | null;
   isLoading: boolean;
   isSignout: boolean;
   error: string | null;
   phoneNumber: string | null;
+  userId: string | null;
 };
 
 type AuthActions = {
@@ -29,12 +29,12 @@ type AuthActions = {
 };
 
 const initialAuthState: AuthState = {
-  user: null,
   token: null,
   isLoading: false,
   isSignout: false,
   error: null,
   phoneNumber: null,
+  userId: null,
 };
 
 const initialAuthActions: AuthActions = {
@@ -69,23 +69,28 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
         await save('phoneNumber', phoneNumber);
 
-        const { token, refreshToken } = await postLogin(phoneNumber);
+        const { token, refreshToken, userId } = await postLogin(phoneNumber);
 
         await save('token', token);
         await save('refreshToken', refreshToken);
+        await save('userId', userId);
+
         console.log('token: ', token);
         console.log('refreshToken: ', refreshToken);
+        console.log('userId: ', userId);
         setAuthState(prevState => ({
           ...prevState,
           token: token,
           isSignout: false,
           isLoading: false,
+          userId: userId,
         }));
       },
       signOut: async () => {
         await clear('token');
         await clear('refreshToken');
         await clear('phoneNumber');
+        await clear('userId');
 
         setAuthState(prevState => ({
           ...prevState,
@@ -116,11 +121,13 @@ function AuthProvider({ children }: AuthProviderProps) {
       },
       getTokenFromStorage: async () => {
         const token = await getValueFor('token');
+        const userId = await getValueFor('userId');
 
         if (token) {
           setAuthState(prevState => ({
             ...prevState,
             token: token,
+            userId: userId,
           }));
           return true;
         }
@@ -175,7 +182,6 @@ function AuthProvider({ children }: AuthProviderProps) {
       try {
         const isToken = await authActions.getTokenFromStorage();
         const phoneNumber = await getValueFor('phoneNumber');
-        console.log('phoneNumber: ', phoneNumber);
         if (!isToken) {
           if (phoneNumber) {
             await authActions.signIn(phoneNumber);
