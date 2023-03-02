@@ -15,9 +15,13 @@ import {
   Headline,
   Button,
   Divider,
+  IconButton,
 } from 'react-native-paper';
 import { getLocaleDate, getLocaleTime } from 'utils/util';
-import { useGetWorkoutByIdQuery } from '/hooks/queries/workout.queries';
+import {
+  useGetWorkoutByIdQuery,
+  useWorkoutDeleteMutation,
+} from '/hooks/queries/workout.queries';
 import WorkoutPromiseLoader from '/components/molecules/Home/WorkoutPromiseLoader';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
@@ -32,6 +36,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const { workoutPromiseId } = route.params;
   const query = useGetWorkoutByIdQuery(workoutPromiseId);
   const { data: myInfo } = useGetUserInfoQuery('me');
+  const deleteMutation = useWorkoutDeleteMutation();
   const { reset } = useQueryErrorResetBoundary();
   const inset = useSafeAreaInsets();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
@@ -54,6 +59,27 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
     [],
   );
 
+  const isAdmin = useCallback((userId: string, adminUserId: string) => {
+    return userId === adminUserId;
+  }, []);
+
+  const onDelete = () => {
+    Alert.alert('게시글을 삭제하시겠습니까?', '', [
+      {
+        text: '취소',
+        style: 'cancel',
+      },
+      {
+        text: '확인',
+        onPress: async () => {
+          await deleteMutation.mutate(workoutPromiseId);
+          navigationToHome();
+        },
+        style: 'destructive',
+      },
+    ]);
+  };
+
   return (
     <Suspense fallback={<WorkoutPromiseLoader />}>
       <ErrorBoundary
@@ -75,19 +101,36 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
             onPress={() => {
               Keyboard.dismiss();
             }}>
-            <View style={style.container}>
-              <ScrollView>
-                {query.data ? (
+            {query.data && myInfo ? (
+              <View style={style.container}>
+                <ScrollView>
                   <>
-                    <View style={style.titleBox}>
-                      <Chip style={style.chip}>모집 중</Chip>
-                      <Text
-                        style={[
-                          style.title,
-                          { color: theme.colors.onBackground },
-                        ]}>
-                        {query.data.title}
-                      </Text>
+                    <View style={style.headerBox}>
+                      <View style={style.titleBox}>
+                        <Chip style={style.chip}>모집 중</Chip>
+                        <Text
+                          style={[
+                            style.title,
+                            { color: theme.colors.onBackground },
+                          ]}>
+                          {query.data.title}
+                        </Text>
+                      </View>
+                      <View style={style.iconBox}>
+                        {isAdmin(myInfo.id, query.data.adminUserId) ? (
+                          <>
+                            <IconButton
+                              icon="create-outline"
+                              // TODO: 운동 약속 편집 화면으로 이동
+                              onPress={() => {}}
+                            />
+                            <IconButton
+                              icon="trash-outline"
+                              onPress={onDelete}
+                            />
+                          </>
+                        ) : null}
+                      </View>
                     </View>
                     <View style={style.workoutPromiseInfoBox}>
                       <View style={style.infoBox}>
@@ -152,17 +195,27 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                       </View>
                     </View>
                   </>
+                </ScrollView>
+                {isAdmin(myInfo.id, query.data.adminUserId) ? (
+                  <Button
+                    mode="contained"
+                    // TODO: 운동 약속 모집 완료
+                    onPress={() => {}}
+                    style={style.button}>
+                    모집 완료
+                  </Button>
                 ) : (
-                  <WorkoutPromiseLoader />
+                  <Button
+                    mode="contained"
+                    onPress={onPressParticipation}
+                    style={style.button}>
+                    참여 요청
+                  </Button>
                 )}
-              </ScrollView>
-              <Button
-                mode="contained"
-                onPress={onPressParticipation}
-                style={style.button}>
-                참여 요청
-              </Button>
-            </View>
+              </View>
+            ) : (
+              <WorkoutPromiseLoader />
+            )}
           </TouchableWithoutFeedback>
           {myInfo ? (
             <ParticipationBottomSheet
@@ -184,11 +237,21 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   title: {
     fontSize: 24,
     fontWeight: '600',
   },
   titleBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 12,
+    marginBottom: 12,
+  },
+  iconBox: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 12,
