@@ -79,10 +79,11 @@ interface WorkoutPromiseRead extends timestampMixin {
 
   promiseTime: Date;
   recruitEndTime: Date | null;
+  status: string;
   // chatRoomId: string | null;
   // chatRoom: ChatRoom | null;
   isPrivate: boolean;
-
+  adminUserId: string;
   gymInfo: Gym | null;
   participants: WorkoutParticipantsRead[];
 }
@@ -106,6 +107,8 @@ interface WorkoutParictipantsRead
   userId: string;
   workoutPromiseId: string;
   chatRoomMemberId: string | null;
+  // TODO: refactor user Type
+  user: RecommendedMate;
 }
 
 interface GymInfoOpenAPI {
