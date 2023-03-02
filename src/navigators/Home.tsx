@@ -35,7 +35,6 @@ function Home({ navigation, route }: Props) {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-
       <Stack.Screen
         name="Details"
         component={DetailsScreen}
