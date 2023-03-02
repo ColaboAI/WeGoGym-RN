@@ -150,6 +150,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                 placeholder="운동 파트너 모집 글 내용"
                 error={hasContentErrors()}
                 value={description}
+                style={style.textInput}
                 onFocus={() => setDescriptionFocus(true)}
                 onChangeText={value => setDescription(value)}
               />
@@ -302,13 +303,7 @@ const style = StyleSheet.create({
     paddingHorizontal: 12,
   },
   textInput: {
-    alignSelf: 'stretch',
-    marginHorizontal: 12,
-    marginBottom: 12,
-    padding: 12,
-    borderRadius: 12,
-    color: 'gray',
-    textAlign: 'left',
+    lineHeight: 24,
   },
   itemContainer: {
     flex: 1,
