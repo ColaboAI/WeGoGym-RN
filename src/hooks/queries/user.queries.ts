@@ -8,6 +8,7 @@ import {
 import { Alert } from 'react-native';
 import { AxiosError } from 'axios';
 import { clear } from '/store/secureStore';
+
 export function useRegisterMutation() {
   return useMutation({
     mutationFn: postRegister,
