@@ -106,15 +106,8 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                 <ScrollView>
                   <>
                     <View style={style.headerBox}>
-                      <View style={style.titleBox}>
+                      <View style={style.chipBox}>
                         <Chip style={style.chip}>모집 중</Chip>
-                        <Text
-                          style={[
-                            style.title,
-                            { color: theme.colors.onBackground },
-                          ]}>
-                          {query.data.title}
-                        </Text>
                       </View>
                       <View style={style.iconBox}>
                         {isAdmin(myInfo.id, query.data.adminUserId) ? (
@@ -131,6 +124,15 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                           </>
                         ) : null}
                       </View>
+                    </View>
+                    <View style={style.titleBox}>
+                      <Text
+                        style={[
+                          style.title,
+                          { color: theme.colors.onBackground },
+                        ]}>
+                        {query.data.title}
+                      </Text>
                     </View>
                     <View style={style.workoutPromiseInfoBox}>
                       <View style={style.infoBox}>
@@ -251,6 +253,7 @@ const style = StyleSheet.create({
     marginHorizontal: 12,
     marginBottom: 12,
   },
+
   iconBox: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -260,6 +263,12 @@ const style = StyleSheet.create({
   body: {
     marginBottom: 12,
     fontWeight: '500',
+  },
+  chipBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 12,
+    marginBottom: 12,
   },
   chip: {
     marginRight: 12,
