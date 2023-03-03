@@ -162,3 +162,22 @@ export function getRelativeTime(date: Date | string) {
 
   return result;
 }
+
+export function isAcceptedParticipant(paticipants: WorkoutParictipantsRead[]) {
+  const acceptedParticipants = paticipants.filter(
+    participant => participant.status === 'ACCEPTED',
+  );
+  return acceptedParticipants.length;
+}
+
+export function isRequested(
+  paticipants: WorkoutParictipantsRead[],
+  userId: string,
+) {
+  const requestedParticipants = paticipants.filter(
+    participant =>
+      participant.status === 'PENDING' && participant.userId === userId,
+  );
+
+  return requestedParticipants.length;
+}

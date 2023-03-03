@@ -1,7 +1,12 @@
 import { StyleSheet, View } from 'react-native';
 import React, { Suspense } from 'react';
 import { Text, Card } from 'react-native-paper';
-import { getLocaleDate, getLocaleTime, getRelativeTime } from 'utils/util';
+import {
+  getLocaleDate,
+  getLocaleTime,
+  getRelativeTime,
+  isAcceptedParticipant,
+} from 'utils/util';
 import { useGetUserInfoQuery } from '/hooks/queries/user.queries';
 import WorkoutPromiseLoader from './WorkoutPromiseLoader';
 
@@ -18,6 +23,7 @@ const WorkoutPromiseCard = ({
   participants,
 }: WorkoutPromiseRead) => {
   const { data: adminUserInfo } = useGetUserInfoQuery(adminUserId);
+
   return (
     <Suspense fallback={<WorkoutPromiseLoader />}>
       <View
@@ -41,7 +47,7 @@ const WorkoutPromiseCard = ({
                 📍 {gymInfo ? gymInfo.name : '위치 미정'}
               </Text>
               <Text>
-                👥 {participants.length}/{maxParticipants} 참여
+                👥 {isAcceptedParticipant(participants)}/{maxParticipants} 참여
               </Text>
             </>
           </Card.Content>
