@@ -163,6 +163,10 @@ export function getRelativeTime(date: Date | string) {
   return result;
 }
 
+export function isAdmin(userId: string, adminUserId: string) {
+  return userId === adminUserId;
+}
+
 export function isAcceptedParticipant(paticipants: WorkoutParictipantsRead[]) {
   const acceptedParticipants = paticipants.filter(
     participant => participant.status === 'ACCEPTED',
