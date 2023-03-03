@@ -21,11 +21,13 @@ import {
   getLocaleDate,
   getLocaleTime,
   isAcceptedParticipant,
+  isAdmin,
   isRequested,
 } from 'utils/util';
 import {
   useGetWorkoutByIdQuery,
   useWorkoutDeleteMutation,
+  useWorkoutParticipantDeleteMutation,
 } from '/hooks/queries/workout.queries';
 import WorkoutPromiseLoader from '/components/molecules/Home/WorkoutPromiseLoader';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -41,7 +43,9 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const { workoutPromiseId } = route.params;
   const query = useGetWorkoutByIdQuery(workoutPromiseId);
   const { data: myInfo } = useGetUserInfoQuery('me');
-  const deleteMutation = useWorkoutDeleteMutation();
+  const deleteWorkoutMutation = useWorkoutDeleteMutation();
+  const deleteParticipationMutation =
+    useWorkoutParticipantDeleteMutation(workoutPromiseId);
   const { reset } = useQueryErrorResetBoundary();
   const inset = useSafeAreaInsets();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
@@ -52,17 +56,11 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
     setIsBottomSheetOpen(true);
   }, []);
 
-  const onPressParticipationCancel = useCallback(async () => {}, []);
-
   const navigationToHome = useCallback(() => {
     navigation.navigate('Home');
   }, [navigation]);
 
-  const isAdmin = useCallback((userId: string, adminUserId: string) => {
-    return userId === adminUserId;
-  }, []);
-
-  const onDelete = () => {
+  const onDeleteWorkout = () => {
     Alert.alert('게시글을 삭제하시겠습니까?', '', [
       {
         text: '취소',
@@ -71,8 +69,24 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
       {
         text: '확인',
         onPress: async () => {
-          await deleteMutation.mutate(workoutPromiseId);
+          deleteWorkoutMutation.mutate(workoutPromiseId);
           navigationToHome();
+        },
+        style: 'destructive',
+      },
+    ]);
+  };
+
+  const onDeleteParticipation = (userId: string) => {
+    Alert.alert('참여를 취소하시겠습니까?', '', [
+      {
+        text: '취소',
+        style: 'cancel',
+      },
+      {
+        text: '확인',
+        onPress: async () => {
+          deleteParticipationMutation.mutate({ workoutPromiseId, userId });
         },
         style: 'destructive',
       },
@@ -125,7 +139,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                             />
                             <IconButton
                               icon="trash-outline"
-                              onPress={onDelete}
+                              onPress={onDeleteWorkout}
                             />
                           </>
                         ) : null}
@@ -222,7 +236,9 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                 ) : (
                   <Button
                     mode="contained"
-                    onPress={onPressParticipationCancel}
+                    onPress={() => {
+                      onDeleteParticipation(myInfo.id);
+                    }}
                     style={style.button}>
                     참여 취소
                   </Button>

@@ -78,6 +78,26 @@ async function postWorkoutParticipant({
   }
 }
 
+async function deleteWorkoutParticipant({
+  workoutPromiseId,
+  userId,
+}: {
+  workoutPromiseId: string;
+  userId: string;
+}): Promise<void> {
+  try {
+    const res = await apiClient.delete(
+      `/workout-promise/${workoutPromiseId}/participants/${userId}`,
+    );
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
 async function getWorkoutPromise({
   limit = 10,
   offset = null,
@@ -203,6 +223,7 @@ export {
   postWorkoutPromise,
   deleteWorkoutPromise,
   postWorkoutParticipant,
+  deleteWorkoutParticipant,
   getWorkoutPromise,
   getWorkoutPromiseById,
   putMyInfo,

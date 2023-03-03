@@ -5,6 +5,7 @@ import {
   postWorkoutPromise,
   postWorkoutParticipant,
   deleteWorkoutPromise,
+  deleteWorkoutParticipant,
 } from '@api/api';
 import { Alert } from 'react-native';
 
@@ -50,6 +51,22 @@ export function useWorkoutParticipantMutation() {
       console.log(data);
       Alert.alert('운동 약속에 참가 신청을 완료하였어요! 승인을 기다려주세요.');
       queryClient.invalidateQueries(['getWorkoutById', data.workoutPromiseId]);
+    },
+  });
+}
+
+export function useWorkoutParticipantDeleteMutation(workoutPromiseId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteWorkoutParticipant,
+    onError: (error: Error) => {
+      Alert.alert(`운동 약속을 취소할 수 없어요: ${error.message}`);
+    },
+    onSuccess() {
+      Alert.alert(
+        '운동 약속 참가 취소 완료하였어요! 다른 운동 약속에 참가해보세요!',
+      );
+      queryClient.invalidateQueries(['getWorkoutById', workoutPromiseId]);
     },
   });
 }
