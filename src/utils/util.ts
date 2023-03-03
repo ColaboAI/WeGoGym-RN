@@ -1,5 +1,6 @@
 import { getValueFor } from 'store/secureStore';
 import { GYM_OPEN_API_KEY } from '@env';
+import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid';
 
 export function getGoal(goals: WorkoutGoal[]) {
