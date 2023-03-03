@@ -184,6 +184,14 @@ type ChatRoom = {
   unreadCount: number;
   members: ChatRoomMember[];
 };
+type ChatMessage = {
+  id: string;
+  createdAt: Date;
+  chatRoomId: string;
+  userId: string;
+  text: string;
+  media_url: string;
+};
 
 type ChatRoomMember = {
   id: string;
