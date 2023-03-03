@@ -67,13 +67,13 @@ function AuthProvider({ children }: AuthProviderProps) {
           clear('phoneNumber');
           return;
         }
-        await save('phoneNumber', phoneNumber);
+        save('phoneNumber', phoneNumber);
 
         const { token, refreshToken, userId } = await postLogin(phoneNumber);
 
-        await save('token', token);
-        await save('refreshToken', refreshToken);
-        await save('userId', userId);
+        save('token', token);
+        save('refreshToken', refreshToken);
+        save('userId', userId);
 
         console.log('token: ', token);
         console.log('refreshToken: ', refreshToken);
@@ -87,10 +87,10 @@ function AuthProvider({ children }: AuthProviderProps) {
         }));
       },
       signOut: async () => {
-        await clear('token');
-        await clear('refreshToken');
-        await clear('phoneNumber');
-        await clear('userId');
+        clear('token');
+        clear('refreshToken');
+        clear('phoneNumber');
+        clear('userId');
 
         setAuthState(prevState => ({
           ...prevState,
@@ -106,8 +106,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         }));
         try {
           const { token, refreshToken } = await postRegister(userInfo);
-          await save('token', token);
-          await save('refreshToken', refreshToken);
+          save('token', token);
+          save('refreshToken', refreshToken);
           setAuthState(prevState => ({
             ...prevState,
             isLoading: false,
@@ -120,8 +120,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
       },
       getTokenFromStorage: async () => {
-        const token = await getValueFor('token');
-        const userId = await getValueFor('userId');
+        const token = getValueFor('token');
+        const userId = getValueFor('userId');
 
         if (token) {
           setAuthState(prevState => ({
@@ -134,8 +134,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         return false;
       },
       refreshToken: async (token: string, refreshToken: string) => {
-        await save('token', token);
-        await save('refreshToken', refreshToken);
+        save('token', token);
+        save('refreshToken', refreshToken);
         setAuthState(prevState => ({
           ...prevState,
           isLoading: false,
@@ -149,7 +149,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         }));
       },
       getPhoneNumFromStorage: async () => {
-        const phoneNumber = await getValueFor('phoneNumber');
+        const phoneNumber = getValueFor('phoneNumber');
         if (phoneNumber) {
           setAuthState(prevState => ({
             ...prevState,
@@ -161,9 +161,9 @@ function AuthProvider({ children }: AuthProviderProps) {
       },
       unRegister: async () => {
         const res = await deleteUser();
-        await clear('token');
-        await clear('refreshToken');
-        await clear('phoneNumber');
+        clear('token');
+        clear('refreshToken');
+        clear('phoneNumber');
         console.log('unRegister', res);
 
         setAuthState(prevState => ({
@@ -181,7 +181,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     const bootstrapAsync = async () => {
       try {
         const isToken = await authActions.getTokenFromStorage();
-        const phoneNumber = await getValueFor('phoneNumber');
+        const phoneNumber = getValueFor('phoneNumber');
         if (!isToken) {
           if (phoneNumber) {
             await authActions.signIn(phoneNumber);

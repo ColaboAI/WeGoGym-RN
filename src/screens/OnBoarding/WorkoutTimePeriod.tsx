@@ -48,8 +48,8 @@ export default function WorkoutTimePeriodScreen({ navigation }: Props) {
         <Button
           mode="contained"
           disabled={!time}
-          onPress={async () => {
-            await save('workoutTimePeriod', time);
+          onPress={() => {
+            save('workoutTimePeriod', time);
             navigation.navigate('WorkoutTimePerDay');
           }}>
           확인

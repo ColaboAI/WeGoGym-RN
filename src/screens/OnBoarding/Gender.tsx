@@ -49,8 +49,8 @@ export default function GenderScreen({ navigation }: Props) {
         <Button
           mode="contained"
           disabled={!gender}
-          onPress={async () => {
-            await save('gender', gender);
+          onPress={() => {
+            save('gender', gender);
             navigation.navigate('BodyInformation');
           }}>
           확인

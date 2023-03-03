@@ -61,11 +61,11 @@ export default function WorkoutGoalScreen() {
       <View style={style.buttonBox}>
         <Button
           mode="contained"
-          onPress={async () => {
+          onPress={() => {
             const workoutGoal = getGoal(isSelected);
-            await save('workoutGoal', workoutGoal);
+            save('workoutGoal', workoutGoal);
 
-            const info = await getInfo();
+            const info = getInfo();
             if (info) {
               signUp(info);
             } else {
