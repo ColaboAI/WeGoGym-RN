@@ -50,7 +50,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
   const navigateToUserDetails = useCallback(
     (id: string) => {
-      navigation.navigate('User', { userId: id });
+      navigation.push('User', { userId: id });
     },
     [navigation],
   );

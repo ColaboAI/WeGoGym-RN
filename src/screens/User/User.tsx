@@ -104,11 +104,11 @@ export default function UserScreen({ navigation, route }: Props) {
                 ) : null}
               </View>
               <View style={style.chatAndImageBtn}>
-                {id === 'me' ? (
+                {id === 'me' && data ? (
                   <Button
                     onPress={() => {
                       if (data) {
-                        navigation.navigate('ProfileEdit', {
+                        navigation.push('ProfileEdit', {
                           myInfo: data,
                         });
                       } else {
@@ -121,16 +121,12 @@ export default function UserScreen({ navigation, route }: Props) {
                   <Button
                     mode="contained"
                     onPress={() => {
-                      navigation.navigate('MainNavigator', {
-                        screen: '채팅',
+                      navigation.navigate('채팅', {
+                        screen: 'ChatRoom',
                         params: {
-                          screen: 'ChatRoom',
-                          params: {
-                            userId: data?.id,
-                            chatRoomName: data?.username,
-                            chatRoomType: '1:1',
-                            chatRoomUserIds: [data?.id ?? '알 수 없음', 'me'],
-                          },
+                          userId: data?.id,
+                          chatRoomName: data?.username,
+                          chatRoomType: 'direct',
                         },
                       });
                     }}>

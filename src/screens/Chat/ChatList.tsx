@@ -1,5 +1,5 @@
 import { StyleSheet, Alert } from 'react-native';
-import React, { Suspense, useCallback, useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import ChatListItem from '../../components/organisms/Chat/ChatListItem';
 import { ChatParamList, ChatStackScreenProps } from 'navigators/types';
 import { useMyChatListQuery } from '/hooks/queries/chat.queries';
@@ -10,12 +10,16 @@ import { ScrollView } from 'react-native-gesture-handler';
 type ChatListScreenProps = ChatStackScreenProps<'ChatList'>;
 function ChatList({ navigation }: ChatListScreenProps) {
   // TODO: ChatRoom ID를 parameter로.
-  const navigateToChatRoom = useCallback(
-    (param: ChatParamList) => {
-      navigation.navigate('ChatRoom', param);
-    },
-    [navigation],
-  );
+  const navigateToChatRoom = (param: ChatParamList) => {
+    navigation.push('ChatRoom', param);
+  };
+
+  // useLayoutEffect(() => {
+  //   const routeName = getFocusedRouteNameFromRoute(route);
+  //   if (routeName === 'ChatRoom') {
+
+  //   }
+  // }, [navigation, route]);
 
   // TODO: useInfiniteQuery로 변경
   const [limit, setLimit] = useState(100);
