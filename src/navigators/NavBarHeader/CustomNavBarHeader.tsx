@@ -1,20 +1,42 @@
 // import { StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { Appbar, Menu, useTheme } from 'react-native-paper';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
-interface Props extends NativeStackHeaderProps {
-  title: string;
-}
-const CustomNavBarHeader = ({ navigation, back, title }: Props) => {
+import { Route } from '@react-navigation/native';
+import { ChatParamList } from '../types';
+type Props = NativeStackHeaderProps & {
+  route: Route<string, ChatParamList | undefined>;
+};
+
+const CustomNavBarHeader = ({ navigation, back, route }: Props) => {
   const theme = useTheme();
   const [visible, setVisible] = React.useState(false);
+  const [newBack, setNewBack] = React.useState(back);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+  const [title, setTitle] = React.useState(route.name);
+  useLayoutEffect(() => {
+    if (
+      route.name === 'ChatRoom' &&
+      back === undefined &&
+      navigation.canGoBack() === true
+    ) {
+      setNewBack({ title: 'ChatList' });
+    }
+    // setCanGoBack(navigation.canGoBack());
+    if (route && route.params && route.params.chatRoomName !== undefined) {
+      setTitle(route.params.chatRoomName);
+    }
+    return () => {
+      setTitle(route.name);
+    };
+    // console.log(navigation);
+  }, [back, navigation, route]);
   return (
     <Appbar.Header>
-      {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
+      {newBack ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
       <Appbar.Content title={title} color={theme.colors.onBackground} />
-      {!back ? (
+      {!newBack ? (
         <Menu
           visible={visible}
           onDismiss={closeMenu}

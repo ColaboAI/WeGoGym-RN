@@ -64,6 +64,9 @@ const ChatListItem = ({
         onPress({
           chatRoomId: id,
           chatRoomName: title,
+          chatRoomDescription: description,
+          chatRoomMembers: members,
+          chatRoomType: members.length > 2 ? 'group' : 'direct',
         } as ChatParamList)
       }
     />

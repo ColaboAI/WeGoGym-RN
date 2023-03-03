@@ -7,6 +7,8 @@ import {
   NotificationsScreen,
   PostingScreen,
   UserScreen,
+  SettingScreen,
+  ProfileEditScreen,
 } from '../screens';
 import DetailsNavBarHeader from './NavBarHeader/DetailsNavBarHeader';
 import { HomeStackParamList, CustomTabScreenProps } from './types';
@@ -83,6 +85,16 @@ function Home({ navigation, route }: Props) {
       <Stack.Screen
         name="User"
         component={UserScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Setting"
+        component={SettingScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProfileEdit"
+        component={ProfileEditScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
