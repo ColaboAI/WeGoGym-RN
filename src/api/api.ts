@@ -326,6 +326,24 @@ async function getMyChatList(param: {
   }
 }
 
+async function getChatRoom(id: string): Promise<ChatRoom> {
+  try {
+    const res = await apiClient.get(`/chat/rooms/${id}`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function getChatMessages(id: string): Promise<ChatMessage[]> {
+  try {
+    const res = await apiClient.get(`/chat/rooms/${id}/messages`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export {
   postLogin,
   postRegister,
@@ -345,4 +363,6 @@ export {
   getRecommendedMates,
   getUserInfo,
   getMyChatList,
+  getChatRoom,
+  getChatMessages,
 };
