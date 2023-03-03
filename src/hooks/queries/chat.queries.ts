@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getMyChatList } from '@api/api';
+import { getChatMessages, getChatRoom, getMyChatList } from '@api/api';
 import { Alert } from 'react-native';
 import { AxiosError } from 'axios';
 
@@ -17,6 +17,36 @@ export function useMyChatListQuery(limit: number, offset: number) {
         '참여자  ',
         data.items.map(i => i.members),
       );
+    },
+    suspense: true,
+  });
+}
+
+export function useChatRoomQuery(chatRoomId: string) {
+  return useQuery({
+    queryKey: ['chatRoom', chatRoomId],
+    queryFn: () => getChatRoom(chatRoomId),
+    retry: 1,
+    onError: (error: AxiosError) => {
+      Alert.alert(`채팅방 정보를 가져오는데 실패하였습니다: ${error.message}`);
+    },
+    onSuccess(data) {
+      console.log('채팅방 정보를 가져왔습니다: ', data);
+    },
+    suspense: true,
+  });
+}
+
+export function useChatMessagesQuery(chatRoomId: string) {
+  return useQuery({
+    queryKey: ['chatMessages', chatRoomId],
+    queryFn: () => getChatMessages(chatRoomId),
+    retry: 1,
+    onError: (error: AxiosError) => {
+      Alert.alert(`채팅 메시지를 가져오는데 실패하였습니다: ${error.message}`);
+    },
+    onSuccess(data) {
+      console.log('채팅 메시지를 가져왔습니다: ', data);
     },
     suspense: true,
   });
