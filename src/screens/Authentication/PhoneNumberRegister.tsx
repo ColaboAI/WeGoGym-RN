@@ -54,7 +54,7 @@ export default function PhoneNumberScreen({ navigation }: Props) {
   }, []);
 
   async function signInWithPhoneNumber(_phoneNumber: string) {
-    await save('phoneNumber', phoneNumber);
+    save('phoneNumber', phoneNumber);
     const fbAuth = auth();
     try {
       const confirmation = await fbAuth.signInWithPhoneNumber(

@@ -23,9 +23,6 @@ export default function SettingScreen() {
 
   const [isPushAlarmSwitchOn, setIsPushAlarmSwitchOn] = useState(false);
   const [isMarketingSwitchOn, setIsMarketingSwitchOn] = useState(false);
-  // const [myPhoneNumber, setMyPhoneNumber] = useState(
-  //   await getValueFor('phoneNumber'),
-  // );
 
   const onTogglePushAlarmSwitch = () =>
     setIsPushAlarmSwitchOn(!isPushAlarmSwitchOn);

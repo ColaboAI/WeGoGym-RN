@@ -42,7 +42,7 @@ function useAxiosInterceptor() {
   apiClient.interceptors.request.use(
     async config => {
       const originalRequest = config;
-      const tokenData = await getValueFor('token');
+      const tokenData = getValueFor('token');
       if (tokenData) {
         originalRequest.headers.Authorization = `Bearer ${tokenData}`;
       }
@@ -86,8 +86,8 @@ function useAxiosInterceptor() {
           setIsTokenRefreshing(true);
           try {
             const data = await refreshAccessToken({
-              token: await getValueFor('token'),
-              refreshToken: await getValueFor('refreshToken'),
+              token: getValueFor('token'),
+              refreshToken: getValueFor('refreshToken'),
             });
             const { token: newAccessToken, refreshToken: newRefresh } = data;
             authActions.refreshToken(newAccessToken, newRefresh);

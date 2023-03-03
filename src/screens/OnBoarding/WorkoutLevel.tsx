@@ -21,7 +21,9 @@ export default function WorkoutLevelScreen({ navigation }: Props) {
     return (
       <Button
         style={[style.button]}
-        mode={buttons[id].split('(')[0] === workoutLevel ? 'contained' : 'elevated'}
+        mode={
+          buttons[id].split('(')[0] === workoutLevel ? 'contained' : 'elevated'
+        }
         onPress={() => {
           setWorkoutLevel(buttons[id].split('(')[0]);
         }}>
@@ -53,8 +55,8 @@ export default function WorkoutLevelScreen({ navigation }: Props) {
         <Button
           mode="contained"
           disabled={!workoutLevel}
-          onPress={async () => {
-            await save('workoutLevel', workoutLevel);
+          onPress={() => {
+            save('workoutLevel', workoutLevel);
             navigation.navigate('WorkoutGoal');
           }}>
           확인

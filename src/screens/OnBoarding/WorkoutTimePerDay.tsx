@@ -47,8 +47,8 @@ export default function WorkoutTimePerDayScreen({ navigation }: Props) {
         <Button
           mode="contained"
           disabled={!howLong}
-          onPress={async () => {
-            await save('workoutTimePerDay', howLong);
+          onPress={() => {
+            save('workoutTimePerDay', howLong);
             navigation.navigate('WorkoutPerWeek');
           }}>
           확인
