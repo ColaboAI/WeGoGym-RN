@@ -22,6 +22,10 @@ const CustomNavBarHeader = ({ navigation, back, route }: Props) => {
       navigation.canGoBack() === true
     ) {
       setNewBack({ title: 'ChatList' });
+      navigation.reset({
+        index: 1,
+        routes: [{ name: 'ChatList' }, { name: 'ChatRoom' }],
+      });
     }
     // setCanGoBack(navigation.canGoBack());
     if (route && route.params && route.params.chatRoomName !== undefined) {
@@ -34,7 +38,9 @@ const CustomNavBarHeader = ({ navigation, back, route }: Props) => {
   }, [back, navigation, route]);
   return (
     <Appbar.Header>
-      {newBack ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
+      {newBack ? (
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+      ) : null}
       <Appbar.Content title={title} color={theme.colors.onBackground} />
       {!newBack ? (
         <Menu
