@@ -51,8 +51,8 @@ export default function WorkoutPerWeekScreen({ navigation }: Props) {
         <Button
           mode="contained"
           disabled={!workoutPerWeek}
-          onPress={async () => {
-            await save('workoutPerWeek', workoutPerWeek);
+          onPress={() => {
+            save('workoutPerWeek', workoutPerWeek);
             navigation.navigate('WorkoutLevel');
           }}>
           확인

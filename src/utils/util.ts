@@ -9,18 +9,18 @@ export function getGoal(goals: WorkoutGoal[]) {
     .join(',');
 }
 
-export async function getInfo(): Promise<UserCreate> {
-  const phoneNumber = (await getValueFor('phoneNumber')) ?? '';
-  const username = (await getValueFor('username')) ?? '';
-  const gender = (await getValueFor('gender')) ?? '';
-  const age = (await getValueFor('age')) ?? '0';
-  const height = (await getValueFor('height')) ?? '0';
-  const weight = (await getValueFor('weight')) ?? '0';
-  const workoutPerWeek = (await getValueFor('workoutPerWeek')) ?? '0';
-  const workoutTimePeriod = (await getValueFor('workoutTimePeriod')) ?? '';
-  const workoutTimePerDay = (await getValueFor('workoutTimePerDay')) ?? '';
-  const workoutLevel = (await getValueFor('workoutLevel')) ?? '';
-  const workoutGoal = (await getValueFor('workoutGoal')) ?? '';
+export function getInfo(): UserCreate {
+  const phoneNumber = getValueFor('phoneNumber') ?? '';
+  const username = getValueFor('username') ?? '';
+  const gender = getValueFor('gender') ?? '';
+  const age = getValueFor('age') ?? '0';
+  const height = getValueFor('height') ?? '0';
+  const weight = getValueFor('weight') ?? '0';
+  const workoutPerWeek = getValueFor('workoutPerWeek') ?? '0';
+  const workoutTimePeriod = getValueFor('workoutTimePeriod') ?? '';
+  const workoutTimePerDay = getValueFor('workoutTimePerDay') ?? '';
+  const workoutLevel = getValueFor('workoutLevel') ?? '';
+  const workoutGoal = getValueFor('workoutGoal') ?? '';
 
   const info = {
     phoneNumber,

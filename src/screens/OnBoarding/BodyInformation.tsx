@@ -65,10 +65,10 @@ export default function BodyInformationScreen({ navigation }: Props) {
           <Button
             mode="contained"
             disabled={age.length < 1 || height.length < 1 || weight.length < 1}
-            onPress={async () => {
-              await save('age', age);
-              await save('height', height);
-              await save('weight', weight);
+            onPress={() => {
+              save('age', age);
+              save('height', height);
+              save('weight', weight);
               navigation.navigate('WorkoutTimePeriod');
             }}>
             확인

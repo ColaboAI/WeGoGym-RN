@@ -29,9 +29,9 @@ export function useGetUserInfoQuery(id: string) {
       Alert.alert(`유저 정보를 가져오는데 실패하였습니다: ${error.message}`);
       // TODO: Refactor this
       if (error.response?.status === 404 || error.response?.status === 500) {
-        await clear('token');
-        await clear('refreshToken');
-        await clear('phoneNumber');
+        clear('token');
+        clear('refreshToken');
+        clear('phoneNumber');
       }
 
       console.log(error);
