@@ -18,12 +18,12 @@ function Chat({ navigation, route }: Props) {
     }
   }, [navigation, route]);
   // TODO: 채팅방 이름 헤더에 띄우기
-  const headerTitle = '채팅';
+
   return (
     <Stack.Navigator
       initialRouteName="ChatList"
       screenOptions={{
-        header: props => <CustomNavBarHeader title={headerTitle} {...props} />,
+        header: props => <CustomNavBarHeader {...props} />,
       }}>
       <Stack.Screen name="ChatList" component={ChatListScreen} />
       <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />

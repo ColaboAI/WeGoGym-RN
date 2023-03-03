@@ -7,9 +7,10 @@ export type ChatParamList = {
   userId?: string;
   chatRoomId?: string;
   chatRoomName?: string;
+  chatRoomDescription?: string;
   chatRoomImage?: string;
   chatRoomType?: string;
-  chatRoomUserIds?: string[];
+  chatRoomMembers?: ChatRoomMember[];
 };
 
 export type ChatStackParamList = {
