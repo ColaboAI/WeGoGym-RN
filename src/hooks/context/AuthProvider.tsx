@@ -117,6 +117,10 @@ function AuthProvider({ children }: AuthProviderProps) {
         } catch (e) {
           const err = e as Error;
           Alert.alert('회원가입 실패', `${err.name}: ${err.message}`);
+          setAuthState(prevState => ({
+            ...prevState,
+            isLoading: false,
+          }));
         }
       },
       getTokenFromStorage: async () => {
