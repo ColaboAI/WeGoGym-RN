@@ -30,7 +30,7 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
 
   return (
     <View style={[styles.ChatRoomContainer, { marginBottom: inset.bottom }]}>
-      <>
+      {/* <>
         <FlatList
           contentContainerStyle={styles.contentContainer}
           data={messages}
@@ -53,7 +53,7 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
         ) : (
           <InputToolbar />
         )}
-      </>
+      </> */}
     </View>
   );
 }
