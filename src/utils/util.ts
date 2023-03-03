@@ -141,7 +141,7 @@ export function getRelativeTime(date: Date | string) {
   let differSec = delta / 1000;
 
   if (differSec < 1) {
-    return (result = 'right now');
+    return (result = '방금');
   }
   if (differSec < 60) {
     return (result = `${Math.floor(differSec)} 초 전`);
