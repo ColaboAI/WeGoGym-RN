@@ -1,6 +1,5 @@
 package com.wegogym;
 
-import android.content.res.Configuration;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;

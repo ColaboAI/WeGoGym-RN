@@ -22,8 +22,6 @@ import {
 import customLightColors from './src/theme/customLightColors.json';
 import customDarkColors from './src/theme/customDarkColors.json';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import 'react-native-gesture-handler';
-import 'react-native-get-random-values';
 import AuthProvider from 'hooks/context/AuthProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
