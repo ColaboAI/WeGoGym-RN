@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import React, { Suspense, useCallback, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { HomeStackScreenProps } from 'navigators/types';
 import {
   Text,
@@ -17,7 +17,12 @@ import {
   Divider,
   IconButton,
 } from 'react-native-paper';
-import { getLocaleDate, getLocaleTime } from 'utils/util';
+import {
+  getLocaleDate,
+  getLocaleTime,
+  isAcceptedParticipant,
+  isRequested,
+} from 'utils/util';
 import {
   useGetWorkoutByIdQuery,
   useWorkoutDeleteMutation,
@@ -40,24 +45,18 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const { reset } = useQueryErrorResetBoundary();
   const inset = useSafeAreaInsets();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
+  const [isParticipationCancel, setIsParticipationCancel] =
+    useState<number>(-1);
 
   const onPressParticipation = useCallback(async () => {
     setIsBottomSheetOpen(true);
   }, []);
 
+  const onPressParticipationCancel = useCallback(async () => {}, []);
+
   const navigationToHome = useCallback(() => {
     navigation.navigate('Home');
   }, [navigation]);
-
-  const isAcceptedParticipant = useCallback(
-    (paticipants: WorkoutParictipantsRead[]) => {
-      const acceptedParticipants = paticipants.filter(
-        participant => participant.status === 'ACCEPTED',
-      );
-      return acceptedParticipants.length;
-    },
-    [],
-  );
 
   const isAdmin = useCallback((userId: string, adminUserId: string) => {
     return userId === adminUserId;
@@ -79,6 +78,13 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
       },
     ]);
   };
+
+  useEffect(() => {
+    if (myInfo && query.data) {
+      const result = isRequested(query.data.participants, myInfo.id);
+      setIsParticipationCancel(result);
+    }
+  }, [myInfo, query.data]);
 
   return (
     <Suspense fallback={<WorkoutPromiseLoader />}>
@@ -206,12 +212,19 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                     style={style.button}>
                     모집 완료
                   </Button>
-                ) : (
+                ) : isParticipationCancel === 0 ? (
                   <Button
                     mode="contained"
                     onPress={onPressParticipation}
                     style={style.button}>
                     참여 요청
+                  </Button>
+                ) : (
+                  <Button
+                    mode="contained"
+                    onPress={onPressParticipationCancel}
+                    style={style.button}>
+                    참여 취소
                   </Button>
                 )}
               </View>
@@ -225,7 +238,6 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
               setIsBottomSheetOpen={setIsBottomSheetOpen}
               workoutPromiseId={workoutPromiseId}
               username={myInfo.username}
-              navigationToHome={navigationToHome}
             />
           ) : (
             <></>

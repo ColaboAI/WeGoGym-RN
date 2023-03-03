@@ -14,7 +14,6 @@ type Props = {
   setIsBottomSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
   workoutPromiseId: string;
   username: string;
-  navigationToHome: () => void;
 };
 
 const ParticipationBottomSheet = ({
@@ -22,7 +21,6 @@ const ParticipationBottomSheet = ({
   setIsBottomSheetOpen,
   workoutPromiseId,
   username,
-  navigationToHome,
 }: Props) => {
   const theme = useTheme();
   const workoutParticipantMutation = useWorkoutParticipantMutation();
@@ -123,7 +121,6 @@ const ParticipationBottomSheet = ({
           setIsBottomSheetOpen(false);
           Keyboard.dismiss();
           onPressPostParticipation();
-          navigationToHome();
         }}>
         참여하기
       </Button>
