@@ -53,6 +53,50 @@ async function deleteWorkoutPromise(id: string): Promise<void> {
   }
 }
 
+async function putWorkoutPromiseStatus({
+  workoutPromiseId,
+  workoutPromise,
+  gymInfo,
+}: {
+  workoutPromiseId: string;
+  workoutPromise: WorkoutPromiseUpdate;
+  gymInfo: GymCreate | null;
+}): Promise<WorkoutPromiseRead> {
+  try {
+    const res = await apiClient.patch(`/workout-promise/${workoutPromiseId}`, {
+      workoutPromise,
+      gymInfo,
+    });
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
+async function putWorkoutPromiseInfo({
+  workoutPromise,
+  gymInfo,
+}: {
+  workoutPromise: WorkoutPromiseUpdate;
+  gymInfo: GymCreate | null;
+}): Promise<WorkoutPromiseRead> {
+  try {
+    const res = await apiClient.post('/workout-promise', {
+      workoutPromise,
+      gymInfo,
+    });
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
 async function postWorkoutParticipant({
   workoutParticipant,
   workoutPromiseId,
@@ -64,7 +108,6 @@ async function postWorkoutParticipant({
     const res = await apiClient.post(
       `/workout-promise/${workoutPromiseId}/participants`,
       {
-        // user_id: workoutParticipant.userId,
         status_message: workoutParticipant.statusMessage,
         name: workoutParticipant.name,
       },
@@ -222,6 +265,8 @@ export {
   postRegister,
   postWorkoutPromise,
   deleteWorkoutPromise,
+  putWorkoutPromiseStatus,
+  putWorkoutPromiseInfo,
   postWorkoutParticipant,
   deleteWorkoutParticipant,
   getWorkoutPromise,

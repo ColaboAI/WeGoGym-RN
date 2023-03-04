@@ -6,6 +6,7 @@ import {
   postWorkoutParticipant,
   deleteWorkoutPromise,
   deleteWorkoutParticipant,
+  putWorkoutPromiseStatus,
 } from '@api/api';
 import { Alert } from 'react-native';
 
@@ -103,5 +104,20 @@ export function useGetWorkoutByIdQuery(id: string) {
       console.log(error);
     },
     suspense: true,
+  });
+}
+
+export function useWorkoutRecruitEndMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: putWorkoutPromiseStatus,
+    onError: (error: Error) => {
+      Alert.alert(`모집을 마감할 수 없습니다: ${error.message}`);
+    },
+    onSuccess(data) {
+      console.log(data);
+      Alert.alert('모집 마감을 완료하였어요!');
+      queryClient.invalidateQueries(['getWorkoutById', data.id]);
+    },
   });
 }

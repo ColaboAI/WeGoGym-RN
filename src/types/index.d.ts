@@ -76,7 +76,6 @@ interface WorkoutPromiseRead extends timestampMixin {
   title: string;
   description: string;
   maxParticipants: number;
-
   promiseTime: Date;
   recruitEndTime: Date | null;
   status: string;
@@ -86,6 +85,17 @@ interface WorkoutPromiseRead extends timestampMixin {
   adminUserId: string;
   gymInfo: Gym | null;
   participants: WorkoutParticipantsRead[];
+}
+
+interface WorkoutPromiseUpdate {
+  title?: string;
+  description?: string;
+  isPrivate?: boolean;
+  maxParticipants?: number;
+  promise_time?: Date;
+  recruit_end_time?: Date | null;
+  gymInfo?: Gym | null;
+  status?: string;
 }
 
 interface WorkoutPromiseListRead {

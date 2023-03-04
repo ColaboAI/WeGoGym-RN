@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useState } from 'react';
 import { HomeStackScreenProps } from 'navigators/types';
 import {
   Text,
@@ -22,12 +22,15 @@ import {
   getLocaleTime,
   isAcceptedParticipant,
   isAdmin,
+  isRecruitedEnded,
+  isRecruiting,
   isRequested,
 } from 'utils/util';
 import {
   useGetWorkoutByIdQuery,
   useWorkoutDeleteMutation,
   useWorkoutParticipantDeleteMutation,
+  useWorkoutRecruitEndMutation,
 } from '/hooks/queries/workout.queries';
 import WorkoutPromiseLoader from '/components/molecules/Home/WorkoutPromiseLoader';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -47,11 +50,10 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const deleteWorkoutMutation = useWorkoutDeleteMutation();
   const deleteParticipationMutation =
     useWorkoutParticipantDeleteMutation(workoutPromiseId);
+  const updateWorkoutStatusMutation = useWorkoutRecruitEndMutation();
   const { reset } = useQueryErrorResetBoundary();
   const inset = useSafeAreaInsets();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
-  const [isParticipationCancel, setIsParticipationCancel] =
-    useState<number>(-1);
 
   const onPressParticipation = useCallback(async () => {
     setIsBottomSheetOpen(true);
@@ -94,12 +96,28 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
     ]);
   };
 
-  useEffect(() => {
-    if (myInfo && query.data) {
-      const result = isRequested(query.data.participants, myInfo.id);
-      setIsParticipationCancel(result);
-    }
-  }, [myInfo, query.data]);
+  const onRecruitEnd = () => {
+    Alert.alert('모집을 마감하시겠습니까?', '', [
+      {
+        text: '취소',
+        style: 'cancel',
+      },
+      {
+        text: '확인',
+        onPress: async () => {
+          const data = {
+            workoutPromiseId,
+            workoutPromise: {
+              status: 'RECRUIT_ENDED',
+            },
+            gymInfo: null,
+          };
+          updateWorkoutStatusMutation.mutate(data);
+        },
+        style: 'destructive',
+      },
+    ]);
+  };
 
   return (
     <Suspense fallback={<WorkoutPromiseLoader />}>
@@ -127,7 +145,19 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                 <ScrollView>
                   <View style={style.headerBox}>
                     <View style={style.chipBox}>
-                      <Chip style={style.chip}>모집 중</Chip>
+                      {isRecruiting(query.data.status) ? (
+                        <Chip style={style.chip}>모집 중</Chip>
+                      ) : (
+                        <Chip
+                          style={[
+                            style.chip,
+                            {
+                              backgroundColor: theme.colors.surfaceDisabled,
+                            },
+                          ]}>
+                          모집 완료
+                        </Chip>
+                      )}
                     </View>
                     <View style={style.iconBox}>
                       {isAdmin(myInfo.id, query.data.adminUserId) ? (
@@ -245,21 +275,23 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                     </View>
                   </View>
                 </ScrollView>
-                {isAdmin(myInfo.id, query.data.adminUserId) ? (
+                {isAdmin(myInfo.id, query.data.adminUserId) &&
+                isRecruiting(query.data.status) ? (
                   <Button
                     mode="contained"
-                    onPress={() => {}}
+                    onPress={onRecruitEnd}
                     style={style.button}>
                     모집 완료
                   </Button>
-                ) : isParticipationCancel === 0 ? (
+                ) : isRecruitedEnded(query.data.status) ? (
                   <Button
                     mode="contained"
-                    onPress={onPressParticipation}
+                    disabled={true}
+                    onPress={() => {}}
                     style={style.button}>
-                    참여 요청
+                    모집 마감
                   </Button>
-                ) : (
+                ) : isRequested(query.data.participants, myInfo.id) ? (
                   <Button
                     mode="contained"
                     onPress={() => {
@@ -267,6 +299,13 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                     }}
                     style={style.button}>
                     참여 취소
+                  </Button>
+                ) : (
+                  <Button
+                    mode="contained"
+                    onPress={onPressParticipation}
+                    style={style.button}>
+                    참여 요청
                   </Button>
                 )}
               </View>
