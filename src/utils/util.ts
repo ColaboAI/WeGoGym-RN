@@ -167,6 +167,14 @@ export function isAdmin(userId: string, adminUserId: string) {
   return userId === adminUserId;
 }
 
+export function isRecruiting(status: string) {
+  return status === 'RECRUITING';
+}
+
+export function isRecruitedEnded(status: string) {
+  return status === 'RECRUIT_ENDED';
+}
+
 export function isAcceptedParticipant(paticipants: WorkoutParictipantsRead[]) {
   const acceptedParticipants = paticipants.filter(
     participant => participant.status === 'ACCEPTED',
@@ -193,5 +201,5 @@ export function isRequested(
       participant.userId === userId,
   );
 
-  return requestedParticipants.length;
+  return requestedParticipants.length !== 0;
 }
