@@ -171,7 +171,16 @@ export function isAcceptedParticipant(paticipants: WorkoutParictipantsRead[]) {
   const acceptedParticipants = paticipants.filter(
     participant => participant.status === 'ACCEPTED',
   );
-  return acceptedParticipants.length;
+  // admin이 먼저 나오도록 정렬
+  const result = acceptedParticipants
+    .filter(acceptedParticipant => acceptedParticipant.isAdmin === true)
+    .concat(
+      acceptedParticipants.filter(
+        acceptedParticipant => acceptedParticipant.isAdmin === false,
+      ),
+    );
+  console.log('result', result);
+  return result;
 }
 
 export function isRequested(
@@ -180,7 +189,8 @@ export function isRequested(
 ) {
   const requestedParticipants = paticipants.filter(
     participant =>
-      participant.status === 'PENDING' && participant.userId === userId,
+      (participant.status === 'PENDING' || participant.status === 'ACCEPTED') &&
+      participant.userId === userId,
   );
 
   return requestedParticipants.length;

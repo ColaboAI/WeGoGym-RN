@@ -47,7 +47,8 @@ const WorkoutPromiseCard = ({
                 📍 {gymInfo ? gymInfo.name : '위치 미정'}
               </Text>
               <Text>
-                👥 {isAcceptedParticipant(participants)}/{maxParticipants} 참여
+                👥 {isAcceptedParticipant(participants).length}/
+                {maxParticipants} 참여
               </Text>
             </>
           </Card.Content>
