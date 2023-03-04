@@ -53,7 +53,7 @@ async function deleteWorkoutPromise(id: string): Promise<void> {
   }
 }
 
-async function putWorkoutPromiseStatus({
+async function putWorkoutPromiseInfo({
   workoutPromiseId,
   workoutPromise,
   gymInfo,
@@ -64,27 +64,6 @@ async function putWorkoutPromiseStatus({
 }): Promise<WorkoutPromiseRead> {
   try {
     const res = await apiClient.patch(`/workout-promise/${workoutPromiseId}`, {
-      workoutPromise,
-      gymInfo,
-    });
-    return res.data;
-  } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
-    throw e;
-  }
-}
-
-async function putWorkoutPromiseInfo({
-  workoutPromise,
-  gymInfo,
-}: {
-  workoutPromise: WorkoutPromiseUpdate;
-  gymInfo: GymCreate | null;
-}): Promise<WorkoutPromiseRead> {
-  try {
-    const res = await apiClient.post('/workout-promise', {
       workoutPromise,
       gymInfo,
     });
@@ -265,7 +244,6 @@ export {
   postRegister,
   postWorkoutPromise,
   deleteWorkoutPromise,
-  putWorkoutPromiseStatus,
   putWorkoutPromiseInfo,
   postWorkoutParticipant,
   deleteWorkoutParticipant,
