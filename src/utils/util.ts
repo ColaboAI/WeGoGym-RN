@@ -163,23 +163,26 @@ export function getRelativeTime(date: Date | string) {
   return result;
 }
 
+// admin인가
 export function isAdmin(userId: string, adminUserId: string) {
   return userId === adminUserId;
 }
 
+// 모집 중인가
 export function isRecruiting(status: string) {
   return status === 'RECRUITING';
 }
 
+// 모집이 끝났는가
 export function isRecruitedEnded(status: string) {
   return status === 'RECRUIT_ENDED';
 }
 
+// 참여자 중에서 수락된 사람만 가져오기(admin이 먼저 나오도록 정렬)
 export function isAcceptedParticipant(paticipants: WorkoutParictipantsRead[]) {
   const acceptedParticipants = paticipants.filter(
     participant => participant.status === 'ACCEPTED',
   );
-  // admin이 먼저 나오도록 정렬
   const result = acceptedParticipants
     .filter(acceptedParticipant => acceptedParticipant.isAdmin === true)
     .concat(
@@ -187,10 +190,10 @@ export function isAcceptedParticipant(paticipants: WorkoutParictipantsRead[]) {
         acceptedParticipant => acceptedParticipant.isAdmin === false,
       ),
     );
-  console.log('result', result);
   return result;
 }
 
+// 참여 요청을 보낸 적이 있는가
 export function isRequested(
   paticipants: WorkoutParictipantsRead[],
   userId: string,

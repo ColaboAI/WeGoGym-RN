@@ -52,7 +52,7 @@ interface WorkoutPromiseCreate {
   title: string;
   description: string;
   promise_time: Date;
-  recruit_end_time: Date | null;
+  recruit_end_time: Date;
   maxParticipants: number;
   isPrivate: boolean;
 }
@@ -77,7 +77,7 @@ interface WorkoutPromiseRead extends timestampMixin {
   description: string;
   maxParticipants: number;
   promiseTime: Date;
-  recruitEndTime: Date | null;
+  recruitEndTime: Date;
   status: string;
   // chatRoomId: string | null;
   // chatRoom: ChatRoom | null;

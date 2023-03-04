@@ -24,6 +24,7 @@ export type HomeStackParamList = {
   Posting: undefined;
   Notifications: undefined;
   MyWorkoutPromises: undefined;
+  PromiseEdit: { workoutInfo: WorkoutPromiseRead };
 } & UserStackParamList;
 
 export type AuthStackParamList = {

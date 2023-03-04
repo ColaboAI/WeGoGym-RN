@@ -30,7 +30,7 @@ import {
   useGetWorkoutByIdQuery,
   useWorkoutDeleteMutation,
   useWorkoutParticipantDeleteMutation,
-  useWorkoutRecruitEndMutation,
+  usePutWorkoutStatusMutation,
 } from '/hooks/queries/workout.queries';
 import WorkoutPromiseLoader from '/components/molecules/Home/WorkoutPromiseLoader';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -50,7 +50,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const deleteWorkoutMutation = useWorkoutDeleteMutation();
   const deleteParticipationMutation =
     useWorkoutParticipantDeleteMutation(workoutPromiseId);
-  const updateWorkoutStatusMutation = useWorkoutRecruitEndMutation();
+  const updateWorkoutStatusMutation = usePutWorkoutStatusMutation();
   const { reset } = useQueryErrorResetBoundary();
   const inset = useSafeAreaInsets();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
@@ -62,6 +62,13 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const navigationToHome = useCallback(() => {
     navigation.navigate('Home');
   }, [navigation]);
+
+  const navigationToPromiseEdit = useCallback(
+    (workoutInfo: WorkoutPromiseRead) => {
+      navigation.navigate('PromiseEdit', { workoutInfo });
+    },
+    [navigation],
+  );
 
   const onDeleteWorkout = () => {
     Alert.alert('게시글을 삭제하시겠습니까?', '', [
@@ -164,8 +171,9 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                         <>
                           <IconButton
                             icon="create-outline"
-                            // TODO: 운동 약속 편집 화면으로 이동
-                            onPress={() => {}}
+                            onPress={() => {
+                              navigationToPromiseEdit(query.data);
+                            }}
                           />
                           <IconButton
                             icon="trash-outline"
