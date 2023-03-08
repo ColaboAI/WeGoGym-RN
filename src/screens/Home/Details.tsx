@@ -169,12 +169,14 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                     <View style={style.iconBox}>
                       {isAdmin(myInfo.id, query.data.adminUserId) ? (
                         <>
-                          <IconButton
-                            icon="create-outline"
-                            onPress={() => {
-                              navigationToPromiseEdit(query.data);
-                            }}
-                          />
+                          {isRecruiting(query.data.status) ? (
+                            <IconButton
+                              icon="create-outline"
+                              onPress={() => {
+                                navigationToPromiseEdit(query.data);
+                              }}
+                            />
+                          ) : null}
                           <IconButton
                             icon="trash-outline"
                             onPress={onDeleteWorkout}
