@@ -11,21 +11,6 @@ interface timestampMixin {
   updatedAt: Date;
 }
 
-interface Message {
-  _id: string | number;
-  text: string;
-  createdAt: Date | number;
-  user: User;
-  isLeft: boolean;
-  image?: string;
-  // video?: string;
-  // audio?: string;
-  // system?: boolean;
-  sent?: boolean;
-  received?: boolean;
-  // pending?: boolean;
-}
-
 interface WorkoutGoal {
   id: number;
   goal: string;
@@ -206,14 +191,27 @@ type ChatRoom = {
   lastMessageCreatedAt: Date;
   unreadCount: number;
   members: ChatRoomMember[];
+  isPrivate: boolean;
+  isGroupChat: boolean;
+  // admin user id
+  createdBy: string;
 };
-type ChatMessage = {
+
+type ChatRoomCreate = {
+  name: string;
+  description: string;
+  member_user_ids: string[];
+  isPrivate: boolean;
+  isGroupChat: boolean;
+};
+
+type Message = {
   id: string;
-  createdAt: Date;
   chatRoomId: string;
   userId: string;
   text: string;
-  media_url: string;
+  media_url?: string;
+  createdAt: Date;
 };
 
 type ChatRoomMember = {
@@ -232,4 +230,10 @@ type ChatRoomMemberListResponse = {
 type ChatRoomListResponse = {
   total: number;
   items: ChatRoom[];
+};
+
+type MessageListResponse = {
+  total: number;
+  nextCursor: int | null;
+  items: Message[];
 };

@@ -335,9 +335,40 @@ async function getChatRoom(id: string): Promise<ChatRoom> {
   }
 }
 
-async function getChatMessages(id: string): Promise<ChatMessage[]> {
+async function getChatMessages(
+  id: string | undefined,
+  limit: number,
+  offset: number,
+): Promise<MessageListResponse> {
+  if (id === undefined) {
+    return {
+      total: 0,
+      nextCursor: null,
+      items: [],
+    };
+  }
   try {
-    const res = await apiClient.get(`/chat/rooms/${id}/messages`);
+    const res = await apiClient.get(
+      `/chat/rooms/${id}/messages?limit=${limit}&offset=${offset}`,
+    );
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function getDirectChatRoom(id: string): Promise<ChatRoom> {
+  try {
+    const res = await apiClient.get(`/chat/rooms/direct?user_ids=${id}`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function postChatRoom(params: ChatRoomCreate): Promise<ChatRoom> {
+  try {
+    const res = await apiClient.post('/chat/rooms', params);
     return res.data;
   } catch (e) {
     throw e;
@@ -365,4 +396,6 @@ export {
   getMyChatList,
   getChatRoom,
   getChatMessages,
+  getDirectChatRoom,
+  postChatRoom,
 };
