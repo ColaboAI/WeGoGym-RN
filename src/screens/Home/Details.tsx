@@ -80,7 +80,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
         text: '확인',
         onPress: async () => {
           deleteWorkoutMutation.mutate(workoutPromiseId);
-          navigationToHome();
+          navigation.goBack();
         },
         style: 'destructive',
       },
