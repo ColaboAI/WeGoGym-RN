@@ -155,6 +155,31 @@ async function getWorkoutPromiseById(id: string): Promise<WorkoutPromiseRead> {
   }
 }
 
+async function getWorkoutPromiseByUserId({
+  userId,
+  limit = 10,
+  offset = null,
+}: {
+  userId: string;
+  limit: number;
+  offset: number | null;
+}): Promise<WorkoutPromiseListRead> {
+  try {
+    const res = await apiClient.get(`/workout-promise/user/${userId}`, {
+      params: {
+        limit,
+        offset,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
 async function postRegister(params: UserCreate): Promise<UserLoginResponse> {
   try {
     const res = await apiClient.post('/user/register', params);
@@ -248,6 +273,7 @@ export {
   postWorkoutParticipant,
   deleteWorkoutParticipant,
   getWorkoutPromise,
+  getWorkoutPromiseByUserId,
   getWorkoutPromiseById,
   putMyInfo,
   refreshAccessToken,
