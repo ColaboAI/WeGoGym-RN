@@ -18,9 +18,9 @@ type Props = CustomTabScreenProps<'홈'>;
 
 function Home({ navigation, route }: Props) {
   const notificationTitle = '알림';
-  const postingTitle = '게시글 작성';
-  const myWorkoutPromisesTitle = '내가 쓴 글';
-  const promiseEditTitle = '게시글 수정';
+  const postingTitle = '운동 약속 글쓰기';
+  const myWorkoutPromisesTitle = '나의 운동 약속';
+  const promiseEditTitle = '운동 약속 수정하기';
   useLayoutEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route) || 'Home';
     if (routeName !== 'Home') {

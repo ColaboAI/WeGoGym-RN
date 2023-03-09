@@ -1,5 +1,5 @@
 import React from 'react';
-import { Appbar, useTheme } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 
 interface Props extends NativeStackHeaderProps {
@@ -7,7 +7,6 @@ interface Props extends NativeStackHeaderProps {
 }
 
 const DefaultNavBarHeader = ({ navigation, back, title }: Props) => {
-  const theme = useTheme();
   return (
     <>
       <Appbar.Header>
@@ -21,7 +20,6 @@ const DefaultNavBarHeader = ({ navigation, back, title }: Props) => {
         <Appbar.Content
           title={title}
           titleStyle={{ fontSize: 20, fontWeight: '600' }}
-          color={theme.colors.primary}
         />
       </Appbar.Header>
     </>
