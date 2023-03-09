@@ -7,6 +7,7 @@ import {
   deleteWorkoutPromise,
   deleteWorkoutParticipant,
   putWorkoutPromiseInfo,
+  getWorkoutPromiseByUserId,
 } from '@api/api';
 import { Alert } from 'react-native';
 
@@ -22,6 +23,7 @@ export function useWorkoutMutation() {
       Alert.alert('운동 약속을 만들었어요!');
       // invalidate the query to refetch the data
       queryClient.invalidateQueries(['getWorkout']);
+      queryClient.invalidateQueries(['getWorkoutByUserId']);
     },
   });
 }
@@ -37,6 +39,7 @@ export function useWorkoutDeleteMutation() {
       console.log(data);
       Alert.alert('운동 약속을 삭제했어요!');
       queryClient.invalidateQueries(['getWorkout']);
+      queryClient.invalidateQueries(['getWorkoutByUserId']);
     },
   });
 }
@@ -69,6 +72,7 @@ export function useWorkoutParticipantDeleteMutation(workoutPromiseId: string) {
         '운동 약속 참가 취소 완료하였어요! 다른 운동 약속에 참가해보세요!',
       );
       queryClient.invalidateQueries(['getWorkoutById', workoutPromiseId]);
+      queryClient.invalidateQueries(['getWorkoutByUserId']);
       queryClient.invalidateQueries(['getWorkout']);
     },
   });
@@ -107,6 +111,27 @@ export function useGetWorkoutByIdQuery(id: string) {
   });
 }
 
+export function useGetWorkoutByUserIdQuery(
+  userId: string,
+  limit: number,
+  offset: number,
+) {
+  return useQuery({
+    queryKey: ['getWorkoutByUserId', userId, limit, offset],
+    queryFn: () => getWorkoutPromiseByUserId({ userId, limit, offset }),
+    retry: 1,
+    onError: (error: Error) => {
+      Alert.alert(`운동 약속을 가져오는데 실패하였습니다: ${error.message}`);
+      console.log(error);
+    },
+    onSuccess(data) {
+      console.log(data);
+    },
+    suspense: true,
+    keepPreviousData: true,
+  });
+}
+
 export function usePutWorkoutStatusMutation() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -134,6 +159,7 @@ export function usePutWorkoutMutation() {
       Alert.alert('운동 수정을 완료하였어요!');
       queryClient.invalidateQueries(['getWorkout']);
       queryClient.invalidateQueries(['getWorkoutById', data.id]);
+      queryClient.invalidateQueries(['getWorkoutByUserId']);
     },
   });
 }
