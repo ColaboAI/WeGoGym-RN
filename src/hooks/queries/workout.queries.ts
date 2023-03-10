@@ -7,7 +7,8 @@ import {
   deleteWorkoutPromise,
   deleteWorkoutParticipant,
   putWorkoutPromiseInfo,
-  getWorkoutPromiseByUserId,
+  getWorkoutPromiseWrittenByUserId,
+  getWorkoutPromiseJoinedByUserId,
 } from '@api/api';
 import { Alert } from 'react-native';
 
@@ -21,9 +22,8 @@ export function useWorkoutMutation() {
     onSuccess(data) {
       console.log(data);
       Alert.alert('운동 약속을 만들었어요!');
-      // invalidate the query to refetch the data
       queryClient.invalidateQueries(['getWorkout']);
-      queryClient.invalidateQueries(['getWorkoutByUserId']);
+      queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
     },
   });
 }
@@ -39,7 +39,7 @@ export function useWorkoutDeleteMutation() {
       console.log(data);
       Alert.alert('운동 약속을 삭제했어요!');
       queryClient.invalidateQueries(['getWorkout']);
-      queryClient.invalidateQueries(['getWorkoutByUserId']);
+      queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
     },
   });
 }
@@ -56,6 +56,7 @@ export function useWorkoutParticipantMutation() {
       Alert.alert('운동 약속에 참가 신청을 완료하였어요! 승인을 기다려주세요.');
       queryClient.invalidateQueries(['getWorkoutById', data.workoutPromiseId]);
       queryClient.invalidateQueries(['getWorkout']);
+      queryClient.invalidateQueries(['getWorkoutJoinedByUserId']);
     },
   });
 }
@@ -72,7 +73,7 @@ export function useWorkoutParticipantDeleteMutation(workoutPromiseId: string) {
         '운동 약속 참가 취소 완료하였어요! 다른 운동 약속에 참가해보세요!',
       );
       queryClient.invalidateQueries(['getWorkoutById', workoutPromiseId]);
-      queryClient.invalidateQueries(['getWorkoutByUserId']);
+      queryClient.invalidateQueries(['getWorkoutJoinedByUserId']);
       queryClient.invalidateQueries(['getWorkout']);
     },
   });
@@ -111,17 +112,42 @@ export function useGetWorkoutByIdQuery(id: string) {
   });
 }
 
-export function useGetWorkoutByUserIdQuery(
+export function useGetWorkoutWrittenByUserIdQuery(
   userId: string,
   limit: number,
   offset: number,
 ) {
   return useQuery({
-    queryKey: ['getWorkoutByUserId', userId, limit, offset],
-    queryFn: () => getWorkoutPromiseByUserId({ userId, limit, offset }),
+    queryKey: ['getWorkoutWrittenByUserId', userId, limit, offset],
+    queryFn: () => getWorkoutPromiseWrittenByUserId({ userId, limit, offset }),
     retry: 1,
     onError: (error: Error) => {
-      Alert.alert(`운동 약속을 가져오는데 실패하였습니다: ${error.message}`);
+      Alert.alert(
+        `내가 만든 운동 약속을 가져오는데 실패하였습니다: ${error.message}`,
+      );
+      console.log(error);
+    },
+    onSuccess(data) {
+      console.log(data);
+    },
+    suspense: true,
+    keepPreviousData: true,
+  });
+}
+
+export function useGetWorkoutJoinedByUserIdQuery(
+  userId: string,
+  limit: number,
+  offset: number,
+) {
+  return useQuery({
+    queryKey: ['getWorkoutJoinedByUserId', userId, limit, offset],
+    queryFn: () => getWorkoutPromiseJoinedByUserId({ userId, limit, offset }),
+    retry: 1,
+    onError: (error: Error) => {
+      Alert.alert(
+        `내가 참여한 운동 약속을 가져오는데 실패하였습니다: ${error.message}`,
+      );
       console.log(error);
     },
     onSuccess(data) {
@@ -158,8 +184,9 @@ export function usePutWorkoutMutation() {
       console.log(data);
       Alert.alert('운동 수정을 완료하였어요!');
       queryClient.invalidateQueries(['getWorkout']);
+      queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
+      queryClient.invalidateQueries(['getWorkoutJoinedByUserId']);
       queryClient.invalidateQueries(['getWorkoutById', data.id]);
-      queryClient.invalidateQueries(['getWorkoutByUserId']);
     },
   });
 }
