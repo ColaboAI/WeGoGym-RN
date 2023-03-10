@@ -21,7 +21,10 @@ import {
 } from 'react-native-tab-view';
 import { Button, Headline, useTheme } from 'react-native-paper';
 import { Scene, Event } from 'react-native-tab-view/lib/typescript/src/types';
-import { useGetWorkoutByUserIdQuery } from '/hooks/queries/workout.queries';
+import {
+  useGetWorkoutJoinedByUserIdQuery,
+  useGetWorkoutWrittenByUserIdQuery,
+} from '/hooks/queries/workout.queries';
 import WorkoutPromiseLoader from '/components/molecules/Home/WorkoutPromiseLoader';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
@@ -38,7 +41,17 @@ export default function MyWorkoutPromisesScreen({
   const [limit, setLimit] = useState<number>(10);
   const [offset, setOffset] = useState<number>(0);
   const { reset } = useQueryErrorResetBoundary();
-  const query = useGetWorkoutByUserIdQuery('me', limit, offset);
+
+  const workoutPromiseWrittenByMeQuery = useGetWorkoutWrittenByUserIdQuery(
+    'me',
+    limit,
+    offset,
+  );
+  const workoutPromiseJoinedByMeQuery = useGetWorkoutJoinedByUserIdQuery(
+    'me',
+    limit,
+    offset,
+  );
 
   const navigateToPromiseDetails = useCallback(
     (id: string) => {
@@ -69,9 +82,9 @@ export default function MyWorkoutPromisesScreen({
             style.container,
             { backgroundColor: theme.colors.background },
           ]}>
-          {query.data ? (
+          {workoutPromiseWrittenByMeQuery.data ? (
             <FlatList
-              data={query.data.items}
+              data={workoutPromiseWrittenByMeQuery.data.items}
               keyExtractor={item => item.id}
               contentContainerStyle={style.workoutPromiseContainer}
               initialNumToRender={5}
@@ -96,11 +109,55 @@ export default function MyWorkoutPromisesScreen({
       </ErrorBoundary>
     </Suspense>
   );
+
   // 내가 참여한 운동 약속
   const SecondRoute = () => (
-    <View
-      style={[style.container, { backgroundColor: theme.colors.background }]}
-    />
+    <Suspense fallback={<WorkoutPromiseLoader />}>
+      <ErrorBoundary
+        onReset={reset}
+        fallbackRender={({ resetErrorBoundary }) => (
+          <Headline>
+            There was an error!
+            <Button
+              onPress={() => {
+                resetErrorBoundary();
+                Alert.alert("I'm error boundary");
+              }}>
+              Try again
+            </Button>
+          </Headline>
+        )}>
+        <View
+          style={[
+            style.container,
+            { backgroundColor: theme.colors.background },
+          ]}>
+          {workoutPromiseJoinedByMeQuery.data ? (
+            <FlatList
+              data={workoutPromiseJoinedByMeQuery.data.items}
+              keyExtractor={item => item.id}
+              contentContainerStyle={style.workoutPromiseContainer}
+              initialNumToRender={5}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  key={`work-promise-container-${item.id}`}
+                  onPress={() => {
+                    navigateToPromiseDetails(item.id);
+                  }}>
+                  <WorkoutPromiseCard
+                    key={`work-promise-${item.id}`}
+                    {...item}
+                  />
+                </TouchableOpacity>
+              )}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            <WorkoutPromiseLoader />
+          )}
+        </View>
+      </ErrorBoundary>
+    </Suspense>
   );
 
   const renderScene = SceneMap({
