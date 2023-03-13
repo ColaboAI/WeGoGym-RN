@@ -13,14 +13,15 @@ import {
 } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useCallback, useState } from 'react';
 import { useGetUserInfoQuery } from 'hooks/queries/user.queries';
 import GymInfoLoader from 'components/molecules/Home/GymInfoLoader';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
-import { UserStackScreenProps } from '/navigators/types';
+import { ChatParamList, UserStackScreenProps } from '/navigators/types';
 import InfoCard from 'components/molecules/User/InfoCard';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
+import { getDirectChatRoom } from '/api/api';
 type Props = UserStackScreenProps<'User'>;
 export default function UserScreen({ navigation, route }: Props) {
   const theme = useTheme();
@@ -29,6 +30,34 @@ export default function UserScreen({ navigation, route }: Props) {
   const [isAuthenticated] = useState(true);
   const { data } = useGetUserInfoQuery(id);
   const { reset } = useQueryErrorResetBoundary();
+
+  const handleDirectChatNav = useCallback(async () => {
+    try {
+      const chatRoomData = await getDirectChatRoom(id);
+      const navParams: ChatParamList = {
+        chatRoomId: chatRoomData.id,
+        chatRoomName: chatRoomData.name ? chatRoomData.name : data?.username,
+        chatRoomMembers: chatRoomData.members,
+        chatRoomDescription: chatRoomData.description,
+        isGroupChat: chatRoomData.isGroupChat,
+        userId: data?.id,
+      };
+      navigation.navigate('채팅', {
+        screen: 'ChatRoom',
+        params: navParams,
+      });
+    } catch (e) {
+      console.log('New chat Room has to be created');
+      navigation.navigate('채팅', {
+        screen: 'ChatRoom',
+        params: {
+          userId: data?.id,
+          chatRoomName: data?.username,
+          isGroupChat: false,
+        },
+      });
+    }
+  }, [data?.id, data?.username, id, navigation]);
 
   return (
     <Suspense fallback={<GymInfoLoader />}>
@@ -121,14 +150,7 @@ export default function UserScreen({ navigation, route }: Props) {
                   <Button
                     mode="contained"
                     onPress={() => {
-                      navigation.navigate('채팅', {
-                        screen: 'ChatRoom',
-                        params: {
-                          userId: data?.id,
-                          chatRoomName: data?.username,
-                          chatRoomType: 'direct',
-                        },
-                      });
+                      handleDirectChatNav();
                     }}>
                     채팅하기
                   </Button>
