@@ -29,7 +29,6 @@ const FriendProfileCard = ({
             size={60}
             profilePic={profilePic}
             username={username}
-            userId={id}
           />
         </TouchableOpacity>
       </View>

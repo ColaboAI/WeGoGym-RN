@@ -256,7 +256,6 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                               size={40}
                               profilePic={participant.user.profilePic}
                               username={participant.user.username}
-                              userId={participant.user.id}
                               style={style.avatar}
                             />
                             {participant.isAdmin ? (
