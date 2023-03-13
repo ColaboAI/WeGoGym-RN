@@ -143,6 +143,29 @@ async function getWorkoutPromise({
   }
 }
 
+async function getRecruitingWorkoutPromise({
+  limit = 10,
+  offset = null,
+}: {
+  limit: number;
+  offset: number | null;
+}): Promise<WorkoutPromiseListRead> {
+  try {
+    const res = await apiClient.get('/workout-promise/recruiting', {
+      params: {
+        limit,
+        offset,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
 async function getWorkoutPromiseById(id: string): Promise<WorkoutPromiseRead> {
   try {
     const res = await apiClient.get(`/workout-promise/${id}`);
@@ -298,6 +321,7 @@ export {
   postWorkoutParticipant,
   deleteWorkoutParticipant,
   getWorkoutPromise,
+  getRecruitingWorkoutPromise,
   getWorkoutPromiseWrittenByUserId,
   getWorkoutPromiseJoinedByUserId,
   getWorkoutPromiseById,
