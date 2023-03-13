@@ -9,6 +9,7 @@ import {
   putWorkoutPromiseInfo,
   getWorkoutPromiseWrittenByUserId,
   getWorkoutPromiseJoinedByUserId,
+  getRecruitingWorkoutPromise,
 } from '@api/api';
 import { Alert } from 'react-native';
 
@@ -92,6 +93,23 @@ export function useGetWorkoutQuery(limit: number, offset: number) {
       console.log(data);
     },
     // Type myInfoRead
+    suspense: true,
+    keepPreviousData: true,
+  });
+}
+
+export function useGetRecruitingWorkoutQuery(limit: number, offset: number) {
+  return useQuery({
+    queryKey: ['getRecruitingWorkout', limit, offset],
+    queryFn: () => getRecruitingWorkoutPromise({ limit, offset }),
+    retry: 1,
+    onError: (error: Error) => {
+      Alert.alert(`운동 약속을 가져오는데 실패하였습니다: ${error.message}`);
+      console.log(error);
+    },
+    onSuccess(data) {
+      console.log(data);
+    },
     suspense: true,
     keepPreviousData: true,
   });

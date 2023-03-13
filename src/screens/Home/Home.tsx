@@ -15,7 +15,10 @@ import CustomFAB from 'components/molecules/Home/CustomFAB';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import WorkoutPromiseLoader from 'components/molecules/Home/WorkoutPromiseLoader';
 import ScreenWrapper from 'components/template/Common/ScreenWrapper';
-import { useGetWorkoutQuery } from '/hooks/queries/workout.queries';
+import {
+  useGetRecruitingWorkoutQuery,
+  useGetWorkoutQuery,
+} from '/hooks/queries/workout.queries';
 import GymMateRecommendation from '/components/organisms/User/GymMateRecommend';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
@@ -28,11 +31,16 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const theme = useTheme();
   const [limit, setLimit] = useState<number>(10);
   const [offset, setOffset] = useState<number>(0);
+  const { data: workoutPromiseList } = useGetWorkoutQuery(limit, offset);
+  const { data: recruitingWorkoutPromiseList } = useGetRecruitingWorkoutQuery(
+    limit,
+    offset,
+  );
+  const [isCheck, setIsCheck] = useState<boolean>(false);
+  const [visible, setVisible] = useState(true);
 
-  const query = useGetWorkoutQuery(limit, offset);
   const { reset } = useQueryErrorResetBoundary();
 
-  const [visible, setVisible] = useState(true);
   const navigateToPromiseDetails = useCallback(
     (id: string) => {
       navigation.navigate('Details', { workoutPromiseId: id });
@@ -115,25 +123,45 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
               </Headline>
             )}>
             <View>
-              {query.data ? (
+              {workoutPromiseList && recruitingWorkoutPromiseList ? (
                 <FlatList
-                  data={query.data.items}
-                  keyExtractor={item => item.id}
+                  data={
+                    isCheck
+                      ? workoutPromiseList.items
+                      : recruitingWorkoutPromiseList.items
+                  }
+                  keyExtractor={item => item.id.toString()}
                   contentContainerStyle={style.workoutPromiseContainer}
                   initialNumToRender={5}
                   ListHeaderComponent={
-                    <GymMateRecommendation
-                      navigateToUserDetails={navigateToUserDetails}
-                    />
+                    <>
+                      <GymMateRecommendation
+                        navigateToUserDetails={navigateToUserDetails}
+                      />
+                      <View style={style.isRecruitingContainer}>
+                        <IconButton
+                          icon={
+                            isCheck
+                              ? 'checkmark-circle-outline'
+                              : 'ellipse-outline'
+                          }
+                          size={20}
+                          onPress={() => {
+                            setIsCheck(!isCheck);
+                          }}
+                        />
+                        <Text variant="titleSmall">모집중인 약속만 보기</Text>
+                      </View>
+                    </>
                   }
                   renderItem={({ item }) => (
                     <TouchableOpacity
-                      key={`work-promise-container-${item.id}`}
+                      key={`workout-promise-container-${item.id}`}
                       onPress={() => {
                         navigateToPromiseDetails(item.id);
                       }}>
                       <WorkoutPromiseCard
-                        key={`work-promise-${item.id}`}
+                        key={`workout-promise-${item.id}`}
                         {...item}
                       />
                     </TouchableOpacity>
@@ -170,6 +198,11 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  isRecruitingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   bannerContainer: {
     justifyContent: 'center',
