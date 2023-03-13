@@ -2,12 +2,10 @@ import React, { useRef } from 'react';
 import { TextInput, useTheme } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import { Platform } from 'react-native';
-import { ChatParamList, ChatStackParamList } from '/navigators/types';
+import { ChatParamList } from '/navigators/types';
 import { UseMutationResult } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { getValueFor } from '/store/secureStore';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
 import { BASE_URL } from '/api/client';
 
 export type ChatInputProps = ChatParamList & {
@@ -29,7 +27,6 @@ const ChatInput = (props: ChatInputProps) => {
     userId,
     inputText,
     setInputText,
-    isTyping,
     setIsTyping,
     chatRoomMutation,
   } = props;
