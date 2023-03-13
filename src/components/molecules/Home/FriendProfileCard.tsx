@@ -49,11 +49,7 @@ const styles = StyleSheet.create({
   avatarContainer: {
     marginBottom: 16,
   },
-  avatar: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
-  },
+  avatar: {},
   usernameContainer: {
     position: 'relative',
     flexDirection: 'row',
