@@ -1,5 +1,5 @@
 import { StyleSheet, Alert } from 'react-native';
-import React, { Suspense, useCallback, useState } from 'react';
+import React, { Suspense, useCallback } from 'react';
 import ChatListItem from '../../components/organisms/Chat/ChatListItem';
 import { ChatParamList, ChatStackScreenProps } from 'navigators/types';
 import { useMyChatListQuery } from '/hooks/queries/chat.queries';
