@@ -8,13 +8,13 @@ import { getRelativeTime } from '/utils/util';
 
 type Props = {
   id: string;
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
   createdAt: Date;
   lastMessageText: string;
   lastMessageCreatedAt: Date;
   members: ChatRoomMember[];
-  unreadCount: number;
+  unreadCount: number | null;
   onPress: (params: ChatParamList) => void;
 };
 
