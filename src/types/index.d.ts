@@ -189,7 +189,7 @@ type ChatRoom = {
   updatedAt: Date;
   lastMessageText: string;
   lastMessageCreatedAt: Date;
-  unreadCount: number;
+  unreadCount: number | null;
   members: ChatRoomMember[];
   isPrivate: boolean;
   isGroupChat: boolean;
@@ -198,11 +198,12 @@ type ChatRoom = {
 };
 
 type ChatRoomCreate = {
-  name: string;
-  description: string;
-  member_user_ids: string[];
+  name?: string;
+  description?: string;
+  membersUserIds: string[];
   isPrivate: boolean;
   isGroupChat: boolean;
+  createdBy: string;
 };
 
 type Message = {
@@ -229,6 +230,7 @@ type ChatRoomMemberListResponse = {
 
 type ChatRoomListResponse = {
   total: number;
+  nextCursor: int | null;
   items: ChatRoom[];
 };
 
