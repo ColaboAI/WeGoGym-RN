@@ -19,7 +19,6 @@ import { useGetWorkoutQuery } from '/hooks/queries/workout.queries';
 import GymMateRecommendation from '/components/organisms/User/GymMateRecommend';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
-import GymMateRecommendation from '/components/organisms/User/GymMateRecommend';
 
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 // TODO:
