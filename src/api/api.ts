@@ -313,12 +313,12 @@ async function getRecommendedMates(limit: number): Promise<RecommendedMate[]> {
 }
 
 async function getMyChatList(param: {
-  limit: number;
   offset: number;
 }): Promise<ChatRoomListResponse> {
+  const limit = 20;
   try {
     const res = await apiClient.get(
-      `/chat/rooms/me?limit=${param.limit}&offset=${param.offset}`,
+      `/chat/rooms/me?limit=${limit}&offset=${param.offset}`,
     );
     return res.data;
   } catch (e) {
@@ -357,11 +357,15 @@ async function getChatMessages(
   }
 }
 
-async function getDirectChatRoom(id: string): Promise<ChatRoom> {
+async function getDirectChatRoom(id: string | undefined): Promise<ChatRoom> {
   try {
-    const res = await apiClient.get(`/chat/rooms/direct?user_ids=${id}`);
+    if (id === undefined) {
+      throw new Error('id is undefined');
+    }
+    const res = await apiClient.get(`/chat/room/direct?user_ids=${id}`);
     return res.data;
   } catch (e) {
+    console.error(e);
     throw e;
   }
 }
