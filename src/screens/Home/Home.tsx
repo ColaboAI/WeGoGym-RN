@@ -150,7 +150,9 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
                             setIsCheck(!isCheck);
                           }}
                         />
-                        <Text variant="titleSmall">모집중인 약속만 보기</Text>
+                        <Text variant="titleSmall">
+                          모집중인 운동 약속만 보기
+                        </Text>
                       </View>
                     </>
                   }
