@@ -46,8 +46,8 @@ const WorkoutPromiseCard = ({
                 />
               )}
               right={props => (
-                <Text {...props} variant="bodySmall">
-                  {adminUserInfo?.username}님 ∙ {getRelativeTime(updatedAt)}
+                <Text {...props} variant="labelSmall">
+                  {adminUserInfo?.username}님
                 </Text>
               )}
               leftStyle={style.leftBox}
@@ -75,16 +75,27 @@ const WorkoutPromiseCard = ({
                   />
                   <Text>{gymInfo ? gymInfo.name : '위치 미정'}</Text>
                 </View>
-                <View style={style.infoBox}>
-                  <Icon
-                    name="people-outline"
-                    size={18}
-                    color={theme.colors.onBackground}
-                    style={style.icon}
-                  />
-                  <Text>
-                    {isAcceptedParticipant(participants).length}/
-                    {maxParticipants} 참여
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={style.infoBox}>
+                    <Icon
+                      name="people-outline"
+                      size={18}
+                      color={theme.colors.onBackground}
+                      style={style.icon}
+                    />
+                    <Text>
+                      {isAcceptedParticipant(participants).length}/
+                      {maxParticipants} 참여 중
+                    </Text>
+                  </View>
+                  <Text
+                    variant="labelSmall"
+                    style={{ color: theme.colors.onBackground }}>
+                    {getRelativeTime(updatedAt)}
                   </Text>
                 </View>
               </>

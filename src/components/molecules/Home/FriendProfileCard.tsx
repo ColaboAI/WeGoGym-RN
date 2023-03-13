@@ -26,7 +26,7 @@ const FriendProfileCard = ({
           }}>
           <CustomAvatar
             style={styles.avatar}
-            size={80}
+            size={60}
             profilePic={profilePic}
             username={username}
             userId={id}

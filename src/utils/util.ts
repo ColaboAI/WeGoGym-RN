@@ -144,13 +144,13 @@ export function getRelativeTime(date: Date | string) {
     return (result = '방금');
   }
   if (differSec < 60) {
-    return (result = `${Math.floor(differSec)} 초 전`);
+    return (result = `${Math.floor(differSec)}초 전`);
   }
   if (differSec < 3600) {
-    return (result = `${Math.floor(differSec / 60)} 분 전`);
+    return (result = `${Math.floor(differSec / 60)}분 전`);
   }
   if (differSec < 24 * 3600) {
-    return (result = `${Math.floor(differSec / 3600)} 시간 전`);
+    return (result = `${Math.floor(differSec / 3600)}시간 전`);
   }
   if (differSec >= 24 * 3600) {
     return date
