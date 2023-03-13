@@ -42,7 +42,6 @@ const WorkoutPromiseCard = ({
                   size={30}
                   profilePic={adminUserInfo.profilePic}
                   username={adminUserInfo.username}
-                  userId={adminUserInfo.id}
                 />
               )}
               right={props => (

@@ -344,9 +344,7 @@ const style = StyleSheet.create({
     marginBottom: 16,
   },
   avatar: {
-    backgroundColor: 'white',
     borderWidth: 1,
-    borderColor: '#E5E5E5',
   },
   usernameContainer: {
     position: 'relative',
