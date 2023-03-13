@@ -54,13 +54,17 @@ const Bubble = ({ text, createdAt, userId, getUserInfo }: Props) => {
           }}>
           {text}
         </Text>
-        <Text
-          style={{
-            color: isLeft ? theme.colors.onSecondary : theme.colors.onPrimary,
-          }}>
-          {getRelativeTime(createdAt)}
-        </Text>
       </Surface>
+      <Text
+        variant="labelSmall"
+        style={{
+          color: theme.colors.onBackground,
+          alignSelf: isLeft ? 'flex-start' : 'flex-end',
+          paddingHorizontal: '3%',
+          fontWeight: '300',
+        }}>
+        {getRelativeTime(createdAt)}
+      </Text>
     </View>
   );
 };
@@ -70,7 +74,6 @@ export default Bubble;
 const styles = StyleSheet.create({
   bubbleContainer: {
     flexDirection: 'column',
-    alignItems: 'flex-start',
     marginBottom: 5,
   },
   leftBubble: {
@@ -78,11 +81,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 60,
     padding: 15,
-    borderTopLeftRadius: 0,
+    borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    marginBottom: 10,
+    marginBottom: '1%',
   },
 
   rightBubble: {
@@ -91,10 +94,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
     padding: 15,
     borderTopLeftRadius: 20,
-    borderTopRightRadius: 0,
+    borderTopRightRadius: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    marginBottom: 10,
+    marginBottom: '1%',
   },
 
   avatarContainer: {
