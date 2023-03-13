@@ -24,6 +24,7 @@ import { HomeStackScreenProps } from 'navigators/types';
 import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
 import { useWorkoutMutation } from '/hooks/queries/workout.queries';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;
@@ -159,7 +160,15 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
               ⚠️ 운동 모집 글의 내용을 입력해주세요!
             </HelperText>
             <View style={style.infoContainer}>
-              <Text variant="titleMedium">👥 인원</Text>
+              <View style={style.infoBox}>
+                <Icon
+                  name="people-outline"
+                  size={20}
+                  color={theme.colors.onBackground}
+                  style={style.icon}
+                />
+                <Text variant="titleMedium">인원</Text>
+              </View>
               <View style={style.numberButtonContainer}>
                 <IconButton
                   icon="remove-circle-outline"
@@ -180,7 +189,15 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
             </View>
             {/* 운동 날짜 */}
             <View style={style.infoContainer}>
-              <Text variant="titleMedium">🗓️ 약속 날짜</Text>
+              <View style={style.infoBox}>
+                <Icon
+                  name="calendar-outline"
+                  size={20}
+                  color={theme.colors.onBackground}
+                  style={style.icon}
+                />
+                <Text variant="titleMedium">약속 날짜</Text>
+              </View>
               <Button
                 onPress={() => {
                   setPromiseDateState(prev => ({
@@ -197,7 +214,15 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
               </Button>
             </View>
             <View style={style.infoContainer}>
-              <Text variant="titleMedium">⏰ 약속 시간</Text>
+              <View style={style.infoBox}>
+                <Icon
+                  name="alarm-outline"
+                  size={20}
+                  color={theme.colors.onBackground}
+                  style={style.icon}
+                />
+                <Text variant="titleMedium">약속 시간</Text>
+              </View>
               <Button
                 onPress={() => {
                   setPromiseDateState(prev => ({
@@ -213,7 +238,15 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
             </View>
             {/* 모집 기한 */}
             <View style={style.infoContainer}>
-              <Text variant="titleMedium">🎯 모집 기한</Text>
+              <View style={style.infoBox}>
+                <Icon
+                  name="timer-outline"
+                  size={20}
+                  color={theme.colors.onBackground}
+                  style={style.icon}
+                />
+                <Text variant="titleMedium">모집 기한</Text>
+              </View>
               <Button
                 onPress={() => {
                   setRecruitEndDateState(prev => ({
@@ -230,9 +263,16 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                 </Text>
               </Button>
             </View>
-
             <View style={style.infoContainer}>
-              <Text variant="titleMedium">📍 위치</Text>
+              <View style={style.infoBox}>
+                <Icon
+                  name="location-outline"
+                  size={20}
+                  color={theme.colors.onBackground}
+                  style={style.icon}
+                />
+                <Text variant="titleMedium">위치</Text>
+              </View>
               <Button onPress={onPressLocation}>
                 <Text
                   variant="bodyLarge"
@@ -243,7 +283,15 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
             </View>
             {/* 공개 여부 */}
             <View style={style.infoContainer}>
-              <Text variant="titleMedium">🔒 비공개 여부</Text>
+              <View style={style.infoBox}>
+                <Icon
+                  name={isPrivate ? 'lock-closed-outline' : 'lock-open-outline'}
+                  size={20}
+                  color={theme.colors.onBackground}
+                  style={style.icon}
+                />
+                <Text variant="titleMedium">비공개 여부</Text>
+              </View>
               <Switch
                 value={isPrivate}
                 onValueChange={value => setIsPrivate(value)}
@@ -286,6 +334,10 @@ const style = StyleSheet.create({
   descriptionContainer: {
     paddingHorizontal: 12,
   },
+  infoBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   infoContainer: {
     flexDirection: 'row',
     paddingHorizontal: 12,
@@ -322,5 +374,8 @@ const style = StyleSheet.create({
     marginRight: 4,
     width: 75,
     height: 30,
+  },
+  icon: {
+    marginRight: 6,
   },
 });

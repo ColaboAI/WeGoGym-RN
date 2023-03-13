@@ -59,10 +59,6 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
     setIsBottomSheetOpen(true);
   }, []);
 
-  const navigationToHome = useCallback(() => {
-    navigation.navigate('Home');
-  }, [navigation]);
-
   const navigationToPromiseEdit = useCallback(
     (workoutInfo: WorkoutPromiseRead) => {
       navigation.navigate('PromiseEdit', { workoutInfo });

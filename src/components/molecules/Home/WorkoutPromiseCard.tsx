@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import React, { Suspense } from 'react';
-import { Text, Card } from 'react-native-paper';
+import { Text, Card, useTheme } from 'react-native-paper';
 import {
   getLocaleDate,
   getLocaleTime,
@@ -9,6 +9,8 @@ import {
 } from 'utils/util';
 import { useGetUserInfoQuery } from '/hooks/queries/user.queries';
 import WorkoutPromiseLoader from './WorkoutPromiseLoader';
+import Icon from 'react-native-vector-icons/Ionicons';
+import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 
 const WorkoutPromiseCard = ({
   id,
@@ -18,42 +20,80 @@ const WorkoutPromiseCard = ({
   maxParticipants,
   promiseTime,
   // recruitEndTime,
+  // status,
   gymInfo,
   updatedAt,
   participants,
 }: WorkoutPromiseRead) => {
   const { data: adminUserInfo } = useGetUserInfoQuery(adminUserId);
-
+  const theme = useTheme();
   return (
     <Suspense fallback={<WorkoutPromiseLoader />}>
-      <View
-        key={`workout-promise-card-${id}`}
-        style={style.promiseCardContainer}>
-        <Card>
-          <Card.Title
-            title={title}
-            right={props => (
-              <Text {...props} variant="bodySmall" style={style.subtitle}>
-                {adminUserInfo?.username}님 ∙ {getRelativeTime(updatedAt)}
-              </Text>
-            )}
-          />
-          <Card.Content>
-            <>
-              <Text style={style.promiseInfo}>
-                📅 {getLocaleDate(promiseTime)} {getLocaleTime(promiseTime)}
-              </Text>
-              <Text style={style.promiseInfo}>
-                📍 {gymInfo ? gymInfo.name : '위치 미정'}
-              </Text>
-              <Text>
-                👥 {isAcceptedParticipant(participants).length}/
-                {maxParticipants} 참여
-              </Text>
-            </>
-          </Card.Content>
-        </Card>
-      </View>
+      {adminUserInfo ? (
+        <View
+          key={`workout-promise-card-${id}`}
+          style={style.promiseCardContainer}>
+          <Card>
+            <Card.Title
+              title={title}
+              left={props => (
+                <CustomAvatar
+                  {...props}
+                  size={30}
+                  profilePic={adminUserInfo.profilePic}
+                  username={adminUserInfo.username}
+                  userId={adminUserInfo.id}
+                />
+              )}
+              right={props => (
+                <Text {...props} variant="bodySmall">
+                  {adminUserInfo?.username}님 ∙ {getRelativeTime(updatedAt)}
+                </Text>
+              )}
+              leftStyle={style.leftBox}
+              rightStyle={style.rightBox}
+            />
+            <Card.Content>
+              <>
+                <View style={style.infoBox}>
+                  <Icon
+                    name="calendar-outline"
+                    size={18}
+                    color={theme.colors.onBackground}
+                    style={style.icon}
+                  />
+                  <Text>
+                    {getLocaleDate(promiseTime)} {getLocaleTime(promiseTime)}
+                  </Text>
+                </View>
+                <View style={style.infoBox}>
+                  <Icon
+                    name="location-outline"
+                    size={18}
+                    color={theme.colors.onBackground}
+                    style={style.icon}
+                  />
+                  <Text>{gymInfo ? gymInfo.name : '위치 미정'}</Text>
+                </View>
+                <View style={style.infoBox}>
+                  <Icon
+                    name="people-outline"
+                    size={18}
+                    color={theme.colors.onBackground}
+                    style={style.icon}
+                  />
+                  <Text>
+                    {isAcceptedParticipant(participants).length}/
+                    {maxParticipants} 참여
+                  </Text>
+                </View>
+              </>
+            </Card.Content>
+          </Card>
+        </View>
+      ) : (
+        <WorkoutPromiseLoader />
+      )}
     </Suspense>
   );
 };
@@ -62,8 +102,19 @@ const style = StyleSheet.create({
   promiseCardContainer: {
     padding: 12,
   },
-  subtitle: { marginRight: 12 },
-  promiseInfo: { marginBottom: 6 },
+  leftBox: {
+    marginRight: 0,
+    marginBottom: 5,
+  },
+  rightBox: { marginRight: 12, marginBottom: 5 },
+  infoBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  icon: {
+    marginRight: 6,
+  },
 });
 
 export default WorkoutPromiseCard;
