@@ -22,7 +22,11 @@ function CustomAvatar(props: Props) {
           style={props.style ? props.style : styles.avatar}
         />
       ) : (
-        <Avatar.Text size={props.size} label={props.username[0] ?? 'User'} />
+        <Avatar.Text
+          size={props.size}
+          label={props.username[0] ?? 'User'}
+          style={props.style ? props.style : styles.avatar}
+        />
       )}
     </View>
   );
