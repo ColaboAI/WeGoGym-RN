@@ -4,14 +4,11 @@ import { ChatStackScreenProps } from 'navigators/types';
 import { ActivityIndicator, Button, Text } from 'react-native-paper';
 import Bubble from '/components/molecules/Chat/Bubble';
 import InputToolbar from '/components/organisms/Chat/InputToolbar';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlatList } from 'react-native-gesture-handler';
-import {
-  useChatRoomMessagesQuery,
-  useChatRoomMutation,
-} from '/hooks/queries/chat.queries';
+import { useChatRoomMessagesQuery } from '/hooks/queries/chat.queries';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import { useChatRoomState } from '/hooks/chat/hook';
 
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 // Logic for the chat room screen (chat room id is passed in the route params)
@@ -26,13 +23,17 @@ type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 // 4. Navigate(replace) to the chat room screen with the new chat room id
 
 function ChatRoom({ route }: ChatRoomScreenProps) {
-  const inset = useSafeAreaInsets();
-  const [limit] = React.useState(10);
-  const [offset] = React.useState(0);
+  const {
+    inset,
+    limit,
+    offset,
+    inputText,
+    setInputText,
+    isTyping,
+    setIsTyping,
+    chatRoomMutation,
+  } = useChatRoomState();
 
-  const [roomId, setRoomId] = React.useState<string | undefined>(
-    route.params.chatRoomId,
-  );
   const getUserInfo = useCallback(
     (id: string) => {
       const found = route.params.chatRoomMembers?.find(
@@ -45,9 +46,8 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
   );
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useChatRoomMessagesQuery(roomId, limit, offset);
+    useChatRoomMessagesQuery(route.params.chatRoomId, limit, offset);
   // const messageMutation = useCreateMessageMutation();
-  const chatRoomMutation = useChatRoomMutation();
 
   const { reset } = useQueryErrorResetBoundary();
 
@@ -81,49 +81,76 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
         )}>
         <View
           style={[styles.ChatRoomContainer, { marginBottom: inset.bottom }]}>
-          <>
-            {((data?.pages.length === 1 && data.pages[0].total === 0) ||
+          {/* {((data?.pages.length === 1 && data.pages[0].total === 0) ||
               data?.pages === undefined) && (
               <View style={styles.emptyContainer}>
                 <Text>메세지가 없습니다. 새로운 메세지를 작성해보세요!</Text>
               </View>
-            )}
-
-            <FlatList
-              contentContainerStyle={styles.contentContainer}
-              data={data?.pages.map(page => page.items).flat() || null}
-              keyExtractor={item => item.id}
-              onEndReached={() => {
-                if (hasNextPage) {
-                  fetchNextPage();
-                }
-
-                console.log('onEndReached');
-              }}
-              onEndReachedThreshold={0.7}
-              renderItem={renderItem}
-              ListFooterComponent={
-                <ActivityIndicator animating={isFetchingNextPage} />
-              }
-              automaticallyAdjustContentInsets={false}
-              inverted={true}
-              keyboardDismissMode="interactive"
-              keyboardShouldPersistTaps="handled"
-              contentInsetAdjustmentBehavior="never"
-              maintainVisibleContentPosition={{
-                minIndexForVisible: 0,
-                autoscrollToTopThreshold: 80,
-              }}
-              automaticallyAdjustKeyboardInsets={true}
+            )} */}
+          {/* {route.params.isGroupChat === false && roomId === undefined && (
+            <DirectChatRoomCreate
+              chatRoomMutation={chatRoomMutation}
+              chatRoomId={roomId}
+              setChatRoomId={setRoomId}
+              userId={route.params.userId}
             />
-            {Platform.OS === 'ios' ? (
-              <InputAccessoryView>
-                <InputToolbar />
-              </InputAccessoryView>
-            ) : (
-              <InputToolbar />
-            )}
-          </>
+          )} */}
+
+          <FlatList
+            contentContainerStyle={styles.contentContainer}
+            data={data?.pages.flatMap(page => page.items)}
+            keyExtractor={item => item.id}
+            onEndReached={() => {
+              if (hasNextPage) {
+                fetchNextPage();
+              }
+            }}
+            onEndReachedThreshold={0.1}
+            renderItem={renderItem}
+            ListFooterComponent={
+              <ActivityIndicator animating={isFetchingNextPage} />
+            }
+            automaticallyAdjustContentInsets={false}
+            inverted={true}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
+            contentInsetAdjustmentBehavior="never"
+            maintainVisibleContentPosition={{
+              minIndexForVisible: 0,
+              autoscrollToTopThreshold: 80,
+            }}
+            automaticallyAdjustKeyboardInsets={true}
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <Text>메세지가 없습니다. 새로운 메세지를 작성해보세요!</Text>
+              </View>
+            }
+          />
+          {Platform.OS === 'ios' ? (
+            <InputAccessoryView>
+              <InputToolbar
+                {...route.params}
+                {...{
+                  inputText,
+                  setInputText,
+                  isTyping,
+                  setIsTyping,
+                  chatRoomMutation,
+                }}
+              />
+            </InputAccessoryView>
+          ) : (
+            <InputToolbar
+              {...route.params}
+              {...{
+                inputText,
+                setInputText,
+                isTyping,
+                setIsTyping,
+                chatRoomMutation,
+              }}
+            />
+          )}
         </View>
       </ErrorBoundary>
     </Suspense>
@@ -135,6 +162,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
+    justifyContent: 'flex-end',
   },
   emptyContainer: {
     flex: 1,

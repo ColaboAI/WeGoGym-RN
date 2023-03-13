@@ -9,7 +9,7 @@ export type ChatParamList = {
   chatRoomName?: string;
   chatRoomDescription?: string;
   chatRoomImage?: string;
-  chatRoomType?: string;
+  isGroupChat?: boolean;
   chatRoomMembers?: ChatRoomMember[];
 };
 

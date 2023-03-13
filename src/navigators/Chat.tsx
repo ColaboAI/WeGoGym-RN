@@ -17,7 +17,6 @@ function Chat({ navigation, route }: Props) {
       navigation.setOptions({ tabBarStyle: { display: 'flex' } });
     }
   }, [navigation, route]);
-  // TODO: 채팅방 이름 헤더에 띄우기
 
   return (
     <Stack.Navigator
