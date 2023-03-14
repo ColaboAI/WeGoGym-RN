@@ -1,8 +1,9 @@
 module.exports = {
   root: true,
   extends: [
-    '@react-native-community',
+    '@react-native',
     'plugin:@tanstack/eslint-plugin-query/recommended',
+    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', '@tanstack/query'],
