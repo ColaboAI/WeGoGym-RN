@@ -337,9 +337,9 @@ async function getChatRoom(id: string): Promise<ChatRoom> {
 
 async function getChatMessages(
   id: string | undefined,
-  limit: number,
   offset: number,
 ): Promise<MessageListResponse> {
+  const limit = 20;
   if (id === undefined) {
     return {
       total: 0,
