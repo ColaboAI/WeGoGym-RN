@@ -120,20 +120,12 @@ async function deleteWorkoutParticipant({
   }
 }
 
-async function getWorkoutPromise({
-  limit = 10,
-  offset = null,
-}: {
-  limit: number;
-  offset: number | null;
-}): Promise<WorkoutPromiseListRead> {
+async function getWorkoutPromise(
+  offset: number,
+): Promise<WorkoutPromiseListRead> {
+  const limit = 10;
   try {
-    const res = await apiClient.get('/workout-promise', {
-      params: {
-        limit,
-        offset,
-      },
-    });
+    const res = await apiClient.get(`/workout-promise?limit=${limit}&offset=${offset}`);
     return res.data;
   } catch (e) {
     if (e instanceof AxiosError) {
@@ -143,20 +135,12 @@ async function getWorkoutPromise({
   }
 }
 
-async function getRecruitingWorkoutPromise({
-  limit = 10,
-  offset = null,
-}: {
-  limit: number;
-  offset: number | null;
-}): Promise<WorkoutPromiseListRead> {
+async function getRecruitingWorkoutPromise(
+  limit: number,
+  offset: number,
+): Promise<WorkoutPromiseListRead> {
   try {
-    const res = await apiClient.get('/workout-promise/recruiting', {
-      params: {
-        limit,
-        offset,
-      },
-    });
+    const res = await apiClient.get(`/workout-promise/recruiting?limit=${limit}&offset=${offset}`);
     return res.data;
   } catch (e) {
     if (e instanceof AxiosError) {

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   getWorkoutPromise,
   getWorkoutPromiseById,
@@ -80,35 +80,46 @@ export function useWorkoutParticipantDeleteMutation(workoutPromiseId: string) {
   });
 }
 
-export function useGetWorkoutQuery(limit: number, offset: number) {
-  return useQuery({
-    queryKey: ['getWorkout', limit, offset],
-    queryFn: () => getWorkoutPromise({ limit, offset }),
+export function useGetWorkoutQuery() {
+  return useInfiniteQuery({
+    queryKey: ['getWorkout'],
+    queryFn: ({pageParam = 0}) => getWorkoutPromise(pageParam),
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.nextCursor === undefined) {
+        return undefined;
+      }
+      return lastPage.nextCursor;
+    },
+    getPreviousPageParam: (firstPage, pages) => {
+      if (firstPage.prevCursor === undefined) {
+        return undefined;
+      }
+      return firstPage.prevCursor;
+    },
     retry: 1,
     onError: (error: Error) => {
       Alert.alert(`운동 약속을 가져오는데 실패하였습니다: ${error.message}`);
       console.log(error);
     },
     onSuccess(data) {
-      console.log(data);
+      console.log('운동 약속을 가져왔습니다 :',data);
     },
-    // Type myInfoRead
     suspense: true,
     keepPreviousData: true,
   });
 }
 
 export function useGetRecruitingWorkoutQuery(limit: number, offset: number) {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['getRecruitingWorkout', limit, offset],
-    queryFn: () => getRecruitingWorkoutPromise({ limit, offset }),
+    queryFn: ({pageParam = 0}) => getRecruitingWorkoutPromise( limit, offset ),
     retry: 1,
     onError: (error: Error) => {
       Alert.alert(`운동 약속을 가져오는데 실패하였습니다: ${error.message}`);
       console.log(error);
     },
     onSuccess(data) {
-      console.log(data);
+      console.log('운동 약속을 가져왔습니다.',data);
     },
     suspense: true,
     keepPreviousData: true,

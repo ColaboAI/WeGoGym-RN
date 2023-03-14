@@ -5,8 +5,7 @@ import {
   Divider,
   Banner,
   useTheme,
-  Headline,
-  Button,
+  ActivityIndicator,
 } from 'react-native-paper';
 import React, { Suspense, useCallback, useState } from 'react';
 import WorkoutPromiseCard from 'components/molecules/Home/WorkoutPromiseCard';
@@ -25,20 +24,23 @@ import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 // TODO:
-// 추천 짐메이트의 경우 일단 백엔드 구현 없으므로. 추후에 구현.
-// 페이지네이션 구현.(당겨서 새로고침?, 무한 스크롤)
+// 페이지네이션 구현 (당겨서 새로고침)
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const theme = useTheme();
   const [limit, setLimit] = useState<number>(10);
   const [offset, setOffset] = useState<number>(0);
-  const { data: workoutPromiseList } = useGetWorkoutQuery(limit, offset);
-  const { data: recruitingWorkoutPromiseList } = useGetRecruitingWorkoutQuery(
-    limit,
-    offset,
-  );
+  const {
+    data: workoutPromiseList,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useGetWorkoutQuery(limit, offset);
+  // const { data: recruitingWorkoutPromiseList, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetRecruitingWorkoutQuery(
+  //   limit,
+  //   offset,
+  // );
   const [isCheck, setIsCheck] = useState<boolean>(false);
   const [visible, setVisible] = useState(true);
-
   const { reset } = useQueryErrorResetBoundary();
 
   const navigateToPromiseDetails = useCallback(
@@ -76,6 +78,19 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     [visible],
   );
 
+  const renderItem = useCallback(
+    ({ item }: { item: WorkoutPromiseRead }) => (
+      <TouchableOpacity
+        key={`workout-promise-container-${item.id}`}
+        onPress={() => {
+          navigateToPromiseDetails(item.id);
+        }}>
+        <WorkoutPromiseCard key={`workout-promise-${item.id}`} {...item} />
+      </TouchableOpacity>
+    ),
+    [navigateToPromiseDetails],
+  );
+
   return (
     <>
       <ScreenWrapper withScrollView={false} style={style.container}>
@@ -111,69 +126,60 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           <ErrorBoundary
             onReset={reset}
             fallbackRender={({ resetErrorBoundary }) => (
-              <Headline>
-                There was an error!
-                <Button
-                  onPress={() => {
-                    resetErrorBoundary();
-                    Alert.alert("I'm error boundary");
-                  }}>
-                  Try again
-                </Button>
-              </Headline>
+              <View style={style.emptyContainer}>
+                <Text>운동을 불러올 수 없습니다.</Text>
+              </View>
             )}>
-            <View>
-              {workoutPromiseList && recruitingWorkoutPromiseList ? (
-                <FlatList
-                  data={
-                    isCheck
-                      ? workoutPromiseList.items
-                      : recruitingWorkoutPromiseList.items
+            <>
+              <FlatList
+                data={workoutPromiseList?.pages.flatMap(page => page.items)}
+                keyExtractor={item => item.id}
+                contentContainerStyle={style.workoutPromiseContainer}
+                onEndReached={() => {
+                  if (hasNextPage) {
+                    fetchNextPage();
                   }
-                  keyExtractor={item => item.id.toString()}
-                  contentContainerStyle={style.workoutPromiseContainer}
-                  initialNumToRender={5}
-                  ListHeaderComponent={
-                    <>
-                      <GymMateRecommendation
-                        navigateToUserDetails={navigateToUserDetails}
+                  console.log('end reached');
+                }}
+                onEndReachedThreshold={0.1}
+                initialNumToRender={5}
+                ListHeaderComponent={
+                  <>
+                    <GymMateRecommendation
+                      navigateToUserDetails={navigateToUserDetails}
+                    />
+                    <View style={style.isRecruitingContainer}>
+                      <IconButton
+                        icon={
+                          isCheck
+                            ? 'checkmark-circle-outline'
+                            : 'ellipse-outline'
+                        }
+                        size={20}
+                        onPress={() => {
+                          setIsCheck(!isCheck);
+                        }}
                       />
-                      <View style={style.isRecruitingContainer}>
-                        <IconButton
-                          icon={
-                            isCheck
-                              ? 'checkmark-circle-outline'
-                              : 'ellipse-outline'
-                          }
-                          size={20}
-                          onPress={() => {
-                            setIsCheck(!isCheck);
-                          }}
-                        />
-                        <Text variant="titleSmall">
-                          모집중인 운동 약속만 보기
-                        </Text>
-                      </View>
-                    </>
-                  }
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      key={`workout-promise-container-${item.id}`}
-                      onPress={() => {
-                        navigateToPromiseDetails(item.id);
-                      }}>
-                      <WorkoutPromiseCard
-                        key={`workout-promise-${item.id}`}
-                        {...item}
-                      />
-                    </TouchableOpacity>
-                  )}
-                  showsVerticalScrollIndicator={false}
-                />
-              ) : (
-                <WorkoutPromiseLoader />
-              )}
-            </View>
+                      <Text variant="titleSmall">
+                        모집중인 운동 약속만 보기
+                      </Text>
+                    </View>
+                  </>
+                }
+                ListFooterComponent={
+                  <ActivityIndicator animating={isFetchingNextPage} />
+                }
+                renderItem={renderItem}
+                showsVerticalScrollIndicator={false}
+                ListEmptyComponent={
+                  <View style={style.emptyContainer}>
+                    <Text>
+                      운동 약속이 없습니다. 새로운 운동 약속을 만들어보세요!
+                    </Text>
+                  </View>
+                }
+              />
+            </>
           </ErrorBoundary>
         </Suspense>
       </ScreenWrapper>
@@ -186,6 +192,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     </>
   );
 }
+
 const style = StyleSheet.create({
   container: {
     flex: 1,
@@ -229,5 +236,10 @@ const style = StyleSheet.create({
   },
   workoutPromiseContainer: {
     flexGrow: 1,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
