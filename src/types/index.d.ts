@@ -86,6 +86,8 @@ interface WorkoutPromiseUpdate {
 interface WorkoutPromiseListRead {
   total: number;
   items: WorkoutPromiseRead[];
+  nextCursor: int | null;
+  prevCursor: int | null;
 }
 
 interface WorkoutParictipantBase {
