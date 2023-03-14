@@ -25,8 +25,6 @@ type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 function ChatRoom({ route }: ChatRoomScreenProps) {
   const {
     inset,
-    limit,
-    offset,
     inputText,
     setInputText,
     isTyping,
@@ -46,7 +44,7 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
   );
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useChatRoomMessagesQuery(route.params.chatRoomId, limit, offset);
+    useChatRoomMessagesQuery(route.params.chatRoomId);
   // const messageMutation = useCreateMessageMutation();
 
   const { reset } = useQueryErrorResetBoundary();

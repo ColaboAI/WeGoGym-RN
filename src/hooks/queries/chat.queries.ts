@@ -64,17 +64,12 @@ export function useChatRoomQuery(chatRoomId: string) {
   });
 }
 
-export function useChatRoomMessagesQuery(
-  chatRoomId: string | undefined,
-  limit: number,
-  offset: number,
-) {
+export function useChatRoomMessagesQuery(chatRoomId: string | undefined) {
   const queryClient = useQueryClient();
   return useInfiniteQuery({
-    queryKey: ['chatMessages', chatRoomId, limit, offset],
+    queryKey: ['chatMessages', chatRoomId],
 
-    queryFn: ({ pageParam = 0 }) =>
-      getChatMessages(chatRoomId, limit, pageParam),
+    queryFn: ({ pageParam = 0 }) => getChatMessages(chatRoomId, pageParam),
     retry: 1,
     onError: (error: AxiosError) => {
       Alert.alert(
