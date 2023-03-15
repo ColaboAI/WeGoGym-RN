@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { TextInput, useTheme } from 'react-native-paper';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { Platform } from 'react-native';
 import { ChatParamList } from '/navigators/types';
 import {
@@ -114,12 +114,6 @@ const ChatInput = (props: ChatInputProps) => {
               },
             );
 
-            const qData = queryClient.getQueryData([
-              'chatMessages',
-              chatRoomId,
-            ]);
-            console.log('qData: ', qData);
-
             queryClient.setQueryData(
               ['chatMessages', chatRoomId],
               (old: InfiniteData<MessageListResponse> | undefined) => {
@@ -158,6 +152,11 @@ const ChatInput = (props: ChatInputProps) => {
             );
           }
         };
+
+        webSocket.current.onerror = e => {
+          console.error('WebSocket Error: ', e.message);
+          Alert.alert('Websocket Error: ', e.message);
+        };
       }
     }
 
@@ -166,7 +165,7 @@ const ChatInput = (props: ChatInputProps) => {
         webSocket.current.close();
       }
     };
-  }, [chatRoomId, myId]);
+  }, [chatRoomId, myId, queryClient]);
 
   const handleSubmit = async () => {
     if (chatRoomId && myId) {
@@ -187,7 +186,7 @@ const ChatInput = (props: ChatInputProps) => {
       // create direct chat room
       if (userId && myId) {
         try {
-          const chatRoom = await chatRoomMutation.mutateAsync({
+          await chatRoomMutation.mutateAsync({
             createdBy: myId,
             membersUserIds: [userId],
             isPrivate: true,
