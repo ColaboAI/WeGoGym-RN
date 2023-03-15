@@ -4,7 +4,7 @@ import { Badge, List, Text, useTheme } from 'react-native-paper';
 import ChatListAvatar from '/components/molecules/Chat/ChatListAvatar';
 import { useAuthValue } from '/hooks/context/useAuth';
 import { ChatParamList } from '/navigators/types';
-import { getRelativeTime } from '/utils/util';
+import { getLocaleTime } from '/utils/util';
 
 type Props = {
   id: string;
@@ -54,7 +54,7 @@ const ChatListItem = ({
       right={() => (
         <View style={styles.rightContainer}>
           <Text variant={'labelSmall'}>
-            {lastMessageCreatedAt ? getRelativeTime(lastMessageCreatedAt) : ''}
+            {lastMessageCreatedAt ? getLocaleTime(lastMessageCreatedAt) : ''}
           </Text>
           {unreadCount && <Badge>{unreadCount}</Badge>}
         </View>
