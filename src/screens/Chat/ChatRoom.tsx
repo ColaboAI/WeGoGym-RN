@@ -45,7 +45,6 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useChatRoomMessagesQuery(route.params.chatRoomId);
-  // const messageMutation = useCreateMessageMutation();
 
   const { reset } = useQueryErrorResetBoundary();
 

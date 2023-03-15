@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { TextInput, useTheme } from 'react-native-paper';
 import { Alert, StyleSheet } from 'react-native';
 import { Platform } from 'react-native';
@@ -166,7 +166,7 @@ const ChatInput = (props: ChatInputProps) => {
     };
   }, [chatRoomId, myId, queryClient]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (chatRoomId && myId) {
       if (inputText.length > 0) {
         // send message
@@ -191,6 +191,18 @@ const ChatInput = (props: ChatInputProps) => {
             isPrivate: true,
             isGroupChat: false,
           });
+          if (chatRoomMutation.isSuccess) {
+            if (webSocket.current && inputText.length > 0) {
+              webSocket.current.send(
+                JSON.stringify({
+                  type: 'text',
+                  text: inputText,
+                }),
+              );
+              setInputText('');
+              setIsTyping(false);
+            }
+          }
         } catch (e) {
           console.log(e);
         }
@@ -199,7 +211,15 @@ const ChatInput = (props: ChatInputProps) => {
         console.log('No user id');
       }
     }
-  };
+  }, [
+    chatRoomId,
+    chatRoomMutation,
+    inputText,
+    myId,
+    setInputText,
+    setIsTyping,
+    userId,
+  ]);
 
   return (
     <TextInput
