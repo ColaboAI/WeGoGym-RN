@@ -12,8 +12,7 @@ export const BASE_URL =
 export const WS_BASE_URL =
   Platform.OS === 'ios'
     ? 'ws://127.0.0.1:8000/api/v1'
-
-    : 'ws://10.0.2.2:8000/api/v1'
+    : 'ws://10.0.2.2:8000/api/v1';
 type RequestCallback = (token: string) => void;
 const apiClient = applyCaseMiddleware(axios.create({ baseURL: BASE_URL }));
 // const REFRESH_URL = '/auth/refresh';
