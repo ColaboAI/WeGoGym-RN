@@ -44,9 +44,8 @@ const ChatInput = (props: ChatInputProps) => {
   useEffect(() => {
     if (chatRoomId && myId) {
       if (webSocket.current === null) {
-        webSocket.current = new WebSocket(
-          `${WS_BASE_URL}/ws/chat/${chatRoomId}/${myId}`,
-        );
+        const chatURL = `${WS_BASE_URL}/ws/chat/${chatRoomId}/${myId}`;
+        webSocket.current = new WebSocket(chatURL);
         webSocket.current.onopen = () => {
           console.log('WebSocket Client Connected');
         };
