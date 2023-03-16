@@ -48,7 +48,7 @@ const ChatInput = (props: ChatInputProps) => {
         const chatURL = `${WS_BASE_URL}/ws/chat/${chatRoomId}/${myId}`;
         webSocket.current = new WebSocket(chatURL);
         webSocket.current.onopen = () => {
-          console.log('WebSocket Client Connected');
+          onShow('채팅방에 입장 했습니다.', 'success');
         };
         webSocket.current.onclose = e => {
           console.log(e.code, e.reason);
@@ -75,7 +75,7 @@ const ChatInput = (props: ChatInputProps) => {
               ['chatList'],
               (old: InfiniteData<ChatRoomListResponse> | undefined) => {
                 if (old === undefined) {
-                  return;
+                  return undefined;
                 }
                 const newData = old.pages.map(page => {
                   const newPage = page.items.map(item => {
@@ -109,17 +109,12 @@ const ChatInput = (props: ChatInputProps) => {
                     total: old.pages[0].total + 1,
                     nextCursor: old.pages[0].nextCursor
                       ? old.pages[0].nextCursor + 1
-                      : 1,
+                      : null,
                   };
 
                   const newMessageList = {
                     ...old,
-                    pages: [
-                      {
-                        ...newMessagePage,
-                        ...old.pages.slice(1),
-                      },
-                    ],
+                    pages: [newMessagePage, ...old.pages.slice(1)],
                   };
                   return newMessageList;
                 } else {
