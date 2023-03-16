@@ -180,7 +180,7 @@ export function isRecruitedEnded(status: string) {
 }
 
 // 참여자 중에서 수락된 사람만 가져오기(admin이 먼저 나오도록 정렬)
-export function isAcceptedParticipant(paticipants: WorkoutParictipantsRead[]) {
+export function isAcceptedParticipant(paticipants: WorkoutParticipantsRead[]) {
   const acceptedParticipants = paticipants.filter(
     participant => participant.status === 'ACCEPTED',
   );
@@ -196,7 +196,7 @@ export function isAcceptedParticipant(paticipants: WorkoutParictipantsRead[]) {
 
 // 참여 요청을 보낸 적이 있는가
 export function isRequested(
-  paticipants: WorkoutParictipantsRead[],
+  paticipants: WorkoutParticipantsRead[],
   userId: string,
 ) {
   const requestedParticipants = paticipants.filter(

@@ -82,7 +82,7 @@ async function postWorkoutParticipant({
 }: {
   workoutParticipant: WorkoutParictipantBase;
   workoutPromiseId: string;
-}): Promise<WorkoutParictipantsRead> {
+}): Promise<WorkoutParticipantsRead> {
   try {
     const res = await apiClient.post(
       `/workout-promise/${workoutPromiseId}/participants`,

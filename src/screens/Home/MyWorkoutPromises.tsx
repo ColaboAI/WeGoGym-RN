@@ -18,8 +18,8 @@ import {
 import { useTheme } from 'react-native-paper';
 import { Scene, Event } from 'react-native-tab-view/lib/typescript/src/types';
 import { HomeStackScreenProps } from '/navigators/types';
-import FirstRoute from '/components/organisms/Home/MyWorkoutPromise/FirstRoute';
-import SecondRoute from '/components/organisms/Home/MyWorkoutPromise/SecondRoute';
+import FirstRoute from '../../components/organisms/Home/FirstRoute';
+import SecondRoute from '../../components/organisms/Home/SecondRoute';
 
 type HomeScreenProps = HomeStackScreenProps<'MyWorkoutPromises'>;
 
