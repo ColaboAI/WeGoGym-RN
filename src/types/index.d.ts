@@ -97,7 +97,7 @@ interface WorkoutParictipantBase {
   isAdmin?: boolean;
 }
 
-interface WorkoutParictipantsRead
+interface WorkoutParticipantsRead
   extends WorkoutParictipantBase,
     timestampMixin {
   id: string;
