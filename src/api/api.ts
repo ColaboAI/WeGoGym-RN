@@ -125,7 +125,9 @@ async function getWorkoutPromise(
 ): Promise<WorkoutPromiseListRead> {
   const limit = 10;
   try {
-    const res = await apiClient.get(`/workout-promise?limit=${limit}&offset=${offset}`);
+    const res = await apiClient.get(
+      `/workout-promise?limit=${limit}&offset=${offset}`,
+    );
     return res.data;
   } catch (e) {
     if (e instanceof AxiosError) {
@@ -136,11 +138,13 @@ async function getWorkoutPromise(
 }
 
 async function getRecruitingWorkoutPromise(
-  limit: number,
   offset: number,
 ): Promise<WorkoutPromiseListRead> {
+  const limit = 10;
   try {
-    const res = await apiClient.get(`/workout-promise/recruiting?limit=${limit}&offset=${offset}`);
+    const res = await apiClient.get(
+      `/workout-promise/recruiting?limit=${limit}&offset=${offset}`,
+    );
     return res.data;
   } catch (e) {
     if (e instanceof AxiosError) {
@@ -162,15 +166,11 @@ async function getWorkoutPromiseById(id: string): Promise<WorkoutPromiseRead> {
   }
 }
 
-async function getWorkoutPromiseWrittenByUserId({
-  userId,
-  limit = 10,
-  offset = null,
-}: {
-  userId: string;
-  limit: number;
-  offset: number | null;
-}): Promise<WorkoutPromiseListRead> {
+async function getWorkoutPromiseWrittenByUserId(
+  offset: number,
+  userId: string,
+): Promise<WorkoutPromiseListRead> {
+  const limit = 10;
   try {
     const res = await apiClient.get(`/workout-promise/${userId}`, {
       params: {
@@ -187,15 +187,11 @@ async function getWorkoutPromiseWrittenByUserId({
   }
 }
 
-async function getWorkoutPromiseJoinedByUserId({
-  userId,
-  limit = 10,
-  offset = null,
-}: {
-  userId: string;
-  limit: number;
-  offset: number | null;
-}): Promise<WorkoutPromiseListRead> {
+async function getWorkoutPromiseJoinedByUserId(
+  userId: string,
+  offset: number,
+): Promise<WorkoutPromiseListRead> {
+  const limit = 10;
   try {
     const res = await apiClient.get(`/workout-promise/participant/${userId}`, {
       params: {
