@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 apply plugin: "com.google.gms.google-services"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
@@ -118,8 +119,18 @@ android {
         }
     }
     buildTypes {
+        // TODO: Change signing Config
         debug {
+            signingConfig sigxningConfigs.debug
+            // Note: CodePush updates shouldn't be tested in Debug mode as they're overriden by the RN packager. However, because CodePush checks for updates in all modes, we must supply a key.
+            resValue "string", "CodePushDeploymentKey", '""'
+        }
+        releaseStaging {
             signingConfig signingConfigs.debug
+            resValue "string", "CodePushDeploymentKey", '"rYY_5kdr9OaHAxBkt63ahpFEm7tWzpeExtZx9"'
+            // Note: It's a good idea to provide matchingFallbacks for the new buildType you create to prevent build issues
+            // Add the following line if not already there
+            matchingFallbacks = ['release']
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -127,6 +138,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            resValue "string", "CodePushDeploymentKey", '"goVWAgtZDsHrz-8xvkdaL42hrxaHrfiO3WnsZ"'
         }
     }
 
