@@ -30,6 +30,7 @@
     "react-content-loader": "^6.2.1",
     "react-error-boundary": "^4.0.2",
     "react-native": "0.71.4",
+    "react-native-code-push": "^7.1.0",
     "react-native-dotenv": "^3.4.8",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-get-random-values": "^1.8.0",
