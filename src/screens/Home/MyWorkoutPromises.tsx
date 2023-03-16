@@ -1,36 +1,25 @@
 import {
-  Alert,
   PressableAndroidRippleConfig,
   StyleProp,
-  StyleSheet,
   TextStyle,
   useWindowDimensions,
-  View,
   ViewStyle,
 } from 'react-native';
-import React, { Suspense, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   NavigationState,
   Route,
-  SceneMap,
   SceneRendererProps,
   TabBar,
   TabBarIndicatorProps,
   TabBarItemProps,
   TabView,
 } from 'react-native-tab-view';
-import { Button, Headline, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import { Scene, Event } from 'react-native-tab-view/lib/typescript/src/types';
-import {
-  useGetWorkoutJoinedByUserIdQuery,
-  useGetWorkoutWrittenByUserIdQuery,
-} from '/hooks/queries/workout.queries';
-import WorkoutPromiseLoader from '/components/molecules/Home/WorkoutPromiseLoader';
-import { ErrorBoundary } from 'react-error-boundary';
-import { useQueryErrorResetBoundary } from '@tanstack/react-query';
-import WorkoutPromiseCard from '/components/molecules/Home/WorkoutPromiseCard';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { HomeStackScreenProps } from '/navigators/types';
+import FirstRoute from '/components/organisms/Home/MyWorkoutPromise/FirstRoute';
+import SecondRoute from '/components/organisms/Home/MyWorkoutPromise/SecondRoute';
 
 type HomeScreenProps = HomeStackScreenProps<'MyWorkoutPromises'>;
 
@@ -38,20 +27,8 @@ export default function MyWorkoutPromisesScreen({
   navigation,
 }: HomeScreenProps) {
   const theme = useTheme();
-  const [limit, setLimit] = useState<number>(10);
-  const [offset, setOffset] = useState<number>(0);
-  const { reset } = useQueryErrorResetBoundary();
-
-  const workoutPromiseWrittenByMeQuery = useGetWorkoutWrittenByUserIdQuery(
-    'me',
-    limit,
-    offset,
-  );
-  const workoutPromiseJoinedByMeQuery = useGetWorkoutJoinedByUserIdQuery(
-    'me',
-    limit,
-    offset,
-  );
+  const [limit] = useState<number>(10);
+  const [offset] = useState<number>(0);
 
   const navigateToPromiseDetails = useCallback(
     (id: string) => {
@@ -60,110 +37,28 @@ export default function MyWorkoutPromisesScreen({
     [navigation],
   );
 
-  // 내가 만든 운동 약속
-  const FirstRoute = () => (
-    <Suspense fallback={<WorkoutPromiseLoader />}>
-      <ErrorBoundary
-        onReset={reset}
-        fallbackRender={({ resetErrorBoundary }) => (
-          <Headline>
-            There was an error!
-            <Button
-              onPress={() => {
-                resetErrorBoundary();
-                Alert.alert("I'm error boundary");
-              }}>
-              Try again
-            </Button>
-          </Headline>
-        )}>
-        <View
-          style={[
-            style.container,
-            { backgroundColor: theme.colors.background },
-          ]}>
-          {workoutPromiseWrittenByMeQuery.data ? (
-            <FlatList
-              data={workoutPromiseWrittenByMeQuery.data.items}
-              keyExtractor={item => item.id}
-              contentContainerStyle={style.workoutPromiseContainer}
-              initialNumToRender={5}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  key={`work-promise-container-${item.id}`}
-                  onPress={() => {
-                    navigateToPromiseDetails(item.id);
-                  }}>
-                  <WorkoutPromiseCard
-                    key={`work-promise-${item.id}`}
-                    {...item}
-                  />
-                </TouchableOpacity>
-              )}
-              showsVerticalScrollIndicator={false}
-            />
-          ) : (
-            <WorkoutPromiseLoader />
-          )}
-        </View>
-      </ErrorBoundary>
-    </Suspense>
-  );
-
-  // 내가 참여한 운동 약속
-  const SecondRoute = () => (
-    <Suspense fallback={<WorkoutPromiseLoader />}>
-      <ErrorBoundary
-        onReset={reset}
-        fallbackRender={({ resetErrorBoundary }) => (
-          <Headline>
-            There was an error!
-            <Button
-              onPress={() => {
-                resetErrorBoundary();
-                Alert.alert("I'm error boundary");
-              }}>
-              Try again
-            </Button>
-          </Headline>
-        )}>
-        <View
-          style={[
-            style.container,
-            { backgroundColor: theme.colors.background },
-          ]}>
-          {workoutPromiseJoinedByMeQuery.data ? (
-            <FlatList
-              data={workoutPromiseJoinedByMeQuery.data.items}
-              keyExtractor={item => item.id}
-              contentContainerStyle={style.workoutPromiseContainer}
-              initialNumToRender={5}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  key={`work-promise-container-${item.id}`}
-                  onPress={() => {
-                    navigateToPromiseDetails(item.id);
-                  }}>
-                  <WorkoutPromiseCard
-                    key={`work-promise-${item.id}`}
-                    {...item}
-                  />
-                </TouchableOpacity>
-              )}
-              showsVerticalScrollIndicator={false}
-            />
-          ) : (
-            <WorkoutPromiseLoader />
-          )}
-        </View>
-      </ErrorBoundary>
-    </Suspense>
-  );
-
-  const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-  });
+  const renderScene = ({ route }: { route: Route }) => {
+    switch (route.key) {
+      case 'first':
+        return (
+          <FirstRoute
+            limit={limit}
+            offset={offset}
+            navigateToPromiseDetails={navigateToPromiseDetails}
+          />
+        );
+      case 'second':
+        return (
+          <SecondRoute
+            limit={limit}
+            offset={offset}
+            navigateToPromiseDetails={navigateToPromiseDetails}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   const renderTabBar = (
     props: JSX.IntrinsicAttributes &
@@ -225,9 +120,6 @@ export default function MyWorkoutPromisesScreen({
       indicatorStyle={{ backgroundColor: theme.colors.onBackground }}
       style={{ backgroundColor: theme.colors.background }}
       labelStyle={{ color: theme.colors.onBackground }}
-      onTabPress={({ route }) => {
-        console.log(route);
-      }}
     />
   );
 
@@ -248,12 +140,3 @@ export default function MyWorkoutPromisesScreen({
     />
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  workoutPromiseContainer: {
-    flexGrow: 1,
-  },
-});
