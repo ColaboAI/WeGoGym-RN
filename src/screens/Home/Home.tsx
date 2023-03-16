@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   IconButton,
   Text,
@@ -6,12 +6,17 @@ import {
   Banner,
   useTheme,
   ActivityIndicator,
+  Button,
 } from 'react-native-paper';
 import React, { Suspense, useCallback, useState } from 'react';
 import WorkoutPromiseCard from 'components/molecules/Home/WorkoutPromiseCard';
 import { HomeStackScreenProps } from 'navigators/types';
 import CustomFAB from 'components/molecules/Home/CustomFAB';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import WorkoutPromiseLoader from 'components/molecules/Home/WorkoutPromiseLoader';
 import ScreenWrapper from 'components/template/Common/ScreenWrapper';
 import {
@@ -21,27 +26,35 @@ import {
 import GymMateRecommendation from '/components/organisms/User/GymMateRecommend';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import { getValueFor, save } from '/store/secureStore';
 
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 // TODO:
 // 페이지네이션 구현 (당겨서 새로고침)
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const theme = useTheme();
-  const [limit, setLimit] = useState<number>(10);
-  const [offset, setOffset] = useState<number>(0);
   const {
     data: workoutPromiseList,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useGetWorkoutQuery(limit, offset);
-  // const { data: recruitingWorkoutPromiseList, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetRecruitingWorkoutQuery(
-  //   limit,
-  //   offset,
-  // );
+    refetch,
+  } = useGetWorkoutQuery();
+
+  const {
+    data: recruitingWorkoutPromiseList,
+    fetchNextPage: fetchNextRecruitingWorkoutPage,
+    isFetchingNextPage: isFetchingNextRecruitingWorkoutPage,
+    hasNextPage: hasNextRecruitingWorkoutPage,
+    refetch: refetchRecruitingWorkout,
+  } = useGetRecruitingWorkoutQuery();
+
   const [isCheck, setIsCheck] = useState<boolean>(false);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState<string | null>(
+    getValueFor('isFirstTime'),
+  );
   const { reset } = useQueryErrorResetBoundary();
+  const [refreshing, setRefreshing] = useState(false);
 
   const navigateToPromiseDetails = useCallback(
     (id: string) => {
@@ -58,24 +71,36 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   );
 
   const renderBanner = useCallback(
-    () =>
-      visible ? (
-        <View style={style.bannerContainer}>
-          <Banner
-            elevation={4}
-            visible={visible}
-            actions={[
-              {
-                label: '닫기',
-                onPress: () => setVisible(false),
+    () => (
+      <View style={style.bannerContainer}>
+        <Banner
+          elevation={4}
+          visible={visible === 'false' ? false : true}
+          actions={[
+            {
+              label: '닫기',
+              onPress: () => {
+                save('isFirstTime', 'false');
+                setVisible('false');
               },
-            ]}
-            contentStyle={style.banner}>
-            🎉 2023년 3월 1일부터 위고짐 서비스를 시작합니다. 🎉
-          </Banner>
-        </View>
-      ) : null,
+            },
+          ]}
+          contentStyle={style.banner}>
+          🎉 2023년 3월 1일부터 위고짐 서비스를 시작합니다. 🎉
+        </Banner>
+      </View>
+    ),
     [visible],
+  );
+
+  const renderError = useCallback(
+    (resetErrorBoundary: () => void) => (
+      <View style={style.errorContainer}>
+        <Text>운동을 불러올 수 없습니다!</Text>
+        <Button onPress={() => resetErrorBoundary()}>다시 시도</Button>
+      </View>
+    ),
+    [],
   );
 
   const renderItem = useCallback(
@@ -90,6 +115,16 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     ),
     [navigateToPromiseDetails],
   );
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    if (isCheck) {
+      refetchRecruitingWorkout();
+    } else {
+      refetch();
+    }
+    setRefreshing(false);
+  }, [isCheck, refetch, refetchRecruitingWorkout]);
 
   return (
     <>
@@ -125,21 +160,38 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         <Suspense fallback={<WorkoutPromiseLoader />}>
           <ErrorBoundary
             onReset={reset}
-            fallbackRender={({ resetErrorBoundary }) => (
-              <View style={style.emptyContainer}>
-                <Text>운동을 불러올 수 없습니다.</Text>
-              </View>
-            )}>
-            <>
+            fallbackRender={({ resetErrorBoundary }) =>
+              renderError(resetErrorBoundary)
+            }>
+            <View>
               <FlatList
-                data={workoutPromiseList?.pages.flatMap(page => page.items)}
+                data={
+                  !isCheck
+                    ? workoutPromiseList?.pages.flatMap(page => page.items)
+                    : recruitingWorkoutPromiseList?.pages.flatMap(
+                        page => page.items,
+                      )
+                }
                 keyExtractor={item => item.id}
                 contentContainerStyle={style.workoutPromiseContainer}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
                 onEndReached={() => {
-                  if (hasNextPage) {
-                    fetchNextPage();
+                  if (!isCheck) {
+                    if (hasNextPage) {
+                      fetchNextPage();
+                    }
+                    console.log('end reached');
+                  } else {
+                    if (hasNextRecruitingWorkoutPage) {
+                      fetchNextRecruitingWorkoutPage();
+                    }
+                    console.log('end reached');
                   }
-                  console.log('end reached');
                 }}
                 onEndReachedThreshold={0.1}
                 initialNumToRender={5}
@@ -166,11 +218,17 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
                     </View>
                   </>
                 }
-                ListFooterComponent={
-                  <ActivityIndicator animating={isFetchingNextPage} />
-                }
                 renderItem={renderItem}
                 showsVerticalScrollIndicator={false}
+                ListFooterComponent={
+                  <ActivityIndicator
+                    animating={
+                      !isCheck
+                        ? isFetchingNextPage
+                        : isFetchingNextRecruitingWorkoutPage
+                    }
+                  />
+                }
                 ListEmptyComponent={
                   <View style={style.emptyContainer}>
                     <Text>
@@ -179,7 +237,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
                   </View>
                 }
               />
-            </>
+            </View>
           </ErrorBoundary>
         </Suspense>
       </ScreenWrapper>
@@ -196,6 +254,11 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 const style = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  errorContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headerContainer: {
     flexDirection: 'row',
