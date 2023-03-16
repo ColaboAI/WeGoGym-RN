@@ -75,9 +75,6 @@ function AuthProvider({ children }: AuthProviderProps) {
         save('refreshToken', refreshToken);
         save('userId', userId);
 
-        console.log('token: ', token);
-        console.log('refreshToken: ', refreshToken);
-        console.log('userId: ', userId);
         setAuthState(prevState => ({
           ...prevState,
           token: token,
