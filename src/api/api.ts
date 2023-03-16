@@ -379,6 +379,18 @@ async function postChatRoom(params: ChatRoomCreate): Promise<ChatRoom> {
   }
 }
 
+async function deleteChatRoomMember(
+  roomId: string,
+  userId: string,
+): Promise<boolean> {
+  try {
+    await apiClient.delete(`/chat/room/${roomId}/user/${userId}`);
+    return true;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export {
   postLogin,
   postRegister,
@@ -402,4 +414,5 @@ export {
   getChatMessages,
   getDirectChatRoom,
   postChatRoom,
+  deleteChatRoomMember,
 };
