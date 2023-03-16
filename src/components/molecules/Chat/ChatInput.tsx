@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { TextInput, useTheme } from 'react-native-paper';
-import { Alert, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Platform } from 'react-native';
 import { ChatParamList } from '/navigators/types';
 import {
@@ -12,6 +12,7 @@ import { AxiosError } from 'axios';
 import { getValueFor } from '/store/secureStore';
 import { WS_BASE_URL } from '/api/client';
 import { camelCase } from 'camel-case';
+import { useSnackBarActions } from '/hooks/context/useSnackbar';
 export type ChatInputProps = ChatParamList & {
   inputText: string;
   setInputText: (text: string) => void;
@@ -39,7 +40,7 @@ const ChatInput = (props: ChatInputProps) => {
   // const nav = useNavigation<NativeStackNavigationProp<ChatStackParamList>>();
   const queryClient = useQueryClient();
   const webSocket = useRef<WebSocket | null>(null);
-
+  const { onShow } = useSnackBarActions();
   // Init websocket
   useEffect(() => {
     if (chatRoomId && myId) {
@@ -61,7 +62,6 @@ const ChatInput = (props: ChatInputProps) => {
               [camelCase(key)]: data[key],
             };
           }, {} as Message);
-          console.log('new Chat Msg: ', convertedData);
           if (data.type === 'text') {
             const message: Message = {
               id: convertedData.id,
@@ -75,20 +75,7 @@ const ChatInput = (props: ChatInputProps) => {
               ['chatList'],
               (old: InfiniteData<ChatRoomListResponse> | undefined) => {
                 if (old === undefined) {
-                  return {
-                    pages: [
-                      {
-                        items: [
-                          {
-                            ...data,
-                          },
-                        ],
-                        total: 1,
-                        nextCursor: 1,
-                      },
-                    ],
-                    pageParams: [undefined],
-                  };
+                  return;
                 }
                 const newData = old.pages.map(page => {
                   const newPage = page.items.map(item => {
@@ -153,8 +140,7 @@ const ChatInput = (props: ChatInputProps) => {
         };
 
         webSocket.current.onerror = e => {
-          console.error('WebSocket Error: ', e.message);
-          Alert.alert('Websocket Error: ', e.message);
+          onShow(`${e.message}`, 'error');
         };
       }
     }
@@ -164,7 +150,7 @@ const ChatInput = (props: ChatInputProps) => {
         webSocket.current.close();
       }
     };
-  }, [chatRoomId, myId, queryClient]);
+  }, [chatRoomId, myId, onShow, queryClient]);
 
   const handleSubmit = useCallback(async () => {
     if (chatRoomId && myId) {
@@ -185,13 +171,13 @@ const ChatInput = (props: ChatInputProps) => {
       // create direct chat room
       if (userId && myId) {
         try {
-          await chatRoomMutation.mutateAsync({
+          const res = await chatRoomMutation.mutateAsync({
             createdBy: myId,
             membersUserIds: [userId],
             isPrivate: true,
             isGroupChat: false,
           });
-          if (chatRoomMutation.isSuccess) {
+          if (res.id) {
             if (webSocket.current && inputText.length > 0) {
               webSocket.current.send(
                 JSON.stringify({
@@ -203,8 +189,10 @@ const ChatInput = (props: ChatInputProps) => {
               setIsTyping(false);
             }
           }
+          onShow('채팅방이 생성되었습니다.', 'success');
         } catch (e) {
-          console.log(e);
+          console.error(e);
+          onShow('채팅방 생성에 실패했습니다.', 'error');
         }
       } else {
         // TODO: error handling
@@ -216,6 +204,7 @@ const ChatInput = (props: ChatInputProps) => {
     chatRoomMutation,
     inputText,
     myId,
+    onShow,
     setInputText,
     setIsTyping,
     userId,
