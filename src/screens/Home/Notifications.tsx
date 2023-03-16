@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
+import NotificationCard from '/components/molecules/Home/NotificationCard';
 
 export default function NotificationsScreen() {
   return (
     <View style={style.container}>
-      <Text>알림이 없습니다!</Text>
+      <NotificationCard />
     </View>
   );
 }
