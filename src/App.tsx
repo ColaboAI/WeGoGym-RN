@@ -10,6 +10,7 @@ import { useAxiosInterceptor } from './api/client';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { Platform } from 'react-native';
 import { enableScreens } from 'react-native-screens';
+import SnackBarProvider from './hooks/context/SnackBarProvider';
 function App() {
   const authState = useAuthValue();
   useEffect(() => {
@@ -24,20 +25,22 @@ function App() {
   }
 
   return (
-    <QueryErrorResetBoundary>
-      <Stack.Navigator screenOptions={() => ({ headerShown: false })}>
-        {/* TODO: Check phone number and Token */}
-        {authState.token === null ? (
-          <>
-            <Stack.Screen name="Auth" component={Auth} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="MainNavigator" component={MainNavigator} />
-          </>
-        )}
-      </Stack.Navigator>
-    </QueryErrorResetBoundary>
+    <SnackBarProvider>
+      <QueryErrorResetBoundary>
+        <Stack.Navigator screenOptions={() => ({ headerShown: false })}>
+          {/* TODO: Check phone number and Token */}
+          {authState.token === null ? (
+            <>
+              <Stack.Screen name="Auth" component={Auth} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="MainNavigator" component={MainNavigator} />
+            </>
+          )}
+        </Stack.Navigator>
+      </QueryErrorResetBoundary>
+    </SnackBarProvider>
   );
 }
 
