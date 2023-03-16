@@ -5,7 +5,7 @@ import {
   useWindowDimensions,
   ViewStyle,
 } from 'react-native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   NavigationState,
   Route,
@@ -27,8 +27,6 @@ export default function MyWorkoutPromisesScreen({
   navigation,
 }: HomeScreenProps) {
   const theme = useTheme();
-  const [limit] = useState<number>(10);
-  const [offset] = useState<number>(0);
 
   const navigateToPromiseDetails = useCallback(
     (id: string) => {
@@ -41,19 +39,11 @@ export default function MyWorkoutPromisesScreen({
     switch (route.key) {
       case 'first':
         return (
-          <FirstRoute
-            limit={limit}
-            offset={offset}
-            navigateToPromiseDetails={navigateToPromiseDetails}
-          />
+          <FirstRoute navigateToPromiseDetails={navigateToPromiseDetails} />
         );
       case 'second':
         return (
-          <SecondRoute
-            limit={limit}
-            offset={offset}
-            navigateToPromiseDetails={navigateToPromiseDetails}
-          />
+          <SecondRoute navigateToPromiseDetails={navigateToPromiseDetails} />
         );
       default:
         return null;

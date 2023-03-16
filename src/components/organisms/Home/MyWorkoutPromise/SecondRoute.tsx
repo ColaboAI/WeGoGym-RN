@@ -3,26 +3,22 @@ import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { StyleSheet, View } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import { Button, Text, useTheme } from 'react-native-paper';
+import { ActivityIndicator, Button, Text, useTheme } from 'react-native-paper';
 import WorkoutPromiseCard from '/components/molecules/Home/WorkoutPromiseCard';
 import WorkoutPromiseLoader from '/components/molecules/Home/WorkoutPromiseLoader';
 import { useGetWorkoutJoinedByUserIdQuery } from '/hooks/queries/workout.queries';
 
 type Props = {
-  limit: number;
-  offset: number;
   navigateToPromiseDetails: (id: string) => void;
 };
 
 // 내가 참여한 운동 약속
-const SecondRoute = ({ limit, offset, navigateToPromiseDetails }: Props) => {
+const SecondRoute = ({ navigateToPromiseDetails }: Props) => {
   const { reset } = useQueryErrorResetBoundary();
   const theme = useTheme();
-  const workoutPromiseJoinedByMeQuery = useGetWorkoutJoinedByUserIdQuery(
-    'me',
-    limit,
-    offset,
-  );
+
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    useGetWorkoutJoinedByUserIdQuery('me');
 
   const renderError = useCallback(
     (resetErrorBoundary: () => void) => (
@@ -46,39 +42,40 @@ const SecondRoute = ({ limit, offset, navigateToPromiseDetails }: Props) => {
             styles.container,
             { backgroundColor: theme.colors.background },
           ]}>
-          {workoutPromiseJoinedByMeQuery.data ? (
-            <FlatList
-              data={workoutPromiseJoinedByMeQuery.data.items}
-              keyExtractor={item => item.id}
-              contentContainerStyle={styles.workoutPromiseContainer}
-              initialNumToRender={5}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  key={`work-promise-container-${item.id}`}
-                  onPress={() => {
-                    navigateToPromiseDetails(item.id);
-                  }}>
-                  <WorkoutPromiseCard
-                    key={`work-promise-${item.id}`}
-                    {...item}
-                  />
-                </TouchableOpacity>
-              )}
-              showsVerticalScrollIndicator={false}
-              ListEmptyComponent={
-                <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyText}>
-                    참여한 운동 약속이 아직 없어요😅
-                  </Text>
-                  <Text style={styles.emptyText}>
-                    운동 약속에 참여해보세요!
-                  </Text>
-                </View>
+          <FlatList
+            data={data?.pages.flatMap(page => page.items)}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.workoutPromiseContainer}
+            onEndReached={() => {
+              if (hasNextPage) {
+                fetchNextPage();
               }
-            />
-          ) : (
-            <WorkoutPromiseLoader />
-          )}
+              console.log('end reached');
+            }}
+            onEndReachedThreshold={0.1}
+            initialNumToRender={5}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                key={`work-promise-container-${item.id}`}
+                onPress={() => {
+                  navigateToPromiseDetails(item.id);
+                }}>
+                <WorkoutPromiseCard key={`work-promise-${item.id}`} {...item} />
+              </TouchableOpacity>
+            )}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={
+              <ActivityIndicator animating={isFetchingNextPage} />
+            }
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>
+                  참여한 운동 약속이 아직 없어요😅
+                </Text>
+                <Text style={styles.emptyText}>운동 약속에 참여해보세요!</Text>
+              </View>
+            }
+          />
         </View>
       </ErrorBoundary>
     </Suspense>

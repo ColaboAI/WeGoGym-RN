@@ -1,4 +1,9 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import {
   getWorkoutPromise,
   getWorkoutPromiseById,
@@ -83,14 +88,14 @@ export function useWorkoutParticipantDeleteMutation(workoutPromiseId: string) {
 export function useGetWorkoutQuery() {
   return useInfiniteQuery({
     queryKey: ['getWorkout'],
-    queryFn: ({pageParam = 0}) => getWorkoutPromise(pageParam),
-    getNextPageParam: (lastPage, pages) => {
+    queryFn: ({ pageParam = 0 }) => getWorkoutPromise(pageParam),
+    getNextPageParam: lastPage => {
       if (lastPage.nextCursor === undefined) {
         return undefined;
       }
       return lastPage.nextCursor;
     },
-    getPreviousPageParam: (firstPage, pages) => {
+    getPreviousPageParam: firstPage => {
       if (firstPage.prevCursor === undefined) {
         return undefined;
       }
@@ -102,24 +107,36 @@ export function useGetWorkoutQuery() {
       console.log(error);
     },
     onSuccess(data) {
-      console.log('운동 약속을 가져왔습니다 :',data);
+      console.log('운동 약속을 가져왔습니다 :', data);
     },
     suspense: true,
     keepPreviousData: true,
   });
 }
 
-export function useGetRecruitingWorkoutQuery(limit: number, offset: number) {
+export function useGetRecruitingWorkoutQuery() {
   return useInfiniteQuery({
-    queryKey: ['getRecruitingWorkout', limit, offset],
-    queryFn: ({pageParam = 0}) => getRecruitingWorkoutPromise( limit, offset ),
+    queryKey: ['getRecruitingWorkout'],
+    queryFn: ({ pageParam = 0 }) => getRecruitingWorkoutPromise(pageParam),
     retry: 1,
+    getNextPageParam: lastPage => {
+      if (lastPage.nextCursor === undefined) {
+        return undefined;
+      }
+      return lastPage.nextCursor;
+    },
+    getPreviousPageParam: firstPage => {
+      if (firstPage.prevCursor === undefined) {
+        return undefined;
+      }
+      return firstPage.prevCursor;
+    },
     onError: (error: Error) => {
       Alert.alert(`운동 약속을 가져오는데 실패하였습니다: ${error.message}`);
       console.log(error);
     },
     onSuccess(data) {
-      console.log('운동 약속을 가져왔습니다.',data);
+      console.log('운동 약속을 가져왔습니다.', data);
     },
     suspense: true,
     keepPreviousData: true,
@@ -141,15 +158,24 @@ export function useGetWorkoutByIdQuery(id: string) {
   });
 }
 
-export function useGetWorkoutWrittenByUserIdQuery(
-  userId: string,
-  limit: number,
-  offset: number,
-) {
-  return useQuery({
-    queryKey: ['getWorkoutWrittenByUserId', userId, limit, offset],
-    queryFn: () => getWorkoutPromiseWrittenByUserId({ userId, limit, offset }),
+export function useGetWorkoutWrittenByUserIdQuery(userId: string) {
+  return useInfiniteQuery({
+    queryKey: ['getWorkoutWrittenByUserId', userId],
+    queryFn: ({ pageParam = 0 }) =>
+      getWorkoutPromiseWrittenByUserId(pageParam, userId),
     retry: 1,
+    getNextPageParam: lastPage => {
+      if (lastPage.nextCursor === undefined) {
+        return undefined;
+      }
+      return lastPage.nextCursor;
+    },
+    getPreviousPageParam: firstPage => {
+      if (firstPage.prevCursor === undefined) {
+        return undefined;
+      }
+      return firstPage.prevCursor;
+    },
     onError: (error: Error) => {
       Alert.alert(
         `내가 만든 운동 약속을 가져오는데 실패하였습니다: ${error.message}`,
@@ -157,22 +183,31 @@ export function useGetWorkoutWrittenByUserIdQuery(
       console.log(error);
     },
     onSuccess(data) {
-      console.log(data);
+      console.log('내가 만든 운동 약속', data);
     },
     suspense: true,
     keepPreviousData: true,
   });
 }
 
-export function useGetWorkoutJoinedByUserIdQuery(
-  userId: string,
-  limit: number,
-  offset: number,
-) {
-  return useQuery({
-    queryKey: ['getWorkoutJoinedByUserId', userId, limit, offset],
-    queryFn: () => getWorkoutPromiseJoinedByUserId({ userId, limit, offset }),
+export function useGetWorkoutJoinedByUserIdQuery(userId: string) {
+  return useInfiniteQuery({
+    queryKey: ['getWorkoutJoinedByUserId', userId],
+    queryFn: ({ pageParam = 0 }) =>
+      getWorkoutPromiseJoinedByUserId(userId, pageParam),
     retry: 1,
+    getNextPageParam: lastPage => {
+      if (lastPage.nextCursor === undefined) {
+        return undefined;
+      }
+      return lastPage.nextCursor;
+    },
+    getPreviousPageParam: firstPage => {
+      if (firstPage.prevCursor === undefined) {
+        return undefined;
+      }
+      return firstPage.prevCursor;
+    },
     onError: (error: Error) => {
       Alert.alert(
         `내가 참여한 운동 약속을 가져오는데 실패하였습니다: ${error.message}`,
@@ -180,7 +215,7 @@ export function useGetWorkoutJoinedByUserIdQuery(
       console.log(error);
     },
     onSuccess(data) {
-      console.log(data);
+      console.log('내가 참여한 운동 약속', data);
     },
     suspense: true,
     keepPreviousData: true,
