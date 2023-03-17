@@ -350,7 +350,7 @@ PODS:
     - glog
   - react-native-get-random-values (1.8.0):
     - React-Core
-  - react-native-image-picker (5.3.0):
+  - react-native-image-picker (5.3.1):
     - React-Core
   - react-native-mmkv (2.6.3):
     - MMKV (>= 1.2.13)
@@ -715,7 +715,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 1f51e775819199d3fe9410e69ee8d4c4161c7b06
   React-logger: 0d58569ec51d30d1792c5e86a8e3b78d24b582c6
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
-  react-native-image-picker: 8d075f00440dff09ec4b888a85047d290fb2a702
+  react-native-image-picker: ec9b713e248760bfa0f879f0715391de4651a7cb
   react-native-mmkv: 2e5bf67513cc8deed86fcffe87e12b8cc250dfab
   react-native-pager-view: b58cb9e9f42f64e50cab3040815772c1d119a2e2
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
@@ -746,4 +746,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 30dcbcc62e41a4679965670bcce190d7bc99f7ad
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.11.3
