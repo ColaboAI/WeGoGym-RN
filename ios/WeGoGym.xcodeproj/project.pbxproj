@@ -40,6 +40,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = WeGoGym/main.m; sourceTree = "<group>"; };
 		14605921295D7C7E0077C855 /* WeGoGym.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = WeGoGym.entitlements; path = WeGoGym/WeGoGym.entitlements; sourceTree = "<group>"; };
 		3A58978BFBFCE364B18A5679 /* Pods_WeGoGym_WeGoGymTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeGoGym_WeGoGymTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		511358E6B89F80B304DD5205 /* Pods-WeGoGym-WeGoGymTests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.staging.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.staging.xcconfig"; sourceTree = "<group>"; };
 		53D162462AC66259A8263F02 /* Pods-WeGoGym-WeGoGymTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.release.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.release.xcconfig"; sourceTree = "<group>"; };
 		58BEEC5D32F87C4B487254F9 /* Pods_WeGoGym.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeGoGym.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		643CE69529443D24002FE9BB /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
@@ -64,6 +65,7 @@
 		913F89F57A673D0D9AE14977 /* Pods-WeGoGym.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym.debug.xcconfig"; path = "Target Support Files/Pods-WeGoGym/Pods-WeGoGym.debug.xcconfig"; sourceTree = "<group>"; };
 		E4A85BFAC382F3F263430DC1 /* Pods-WeGoGym.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym.release.xcconfig"; path = "Target Support Files/Pods-WeGoGym/Pods-WeGoGym.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F6E1A305E8C619C9375D51FE /* Pods-WeGoGym.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym.staging.xcconfig"; path = "Target Support Files/Pods-WeGoGym/Pods-WeGoGym.staging.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +192,8 @@
 				E4A85BFAC382F3F263430DC1 /* Pods-WeGoGym.release.xcconfig */,
 				820138491D6F4BE6A319E189 /* Pods-WeGoGym-WeGoGymTests.debug.xcconfig */,
 				53D162462AC66259A8263F02 /* Pods-WeGoGym-WeGoGymTests.release.xcconfig */,
+				F6E1A305E8C619C9375D51FE /* Pods-WeGoGym.staging.xcconfig */,
+				511358E6B89F80B304DD5205 /* Pods-WeGoGym-WeGoGymTests.staging.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -684,7 +688,7 @@
 		};
 		643ED1F729C3609C002A998F /* Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E4A85BFAC382F3F263430DC1 /* Pods-WeGoGym.release.xcconfig */;
+			baseConfigurationReference = F6E1A305E8C619C9375D51FE /* Pods-WeGoGym.staging.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -711,7 +715,7 @@
 		};
 		643ED1F829C3609C002A998F /* Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 53D162462AC66259A8263F02 /* Pods-WeGoGym-WeGoGymTests.release.xcconfig */;
+			baseConfigurationReference = 511358E6B89F80B304DD5205 /* Pods-WeGoGym-WeGoGymTests.staging.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
