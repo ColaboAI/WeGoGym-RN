@@ -20,9 +20,11 @@ const WorkoutPromiseLoader = (
         backgroundColor={theme.colors.background}
         foregroundColor={theme.colors.card}
         {...props}>
-        <Rect x="15" y="0" rx="5" ry="5" width="350" height="150" />
-        <Rect x="15" y="160" rx="5" ry="5" width="350" height="150" />
-        <Rect x="15" y="320" rx="5" ry="5" width="350" height="150" />
+        <Rect x="20" y="0" rx="5" ry="5" width="350" height="150" />
+        <Rect x="20" y="160" rx="5" ry="5" width="350" height="150" />
+        <Rect x="20" y="320" rx="5" ry="5" width="350" height="150" />
+        <Rect x="20" y="480" rx="5" ry="5" width="350" height="150" />
+        <Rect x="20" y="640" rx="5" ry="5" width="350" height="150" />
       </ContentLoader>
     </View>
   );
