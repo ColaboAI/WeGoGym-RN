@@ -32,6 +32,12 @@ const GymInfoLoader = (
         <Rect x="17" y="315" rx="5" ry="5" width="35%" height="25" />
         <Rect x="17" y="350" rx="5" ry="5" width="88%" height="25" />
         <Rect x="17" y="385" rx="5" ry="5" width="86%" height="23" />
+        <Rect x="17" y="420" rx="5" ry="5" width="35%" height="25" />
+        <Rect x="17" y="455" rx="5" ry="5" width="88%" height="25" />
+        <Rect x="17" y="490" rx="5" ry="5" width="86%" height="23" />
+        <Rect x="17" y="525" rx="5" ry="5" width="35%" height="25" />
+        <Rect x="17" y="560" rx="5" ry="5" width="88%" height="25" />
+        <Rect x="17" y="595" rx="5" ry="5" width="86%" height="23" />
       </ContentLoader>
     </View>
   );
