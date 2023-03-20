@@ -67,21 +67,25 @@ function AuthProvider({ children }: AuthProviderProps) {
           clear('phoneNumber');
           return;
         }
+
         save('phoneNumber', phoneNumber);
-
-        const { token, refreshToken, userId } = await postLogin(phoneNumber);
-
-        save('token', token);
-        save('refreshToken', refreshToken);
-        save('userId', userId);
-
-        setAuthState(prevState => ({
-          ...prevState,
-          token: token,
-          isSignout: false,
-          isLoading: false,
-          userId: userId,
-        }));
+        try {
+          const { token, refreshToken, userId } = await postLogin(phoneNumber);
+          save('token', token);
+          save('refreshToken', refreshToken);
+          save('userId', userId);
+          setAuthState(prevState => ({
+            ...prevState,
+            token: token,
+            isSignout: false,
+            isLoading: false,
+            userId: userId,
+          }));
+        } catch (e) {
+          const err = e as Error;
+          Alert.alert('로그인 실패', `${err.name}: ${err.message}`);
+          return;
+        }
       },
       signOut: async () => {
         clear('token');
