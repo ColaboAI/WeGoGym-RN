@@ -2,16 +2,24 @@ import { useAuthActions } from 'hooks/context/useAuth';
 import { getValueFor } from 'store/secureStore';
 import axios from 'axios';
 import applyCaseMiddleware from 'axios-case-converter';
-import { useCallback, useMemo, useState } from 'react';
-import { Alert, Platform } from 'react-native';
+import { useMemo, useState } from 'react';
+import { Alert, NativeModules, Platform } from 'react-native';
 import { refreshAccessToken } from './api';
+// TODO: 개발 환경에서만 사용, 배포시에는 서버 주소로 변경
+const getDevServerAddress = () => {
+  const scriptURL = NativeModules.SourceCode.scriptURL;
+  const address = scriptURL.split('://')[1].split('/')[0];
+  const hostname = address.split(':')[0];
+  return hostname;
+};
+
 export const BASE_URL =
   Platform.OS === 'ios'
-    ? 'http://127.0.0.1:8000/api/v1'
+    ? `http://${getDevServerAddress()}:8000/api/v1`
     : 'http://10.0.2.2:8000/api/v1';
 export const WS_BASE_URL =
   Platform.OS === 'ios'
-    ? 'ws://127.0.0.1:8000/api/v1'
+    ? `ws://${getDevServerAddress()}:8000/api/v1`
     : 'ws://10.0.2.2:8000/api/v1';
 type RequestCallback = (token: string) => void;
 const apiClient = applyCaseMiddleware(axios.create({ baseURL: BASE_URL }));
@@ -27,21 +35,16 @@ function useAxiosInterceptor() {
 
   let refreshSubscribers: RequestCallback[] = useMemo(() => [], []);
 
-  const onTokenRefreshed = useCallback(
-    (token: string) => {
-      refreshSubscribers.map((cb: RequestCallback) => {
-        cb(token);
-      });
-    },
-    [refreshSubscribers],
-  );
+  const onTokenRefreshed = (token: string) => {
+    refreshSubscribers.map((cb: RequestCallback) => {
+      cb(token);
+    });
+    refreshSubscribers = [];
+  };
 
-  const addRefreshSubscriber = useCallback(
-    (cb: RequestCallback) => {
-      refreshSubscribers.push(cb);
-    },
-    [refreshSubscribers],
-  );
+  const addRefreshSubscriber = (cb: RequestCallback) => {
+    refreshSubscribers.push(cb);
+  };
 
   apiClient.interceptors.request.use(
     async config => {
@@ -58,15 +61,13 @@ function useAxiosInterceptor() {
   apiClient.interceptors.response.use(
     response => response,
     async error => {
-      const {
-        config,
-        response: { status },
-      } = error;
+      const { config, response } = error;
       const originalRequest = config;
-
-      // if (!config || !status) {
-      //   return Promise.reject(error);
-      // }
+      const status = response?.status;
+      console.error('error: ', error, config, status);
+      if (!config || !status) {
+        return Promise.reject(error);
+      }
       // if (config.url === REFRESH_URL || status !== 401) {
       //   return Promise.reject(error);
       // }
