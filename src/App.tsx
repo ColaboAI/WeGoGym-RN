@@ -11,8 +11,10 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { Platform } from 'react-native';
 import { enableScreens } from 'react-native-screens';
 import SnackBarProvider from './hooks/context/SnackBarProvider';
+import { useNotification } from './hooks/notification';
 function App() {
   const authState = useAuthValue();
+  useNotification();
   useEffect(() => {
     if (Platform.OS === 'ios') {
       enableScreens(false);
