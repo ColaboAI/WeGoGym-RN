@@ -272,6 +272,14 @@ async function putMyInfo(
     throw e;
   }
 }
+async function putMyFCMToken(token: string): Promise<void> {
+  try {
+    const res = await apiClient.patch('/user/me/fcm-token', token);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
 
 async function refreshAccessToken(
   param: RefreshTokenRequest,
@@ -395,4 +403,5 @@ export {
   getDirectChatRoom,
   postChatRoom,
   deleteChatRoomMember,
+  putMyFCMToken,
 };
