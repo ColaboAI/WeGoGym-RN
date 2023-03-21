@@ -11,16 +11,6 @@ import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { useChatRoomState } from '/hooks/chat/hook';
 
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
-// Logic for the chat room screen (chat room id is passed in the route params)
-// 1. Get the chat room id from the route params
-// 2. Get the messages for the chat room
-// 3. Render the messages
-
-// if chat room id is undefined, then we are creating a new chat room
-// 1. Get the user id from the route params
-// 2. Check if chat room exists with the user(receiver) and current user(sender)
-// 3. Create a new chat room with the user
-// 4. Navigate(replace) to the chat room screen with the new chat room id
 
 function ChatRoom({ route }: ChatRoomScreenProps) {
   const {
@@ -78,21 +68,6 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
         )}>
         <View
           style={[styles.ChatRoomContainer, { marginBottom: inset.bottom }]}>
-          {/* {((data?.pages.length === 1 && data.pages[0].total === 0) ||
-              data?.pages === undefined) && (
-              <View style={styles.emptyContainer}>
-                <Text>메세지가 없습니다. 새로운 메세지를 작성해보세요!</Text>
-              </View>
-            )} */}
-          {/* {route.params.isGroupChat === false && roomId === undefined && (
-            <DirectChatRoomCreate
-              chatRoomMutation={chatRoomMutation}
-              chatRoomId={roomId}
-              setChatRoomId={setRoomId}
-              userId={route.params.userId}
-            />
-          )} */}
-
           <FlatList
             contentContainerStyle={styles.contentContainer}
             data={data?.pages.flatMap(page => page.items)}
