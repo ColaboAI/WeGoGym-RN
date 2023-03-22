@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>465388501088-ggbd08jgpi0lpr80tamupukdhesss5of.apps.googleusercontent.com</string>
+	<string>465388501088-gf24qd15i0klfodltqt72oa095efcjqr.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.465388501088-ggbd08jgpi0lpr80tamupukdhesss5of</string>
+	<string>com.googleusercontent.apps.465388501088-gf24qd15i0klfodltqt72oa095efcjqr</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>465388501088-funnu0etj8upi3jndrm3hm4m2bsmmb7i.apps.googleusercontent.com</string>
+	<string>465388501088-4jafrnnijn9rssfhbqo0pbsd1b3l3igh.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDplXqwdNfqud6VDZ1YP5ljDXRt6uUW-Sg</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,22 +15,22 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>WeGoGym.ios</string>
+	<string>ml.colabo.WeGoGym.dev</string>
 	<key>PROJECT_ID</key>
 	<string>wegogym-687a7</string>
 	<key>STORAGE_BUCKET</key>
 	<string>wegogym-687a7.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<true/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:465388501088:ios:841ad3753d7c4443b42b05</string>
+	<string>1:465388501088:ios:9be59c5e391b0161b42b05</string>
 </dict>
 </plist>

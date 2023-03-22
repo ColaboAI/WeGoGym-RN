@@ -11,7 +11,8 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		140E39372963E22B000EFCBF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 140E39362963E22B000EFCBF /* GoogleService-Info.plist */; };
+		6473EDA529C9E50300100247 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6473EDA429C9E50300100247 /* GoogleService-Info.plist */; };
+		6473EDA629C9E50300100247 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6473EDA429C9E50300100247 /* GoogleService-Info.plist */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C218F679AC50DB61217E7C72 /* Pods_WeGoGym_WeGoGymTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A58978BFBFCE364B18A5679 /* Pods_WeGoGym_WeGoGymTests.framework */; };
 		F5A21C9F7369880B91439076 /* Pods_WeGoGym.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58BEEC5D32F87C4B487254F9 /* Pods_WeGoGym.framework */; };
@@ -37,7 +38,6 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = WeGoGym/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = WeGoGym/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = WeGoGym/main.m; sourceTree = "<group>"; };
-		140E39362963E22B000EFCBF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		14605921295D7C7E0077C855 /* WeGoGym.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = WeGoGym.entitlements; path = WeGoGym/WeGoGym.entitlements; sourceTree = "<group>"; };
 		3A58978BFBFCE364B18A5679 /* Pods_WeGoGym_WeGoGymTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeGoGym_WeGoGymTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53D162462AC66259A8263F02 /* Pods-WeGoGym-WeGoGymTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.release.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -58,6 +58,7 @@
 		643CE6A229443D26002FE9BB /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		643CE6A329443D26002FE9BB /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		643CE6A429443D27002FE9BB /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		6473EDA429C9E50300100247 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = WeGoGym/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		820138491D6F4BE6A319E189 /* Pods-WeGoGym-WeGoGymTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.debug.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.debug.xcconfig"; sourceTree = "<group>"; };
 		913F89F57A673D0D9AE14977 /* Pods-WeGoGym.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym.debug.xcconfig"; path = "Target Support Files/Pods-WeGoGym/Pods-WeGoGym.debug.xcconfig"; sourceTree = "<group>"; };
@@ -110,6 +111,7 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				6473EDA429C9E50300100247 /* GoogleService-Info.plist */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -160,7 +162,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				140E39362963E22B000EFCBF /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* WeGoGym */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* WeGoGymTests */,
@@ -281,6 +282,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6473EDA629C9E50300100247 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,8 +291,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				140E39372963E22B000EFCBF /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				6473EDA529C9E50300100247 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
