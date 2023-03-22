@@ -1,7 +1,3 @@
-/**
- * @format
- */
-
 import * as React from 'react';
 import { AppRegistry, StyleSheet, useColorScheme } from 'react-native';
 import { name as appName } from './app.json';
@@ -25,6 +21,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AuthProvider from 'hooks/context/AuthProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { onMessageReceived } from '/utils/notification';
+import messaging from '@react-native-firebase/messaging';
 // https://callstack.github.io/react-native-paper/theming.html
 
 const myLightTheme = {
@@ -60,6 +58,7 @@ const CombinedDarkTheme = {
   },
 };
 const queryClient = new QueryClient();
+messaging().setBackgroundMessageHandler(onMessageReceived);
 
 export default function Main() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -92,4 +91,13 @@ const style = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent(appName, () => Main);
+function HeadlessCheck({ isHeadless }: { isHeadless: boolean }) {
+  if (isHeadless) {
+    // App has been launched in the background by iOS, ignore
+    return null;
+  }
+
+  return <Main />;
+}
+
+AppRegistry.registerComponent(appName, () => HeadlessCheck);
