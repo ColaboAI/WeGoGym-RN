@@ -8,10 +8,11 @@ import { SplashScreen } from './screens';
 import { useAuthValue } from './hooks/context/useAuth';
 import { useAxiosInterceptor } from './api/client';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { Platform } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import { enableScreens } from 'react-native-screens';
 import SnackBarProvider from './hooks/context/SnackBarProvider';
 import { useNotification } from './hooks/notification';
+import notifee from '@notifee/react-native';
 function App() {
   const authState = useAuthValue();
   useNotification();
@@ -20,6 +21,17 @@ function App() {
       enableScreens(false);
     }
   }, []);
+  useEffect(() => {
+    // appstate => focus
+    // remove badge number
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState === 'active') {
+        notifee.setBadgeCount(0);
+      }
+    };
+    AppState.addEventListener('change', handleAppStateChange);
+  }, []);
+
   useAxiosInterceptor();
 
   if (authState.isLoading) {
