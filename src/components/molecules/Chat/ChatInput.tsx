@@ -26,6 +26,9 @@ export type ChatInputProps = ChatParamList & {
   >;
 };
 
+/*
+ * TODO: 앱이 포커스 되었을때, 다시 websocket 연결
+ */
 const ChatInput = (props: ChatInputProps) => {
   const {
     chatRoomId,
@@ -41,6 +44,9 @@ const ChatInput = (props: ChatInputProps) => {
   const queryClient = useQueryClient();
   const webSocket = useRef<WebSocket | null>(null);
   const { onShow } = useSnackBarActions();
+
+  // TODO:init websocket again when app is focused
+
   // Init websocket
   useEffect(() => {
     if (chatRoomId && myId) {
@@ -48,7 +54,7 @@ const ChatInput = (props: ChatInputProps) => {
         const chatURL = `${WS_BASE_URL}/ws/chat/${chatRoomId}/${myId}`;
         webSocket.current = new WebSocket(chatURL);
         webSocket.current.onopen = () => {
-          onShow('채팅방에 입장 했습니다.', 'success');
+          // onShow('채팅방에 입장 했습니다.', 'success');
         };
         webSocket.current.onclose = e => {
           console.log(e.code, e.reason);
