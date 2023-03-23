@@ -2,10 +2,7 @@ import { Alert } from 'react-native';
 import { apiClient } from './client';
 import { AxiosError } from 'axios';
 import { snakeCase } from 'snake-case';
-// TODO: change to https
-// TODO: change to real domain
-
-// TODO: add param like firebase uid to identify user
+// TODO: change to https, deployed url
 async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
   try {
     const res = await apiClient.post('/user/login', {
