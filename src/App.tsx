@@ -42,7 +42,6 @@ function App() {
     <SnackBarProvider>
       <QueryErrorResetBoundary>
         <Stack.Navigator screenOptions={() => ({ headerShown: false })}>
-          {/* TODO: Check phone number and Token */}
           {authState.token === null ? (
             <>
               <Stack.Screen name="Auth" component={Auth} />
