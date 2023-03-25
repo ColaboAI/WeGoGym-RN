@@ -3,8 +3,10 @@ import messaging, {
 } from '@react-native-firebase/messaging';
 import { PermissionsAndroid } from 'react-native';
 
-import notifee, { AndroidImportance, EventType } from '@notifee/react-native';
+import notifee, { AndroidImportance } from '@notifee/react-native';
 import { Platform } from 'react-native';
+import { mmkv } from '/store/secureStore';
+import { convertObjectKeyToCamelCase } from '../util';
 
 async function checkApplicationPermission() {
   if (Platform.OS === 'android') {
@@ -34,10 +36,12 @@ async function requestUserPermission() {
   }
 }
 
+// TODO: MMKV에 current message 저장 후 => 앱이 실행되면 해당 메시지를 client에 최신화, MMKV에서 삭제
+// TODO: 앱 실행 중인 경우 알람 보이지 않게?
 async function onMessageReceived(
   message: FirebaseMessagingTypes.RemoteMessage,
 ) {
-  // const { data } = message;
+  const { data } = message;
 
   const channelId =
     (await notifee.getChannel('wegogym'))?.id ??
@@ -47,34 +51,36 @@ async function onMessageReceived(
       importance: AndroidImportance.HIGH,
     }));
 
-  await notifee.incrementBadgeCount();
-  await notifee.displayNotification({
-    title: message.notification?.title || 'Wegogym',
-    body: message.notification?.body || 'Wegogym',
-    android: {
-      channelId: channelId,
-    },
-  });
-}
-notifee.onBackgroundEvent(async ({ type, detail }) => {
-  const { notification, pressAction } = detail;
-  console.log('Notification received on Background', notification);
-  if (
-    notification === undefined ||
-    pressAction === undefined ||
-    type === undefined ||
-    notification.id === undefined
-  ) {
-    return;
-  }
-  // Check if the user pressed the "Mark as read" action
-  if (type === EventType.ACTION_PRESS && pressAction.id === 'mark-as-read') {
-    // Decrement the count by 1
-    await notifee.decrementBadgeCount();
+  if (data) {
+    if (data.type === 'text_message') {
+      const camelCasedData = convertObjectKeyToCamelCase<Message>(data);
+      camelCasedData.createdAt = new Date(camelCasedData.createdAt);
+      const currMsgListString = mmkv.getString('currentMessage');
+      const currMsgList =
+        currMsgListString !== undefined ? JSON.parse(currMsgListString) : [];
+      const newMsgList = [...currMsgList, camelCasedData];
+      mmkv.setItem('currentMessage', JSON.stringify(newMsgList));
 
-    // Remove the notification
-    await notifee.cancelNotification(notification.id);
+      console.log('mmkv current message', mmkv.getString('currentMessage'));
+
+      await notifee.displayNotification({
+        title: message.notification?.title || 'Wegogym',
+        body: message.notification?.body || 'Wegogym',
+        android: {
+          channelId: channelId,
+          pressAction: {
+            id: 'mark-as-read',
+            launchActivity: 'default',
+          },
+        },
+        ios: {
+          categoryId: 'mark-as-read',
+        },
+      });
+    }
   }
-});
+  // TODO: increment badge count is not working
+  await notifee.incrementBadgeCount();
+}
 
 export { checkApplicationPermission, requestUserPermission, onMessageReceived };

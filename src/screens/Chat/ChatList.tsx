@@ -1,13 +1,21 @@
 import { StyleSheet, Alert } from 'react-native';
-import React, { Suspense, useCallback } from 'react';
+import React, { Suspense, useCallback, useEffect } from 'react';
 import ChatListItem from '../../components/organisms/Chat/ChatListItem';
 import { ChatParamList, ChatStackScreenProps } from 'navigators/types';
 import { useMyChatListQuery } from '/hooks/queries/chat.queries';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Button, Headline, Text } from 'react-native-paper';
-import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import {
+  InfiniteData,
+  useQueryClient,
+  useQueryErrorResetBoundary,
+} from '@tanstack/react-query';
 import { FlatList } from 'react-native-gesture-handler';
+import { useMMKVObject } from 'react-native-mmkv';
+import { mmkv } from '/store/secureStore';
+
 type ChatListScreenProps = ChatStackScreenProps<'ChatList'>;
+
 function ChatList({ navigation }: ChatListScreenProps) {
   const navigateToChatRoom = useCallback(
     (param: ChatParamList) => {
@@ -15,6 +23,66 @@ function ChatList({ navigation }: ChatListScreenProps) {
     },
     [navigation],
   );
+  const queryClient = useQueryClient();
+  const storage = mmkv.getStorage();
+
+  const [currentMessage, setCurrentMessage] = useMMKVObject<Message[]>(
+    'currentMessage',
+    storage,
+  );
+  // TODO: Date 순서로 정렬? (최신순) 확인 필요.
+  useEffect(() => {
+    if (currentMessage && currentMessage.length > 0) {
+      currentMessage.forEach(message => {
+        queryClient.setQueryData(
+          ['chatList'],
+          (prev: InfiniteData<ChatRoomListResponse> | undefined) => {
+            const found = prev?.pages
+              .flatMap(page => page.items)
+              .find(item => item.id === message.chatRoomId);
+            if (found) {
+              found.lastMessageText = message.text;
+              found.lastMessageCreatedAt = message.createdAt;
+              found.unreadCount = found.unreadCount ? found.unreadCount + 1 : 1;
+            }
+            return prev;
+          },
+        );
+        queryClient.setQueryData(
+          ['chatMessage', message.chatRoomId],
+          (old: InfiniteData<MessageListResponse> | undefined) => {
+            if (old) {
+              const newMessagePage = {
+                items: [message, ...old.pages[0].items],
+                total: old.pages[0].total + 1,
+                nextCursor: old.pages[0].nextCursor
+                  ? old.pages[0].nextCursor + 1
+                  : null,
+              };
+
+              const newMessageList = {
+                ...old,
+                pages: [newMessagePage, ...old.pages.slice(1)],
+              };
+              return newMessageList;
+            } else {
+              return {
+                pages: [
+                  {
+                    items: [message],
+                    total: 1,
+                    nextCursor: 1,
+                  },
+                ],
+                pageParams: [undefined],
+              };
+            }
+          },
+        );
+      });
+      setCurrentMessage([]);
+    }
+  }, [currentMessage, queryClient, setCurrentMessage]);
 
   // TODO: useInfiniteQuery로 변경
 

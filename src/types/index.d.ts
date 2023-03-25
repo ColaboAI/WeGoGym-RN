@@ -213,7 +213,7 @@ type Message = {
   chatRoomId: string;
   userId: string;
   text: string;
-  media_url?: string;
+  mediaUrl?: string;
   createdAt: Date;
 };
 
