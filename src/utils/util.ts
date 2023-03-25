@@ -2,6 +2,17 @@ import { getValueFor } from 'store/secureStore';
 import { GYM_OPEN_API_KEY } from '@env';
 import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid';
+import { camelCase } from 'camel-case';
+
+export function convertObjectKeyToCamelCase<T>(obj: { [x: string]: any }) {
+  const convertedData = Object.keys(obj).reduce((acc, key) => {
+    return {
+      ...acc,
+      [camelCase(key)]: obj[key],
+    };
+  }, {} as T);
+  return convertedData;
+}
 
 export function getGoal(goals: WorkoutGoal[]) {
   return goals

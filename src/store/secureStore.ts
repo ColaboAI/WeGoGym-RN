@@ -7,13 +7,14 @@ function initMMKV() {
     encryptionKey: `${MMKV_ENCRYPTION_KEY}`,
   });
 
-  const storage = new MMKV();
+  const storage = new MMKV({ id: 'mmkv-global-store' });
   return { storage, secureStorage };
 }
 
 const { storage, secureStorage } = initMMKV();
 
 export const mmkv = {
+  getStorage: () => storage,
   setItem: (key: string, value: string | number | boolean | Uint8Array) => {
     storage.set(key, value);
   },
@@ -56,6 +57,7 @@ export const mmkv = {
 };
 
 export const secureMmkv = {
+  getSecureStorage: () => secureStorage,
   setItem: (key: string, value: string | number | boolean | Uint8Array) => {
     secureStorage.set(key, value);
   },
