@@ -15,6 +15,7 @@ import {
   getWorkoutPromiseWrittenByUserId,
   getWorkoutPromiseJoinedByUserId,
   getRecruitingWorkoutPromise,
+  putWorkoutParticipant,
 } from '@api/api';
 import { Alert } from 'react-native';
 
@@ -257,6 +258,24 @@ export function usePutWorkoutMutation() {
       queryClient.invalidateQueries(['getRecruitingWorkout']);
       queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
       queryClient.invalidateQueries(['getWorkoutById', data.id]);
+    },
+  });
+}
+
+export function usePutWorkoutParticipantMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: putWorkoutParticipant,
+    onError: (error: Error) => {
+      Alert.alert(`승인할 수 없습니다. : ${error.message}`);
+    },
+    onSuccess(data) {
+      console.log(data);
+      Alert.alert('승인 완료했습니다.');
+      queryClient.invalidateQueries(['getWorkout']);
+      queryClient.invalidateQueries(['getRecruitingWorkout']);
+      queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
+      queryClient.invalidateQueries(['getWorkoutJoinedByUserId']);
     },
   });
 }
