@@ -37,8 +37,8 @@ const WorkoutPromiseCard = ({
                 <CustomAvatar
                   {...props}
                   size={30}
-                  profilePic={adminUserInfo.profilePic}
-                  username={adminUserInfo.username}
+                  profilePic={adminUserInfo?.profilePic}
+                  username={adminUserInfo?.username}
                 />
               )}
               right={props => (
