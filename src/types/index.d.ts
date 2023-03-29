@@ -90,7 +90,7 @@ interface WorkoutPromiseListRead {
   prevCursor: int | null;
 }
 
-interface WorkoutParictipantBase {
+interface WorkoutParticipantBase {
   name: string;
   status?: string;
   statusMessage: string;
@@ -98,7 +98,7 @@ interface WorkoutParictipantBase {
 }
 
 interface WorkoutParticipantsRead
-  extends WorkoutParictipantBase,
+  extends WorkoutParticipantBase,
     timestampMixin {
   id: string;
   userId: string;
@@ -106,6 +106,13 @@ interface WorkoutParticipantsRead
   chatRoomMemberId: string | null;
   // TODO: refactor user Type
   user: RecommendedMate;
+}
+
+interface WorkoutParticipantUpdate {
+  name?: string;
+  status?: string;
+  statusMessage?: string;
+  isAdmin?: boolean;
 }
 
 interface GymInfoOpenAPI {
@@ -243,3 +250,29 @@ type MessageListResponse = {
   nextCursor: int | null;
   items: Message[];
 };
+
+interface Notification {
+  message: string;
+  readAt: Date | null;
+}
+
+interface NotificationWorkout extends Notification {
+  notificationType: string;
+}
+
+interface NotificationWorkoutRead extends NotificationWorkout {
+  id: string;
+  senderId: string;
+  sender: RecommendedMate;
+  recipientId: string;
+  recipient: WorkoutParticipantsRead;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface NotificationWorkoutListResponse {
+  total: number;
+  items: NotificationRead[];
+  nextCursor: int | null;
+  prevCursor: int | null;
+}
