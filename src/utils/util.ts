@@ -252,3 +252,22 @@ export function getChatRoomNameFromMembers(members: ChatRoomMember[]) {
   }
   return otherMembers.flatMap(member => member.user.username).join(', ');
 }
+
+export function getNotificationBody(notificationType: string): string {
+  switch (notificationType) {
+    case 'NEW_WORKOUT_PROMISE':
+      return '새로운 운동 약속이 있습니다!';
+    case 'WORKOUT_REQUEST':
+      return '이 운동 약속 참여 요청을 보냈습니다:';
+    case 'WORKOUT_ACCEPT':
+      return '이 운동 약속 참여를 승인하였습니다.';
+    case 'WORKOUT_REJECT':
+      return '이 운동 약속 참여를 거절하였습니다.';
+    case 'WORKOUT_NEW_PARTICIPANT':
+      return '이 운동 약속에 참여하였습니다.';
+    case 'WORKOUT_RECRUIT_END':
+      return '이 운동 약속 참여자 모집을 완료하였습니다.';
+    default:
+      return '';
+  }
+}
