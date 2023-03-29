@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import React from 'react';
-import { Card, Text, useTheme } from 'react-native-paper';
+import { Card, Text } from 'react-native-paper';
 
 type Props = {
   textContent: string | number;
@@ -8,9 +8,7 @@ type Props = {
 };
 
 function InfoCard(props: Props) {
-  const theme = useTheme();
   const textContentStyle = {
-    color: theme.colors.primary,
     marginBottom: 5,
   };
   return (

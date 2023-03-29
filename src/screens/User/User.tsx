@@ -5,7 +5,6 @@ import {
   Divider,
   Card,
   List,
-  useTheme,
   Tooltip,
   Button,
   Headline,
@@ -24,7 +23,6 @@ import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import { getDirectChatRoom } from '/api/api';
 type Props = UserStackScreenProps<'User'>;
 export default function UserScreen({ navigation, route }: Props) {
-  const theme = useTheme();
   const id: string =
     route.params && route.params.userId ? route.params.userId : 'me';
   const [isAuthenticated] = useState(true);
@@ -157,13 +155,7 @@ export default function UserScreen({ navigation, route }: Props) {
             {/* 신체 정보 */}
             <View style={style.myBodySection}>
               <View style={style.title}>
-                <Text
-                  variant="titleMedium"
-                  style={{
-                    color: theme.colors.primary,
-                  }}>
-                  🏋🏻 피지컬
-                </Text>
+                <Text variant="titleMedium">🏋🏻 피지컬</Text>
               </View>
               <ScrollView
                 horizontal
@@ -203,13 +195,7 @@ export default function UserScreen({ navigation, route }: Props) {
             {/* 운동 목표 */}
             <View style={style.myGoalSection}>
               <View style={style.title}>
-                <Text
-                  variant="titleMedium"
-                  style={{
-                    color: theme.colors.primary,
-                  }}>
-                  🏃🏻‍♀️ 운동 목표
-                </Text>
+                <Text variant="titleMedium">🏃🏻‍♀️ 운동 목표</Text>
               </View>
               <ScrollView
                 style={style.horizontalChipContainer}
@@ -236,13 +222,7 @@ export default function UserScreen({ navigation, route }: Props) {
             {/* 기타 개인 정보 */}
             <View style={style.myInfoSection}>
               <View style={style.title}>
-                <Text
-                  variant="titleMedium"
-                  style={{
-                    color: theme.colors.primary,
-                  }}>
-                  ℹ️ 정보
-                </Text>
+                <Text variant="titleMedium">ℹ️ 정보</Text>
               </View>
               <View style={style.infoContainer}>
                 <Card>
