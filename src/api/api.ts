@@ -77,7 +77,7 @@ async function postWorkoutParticipant({
   workoutParticipant,
   workoutPromiseId,
 }: {
-  workoutParticipant: WorkoutParictipantBase;
+  workoutParticipant: WorkoutParticipantBase;
   workoutPromiseId: string;
 }): Promise<WorkoutParticipantsRead> {
   try {
@@ -237,6 +237,7 @@ async function getUserInfo(id: string): Promise<MyInfoRead> {
     throw e;
   }
 }
+
 async function putMyInfo(
   params: UserUpdate,
   formData: FormData,
@@ -391,6 +392,47 @@ async function deleteChatRoomMember(
   }
 }
 
+async function getNotificationWorkout(
+  offset: number,
+): Promise<NotificationWorkoutListResponse> {
+  const limit = 10;
+  try {
+    const res = await apiClient.get(
+      `notification/workout?limit=${limit}&offset=${offset}`,
+    );
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
+async function putWorkoutParticipant({
+  workoutPromiseId,
+  userId,
+  workoutParticipant,
+}: {
+  workoutPromiseId: string;
+  userId: string;
+  workoutParticipant: WorkoutParticipantUpdate;
+}): Promise<WorkoutParticipantBase> {
+  console.log('workoutParticipant: ', workoutParticipant);
+  try {
+    const res = await apiClient.patch(
+      `/workout-promise/${workoutPromiseId}/participants/${userId}`,
+      { workoutParticipant },
+    );
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
 export {
   postLogin,
   postRegister,
@@ -404,6 +446,8 @@ export {
   getWorkoutPromiseWrittenByUserId,
   getWorkoutPromiseJoinedByUserId,
   getWorkoutPromiseById,
+  getNotificationWorkout,
+  putWorkoutParticipant,
   putMyInfo,
   refreshAccessToken,
   deleteUser,
