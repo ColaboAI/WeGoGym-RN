@@ -81,10 +81,8 @@ const SecondRoute = ({ navigateToPromiseDetails }: Props) => {
             }
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>
-                  참여한 운동 약속이 아직 없어요😅
-                </Text>
-                <Text style={styles.emptyText}>운동 약속에 참여해보세요!</Text>
+                <Text>참여한 운동 약속이 아직 없어요😅</Text>
+                <Text>운동 약속에 참여해보세요!</Text>
               </View>
             }
           />
@@ -110,11 +108,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  emptyText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
   },
 });
 

@@ -231,9 +231,8 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
                 }
                 ListEmptyComponent={
                   <View style={style.emptyContainer}>
-                    <Text>
-                      운동 약속이 없습니다. 새로운 운동 약속을 만들어보세요!
-                    </Text>
+                    <Text>운동 약속이 없습니다.</Text>
+                    <Text>새로운 운동 약속을 만들어보세요!</Text>
                   </View>
                 }
               />
