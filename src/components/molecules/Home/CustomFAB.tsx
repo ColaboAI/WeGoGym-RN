@@ -1,13 +1,16 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 import { FAB } from 'react-native-paper';
 
 type Props = {
   icon: string;
+  customStyle?: ViewStyle;
   onPress: () => void;
 };
-const CustomFAB = ({ icon, onPress }: Props) => {
-  return <FAB icon={icon} style={styles.fab} onPress={onPress} />;
+const CustomFAB = ({ icon, customStyle, onPress }: Props) => {
+  return (
+    <FAB icon={icon} style={customStyle ?? styles.fab} onPress={onPress} />
+  );
 };
 
 const styles = StyleSheet.create({
