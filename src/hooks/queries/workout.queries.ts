@@ -64,9 +64,6 @@ export function useWorkoutParticipantMutation() {
       console.log(data);
       Alert.alert('운동 약속에 참가 신청을 완료하였어요! 승인을 기다려주세요.');
       queryClient.invalidateQueries(['getWorkoutById', data.workoutPromiseId]);
-      queryClient.invalidateQueries(['getWorkoutJoinedByUserId']);
-      queryClient.invalidateQueries(['getWorkout']);
-      queryClient.invalidateQueries(['getRecruitingWorkout']);
     },
   });
 }
@@ -262,7 +259,7 @@ export function usePutWorkoutMutation() {
   });
 }
 
-export function usePutWorkoutParticipantMutation() {
+export function usePutWorkoutParticipantAcceptMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: putWorkoutParticipant,
@@ -272,6 +269,24 @@ export function usePutWorkoutParticipantMutation() {
     onSuccess(data) {
       console.log(data);
       Alert.alert('승인 완료했습니다.');
+      queryClient.invalidateQueries(['getWorkout']);
+      queryClient.invalidateQueries(['getRecruitingWorkout']);
+      queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
+      queryClient.invalidateQueries(['getWorkoutJoinedByUserId']);
+    },
+  });
+}
+
+export function usePutWorkoutParticipantRejectMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: putWorkoutParticipant,
+    onError: (error: Error) => {
+      Alert.alert(`거절할 수 없습니다. : ${error.message}`);
+    },
+    onSuccess(data) {
+      console.log(data);
+      Alert.alert('거절 완료했습니다.');
       queryClient.invalidateQueries(['getWorkout']);
       queryClient.invalidateQueries(['getRecruitingWorkout']);
       queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
