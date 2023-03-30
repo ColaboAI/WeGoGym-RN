@@ -21,7 +21,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AuthProvider from 'hooks/context/AuthProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { onMessageReceived } from '/utils/notification';
+import { onMessageInBackground } from '/utils/notification';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { EventType } from '@notifee/react-native';
 // https://callstack.github.io/react-native-paper/theming.html
@@ -59,7 +59,7 @@ const CombinedDarkTheme = {
   },
 };
 const queryClient = new QueryClient();
-messaging().setBackgroundMessageHandler(onMessageReceived);
+messaging().setBackgroundMessageHandler(onMessageInBackground);
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   const { notification, pressAction } = detail;
   if (

@@ -36,13 +36,27 @@ async function requestUserPermission() {
   }
 }
 
+async function saveMessageToMMKV(data: { [key: string]: string }) {
+  if (data) {
+    if (data.type === 'text_message') {
+      const camelCasedData = convertObjectKeyToCamelCase<Message>(data);
+      camelCasedData.createdAt = new Date(camelCasedData.createdAt);
+      const currMsgListString = mmkv.getString('currentMessage');
+
+      console.log('mmkv current message', mmkv.getString('currentMessage'));
+      const currMsgList =
+        currMsgListString !== undefined ? JSON.parse(currMsgListString) : [];
+      const newMsgList = [...currMsgList, camelCasedData];
+      mmkv.setItem('currentMessage', JSON.stringify(newMsgList));
+    }
+  }
+}
+
 // TODO: MMKV에 current message 저장 후 => 앱이 실행되면 해당 메시지를 client에 최신화, MMKV에서 삭제
 // TODO: 앱 실행 중인 경우 알람 보이지 않게?
-async function onMessageReceived(
+async function onMessageInBackground(
   message: FirebaseMessagingTypes.RemoteMessage,
 ) {
-  const { data } = message;
-
   const channelId =
     (await notifee.getChannel('wegogym'))?.id ??
     (await notifee.createChannel({
@@ -50,19 +64,10 @@ async function onMessageReceived(
       name: 'Wegogym',
       importance: AndroidImportance.HIGH,
     }));
-
+  const { data } = message;
   if (data) {
     if (data.type === 'text_message') {
-      const camelCasedData = convertObjectKeyToCamelCase<Message>(data);
-      camelCasedData.createdAt = new Date(camelCasedData.createdAt);
-      const currMsgListString = mmkv.getString('currentMessage');
-      const currMsgList =
-        currMsgListString !== undefined ? JSON.parse(currMsgListString) : [];
-      const newMsgList = [...currMsgList, camelCasedData];
-      mmkv.setItem('currentMessage', JSON.stringify(newMsgList));
-
-      console.log('mmkv current message', mmkv.getString('currentMessage'));
-
+      await saveMessageToMMKV(data);
       await notifee.displayNotification({
         title: message.notification?.title || 'Wegogym',
         body: message.notification?.body || 'Wegogym',
@@ -83,4 +88,20 @@ async function onMessageReceived(
   await notifee.incrementBadgeCount();
 }
 
-export { checkApplicationPermission, requestUserPermission, onMessageReceived };
+async function onMessageInForeground(
+  message: FirebaseMessagingTypes.RemoteMessage,
+) {
+  const { data } = message;
+  if (data) {
+    if (data.type === 'text_message') {
+      await saveMessageToMMKV(data);
+    }
+  }
+}
+
+export {
+  checkApplicationPermission,
+  requestUserPermission,
+  onMessageInBackground,
+  onMessageInForeground,
+};

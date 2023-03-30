@@ -44,6 +44,8 @@ function ChatList({ navigation }: ChatListScreenProps) {
               found.lastMessageText = message.text;
               found.lastMessageCreatedAt = message.createdAt;
               found.unreadCount = found.unreadCount ? found.unreadCount + 1 : 1;
+            } else {
+              queryClient.invalidateQueries(['chatList']);
             }
             return prev;
           },
