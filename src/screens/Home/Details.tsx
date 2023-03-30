@@ -40,6 +40,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ParticipationBottomSheet from '/components/organisms/User/ParticipationBottomSheet';
 import { useGetUserInfoQuery } from '/hooks/queries/user.queries';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
+import CustomFAB from '/components/molecules/Home/CustomFAB';
 type HomeScreenProps = HomeStackScreenProps<'Details'>;
 
 export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
@@ -138,197 +139,212 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
             </Button>
           </Headline>
         )}>
-        <View style={[style.container, { marginBottom: inset.bottom }]}>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              Keyboard.dismiss();
-            }}>
-            {query.data && myInfo ? (
-              <View style={style.container}>
-                <ScrollView>
-                  <View style={style.headerBox}>
-                    <View style={style.chipBox}>
-                      {isRecruiting(query.data.status) ? (
-                        <Chip style={style.chip}>모집 중</Chip>
-                      ) : (
-                        <Chip
-                          style={[
-                            style.chip,
-                            {
-                              backgroundColor: theme.colors.surfaceDisabled,
-                            },
-                          ]}>
-                          모집 완료
-                        </Chip>
-                      )}
-                    </View>
-                    <View style={style.iconBox}>
-                      {isAdmin(myInfo.id, query.data.adminUserId) ? (
-                        <>
-                          {isRecruiting(query.data.status) ? (
-                            <IconButton
-                              icon="create-outline"
-                              onPress={() => {
-                                navigationToPromiseEdit(query.data);
-                              }}
-                            />
-                          ) : null}
-                          <IconButton
-                            icon="trash-outline"
-                            onPress={onDeleteWorkout}
-                          />
-                        </>
-                      ) : null}
-                    </View>
-                  </View>
-                  <View style={style.titleBox}>
-                    <Text
-                      style={[
-                        style.title,
-                        { color: theme.colors.onBackground },
-                      ]}>
-                      {query.data.title}
-                    </Text>
-                  </View>
-                  <View style={style.workoutPromiseInfoBox}>
-                    <View style={style.infoBox}>
-                      <Icon
-                        name="calendar-outline"
-                        size={20}
-                        color={theme.colors.onBackground}
-                        style={style.icon}
-                      />
-                      <Text variant="bodyLarge" style={style.body}>
-                        {getLocaleDate(query.data.promiseTime)}{' '}
-                        {getLocaleTime(query.data.promiseTime)}
-                      </Text>
-                    </View>
-                    <View style={style.infoBox}>
-                      <Icon
-                        name="location-outline"
-                        size={20}
-                        color={theme.colors.onBackground}
-                        style={style.icon}
-                      />
-                      <Text variant="bodyLarge" style={style.body}>
-                        {query.data.gymInfo
-                          ? query.data.gymInfo.name
-                          : '위치 미정'}
-                      </Text>
-                    </View>
-                    <View style={style.infoBox}>
-                      <Icon
-                        name="people-outline"
-                        size={20}
-                        color={theme.colors.onBackground}
-                        style={style.icon}
-                      />
-                      <Text variant="bodyLarge" style={style.body}>
-                        {isAcceptedParticipant(query.data.participants).length}/
-                        {query.data.maxParticipants} 참여
-                      </Text>
-                    </View>
-                    <Divider />
-                    <View style={style.descriptionBox}>
-                      <Text variant="bodyLarge" style={style.body}>
-                        {query.data.description}
-                      </Text>
-                    </View>
-                    <View style={style.participant}>
-                      <Text variant="bodyLarge">참여 중인 짐메이트</Text>
-                      <Text
-                        variant="bodyLarge"
-                        style={{ color: theme.colors.primary }}>
-                        {' '}
-                        {isAcceptedParticipant(query.data.participants).length}
-                      </Text>
-                      <Text variant="bodyLarge">
-                        /{query.data.maxParticipants}
-                      </Text>
-                    </View>
-                    <View style={style.participantList}>
-                      {isAcceptedParticipant(query.data.participants).map(
-                        participant => (
-                          <View
-                            key={participant.id}
-                            style={style.participantBox}>
-                            <CustomAvatar
-                              size={40}
-                              profilePic={participant.user.profilePic}
-                              username={participant.user.username}
-                              style={style.avatar}
-                            />
-                            {participant.isAdmin ? (
-                              <View
-                                style={[
-                                  style.adminIconBox,
-                                  {
-                                    backgroundColor: theme.colors.tertiary,
-                                  },
-                                ]}>
-                                <IconButton
-                                  icon="barbell-outline"
-                                  iconColor={theme.colors.onTertiary}
-                                  size={12}
-                                  style={style.adminIcon}
-                                />
-                              </View>
+        <>
+          <View style={[style.container, { marginBottom: inset.bottom }]}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                Keyboard.dismiss();
+              }}>
+              {query.data && myInfo ? (
+                <View style={style.container}>
+                  <ScrollView>
+                    <View style={style.headerBox}>
+                      <View style={style.chipBox}>
+                        {isRecruiting(query.data.status) ? (
+                          <Chip style={style.chip}>모집 중</Chip>
+                        ) : (
+                          <Chip
+                            style={[
+                              style.chip,
+                              {
+                                backgroundColor: theme.colors.surfaceDisabled,
+                              },
+                            ]}>
+                            모집 완료
+                          </Chip>
+                        )}
+                      </View>
+                      <View style={style.iconBox}>
+                        {isAdmin(myInfo.id, query.data.adminUserId) ? (
+                          <>
+                            {isRecruiting(query.data.status) ? (
+                              <IconButton
+                                icon="create-outline"
+                                onPress={() => {
+                                  navigationToPromiseEdit(query.data);
+                                }}
+                              />
                             ) : null}
-                          </View>
-                        ),
-                      )}
+                            <IconButton
+                              icon="trash-outline"
+                              onPress={onDeleteWorkout}
+                            />
+                          </>
+                        ) : null}
+                      </View>
                     </View>
-                  </View>
-                </ScrollView>
-                {isAdmin(myInfo.id, query.data.adminUserId) &&
-                isRecruiting(query.data.status) ? (
-                  <Button
-                    mode="contained"
-                    onPress={onRecruitEnd}
-                    style={style.button}>
-                    모집 완료
-                  </Button>
-                ) : isRecruitedEnded(query.data.status) ? (
-                  <Button
-                    mode="contained"
-                    disabled={true}
-                    onPress={() => {}}
-                    style={style.button}>
-                    모집 마감
-                  </Button>
-                ) : isRequested(query.data.participants, myInfo.id) ? (
-                  <Button
-                    mode="contained"
-                    onPress={() => {
-                      onDeleteParticipation(myInfo.id);
-                    }}
-                    style={style.button}>
-                    참여 취소
-                  </Button>
-                ) : (
-                  <Button
-                    mode="contained"
-                    onPress={onPressParticipation}
-                    style={style.button}>
-                    참여 요청
-                  </Button>
-                )}
-              </View>
+                    <View style={style.titleBox}>
+                      <Text
+                        style={[
+                          style.title,
+                          { color: theme.colors.onBackground },
+                        ]}>
+                        {query.data.title}
+                      </Text>
+                    </View>
+                    <View style={style.workoutPromiseInfoBox}>
+                      <View style={style.infoBox}>
+                        <Icon
+                          name="calendar-outline"
+                          size={20}
+                          color={theme.colors.onBackground}
+                          style={style.icon}
+                        />
+                        <Text variant="bodyLarge" style={style.body}>
+                          {getLocaleDate(query.data.promiseTime)}{' '}
+                          {getLocaleTime(query.data.promiseTime)}
+                        </Text>
+                      </View>
+                      <View style={style.infoBox}>
+                        <Icon
+                          name="location-outline"
+                          size={20}
+                          color={theme.colors.onBackground}
+                          style={style.icon}
+                        />
+                        <Text variant="bodyLarge" style={style.body}>
+                          {query.data.gymInfo
+                            ? query.data.gymInfo.name
+                            : '위치 미정'}
+                        </Text>
+                      </View>
+                      <View style={style.infoBox}>
+                        <Icon
+                          name="people-outline"
+                          size={20}
+                          color={theme.colors.onBackground}
+                          style={style.icon}
+                        />
+                        <Text variant="bodyLarge" style={style.body}>
+                          {
+                            isAcceptedParticipant(query.data.participants)
+                              .length
+                          }
+                          /{query.data.maxParticipants} 참여
+                        </Text>
+                      </View>
+                      <Divider />
+                      <View style={style.descriptionBox}>
+                        <Text variant="bodyLarge" style={style.body}>
+                          {query.data.description}
+                        </Text>
+                      </View>
+                      <View style={style.participant}>
+                        <Text variant="bodyLarge">참여 중인 짐메이트</Text>
+                        <Text
+                          variant="bodyLarge"
+                          style={{ color: theme.colors.primary }}>
+                          {' '}
+                          {
+                            isAcceptedParticipant(query.data.participants)
+                              .length
+                          }
+                        </Text>
+                        <Text variant="bodyLarge">
+                          /{query.data.maxParticipants}
+                        </Text>
+                      </View>
+                      <View style={style.participantList}>
+                        {isAcceptedParticipant(query.data.participants).map(
+                          participant => (
+                            <View
+                              key={participant.id}
+                              style={style.participantBox}>
+                              <CustomAvatar
+                                size={40}
+                                profilePic={participant.user.profilePic}
+                                username={participant.user.username}
+                                style={style.avatar}
+                              />
+                              {participant.isAdmin ? (
+                                <View
+                                  style={[
+                                    style.adminIconBox,
+                                    {
+                                      backgroundColor: theme.colors.tertiary,
+                                    },
+                                  ]}>
+                                  <IconButton
+                                    icon="barbell-outline"
+                                    iconColor={theme.colors.onTertiary}
+                                    size={12}
+                                    style={style.adminIcon}
+                                  />
+                                </View>
+                              ) : null}
+                            </View>
+                          ),
+                        )}
+                      </View>
+                    </View>
+                  </ScrollView>
+                  {isAdmin(myInfo.id, query.data.adminUserId) &&
+                  isRecruiting(query.data.status) ? (
+                    <Button
+                      mode="contained"
+                      onPress={onRecruitEnd}
+                      style={style.button}>
+                      모집 완료
+                    </Button>
+                  ) : isRecruitedEnded(query.data.status) ? (
+                    <Button
+                      mode="contained"
+                      disabled={true}
+                      onPress={() => {}}
+                      style={style.button}>
+                      모집 마감
+                    </Button>
+                  ) : isRequested(query.data.participants, myInfo.id) ? (
+                    <Button
+                      mode="contained"
+                      onPress={() => {
+                        onDeleteParticipation(myInfo.id);
+                      }}
+                      style={style.button}>
+                      참여 취소
+                    </Button>
+                  ) : (
+                    <Button
+                      mode="contained"
+                      onPress={onPressParticipation}
+                      style={style.button}>
+                      참여 요청
+                    </Button>
+                  )}
+                </View>
+              ) : (
+                <WorkoutPromiseLoader />
+              )}
+            </TouchableWithoutFeedback>
+            {myInfo ? (
+              <ParticipationBottomSheet
+                isBottomSheetOpen={isBottomSheetOpen}
+                setIsBottomSheetOpen={setIsBottomSheetOpen}
+                workoutPromiseId={workoutPromiseId}
+                username={myInfo.username}
+              />
             ) : (
-              <WorkoutPromiseLoader />
+              <></>
             )}
-          </TouchableWithoutFeedback>
-          {myInfo ? (
-            <ParticipationBottomSheet
-              isBottomSheetOpen={isBottomSheetOpen}
-              setIsBottomSheetOpen={setIsBottomSheetOpen}
-              workoutPromiseId={workoutPromiseId}
-              username={myInfo.username}
+            <CustomFAB
+              icon="chatbubbles"
+              customStyle={style.fab}
+              onPress={() => {
+                navigation.navigate('Posting');
+              }}
             />
-          ) : (
-            <></>
-          )}
-        </View>
+          </View>
+        </>
       </ErrorBoundary>
     </Suspense>
   );
@@ -412,5 +428,11 @@ const style = StyleSheet.create({
   adminIcon: {},
   avatar: {
     marginRight: 8,
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 30,
   },
 });
