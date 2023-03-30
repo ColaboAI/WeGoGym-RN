@@ -3,7 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Card, Button, Text, useTheme } from 'react-native-paper';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
-import { usePutWorkoutParticipantMutation } from '/hooks/queries/workout.queries';
+import {
+  usePutWorkoutParticipantAcceptMutation,
+  usePutWorkoutParticipantRejectMutation,
+} from '/hooks/queries/workout.queries';
 import { getNotificationBody, getRelativeTime } from '/utils/util';
 
 type NotificationProps = {
@@ -12,7 +15,7 @@ type NotificationProps = {
   readAt: Date | null;
   // 알림 타입에 따라 보여줄 컴포넌트가 달라짐
   notificationType: string;
-  sender: RecommendedMate;
+  sender: WorkoutParticipantsRead;
   recipient: WorkoutParticipantsRead;
   createdAt: Date;
   navigateToUserDetails: (id: string) => void;
@@ -31,30 +34,44 @@ const NotificationCard = ({
 }: NotificationProps) => {
   const theme = useTheme();
   const body = getNotificationBody(notificationType);
-  const updateWorkoutParticipantMutation = usePutWorkoutParticipantMutation();
+  const updateWorkoutParticipantAcceptMutation =
+    usePutWorkoutParticipantAcceptMutation();
+  const updateWorkoutParticipantRejectMutation =
+    usePutWorkoutParticipantRejectMutation();
 
   const onPressAccept = useCallback(async () => {
     const data = {
       workoutPromiseId: recipient.workoutPromiseId,
-      userId: sender.id,
+      userId: sender.userId,
       workoutParticipant: {
+        name: sender.user.username,
+        message,
         status: 'ACCEPTED',
       },
     };
-
-    updateWorkoutParticipantMutation.mutate(data);
-  }, [updateWorkoutParticipantMutation, recipient.workoutPromiseId, sender.id]);
+    updateWorkoutParticipantAcceptMutation.mutate(data);
+  }, [
+    recipient.workoutPromiseId,
+    sender.userId,
+    sender.user.username,
+    message,
+    updateWorkoutParticipantAcceptMutation,
+  ]);
 
   const onPressReject = useCallback(async () => {
     const data = {
       workoutPromiseId: recipient.workoutPromiseId,
-      userId: sender.id,
+      userId: sender.userId,
       workoutParticipant: {
         status: 'REJECTED',
       },
     };
-    updateWorkoutParticipantMutation.mutate(data);
-  }, [updateWorkoutParticipantMutation, recipient.workoutPromiseId, sender.id]);
+    updateWorkoutParticipantRejectMutation.mutate(data);
+  }, [
+    updateWorkoutParticipantRejectMutation,
+    recipient.workoutPromiseId,
+    sender.userId,
+  ]);
 
   return (
     <View key={`notification-${id}`} style={styles.notificationCardContainer}>
@@ -69,15 +86,15 @@ const NotificationCard = ({
                   }}>
                   <CustomAvatar
                     size={30}
-                    profilePic={sender.profilePic}
-                    username={sender.username}
+                    profilePic={sender.user.profilePic}
+                    username={sender.user.username}
                   />
                 </TouchableOpacity>
               </View>
               <View style={styles.messsageContainer}>
                 <Text variant="titleSmall">
-                  <Text style={styles.username}>{sender.username}</Text>님{body}{' '}
-                  {message}{' '}
+                  <Text style={styles.username}>{sender.user.username}</Text>님
+                  {body} {message}{' '}
                   <Text
                     variant="titleSmall"
                     style={{ color: theme.colors.onPrimaryContainer }}>
@@ -103,7 +120,7 @@ const NotificationCard = ({
 
 const styles = StyleSheet.create({
   notificationCardContainer: {
-    padding: 12,
+    paddingVertical: 6,
   },
   infoContainer: {
     flexDirection: 'row',

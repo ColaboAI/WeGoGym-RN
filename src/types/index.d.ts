@@ -263,7 +263,7 @@ interface NotificationWorkout extends Notification {
 interface NotificationWorkoutRead extends NotificationWorkout {
   id: string;
   senderId: string;
-  sender: RecommendedMate;
+  sender: WorkoutParticipantsRead;
   recipientId: string;
   recipient: WorkoutParticipantsRead;
   createdAt: Date;
@@ -272,7 +272,7 @@ interface NotificationWorkoutRead extends NotificationWorkout {
 
 interface NotificationWorkoutListResponse {
   total: number;
-  items: NotificationRead[];
+  items: NotificationWorkoutRead[];
   nextCursor: int | null;
   prevCursor: int | null;
 }
