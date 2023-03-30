@@ -3,7 +3,7 @@ import messaging from '@react-native-firebase/messaging';
 import { putMyFCMToken } from '/api/api';
 import {
   checkApplicationPermission,
-  onMessageReceived,
+  onMessageInForeground,
 } from '/utils/notification';
 import { getValueFor, save } from '/store/secureStore';
 import notifee from '@notifee/react-native';
@@ -101,7 +101,7 @@ export function useNotification() {
     // FcmToken을 서버에 저장
     onAppBootstrap();
     // 앱이 foreground에서 Notification을 받았을 때
-    messaging().onMessage(onMessageReceived);
+    messaging().onMessage(onMessageInForeground);
     // 알람을 눌러서 앱이 실행되었을 때
     onInitialNotification();
   }, [navigation, onInitialNotification, queryClient]);
