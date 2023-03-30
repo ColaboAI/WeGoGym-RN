@@ -397,9 +397,12 @@ async function getNotificationWorkout(
 ): Promise<NotificationWorkoutListResponse> {
   const limit = 10;
   try {
-    const res = await apiClient.get(
-      `notification/workout?limit=${limit}&offset=${offset}`,
-    );
+    const res = await apiClient.get(`notification/workout`, {
+      params: {
+        limit,
+        offset,
+      },
+    });
     return res.data;
   } catch (e) {
     if (e instanceof AxiosError) {
@@ -418,7 +421,6 @@ async function putWorkoutParticipant({
   userId: string;
   workoutParticipant: WorkoutParticipantUpdate;
 }): Promise<WorkoutParticipantBase> {
-  console.log('workoutParticipant: ', workoutParticipant);
   try {
     const res = await apiClient.patch(
       `/workout-promise/${workoutPromiseId}/participants/${userId}`,
