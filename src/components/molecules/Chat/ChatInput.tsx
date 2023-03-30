@@ -232,7 +232,7 @@ const ChatInput = (props: ChatInputProps) => {
         }
       } else {
         // TODO: error handling
-        console.log('No user id');
+        console.log('No user id', userId, myId);
       }
     }
   }, [

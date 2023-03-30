@@ -5,7 +5,7 @@ import {
   checkApplicationPermission,
   onMessageReceived,
 } from '/utils/notification';
-import { save } from '/store/secureStore';
+import { getValueFor, save } from '/store/secureStore';
 import notifee from '@notifee/react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -15,8 +15,11 @@ import { AppState } from 'react-native';
 
 async function onAppBootstrap() {
   // Get the token
+  const wggAccessToken = getValueFor('token');
+  if (!wggAccessToken) {
+    return;
+  }
   const token = await messaging().getToken();
-
   // Check if the user has granted permission, if not, request it
   await checkApplicationPermission();
 

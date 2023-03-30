@@ -106,9 +106,10 @@ function AuthProvider({ children }: AuthProviderProps) {
           isLoading: true,
         }));
         try {
-          const { token, refreshToken } = await postRegister(userInfo);
+          const { token, refreshToken, userId } = await postRegister(userInfo);
           save('token', token);
           save('refreshToken', refreshToken);
+          save('userId', userId);
           setAuthState(prevState => ({
             ...prevState,
             isLoading: false,
