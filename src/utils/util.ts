@@ -143,7 +143,6 @@ export function isToday(date: Date) {
 }
 
 export function getRelativeTime(date: Date | string) {
-  let result = null;
   if (typeof date === 'string') {
     date = new Date(date);
   }
@@ -153,26 +152,32 @@ export function getRelativeTime(date: Date | string) {
   let differSec = delta / 1000;
 
   if (differSec < 1) {
-    return (result = '방금');
+    return '방금';
   }
   if (differSec < 60) {
-    return (result = `${Math.floor(differSec)}초 전`);
+    return `${Math.floor(differSec)}초 전`;
   }
   if (differSec < 3600) {
-    return (result = `${Math.floor(differSec / 60)}분 전`);
+    return `${Math.floor(differSec / 60)}분 전`;
   }
   if (differSec < 24 * 3600) {
-    return (result = `${Math.floor(differSec / 3600)}시간 전`);
-  }
-  if (differSec >= 24 * 3600) {
-    return date
-      .toLocaleString('ko-KR', {
-        timeZone: 'Asia/Seoul',
-      })
-      .slice(0, 10);
+    return `${Math.floor(differSec / 3600)}시간 전`;
   }
 
-  return result;
+  if (today.getFullYear() === date.getFullYear()) {
+    return date.toLocaleString('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      month: 'short',
+      day: 'numeric',
+    });
+  } else {
+    return date.toLocaleString('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  }
 }
 
 // admin인가
@@ -217,4 +222,15 @@ export function isRequested(
   );
 
   return requestedParticipants.length !== 0;
+}
+
+export function isAccepted(
+  paticipants: WorkoutParticipantsRead[],
+  userId: string,
+) {
+  const acceptedParticipants = paticipants.filter(
+    participant =>
+      participant.status === 'ACCEPTED' && participant.userId === userId,
+  );
+  return acceptedParticipants.length !== 0;
 }
