@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Surface, Text, useTheme } from 'react-native-paper';
 import { getValueFor } from '/store/secureStore';
-import { getRelativeTime } from '/utils/util';
+import { getLocaleTime, getRelativeTime, isToday } from '/utils/util';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 type Props = {
   getUserInfo: (id: string) => User | undefined;
@@ -43,14 +43,16 @@ const Bubble = ({ text, createdAt, userId, getUserInfo }: Props) => {
           isLeft ? styles.leftBubble : styles.rightBubble,
           {
             backgroundColor: isLeft
-              ? theme.colors.secondary
+              ? theme.colors.surfaceVariant
               : theme.colors.primary,
           },
         ]}
         elevation={3}>
         <Text
           style={{
-            color: isLeft ? theme.colors.onSecondary : theme.colors.onPrimary,
+            color: isLeft
+              ? theme.colors.onSurfaceVariant
+              : theme.colors.onPrimary,
           }}>
           {text}
         </Text>
@@ -63,7 +65,9 @@ const Bubble = ({ text, createdAt, userId, getUserInfo }: Props) => {
           paddingHorizontal: '3%',
           fontWeight: '300',
         }}>
-        {getRelativeTime(createdAt)}
+        {isToday(createdAt)
+          ? getLocaleTime(createdAt)
+          : getRelativeTime(createdAt)}
       </Text>
     </View>
   );

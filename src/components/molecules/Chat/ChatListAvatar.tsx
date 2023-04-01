@@ -3,19 +3,26 @@ import React from 'react';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 
 type Props = {
-  members: ChatRoomMember[];
+  members?: ChatRoomMember[];
 };
 
-export default function ChatListAvatar(props: Props) {
+export default function ChatListAvatar({ members }: Props) {
+  if (members === undefined) {
+    return (
+      <View style={styles.container}>
+        <CustomAvatar size={48} username="?" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
-      {props.members.map((member, idx) => {
+      {members.map((member, idx) => {
         return (
           <CustomAvatar
             key={`chat-list-avatar-${idx}`}
             username={member.user.username}
             profilePic={member.user.profilePic}
-            size={48 / props.members.length}
+            size={48 / members.length}
           />
         );
       })}

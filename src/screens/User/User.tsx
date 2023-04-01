@@ -37,10 +37,7 @@ export default function UserScreen({ navigation, route }: Props) {
       const navParams: ChatParamList = {
         chatRoomId: chatRoomData.id,
         chatRoomName: chatRoomData.name ? chatRoomData.name : data?.username,
-        chatRoomMembers: chatRoomData.members,
-        chatRoomDescription: chatRoomData.description,
-        isGroupChat: chatRoomData.isGroupChat,
-        userId: data?.id,
+        isGroupChat: false,
       };
       navigation.navigate('채팅', {
         screen: 'ChatRoom',
