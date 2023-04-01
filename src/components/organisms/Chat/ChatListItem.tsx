@@ -8,7 +8,7 @@ import ChatListAvatar from '/components/molecules/Chat/ChatListAvatar';
 import { useAuthValue } from '/hooks/context/useAuth';
 import { useSnackBarActions } from '/hooks/context/useSnackbar';
 import { ChatParamList } from '/navigators/types';
-import { getLocaleTime } from '/utils/util';
+import { getLocaleDate, getLocaleTime, isToday } from '/utils/util';
 
 type Props = {
   id: string;
@@ -79,12 +79,9 @@ const ChatListItem = ({
         ref={swipeRef}
         renderRightActions={() => (
           <RectButton
-            style={[
-              { backgroundColor: theme.colors.tertiary },
-              styles.swipeRight,
-            ]}
+            style={[{ backgroundColor: theme.colors.error }, styles.swipeRight]}
             onPress={handleExitRoom}>
-            <Animated.Text style={{ color: theme.colors.onTertiary }}>
+            <Animated.Text style={{ color: theme.colors.onError }}>
               나가기
             </Animated.Text>
           </RectButton>
@@ -100,17 +97,19 @@ const ChatListItem = ({
             fontWeight: '600',
           }}
           left={() => {
-            return (
-              chatMems.length > 0 && (
-                <ChatListAvatar members={chatMems.slice(0, 3)} />
-              )
-            );
+            if (chatMems.length === 0) {
+              return <ChatListAvatar />;
+            } else {
+              return <ChatListAvatar members={chatMems.slice(0, 3)} />;
+            }
           }}
           right={() => (
             <View style={styles.rightContainer}>
               <Text variant={'labelSmall'}>
                 {lastMessageCreatedAt
-                  ? getLocaleTime(lastMessageCreatedAt)
+                  ? isToday(lastMessageCreatedAt)
+                    ? getLocaleTime(lastMessageCreatedAt)
+                    : getLocaleDate(lastMessageCreatedAt)
                   : ''}
               </Text>
               {unreadCount && <Badge>{unreadCount}</Badge>}

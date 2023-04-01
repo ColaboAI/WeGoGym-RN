@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { TextInput, useTheme } from 'react-native-paper';
 import { Alert, StyleSheet } from 'react-native';
 import { Platform } from 'react-native';
-import { ChatParamList } from '/navigators/types';
+import { ChatParamList, ChatStackScreenProps } from '/navigators/types';
 import {
   InfiniteData,
   UseMutationResult,
@@ -13,6 +13,7 @@ import { getValueFor } from '/store/secureStore';
 import { WS_BASE_URL } from '/api/client';
 import { useSnackBarActions } from '/hooks/context/useSnackbar';
 import { convertObjectKeyToCamelCase } from '/utils/util';
+import { useNavigation } from '@react-navigation/native';
 export type ChatInputProps = ChatParamList & {
   inputText: string;
   setInputText: (text: string) => void;
@@ -38,6 +39,8 @@ const ChatInput = (props: ChatInputProps) => {
     setIsTyping,
     chatRoomMutation,
   } = props;
+  const nav = useNavigation<ChatStackScreenProps<'ChatRoom'>['navigation']>();
+
   const theme = useTheme();
   const myId = getValueFor('userId');
   // const nav = useNavigation<NativeStackNavigationProp<ChatStackParamList>>();
@@ -122,7 +125,7 @@ const ChatInput = (props: ChatInputProps) => {
     },
     [chatRoomId, queryClient],
   );
-  const reconnectWebSocket = useCallback(() => {
+  const connectWebSocket = useCallback(() => {
     if (webSocket.current) {
       webSocket.current.close();
       webSocket.current = null;
@@ -130,7 +133,9 @@ const ChatInput = (props: ChatInputProps) => {
     if (chatRoomId && myId) {
       const chatURL = `${WS_BASE_URL}/ws/chat/${chatRoomId}/${myId}`;
       webSocket.current = new WebSocket(chatURL);
-      webSocket.current.onopen = () => {};
+      webSocket.current.onopen = () => {
+        console.log('websocket connected');
+      };
       webSocket.current.onclose = e => {
         console.log(`${e.code}: ${e.reason}`);
         // reconnect websocket
@@ -141,34 +146,14 @@ const ChatInput = (props: ChatInputProps) => {
       webSocket.current.onerror = e => {
         console.log(e);
         setTimeout(() => {
-          reconnectWebSocket();
+          connectWebSocket();
         }, 1000);
       };
     }
   }, [chatRoomId, myId, onMessageHandler]);
 
-  // TODO:init websocket again when app is focused
-  // Init websocket
   useEffect(() => {
-    if (chatRoomId && myId) {
-      if (webSocket.current === null) {
-        const chatURL = `${WS_BASE_URL}/ws/chat/${chatRoomId}/${myId}`;
-        webSocket.current = new WebSocket(chatURL);
-        webSocket.current.onopen = () => {};
-        webSocket.current.onclose = e => {
-          console.log(`${e.code}: ${e.reason}`);
-        };
-
-        webSocket.current.onmessage = onMessageHandler;
-
-        webSocket.current.onerror = e => {
-          console.log(e);
-          setTimeout(() => {
-            reconnectWebSocket();
-          }, 1000);
-        };
-      }
-    }
+    connectWebSocket();
 
     return () => {
       if (webSocket.current) {
@@ -176,17 +161,31 @@ const ChatInput = (props: ChatInputProps) => {
         webSocket.current = null;
       }
     };
-  }, [
-    chatRoomId,
-    myId,
-    onMessageHandler,
-    onShow,
-    queryClient,
-    reconnectWebSocket,
-  ]);
+  }, [connectWebSocket]);
+
+  const createDirectChatRoom = useCallback(async () => {
+    if (userId && myId) {
+      try {
+        console.log('create Direct chat room');
+        const res = await chatRoomMutation.mutateAsync({
+          createdBy: myId,
+          membersUserIds: [userId],
+          isGroupChat: false,
+          isPrivate: true,
+        });
+        console.log(res);
+        nav.setParams({
+          chatRoomId: res.id,
+        });
+      } catch (e) {
+        console.log(e);
+        onShow('채팅방 생성에 실패했습니다.', 'error');
+      }
+    }
+  }, [chatRoomMutation, myId, nav, onShow, userId]);
 
   const handleSubmit = useCallback(async () => {
-    if (chatRoomId && myId) {
+    if (chatRoomId !== undefined && myId) {
       if (inputText.length > 0) {
         // send message
         if (webSocket.current && webSocket.current.readyState === 1) {
@@ -200,47 +199,24 @@ const ChatInput = (props: ChatInputProps) => {
           setIsTyping(false);
         } else {
           Alert.alert('채팅방과의 연결이 끊어졌습니다.', '다시 시도해주세요.');
-          // TODO: reconnect websocket
         }
       }
     } else {
       // create direct chat room
       if (userId && myId) {
-        try {
-          const res = await chatRoomMutation.mutateAsync({
-            createdBy: myId,
-            membersUserIds: [userId],
-            isPrivate: true,
-            isGroupChat: false,
-          });
-          if (res.id) {
-            if (webSocket.current && inputText.length > 0) {
-              webSocket.current.send(
-                JSON.stringify({
-                  type: 'text_message',
-                  text: inputText,
-                }),
-              );
-              setInputText('');
-              setIsTyping(false);
-            }
-          }
-          onShow('채팅방이 생성되었습니다.', 'success');
-        } catch (e) {
-          console.error(e);
-          onShow('채팅방 생성에 실패했습니다.', 'error');
-        }
+        await createDirectChatRoom();
       } else {
         // TODO: error handling
         console.log('No user id', userId, myId);
+        nav.navigate('ChatList');
       }
     }
   }, [
+    nav,
     chatRoomId,
-    chatRoomMutation,
+    createDirectChatRoom,
     inputText,
     myId,
-    onShow,
     setInputText,
     setIsTyping,
     userId,
@@ -267,6 +243,7 @@ const ChatInput = (props: ChatInputProps) => {
           containerColor={theme.colors.primaryContainer}
           iconColor={theme.colors.onPrimaryContainer}
           onPress={() => handleSubmit()}
+          disabled={chatRoomMutation.isLoading}
         />
       }
       value={inputText}

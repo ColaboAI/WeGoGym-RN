@@ -8,7 +8,6 @@ import {
 import {
   getChatMessages,
   getChatRoom,
-  getDirectChatRoom,
   getMyChatList,
   postChatRoom,
 } from '@api/api';
@@ -17,7 +16,7 @@ import { AxiosError } from 'axios';
 import { getValueFor } from '/store/secureStore';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ChatStackParamList } from '/navigators/types';
+import { ChatStackParamList, ChatStackScreenProps } from '/navigators/types';
 
 export function useMyChatListQuery() {
   return useInfiniteQuery({
@@ -49,7 +48,13 @@ export function useMyChatListQuery() {
   });
 }
 
-export function useChatRoomQuery(chatRoomId: string) {
+export function useChatRoomQuery({
+  chatRoomId,
+  navigation,
+}: {
+  chatRoomId: string | undefined;
+  navigation: ChatStackScreenProps<'ChatRoom'>['navigation'];
+}) {
   return useQuery({
     queryKey: ['chatRoom', chatRoomId],
     queryFn: () => getChatRoom(chatRoomId),
@@ -58,9 +63,14 @@ export function useChatRoomQuery(chatRoomId: string) {
       Alert.alert(`채팅방 정보를 가져오는데 실패하였습니다: ${error.message}`);
     },
     onSuccess(data) {
-      console.log('채팅방 정보를 가져왔습니다: ', data);
+      navigation.setParams({
+        chatRoomDescription: data.description,
+        isGroupChat: data.isGroupChat,
+        chatRoomMembers: data.members,
+      });
     },
     suspense: true,
+    enabled: !!chatRoomId,
   });
 }
 
@@ -76,9 +86,7 @@ export function useChatRoomMessagesQuery(chatRoomId: string | undefined) {
         `채팅 메시지를 가져오는데 실패하였습니다: ${error.code}, ${error.message}`,
       );
     },
-    onSuccess(data) {
-      console.log('채팅 메시지를 가져왔습니다: ', data);
-
+    onSuccess() {
       queryClient.setQueryData(
         ['chatList'],
         (oldData: InfiniteData<ChatRoomListResponse> | undefined) => {
@@ -124,28 +132,13 @@ export function useChatRoomMessagesQuery(chatRoomId: string | undefined) {
   });
 }
 
-export function useDirectChatRoomQuery(userId: string | undefined) {
-  return useQuery({
-    queryKey: ['directChatRoom', userId],
-    queryFn: () => getDirectChatRoom(userId),
-    retry: 0,
-    onError: (error: AxiosError) => {
-      console.log('개인 채팅방 정보를 가져오는데 실패하였습니다: ', error);
-    },
-    onSuccess(data) {
-      console.log('개인 채팅방 정보: ', data);
-    },
-    suspense: true,
-    enabled: !!userId,
-  });
-}
-
 export function useChatRoomMutation() {
   const queryClient = useQueryClient();
   const nav = useNavigation<NativeStackNavigationProp<ChatStackParamList>>();
 
   return useMutation({
     mutationFn: postChatRoom,
+    retry: 0,
     onError: (error: AxiosError) => {
       Alert.alert(`채팅방 생성에 실패하였습니다: ${error.message}`);
     },
@@ -157,10 +150,10 @@ export function useChatRoomMutation() {
         const recieverId = data.members.find(m => m.user.id !== myId)?.id;
         queryClient.setQueryData(['directChatRoom', recieverId], data);
         nav.setParams({
-          chatRoomId: data?.id,
-          chatRoomMembers: data?.members,
-          chatRoomDescription: data?.description,
-          isGroupChat: data?.isGroupChat,
+          chatRoomId: data.id,
+          chatRoomMembers: data.members,
+          chatRoomDescription: data.description,
+          isGroupChat: data.isGroupChat,
         });
       }
       // TODO: 채팅방 목록에 새로운 채팅방 추가 잘 되는지 확인, 안되면 수정

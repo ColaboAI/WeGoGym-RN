@@ -5,14 +5,18 @@ import { ActivityIndicator, Button, Text } from 'react-native-paper';
 import Bubble from '/components/molecules/Chat/Bubble';
 import InputToolbar from '/components/organisms/Chat/InputToolbar';
 import { FlatList } from 'react-native-gesture-handler';
-import { useChatRoomMessagesQuery } from '/hooks/queries/chat.queries';
+import {
+  useChatRoomMessagesQuery,
+  useChatRoomQuery,
+} from '/hooks/queries/chat.queries';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { useChatRoomState } from '/hooks/chat/hook';
+import GymInfoLoader from '/components/molecules/Home/GymInfoLoader';
 
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 
-function ChatRoom({ route }: ChatRoomScreenProps) {
+function ChatRoom({ navigation, route }: ChatRoomScreenProps) {
   const {
     inset,
     inputText,
@@ -33,9 +37,13 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
     [route.params.chatRoomMembers],
   );
 
+  useChatRoomQuery({
+    chatRoomId: route.params.chatRoomId,
+    navigation,
+  });
+
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useChatRoomMessagesQuery(route.params.chatRoomId);
-
   const { reset } = useQueryErrorResetBoundary();
 
   const renderItem = ({ item }: { item: Message }) => {
@@ -52,12 +60,7 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
   };
 
   return (
-    <Suspense
-      fallback={
-        <View>
-          <Text>Loading...</Text>
-        </View>
-      }>
+    <Suspense fallback={<GymInfoLoader />}>
       <ErrorBoundary
         onReset={reset}
         fallbackRender={({ resetErrorBoundary }) => (

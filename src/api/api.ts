@@ -311,7 +311,10 @@ async function getMyChatList(param: {
   }
 }
 
-async function getChatRoom(id: string): Promise<ChatRoom> {
+async function getChatRoom(id?: string): Promise<ChatRoom> {
+  if (id === undefined) {
+    throw new Error('id is undefined');
+  }
   try {
     const res = await apiClient.get(`/chat/rooms/${id}`);
     return res.data;

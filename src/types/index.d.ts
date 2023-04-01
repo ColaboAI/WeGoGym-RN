@@ -64,7 +64,7 @@ interface WorkoutPromiseRead extends timestampMixin {
   promiseTime: Date;
   recruitEndTime: Date;
   status: string;
-  // chatRoomId: string | null;
+  chatRoomId: string | null;
   // chatRoom: ChatRoom | null;
   isPrivate: boolean;
   adminUserId: string;
