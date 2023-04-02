@@ -5,11 +5,17 @@ import { FAB } from 'react-native-paper';
 type Props = {
   icon: string;
   customStyle?: ViewStyle;
+  disabled?: boolean;
   onPress: () => void;
 };
-const CustomFAB = ({ icon, customStyle, onPress }: Props) => {
+const CustomFAB = ({ icon, disabled, customStyle, onPress }: Props) => {
   return (
-    <FAB icon={icon} style={customStyle ?? styles.fab} onPress={onPress} />
+    <FAB
+      icon={icon}
+      style={customStyle ?? styles.fab}
+      disabled={disabled}
+      onPress={onPress}
+    />
   );
 };
 

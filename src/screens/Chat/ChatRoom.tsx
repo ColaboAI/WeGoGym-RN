@@ -16,7 +16,7 @@ import GymInfoLoader from '/components/molecules/Home/GymInfoLoader';
 
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 
-function ChatRoom({ navigation, route }: ChatRoomScreenProps) {
+function ChatRoom({ route }: ChatRoomScreenProps) {
   const {
     inset,
     inputText,
@@ -37,10 +37,7 @@ function ChatRoom({ navigation, route }: ChatRoomScreenProps) {
     [route.params.chatRoomMembers],
   );
 
-  useChatRoomQuery({
-    chatRoomId: route.params.chatRoomId,
-    navigation,
-  });
+  useChatRoomQuery(route.params.chatRoomId);
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useChatRoomMessagesQuery(route.params.chatRoomId);
