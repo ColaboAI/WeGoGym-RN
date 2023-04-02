@@ -72,6 +72,8 @@ const ParticipationBottomSheet = ({
       index={-1}
       snapPoints={Platform.OS === 'ios' ? iosSnapPoints : androidSnapPoints}
       backdropComponent={renderBackdrop}
+      handleStyle={{ backgroundColor: theme.colors.background }}
+      backgroundStyle={{ backgroundColor: theme.colors.background }}
       enablePanDownToClose={true}
       onClose={() => {
         setIsBottomSheetOpen(false);
@@ -79,7 +81,7 @@ const ParticipationBottomSheet = ({
       android_keyboardInputMode={'adjustResize'}>
       <BottomSheetView style={styles.container}>
         <View style={styles.titleBox}>
-          <Text style={styles.title}>
+          <Text style={[styles.title, { color: theme.colors.onBackground }]}>
             운동 파트너에게 보낼 메세지를{'\n'}작성해주세요
           </Text>
           <IconButton
@@ -102,7 +104,7 @@ const ParticipationBottomSheet = ({
               styles.textInput,
               {
                 backgroundColor: theme.colors.secondaryContainer,
-                color: theme.colors.onBackground,
+                color: theme.colors.onSecondary,
               },
             ]}
           />
@@ -116,6 +118,7 @@ const ParticipationBottomSheet = ({
       </BottomSheetView>
       <Button
         mode="contained"
+        disabled={requestMessage.length === 0}
         style={styles.buttonBox}
         onPress={() => {
           setIsBottomSheetOpen(false);
