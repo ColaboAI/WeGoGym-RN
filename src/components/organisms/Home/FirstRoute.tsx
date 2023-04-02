@@ -1,12 +1,8 @@
 import React, { Suspense, useCallback, useState } from 'react';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
-import { StyleSheet, View } from 'react-native';
-import {
-  FlatList,
-  RefreshControl,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native-gesture-handler';
 import { ActivityIndicator, Button, Text, useTheme } from 'react-native-paper';
 import WorkoutPromiseCard from '/components/molecules/Home/WorkoutPromiseCard';
 import WorkoutPromiseLoader from '/components/molecules/Home/WorkoutPromiseLoader';
@@ -67,7 +63,7 @@ const FirstRoute = ({ navigateToPromiseDetails }: Props) => {
             onEndReachedThreshold={0.01}
             initialNumToRender={5}
             renderItem={({ item }) => (
-              <TouchableOpacity
+              <Pressable
                 key={`workout-promise-container-${item.id}`}
                 onPress={() => {
                   navigateToPromiseDetails(item.id);
@@ -76,7 +72,7 @@ const FirstRoute = ({ navigateToPromiseDetails }: Props) => {
                   key={`workout-promise-${item.id}`}
                   {...item}
                 />
-              </TouchableOpacity>
+              </Pressable>
             )}
             showsVerticalScrollIndicator={false}
             ListFooterComponent={

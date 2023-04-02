@@ -1,11 +1,10 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetFlatList,
   BottomSheetTextInput,
   BottomSheetView,
-  TouchableOpacity,
 } from '@gorhom/bottom-sheet';
 import GymInfoLoader from '/components/molecules/Home/GymInfoLoader';
 import { Chip, Text, useTheme } from 'react-native-paper';
@@ -67,7 +66,7 @@ const GymBottomSheet = (props: Props) => {
 
   const renderItem = useCallback(
     ({ item }: { item: Gym }) => (
-      <TouchableOpacity
+      <Pressable
         onPress={() => {
           props.setGymInfo(item);
           props.setIsBottomSheetOpen(false);
@@ -94,7 +93,7 @@ const GymBottomSheet = (props: Props) => {
             <Text variant="bodySmall">{item.zip_code}</Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     ),
     [props],
   );
