@@ -22,7 +22,7 @@ import GymMateRecommendation from '/components/organisms/User/GymMateRecommend';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { getValueFor, save } from '/store/secureStore';
-
+import TextLogo from '/asset/svg/TextLogo';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 // TODO:
 // 페이지네이션 구현 (당겨서 새로고침)
@@ -124,9 +124,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     <>
       <ScreenWrapper withScrollView={false} style={style.container}>
         <View style={style.headerContainer}>
-          <Text variant="titleLarge" style={[style.font]}>
-            WeGoGym
-          </Text>
+          <TextLogo />
           <View style={style.iconContainer}>
             <IconButton
               icon="document-text-outline"
