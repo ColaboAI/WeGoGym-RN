@@ -424,7 +424,7 @@ async function putWorkoutParticipant({
   try {
     const res = await apiClient.patch(
       `/workout-promise/${workoutPromiseId}/participants/${userId}`,
-      { workoutParticipant },
+      workoutParticipant,
     );
     return res.data;
   } catch (e) {

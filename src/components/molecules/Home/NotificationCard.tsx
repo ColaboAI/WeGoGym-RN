@@ -44,8 +44,6 @@ const NotificationCard = ({
       workoutPromiseId: recipient.workoutPromiseId,
       userId: sender.userId,
       workoutParticipant: {
-        name: sender.user.username,
-        message,
         status: 'ACCEPTED',
       },
     };
@@ -53,8 +51,6 @@ const NotificationCard = ({
   }, [
     recipient.workoutPromiseId,
     sender.userId,
-    sender.user.username,
-    message,
     updateWorkoutParticipantAcceptMutation,
   ]);
 
