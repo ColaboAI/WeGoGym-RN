@@ -33,7 +33,7 @@ export default function LoginScreen({ navigation }: Props) {
         <Image
           style={{ height: 350, width: 350 }}
           resizeMode="contain"
-          source={require('../image/gymmate.png')}
+          source={require('../asset/image/gymmate.png')}
         />
       </View>
       <View style={style.buttonBox}>
