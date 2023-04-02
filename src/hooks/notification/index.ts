@@ -56,11 +56,16 @@ export function useNotification() {
           return isTargetPage;
         },
       });
-      // TODO: 해당 채팅방으로 이동
-      navigation.navigate('MainNavigator', {
-        screen: '채팅',
-        params: { screen: 'ChatList' },
-      });
+      if (data.chat_room_id) {
+        const chatRoomId = data.chat_room_id as string;
+        navigation.navigate('MainNavigator', {
+          screen: '채팅',
+          params: {
+            screen: 'ChatRoom',
+            params: { chatRoomId },
+          },
+        });
+      }
     }
   }, [navigation, queryClient]);
 
