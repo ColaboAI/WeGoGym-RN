@@ -101,11 +101,11 @@ const ParticipationBottomSheet = ({
             maxLength={50}
             multiline={true}
             style={[
-              styles.textInput,
               {
                 backgroundColor: theme.colors.secondaryContainer,
-                color: theme.colors.onSecondary,
+                color: theme.colors.onSecondaryContainer,
               },
+              styles.textInput,
             ]}
           />
           <View style={styles.textLimitBox}>
