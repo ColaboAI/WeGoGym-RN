@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { save, getValueFor, clear } from '@store/secureStore';
+import { save, getValueFor, clear, secureMmkv, mmkv } from '@store/secureStore';
 import { postLogin, postRegister, deleteUser } from 'api/api';
 import { Alert } from 'react-native';
 type AuthState = {
@@ -88,10 +88,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
       },
       signOut: async () => {
-        clear('token');
-        clear('refreshToken');
-        clear('phoneNumber');
-        clear('userId');
+        secureMmkv.deleteAllKeys();
+        mmkv.deleteAllKeys();
 
         setAuthState(prevState => ({
           ...prevState,
@@ -167,9 +165,8 @@ function AuthProvider({ children }: AuthProviderProps) {
       },
       unRegister: async () => {
         const res = await deleteUser();
-        clear('token');
-        clear('refreshToken');
-        clear('phoneNumber');
+        secureMmkv.deleteAllKeys();
+        mmkv.deleteAllKeys();
         console.log('unRegister', res);
 
         setAuthState(prevState => ({
