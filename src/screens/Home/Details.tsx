@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import React, { Suspense, useCallback, useState } from 'react';
+import React, { Suspense, useCallback, useMemo, useState } from 'react';
 import { HomeStackScreenProps } from 'navigators/types';
 import {
   Text,
@@ -20,6 +20,7 @@ import {
 import {
   getLocaleDate,
   getLocaleTime,
+  isAccepted,
   isAcceptedParticipant,
   isAdmin,
   isRecruitedEnded,
@@ -34,17 +35,22 @@ import {
 } from '/hooks/queries/workout.queries';
 import WorkoutPromiseLoader from '/components/molecules/Home/WorkoutPromiseLoader';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import {
+  useQueryClient,
+  useQueryErrorResetBoundary,
+} from '@tanstack/react-query';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ParticipationBottomSheet from '/components/organisms/User/ParticipationBottomSheet';
 import { useGetUserInfoQuery } from '/hooks/queries/user.queries';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import CustomFAB from '/components/molecules/Home/CustomFAB';
+import { useChatRoomMutation } from '/hooks/queries/chat.queries';
 type HomeScreenProps = HomeStackScreenProps<'Details'>;
 
 export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const theme = useTheme();
+  const queryClient = useQueryClient();
   const { workoutPromiseId } = route.params;
   const query = useGetWorkoutByIdQuery(workoutPromiseId);
   const { data: myInfo } = useGetUserInfoQuery('me');
@@ -56,6 +62,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const inset = useSafeAreaInsets();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
 
+  const chatRoomMutation = useChatRoomMutation();
   const onPressParticipation = useCallback(async () => {
     setIsBottomSheetOpen(true);
   }, []);
@@ -121,6 +128,119 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
         style: 'destructive',
       },
     ]);
+  };
+
+  const isChatButtonDisabled = useMemo(() => {
+    if (!query.data || !myInfo) {
+      return true;
+    }
+
+    // 약속 참여자인 경우만 활성화
+    if (!isAccepted(query.data.participants, myInfo.id)) {
+      return true;
+    }
+
+    return false;
+  }, [myInfo, query.data]);
+
+  const onPressChat = (
+    myId: string | undefined,
+    adminUserId: string | undefined,
+  ) => {
+    if (!myId || !adminUserId || isChatButtonDisabled || !query.data) {
+      return;
+    }
+    const { chatRoomId } = query.data;
+    const isAdminUser = myId === adminUserId;
+    console.log('chatRoomId', chatRoomId);
+
+    if (chatRoomId && isAccepted(query.data.participants, myId)) {
+      Alert.alert('채팅방으로 이동하시겠습니까?', '', [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: '확인',
+          onPress: () => {
+            navigation.navigate('MainNavigator', {
+              screen: '채팅',
+              params: {
+                screen: 'ChatRoom',
+                params: {
+                  chatRoomId: chatRoomId,
+                  chatRoomName: query.data.title,
+                  isGroupChat: true,
+                },
+              },
+            });
+          },
+        },
+      ]);
+      return;
+    }
+    if (isAdminUser) {
+      Alert.alert('채팅방을 개설하시겠습니까?', '', [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: '확인',
+          onPress: async () => {
+            // Post ChatRoom With Members
+            const res = await chatRoomMutation.mutateAsync({
+              adminUserId: myId,
+              membersUserIds: query.data.participants.map(
+                participant => participant.userId,
+              ),
+              isGroupChat: true,
+              isPrivate: true,
+              name: query.data.title,
+              description: query.data.description,
+              workoutPromiseId: query.data.id,
+            });
+
+            queryClient.setQueryData<WorkoutPromiseRead>(
+              ['workoutPromise', workoutPromiseId],
+              prev => {
+                if (!prev) {
+                  return prev;
+                }
+                return {
+                  ...prev,
+                  chatRoomId: res.id,
+                };
+              },
+            );
+
+            navigation.navigate('채팅', {
+              screen: 'ChatRoom',
+              params: {
+                chatRoomId: res.id,
+                chatRoomName: res.name,
+              },
+            });
+          },
+          style: 'destructive',
+        },
+      ]);
+    } else {
+      Alert.alert('채팅방에 참여하시겠습니까?', '', [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: '확인',
+          onPress: () => {
+            // Post ChatRoom Member With ChatRoomId
+            Alert.alert('채팅방 참여 완료');
+          },
+          style: 'destructive',
+        },
+      ]);
+    }
   };
 
   return (
@@ -339,8 +459,9 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
             <CustomFAB
               icon="chatbubbles"
               customStyle={style.fab}
+              disabled={isChatButtonDisabled}
               onPress={() => {
-                navigation.navigate('Posting');
+                onPressChat(myInfo?.id, query.data?.adminUserId);
               }}
             />
           </View>

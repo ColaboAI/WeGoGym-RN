@@ -196,7 +196,8 @@ type ChatRoom = {
   isPrivate: boolean;
   isGroupChat: boolean;
   // admin user id
-  createdBy: string;
+  adminUserId: string;
+  workoutPromiseId?: string;
 };
 
 type ChatRoomCreate = {
@@ -205,7 +206,8 @@ type ChatRoomCreate = {
   membersUserIds: string[];
   isPrivate: boolean;
   isGroupChat: boolean;
-  createdBy: string;
+  adminUserId: string;
+  workoutPromiseId?: string;
 };
 
 type Message = {

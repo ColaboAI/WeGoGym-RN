@@ -43,7 +43,6 @@ const ChatInput = (props: ChatInputProps) => {
 
   const theme = useTheme();
   const myId = getValueFor('userId');
-  // const nav = useNavigation<NativeStackNavigationProp<ChatStackParamList>>();
   const queryClient = useQueryClient();
   const webSocket = useRef<WebSocket | null>(null);
   const { onShow } = useSnackBarActions();
@@ -168,8 +167,8 @@ const ChatInput = (props: ChatInputProps) => {
       try {
         console.log('create Direct chat room');
         const res = await chatRoomMutation.mutateAsync({
-          createdBy: myId,
-          membersUserIds: [userId],
+          adminUserId: myId,
+          membersUserIds: [myId, userId],
           isGroupChat: false,
           isPrivate: true,
         });
