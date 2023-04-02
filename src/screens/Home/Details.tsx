@@ -20,7 +20,7 @@ import {
 import {
   getLocaleDate,
   getLocaleTime,
-  isAccepted,
+  getMyParticipant,
   isAcceptedParticipant,
   isAdmin,
   isRecruitedEnded,
@@ -46,6 +46,7 @@ import { useGetUserInfoQuery } from '/hooks/queries/user.queries';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import CustomFAB from '/components/molecules/Home/CustomFAB';
 import { useChatRoomMutation } from '/hooks/queries/chat.queries';
+import { postChatRoomMember } from '/api/api';
 type HomeScreenProps = HomeStackScreenProps<'Details'>;
 
 export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
@@ -129,14 +130,33 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
       },
     ]);
   };
-
+  // TODO: Refactor
   const isChatButtonDisabled = useMemo(() => {
     if (!query.data || !myInfo) {
       return true;
     }
-
-    // 약속 참여자인 경우만 활성화
-    if (!isAccepted(query.data.participants, myInfo.id)) {
+    const myParticipation = getMyParticipant(
+      query.data.participants,
+      myInfo.id,
+    );
+    if (!myParticipation) {
+      console.log(myParticipation);
+      return true;
+    }
+    // 약속 참여자인 경우만 활성화 + 어드민 아닌 경우 채팅방 개설 전까지 비활성화
+    if (myParticipation) {
+      if (myParticipation.status === 'ACCEPTED') {
+        if (
+          myParticipation.isAdmin !== true &&
+          query.data.chatRoomId === null
+        ) {
+          return true;
+        }
+      } else {
+        // 참여자가 아닌 경우
+        return true;
+      }
+    } else {
       return true;
     }
 
@@ -152,94 +172,120 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
     }
     const { chatRoomId } = query.data;
     const isAdminUser = myId === adminUserId;
-    console.log('chatRoomId', chatRoomId);
 
-    if (chatRoomId && isAccepted(query.data.participants, myId)) {
-      Alert.alert('채팅방으로 이동하시겠습니까?', '', [
-        {
-          text: '취소',
-          style: 'cancel',
-        },
-        {
-          text: '확인',
-          onPress: () => {
-            navigation.navigate('MainNavigator', {
-              screen: '채팅',
-              params: {
+    const myParticipation = getMyParticipant(query.data.participants, myId);
+
+    if (chatRoomId) {
+      if (myParticipation) {
+        if (myParticipation.chatRoomMemberId) {
+          Alert.alert('채팅방으로 이동하시겠습니까?', '', [
+            {
+              text: '취소',
+              style: 'cancel',
+            },
+            {
+              text: '확인',
+              onPress: () => {
+                navigation.navigate('MainNavigator', {
+                  screen: '채팅',
+                  params: {
+                    screen: 'ChatRoom',
+                    params: {
+                      chatRoomId: chatRoomId,
+                      chatRoomName: query.data.title,
+                      isGroupChat: true,
+                    },
+                  },
+                });
+              },
+            },
+          ]);
+        } else {
+          // 채팅방에 참여하지 않은 경우
+          Alert.alert('채팅방에 참여하시겠습니까?', '', [
+            {
+              text: '취소',
+              style: 'cancel',
+            },
+            {
+              text: '확인',
+              onPress: async () => {
+                await postChatRoomMember(chatRoomId, myId);
+
+                navigation.navigate('MainNavigator', {
+                  screen: '채팅',
+                  params: {
+                    screen: 'ChatRoom',
+                    params: {
+                      chatRoomId: chatRoomId,
+                      chatRoomName: query.data.title,
+                      isGroupChat: true,
+                    },
+                  },
+                });
+              },
+            },
+          ]);
+        }
+      }
+    } else {
+      if (isAdminUser) {
+        Alert.alert('채팅방을 개설하시겠습니까?', '', [
+          {
+            text: '취소',
+            style: 'cancel',
+          },
+          {
+            text: '확인',
+            onPress: async () => {
+              // Post ChatRoom With Members
+              const res = await chatRoomMutation.mutateAsync({
+                adminUserId: myId,
+                membersUserIds: query.data.participants.map(
+                  participant => participant.userId,
+                ),
+                isGroupChat: true,
+                isPrivate: true,
+                name: query.data.title,
+                description: query.data.description,
+                workoutPromiseId: query.data.id,
+              });
+
+              queryClient.setQueryData<WorkoutPromiseRead>(
+                ['workoutPromise', workoutPromiseId],
+                prev => {
+                  if (!prev) {
+                    return prev;
+                  }
+                  return {
+                    ...prev,
+                    chatRoomId: res.id,
+                  };
+                },
+              );
+
+              navigation.navigate('채팅', {
                 screen: 'ChatRoom',
                 params: {
-                  chatRoomId: chatRoomId,
-                  chatRoomName: query.data.title,
-                  isGroupChat: true,
-                },
-              },
-            });
-          },
-        },
-      ]);
-      return;
-    }
-    if (isAdminUser) {
-      Alert.alert('채팅방을 개설하시겠습니까?', '', [
-        {
-          text: '취소',
-          style: 'cancel',
-        },
-        {
-          text: '확인',
-          onPress: async () => {
-            // Post ChatRoom With Members
-            const res = await chatRoomMutation.mutateAsync({
-              adminUserId: myId,
-              membersUserIds: query.data.participants.map(
-                participant => participant.userId,
-              ),
-              isGroupChat: true,
-              isPrivate: true,
-              name: query.data.title,
-              description: query.data.description,
-              workoutPromiseId: query.data.id,
-            });
-
-            queryClient.setQueryData<WorkoutPromiseRead>(
-              ['workoutPromise', workoutPromiseId],
-              prev => {
-                if (!prev) {
-                  return prev;
-                }
-                return {
-                  ...prev,
                   chatRoomId: res.id,
-                };
-              },
-            );
-
-            navigation.navigate('채팅', {
-              screen: 'ChatRoom',
-              params: {
-                chatRoomId: res.id,
-                chatRoomName: res.name,
-              },
-            });
+                  chatRoomName: res.name,
+                },
+              });
+            },
+            style: 'destructive',
           },
-          style: 'destructive',
-        },
-      ]);
-    } else {
-      Alert.alert('채팅방에 참여하시겠습니까?', '', [
-        {
-          text: '취소',
-          style: 'cancel',
-        },
-        {
-          text: '확인',
-          onPress: () => {
-            // Post ChatRoom Member With ChatRoomId
-            Alert.alert('채팅방 참여 완료');
-          },
-          style: 'destructive',
-        },
-      ]);
+        ]);
+      } else {
+        Alert.alert(
+          '채팅방이 개설되지 않았습니다.',
+          '운동 약속 관리자가 개설할 수 있습니다.',
+          [
+            {
+              text: '확인',
+            },
+          ],
+        );
+      }
     }
   };
 
