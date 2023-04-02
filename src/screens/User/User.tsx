@@ -130,6 +130,7 @@ export default function UserScreen({ navigation, route }: Props) {
               <View style={style.chatAndImageBtn}>
                 {id === 'me' && data ? (
                   <Button
+                    mode="contained"
                     onPress={() => {
                       if (data) {
                         navigation.push('ProfileEdit', {
@@ -151,6 +152,34 @@ export default function UserScreen({ navigation, route }: Props) {
                   </Button>
                 )}
               </View>
+            </View>
+            {/* 운동 목표 */}
+            <View style={style.myGoalSection}>
+              <View style={style.title}>
+                <Text variant="titleMedium">🏃🏻‍♀️ 운동 목표</Text>
+              </View>
+              <ScrollView
+                style={style.horizontalChipContainer}
+                horizontal
+                nestedScrollEnabled
+                showsHorizontalScrollIndicator={false}>
+                {data &&
+                data.workoutGoal &&
+                data.workoutGoal.split(',').length > 0 ? (
+                  data.workoutGoal.split(',').map((goal, index) => (
+                    <Chip
+                      elevated
+                      elevation={1}
+                      key={`workoutGoal-${index}`}
+                      icon="checkmark-circle-outline"
+                      style={[style.chip]}>
+                      {goal}
+                    </Chip>
+                  ))
+                ) : (
+                  <Text variant="bodySmall">운동 목표를 등록해보세요!</Text>
+                )}
+              </ScrollView>
             </View>
             {/* 신체 정보 */}
             <View style={style.myBodySection}>
@@ -192,40 +221,13 @@ export default function UserScreen({ navigation, route }: Props) {
               </ScrollView>
             </View>
 
-            {/* 운동 목표 */}
-            <View style={style.myGoalSection}>
-              <View style={style.title}>
-                <Text variant="titleMedium">🏃🏻‍♀️ 운동 목표</Text>
-              </View>
-              <ScrollView
-                style={style.horizontalChipContainer}
-                horizontal
-                nestedScrollEnabled
-                showsHorizontalScrollIndicator={false}>
-                {data &&
-                data.workoutGoal &&
-                data.workoutGoal.split(',').length > 0 ? (
-                  data.workoutGoal.split(',').map((goal, index) => (
-                    <Chip
-                      key={`workoutGoal-${index}`}
-                      icon="checkmark-circle-outline"
-                      style={style.chip}>
-                      {goal}
-                    </Chip>
-                  ))
-                ) : (
-                  <Text variant="bodySmall">운동 목표를 등록해보세요!</Text>
-                )}
-              </ScrollView>
-            </View>
-
             {/* 기타 개인 정보 */}
             <View style={style.myInfoSection}>
               <View style={style.title}>
                 <Text variant="titleMedium">ℹ️ 정보</Text>
               </View>
               <View style={style.infoContainer}>
-                <Card>
+                <Card elevation={1}>
                   <Card.Content>
                     <List.Item
                       title="소개"
@@ -320,9 +322,7 @@ const style = StyleSheet.create({
   avatarContainer: {
     marginBottom: 16,
   },
-  avatar: {
-    borderWidth: 1,
-  },
+  avatar: {},
   usernameContainer: {
     position: 'relative',
     flexDirection: 'row',
@@ -340,7 +340,6 @@ const style = StyleSheet.create({
   physicalContainer: {
     flexDirection: 'row',
     // justifyContent: 'space-between',
-    padding: 12,
   },
   infoContainer: {
     padding: 12,
@@ -357,7 +356,7 @@ const style = StyleSheet.create({
   horizontalChipContainer: {
     flexDirection: 'row',
     paddingTop: 12,
-    marginBottom: 16,
+    paddingBottom: 16,
   },
   myBodySection: {
     flex: 1,
