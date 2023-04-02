@@ -129,7 +129,6 @@ interface UserBase {
 
 interface UserCreate extends UserBase {
   // TODO: remove ID
-  _id?: string;
   username: string;
   gender: string;
   age: number;
