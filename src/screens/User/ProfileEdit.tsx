@@ -1,13 +1,12 @@
 import { StyleSheet, View, Platform } from 'react-native';
 import {
   Text,
-  Avatar,
   Card,
   List,
-  useTheme,
   Button,
   Chip,
   TextInput,
+  useTheme,
 } from 'react-native-paper';
 import React, { useCallback, useState } from 'react';
 import { UserStackScreenProps } from '/navigators/types';
@@ -23,6 +22,7 @@ import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
 import { usePutMyInfoMutation } from '/hooks/queries/user.queries';
 import StringMenu from '/components/molecules/User/StringMenu';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 
 // TODO: bio
 type Props = UserStackScreenProps<'ProfileEdit'>;
@@ -147,33 +147,56 @@ export default function ProfileEdit({ navigation, route }: Props) {
         nativeID="userInfoUpdateScroll">
         <View style={style.profileContainer}>
           <View style={style.avatarContainer}>
-            {myInfoState.profilePic ? (
-              <Avatar.Image
-                size={64}
-                source={{
-                  uri: myInfoState.profilePic,
-                }}
-                style={style.avatar}
-              />
-            ) : (
-              <Avatar.Text size={64} label={myInfo.username[0] ?? 'User'} />
-            )}
+            <CustomAvatar
+              username={myInfo.username[0]}
+              profilePic={myInfoState.profilePic}
+              size={64}
+            />
           </View>
           <View style={style.usernameContainer}>
             <Text variant="titleMedium">{myInfo.username} 님</Text>
           </View>
-          <Button onPress={onPressProfilePic}>프로필 사진 수정</Button>
+          <Button
+            style={style.btn}
+            mode="contained"
+            onPress={onPressProfilePic}>
+            프로필 사진 수정
+          </Button>
         </View>
+
+        {/* 운동 목표 */}
+        <View style={style.myGoalSection}>
+          <View style={style.title}>
+            <Text variant="titleMedium">🏃🏻‍♀️ 나의 운동 목표</Text>
+          </View>
+          <ScrollView
+            style={style.horizontalChipContainer}
+            horizontal
+            nestedScrollEnabled
+            showsHorizontalScrollIndicator={false}>
+            {myWorkoutGoalState.map((item, index) => (
+              <Chip
+                key={item.id}
+                selected={item.select}
+                selectedColor={theme.colors.primary}
+                onPress={() => {
+                  setMyWorkoutGoalState(prev => {
+                    const newWorkoutGoalList = [...prev];
+                    newWorkoutGoalList[index].select = !item.select;
+                    return newWorkoutGoalList;
+                  });
+                }}
+                style={style.chip}>
+                {item.goal}
+              </Chip>
+            ))}
+          </ScrollView>
+        </View>
+
         {/* 신체 정보 */}
         <View style={style.myBodySection}>
           <View style={style.title}>
-            <Text
-              variant="titleMedium"
-              style={{
-                color: theme.colors.primary,
-              }}>
-              🏋🏻 나의 피지컬
-            </Text>
+            <Text variant="titleMedium">🏋🏻 나의 피지컬</Text>
           </View>
           <View style={style.physicalContainer}>
             <InfoEditCardNumeric
@@ -246,54 +269,13 @@ export default function ProfileEdit({ navigation, route }: Props) {
           </View>
         </View>
 
-        {/* 운동 목표 */}
-        <View style={style.myGoalSection}>
-          <View style={style.title}>
-            <Text
-              variant="titleMedium"
-              style={{
-                color: theme.colors.primary,
-              }}>
-              🏃🏻‍♀️ 나의 운동 목표
-            </Text>
-          </View>
-          <ScrollView
-            style={style.horizontalChipContainer}
-            horizontal
-            nestedScrollEnabled
-            showsHorizontalScrollIndicator={false}>
-            {myWorkoutGoalState.map((item, index) => (
-              <Chip
-                key={item.id}
-                selected={item.select}
-                selectedColor={theme.colors.primary}
-                onPress={() => {
-                  setMyWorkoutGoalState(prev => {
-                    const newWorkoutGoalList = [...prev];
-                    newWorkoutGoalList[index].select = !item.select;
-                    return newWorkoutGoalList;
-                  });
-                }}
-                style={style.chip}>
-                {item.goal}
-              </Chip>
-            ))}
-          </ScrollView>
-        </View>
-
         {/* 기타 개인 정보 */}
         <View style={style.myInfoSection}>
           <View style={style.title}>
-            <Text
-              variant="titleMedium"
-              style={{
-                color: theme.colors.primary,
-              }}>
-              ℹ️ 나의 정보
-            </Text>
+            <Text variant="titleMedium">ℹ️ 나의 정보</Text>
           </View>
           <View style={style.infoContainer}>
-            <Card>
+            <Card elevation={1}>
               <Card.Content>
                 <TextInput
                   mode="outlined"
@@ -426,6 +408,9 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  btn: {
+    marginVertical: 10,
   },
   icon: {
     position: 'absolute',

@@ -1,6 +1,6 @@
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import React from 'react';
-import { Avatar } from 'react-native-paper';
+import { Avatar, useTheme } from 'react-native-paper';
 
 interface Props {
   profilePic?: string;
@@ -10,6 +10,14 @@ interface Props {
 }
 
 function CustomAvatar(props: Props) {
+  const theme = useTheme();
+  const customStyleFromTheme = {
+    text: {
+      color: theme.colors.onSurfaceVariant,
+      backgroundColor: theme.colors.surfaceVariant,
+    },
+  };
+
   return (
     <View style={styles.avatarContainer}>
       {props.profilePic ? (
@@ -23,8 +31,12 @@ function CustomAvatar(props: Props) {
       ) : (
         <Avatar.Text
           size={props.size}
-          label={props.username[0] ?? 'User'}
-          style={props.style ? props.style : styles.avatar}
+          label={props.username[0] ?? '?'}
+          style={
+            props.style
+              ? [customStyleFromTheme.text, props.style]
+              : [customStyleFromTheme.text, styles.avatar]
+          }
         />
       )}
     </View>
@@ -34,6 +46,6 @@ function CustomAvatar(props: Props) {
 export default CustomAvatar;
 
 const styles = StyleSheet.create({
-  avatarContainer: {},
+  avatarContainer: { borderRadius: 100 },
   avatar: {},
 });

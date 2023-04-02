@@ -23,12 +23,7 @@ const FriendProfileCard = ({
           onPress={() => {
             navigateToUserDetails(id);
           }}>
-          <CustomAvatar
-            style={styles.avatar}
-            size={60}
-            profilePic={profilePic}
-            username={username}
-          />
+          <CustomAvatar size={60} profilePic={profilePic} username={username} />
         </Pressable>
       </View>
       <View style={styles.usernameContainer}>

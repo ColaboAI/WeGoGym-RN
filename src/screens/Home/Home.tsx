@@ -4,7 +4,6 @@ import {
   Text,
   Divider,
   Banner,
-  useTheme,
   ActivityIndicator,
   Button,
 } from 'react-native-paper';
@@ -28,7 +27,6 @@ type HomeScreenProps = HomeStackScreenProps<'Home'>;
 // TODO:
 // 페이지네이션 구현 (당겨서 새로고침)
 export default function HomeScreen({ navigation }: HomeScreenProps) {
-  const theme = useTheme();
   const {
     data: workoutPromiseList,
     fetchNextPage,
@@ -70,7 +68,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     () => (
       <View style={style.bannerContainer}>
         <Banner
-          elevation={4}
+          elevation={2}
           visible={visible === 'false' ? false : true}
           actions={[
             {
@@ -126,14 +124,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     <>
       <ScreenWrapper withScrollView={false} style={style.container}>
         <View style={style.headerContainer}>
-          <Text
-            variant="titleLarge"
-            style={[
-              style.font,
-              {
-                color: theme.colors.primary,
-              },
-            ]}>
+          <Text variant="titleLarge" style={[style.font]}>
             WeGoGym
           </Text>
           <View style={style.iconContainer}>

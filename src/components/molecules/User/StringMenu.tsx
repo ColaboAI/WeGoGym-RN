@@ -23,7 +23,7 @@ const StringMenu = (props: Props) => {
 
   return (
     <View style={styles.menuContainer}>
-      <Surface elevation={4} style={styles.surface}>
+      <Surface elevation={1} style={styles.surface}>
         <Text variant="labelLarge">{props.titleKorean}</Text>
         <Menu
           visible={visible}

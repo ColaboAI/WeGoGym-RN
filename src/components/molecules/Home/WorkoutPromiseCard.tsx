@@ -30,7 +30,7 @@ const WorkoutPromiseCard = ({
         <View
           key={`workout-promise-card-${id}`}
           style={style.promiseCardContainer}>
-          <Card>
+          <Card elevation={1}>
             <Card.Title
               title={title}
               left={props => (

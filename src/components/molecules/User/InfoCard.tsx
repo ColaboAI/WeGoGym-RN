@@ -12,7 +12,7 @@ function InfoCard(props: Props) {
     marginBottom: 5,
   };
   return (
-    <Card elevation={4} style={styles.cardContainer}>
+    <Card style={styles.cardContainer}>
       <Card.Content style={styles.card}>
         <Text variant="titleMedium" style={textContentStyle}>
           {props.textContent}

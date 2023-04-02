@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useTheme, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import FriendListLoader from 'components/molecules/Home/FriendListLoader';
 import FriendProfileCard from 'components/molecules/Home/FriendProfileCard';
 import { useGetRecommendedMatesQuery } from '/hooks/queries/user.queries';
@@ -13,20 +13,12 @@ type Props = {
 export default function GymMateRecommendation({
   navigateToUserDetails,
 }: Props) {
-  const theme = useTheme();
   //   use query to get friend list
   const { data: friendList } = useGetRecommendedMatesQuery();
   return (
     <>
       <View style={styles.title}>
-        <Text
-          variant="titleLarge"
-          style={[
-            styles.font,
-            {
-              color: theme.colors.primary,
-            },
-          ]}>
+        <Text variant="titleLarge" style={[styles.font]}>
           👍🏻 추천 짐메이트
         </Text>
       </View>
@@ -49,7 +41,6 @@ export default function GymMateRecommendation({
         <Text
           variant="titleLarge"
           style={{
-            color: theme.colors.primary,
             fontSize: 20,
             fontWeight: '600',
           }}>

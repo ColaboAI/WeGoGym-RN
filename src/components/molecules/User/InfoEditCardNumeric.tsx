@@ -22,7 +22,7 @@ function InfoEditCardNumeric(props: Props) {
   const numericTitleListIndex = numericTitleList.indexOf(props.textTitle);
   return (
     <View style={styles.surfaceContainer}>
-      <Surface elevation={4} style={styles.surface}>
+      <Surface elevation={1} style={styles.surface}>
         <Text variant="labelLarge">
           {numericTitleKorList[numericTitleListIndex]}
         </Text>
