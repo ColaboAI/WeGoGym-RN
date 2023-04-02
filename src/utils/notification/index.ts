@@ -42,8 +42,6 @@ async function saveMessageToMMKV(data: { [key: string]: string }) {
       const camelCasedData = convertObjectKeyToCamelCase<Message>(data);
       camelCasedData.createdAt = new Date(camelCasedData.createdAt);
       const currMsgListString = mmkv.getString('currentMessage');
-
-      console.log('mmkv current message', mmkv.getString('currentMessage'));
       const currMsgList =
         currMsgListString !== undefined ? JSON.parse(currMsgListString) : [];
       const newMsgList = [...currMsgList, camelCasedData];
@@ -92,6 +90,9 @@ async function onMessageInForeground(
   message: FirebaseMessagingTypes.RemoteMessage,
 ) {
   const { data } = message;
+  // except in chat room screen
+  // check if current screen is chat room screen
+
   if (data) {
     if (data.type === 'text_message') {
       await saveMessageToMMKV(data);
