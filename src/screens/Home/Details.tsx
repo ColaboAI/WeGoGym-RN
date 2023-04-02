@@ -135,6 +135,11 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
     if (!query.data || !myInfo) {
       return true;
     }
+
+    if (query.data.participants.length < 2) {
+      return true;
+    }
+
     const myParticipation = getMyParticipant(
       query.data.participants,
       myInfo.id,
@@ -502,14 +507,18 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
             ) : (
               <></>
             )}
-            <CustomFAB
-              icon="chatbubbles"
-              customStyle={style.fab}
-              disabled={isChatButtonDisabled}
-              onPress={() => {
-                onPressChat(myInfo?.id, query.data?.adminUserId);
-              }}
-            />
+            {isBottomSheetOpen ? (
+              <></>
+            ) : (
+              <CustomFAB
+                icon="chatbubbles"
+                customStyle={style.fab}
+                disabled={isChatButtonDisabled}
+                onPress={() => {
+                  onPressChat(myInfo?.id, query.data?.adminUserId);
+                }}
+              />
+            )}
           </View>
         </>
       </ErrorBoundary>
