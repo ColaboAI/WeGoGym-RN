@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Text, Card, useTheme } from 'react-native-paper';
 import {
   getLocaleDate,
@@ -7,7 +7,6 @@ import {
   getRelativeTime,
   isAcceptedParticipant,
 } from 'utils/util';
-import { useGetUserInfoQuery } from '/hooks/queries/user.queries';
 import WorkoutPromiseLoader from './WorkoutPromiseLoader';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
@@ -22,86 +21,88 @@ const WorkoutPromiseCard = ({
   updatedAt,
   participants,
 }: WorkoutPromiseRead) => {
-  const { data: adminUserInfo } = useGetUserInfoQuery(adminUserId);
+  // admin user 탈퇴 대응
+  const adminPar = participants.find(
+    participant => participant.userId === adminUserId,
+  );
+
+  const adminUserInfo = adminPar?.user;
+
   const theme = useTheme();
   return (
-    <Suspense fallback={<WorkoutPromiseLoader />}>
+    <View key={`workout-promise-card-${id}`} style={style.promiseCardContainer}>
       {adminUserInfo ? (
-        <View
-          key={`workout-promise-card-${id}`}
-          style={style.promiseCardContainer}>
-          <Card elevation={1}>
-            <Card.Title
-              title={title}
-              left={props => (
-                <CustomAvatar
-                  {...props}
-                  size={30}
-                  profilePic={adminUserInfo?.profilePic}
-                  username={adminUserInfo?.username}
+        <Card elevation={1}>
+          <Card.Title
+            title={title}
+            left={props => (
+              <CustomAvatar
+                {...props}
+                size={30}
+                profilePic={adminUserInfo?.profilePic}
+                username={adminUserInfo?.username ?? '알 수 없음'}
+              />
+            )}
+            right={props => (
+              <Text {...props} variant="labelSmall">
+                {adminUserInfo?.username ?? '알 수 없음'}님
+              </Text>
+            )}
+            leftStyle={style.leftBox}
+            rightStyle={style.rightBox}
+          />
+          <Card.Content>
+            <>
+              <View style={style.infoBox}>
+                <Icon
+                  name="calendar-outline"
+                  size={18}
+                  color={theme.colors.onBackground}
+                  style={style.icon}
                 />
-              )}
-              right={props => (
-                <Text {...props} variant="labelSmall">
-                  {adminUserInfo?.username}님
+                <Text>
+                  {getLocaleDate(promiseTime)} {getLocaleTime(promiseTime)}
                 </Text>
-              )}
-              leftStyle={style.leftBox}
-              rightStyle={style.rightBox}
-            />
-            <Card.Content>
-              <>
+              </View>
+              <View style={style.infoBox}>
+                <Icon
+                  name="location-outline"
+                  size={18}
+                  color={theme.colors.onBackground}
+                  style={style.icon}
+                />
+                <Text>{gymInfo ? gymInfo.name : '위치 미정'}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
                 <View style={style.infoBox}>
                   <Icon
-                    name="calendar-outline"
+                    name="people-outline"
                     size={18}
                     color={theme.colors.onBackground}
                     style={style.icon}
                   />
                   <Text>
-                    {getLocaleDate(promiseTime)} {getLocaleTime(promiseTime)}
+                    {isAcceptedParticipant(participants).length}/
+                    {maxParticipants} 참여 중
                   </Text>
                 </View>
-                <View style={style.infoBox}>
-                  <Icon
-                    name="location-outline"
-                    size={18}
-                    color={theme.colors.onBackground}
-                    style={style.icon}
-                  />
-                  <Text>{gymInfo ? gymInfo.name : '위치 미정'}</Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <View style={style.infoBox}>
-                    <Icon
-                      name="people-outline"
-                      size={18}
-                      color={theme.colors.onBackground}
-                      style={style.icon}
-                    />
-                    <Text>
-                      {isAcceptedParticipant(participants).length}/
-                      {maxParticipants} 참여 중
-                    </Text>
-                  </View>
-                  <Text
-                    variant="labelSmall"
-                    style={{ color: theme.colors.onBackground }}>
-                    {getRelativeTime(updatedAt)}
-                  </Text>
-                </View>
-              </>
-            </Card.Content>
-          </Card>
-        </View>
+                <Text
+                  variant="labelSmall"
+                  style={{ color: theme.colors.onBackground }}>
+                  {getRelativeTime(updatedAt)}
+                </Text>
+              </View>
+            </>
+          </Card.Content>
+        </Card>
       ) : (
         <WorkoutPromiseLoader />
       )}
-    </Suspense>
+    </View>
   );
 };
 
