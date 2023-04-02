@@ -367,6 +367,18 @@ async function postChatRoom(params: ChatRoomCreate): Promise<ChatRoom> {
   }
 }
 
+async function postChatRoomMember(
+  roomId: string,
+  userId: string,
+): Promise<boolean> {
+  try {
+    await apiClient.post(`/chat/room/${roomId}/user/${userId}`);
+    return true;
+  } catch (e) {
+    throw e;
+  }
+}
+
 async function deleteChatRoomMember(
   roomId: string,
   userId: string,
@@ -404,4 +416,5 @@ export {
   postChatRoom,
   deleteChatRoomMember,
   putMyFCMToken,
+  postChatRoomMember,
 };

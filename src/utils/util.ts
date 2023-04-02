@@ -224,13 +224,15 @@ export function isRequested(
   return requestedParticipants.length !== 0;
 }
 
-export function isAccepted(
+export function getMyParticipant(
   paticipants: WorkoutParticipantsRead[],
   userId: string,
 ) {
-  const acceptedParticipants = paticipants.filter(
-    participant =>
-      participant.status === 'ACCEPTED' && participant.userId === userId,
+  const myParticipant = paticipants.find(
+    participant => participant.userId === userId,
   );
-  return acceptedParticipants.length !== 0;
+  if (myParticipant === undefined) {
+    return null;
+  }
+  return myParticipant;
 }
