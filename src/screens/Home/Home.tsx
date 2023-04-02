@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import {
   IconButton,
   Text,
@@ -12,11 +12,7 @@ import React, { Suspense, useCallback, useState } from 'react';
 import WorkoutPromiseCard from 'components/molecules/Home/WorkoutPromiseCard';
 import { HomeStackScreenProps } from 'navigators/types';
 import CustomFAB from 'components/molecules/Home/CustomFAB';
-import {
-  FlatList,
-  RefreshControl,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
+import { FlatList, RefreshControl } from 'react-native-gesture-handler';
 import WorkoutPromiseLoader from 'components/molecules/Home/WorkoutPromiseLoader';
 import ScreenWrapper from 'components/template/Common/ScreenWrapper';
 import {
@@ -105,13 +101,13 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
   const renderItem = useCallback(
     ({ item }: { item: WorkoutPromiseRead }) => (
-      <TouchableOpacity
+      <Pressable
         key={`workout-promise-container-${item.id}`}
         onPress={() => {
           navigateToPromiseDetails(item.id);
         }}>
         <WorkoutPromiseCard key={`workout-promise-${item.id}`} {...item} />
-      </TouchableOpacity>
+      </Pressable>
     ),
     [navigateToPromiseDetails],
   );

@@ -1,7 +1,6 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Text } from 'react-native-paper';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 type Props = {
   navigateToUserDetails: (id: string) => void;
@@ -20,7 +19,7 @@ const FriendProfileCard = ({
   return (
     <View key={id} style={styles.profileContainer}>
       <View style={styles.avatarContainer}>
-        <TouchableOpacity
+        <Pressable
           onPress={() => {
             navigateToUserDetails(id);
           }}>
@@ -30,7 +29,7 @@ const FriendProfileCard = ({
             profilePic={profilePic}
             username={username}
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
       <View style={styles.usernameContainer}>
         <Text variant="titleMedium">{username}</Text>
