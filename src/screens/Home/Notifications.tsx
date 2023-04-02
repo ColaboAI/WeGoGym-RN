@@ -26,7 +26,14 @@ export default function NotificationsScreen({ navigation }: HomeScreenProps) {
 
   const navigateToUserDetails = useCallback(
     (id: string) => {
-      navigation.push('User', { userId: id });
+      navigation.navigate('User', { userId: id });
+    },
+    [navigation],
+  );
+
+  const navigateToWorkoutDetails = useCallback(
+    (id: string) => {
+      navigation.navigate('Details', { workoutPromiseId: id });
     },
     [navigation],
   );
@@ -36,6 +43,7 @@ export default function NotificationsScreen({ navigation }: HomeScreenProps) {
       key={`notification-${item.id}`}
       {...item}
       navigateToUserDetails={navigateToUserDetails}
+      navigateToWorkoutDetails={navigateToWorkoutDetails}
     />
   );
 
