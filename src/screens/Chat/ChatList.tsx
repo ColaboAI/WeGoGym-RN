@@ -50,37 +50,7 @@ function ChatList({ navigation }: ChatListScreenProps) {
             return prev;
           },
         );
-        queryClient.setQueryData(
-          ['chatMessage', message.chatRoomId],
-          (old: InfiniteData<MessageListResponse> | undefined) => {
-            if (old) {
-              const newMessagePage = {
-                items: [message, ...old.pages[0].items],
-                total: old.pages[0].total + 1,
-                nextCursor: old.pages[0].nextCursor
-                  ? old.pages[0].nextCursor + 1
-                  : null,
-              };
-
-              const newMessageList = {
-                ...old,
-                pages: [newMessagePage, ...old.pages.slice(1)],
-              };
-              return newMessageList;
-            } else {
-              return {
-                pages: [
-                  {
-                    items: [message],
-                    total: 1,
-                    nextCursor: 1,
-                  },
-                ],
-                pageParams: [undefined],
-              };
-            }
-          },
-        );
+        queryClient.invalidateQueries(['chatMessage', message.chatRoomId]);
       });
       setCurrentMessage([]);
     }
