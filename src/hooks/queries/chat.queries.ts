@@ -15,6 +15,7 @@ import { Alert } from 'react-native';
 import { AxiosError } from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { ChatStackScreenProps } from '/navigators/types';
+import { getChatRoomNameFromMembers } from '/utils/util';
 
 export function useMyChatListQuery() {
   return useInfiniteQuery({
@@ -61,7 +62,7 @@ export function useChatRoomQuery(chatRoomId: string | undefined) {
         chatRoomDescription: data.description,
         isGroupChat: data.isGroupChat,
         chatRoomMembers: data.members,
-        chatRoomName: data.name,
+        chatRoomName: data.name ?? getChatRoomNameFromMembers(data.members),
       });
     },
     suspense: true,

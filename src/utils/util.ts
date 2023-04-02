@@ -236,3 +236,19 @@ export function getMyParticipant(
   }
   return myParticipant;
 }
+
+export function getChatRoomNameFromMembers(members: ChatRoomMember[]) {
+  const myId = getValueFor('userId');
+  if (myId === null) {
+    return '';
+  }
+  const otherMembers = members.filter(member => {
+    if (member.user.id !== myId) {
+      return true;
+    }
+  });
+  if (otherMembers.length === 1) {
+    return otherMembers[0].user.username;
+  }
+  return otherMembers.flatMap(member => member.user.username).join(', ');
+}
