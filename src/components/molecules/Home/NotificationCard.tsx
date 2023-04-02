@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Card, Text, useTheme } from 'react-native-paper';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
+import { usePutNotificationMutation } from '/hooks/queries/notification.queries';
 import {
   usePutWorkoutParticipantAcceptMutation,
   usePutWorkoutParticipantRejectMutation,
@@ -12,7 +13,6 @@ type NotificationProps = {
   id: string;
   message: string;
   readAt: Date | null;
-  // 알림 타입에 따라 보여줄 컴포넌트가 달라짐
   notificationType: string;
   sender: WorkoutParticipantsRead;
   recipient: WorkoutParticipantsRead;
@@ -25,7 +25,7 @@ type NotificationProps = {
 const NotificationCard = ({
   id,
   message,
-  // readAt,
+  readAt,
   notificationType,
   sender,
   recipient,
@@ -39,6 +39,7 @@ const NotificationCard = ({
     usePutWorkoutParticipantAcceptMutation();
   const updateWorkoutParticipantRejectMutation =
     usePutWorkoutParticipantRejectMutation();
+  const updateNotificationMutation = usePutNotificationMutation();
 
   const onPressAccept = useCallback(async () => {
     const data = {
@@ -49,9 +50,12 @@ const NotificationCard = ({
       },
     };
     updateWorkoutParticipantAcceptMutation.mutate(data);
+    updateNotificationMutation.mutate({ notificationId: id });
   }, [
+    id,
     recipient.workoutPromiseId,
     sender.userId,
+    updateNotificationMutation,
     updateWorkoutParticipantAcceptMutation,
   ]);
 
@@ -64,11 +68,76 @@ const NotificationCard = ({
       },
     };
     updateWorkoutParticipantRejectMutation.mutate(data);
+    updateNotificationMutation.mutate({ notificationId: id });
   }, [
-    updateWorkoutParticipantRejectMutation,
     recipient.workoutPromiseId,
     sender.userId,
+    updateWorkoutParticipantRejectMutation,
+    updateNotificationMutation,
+    id,
   ]);
+
+  const renderButton = useCallback(() => {
+    if (notificationType === 'WORKOUT_REQUEST') {
+      if (!readAt) {
+        return (
+          <>
+            <Pressable onPress={onPressAccept}>
+              <View
+                style={[
+                  styles.buttonBox,
+                  { backgroundColor: theme.colors.primary },
+                ]}>
+                <Text
+                  variant="bodyLarge"
+                  style={[
+                    styles.buttonText,
+                    { color: theme.colors.onPrimary },
+                  ]}>
+                  승인
+                </Text>
+              </View>
+            </Pressable>
+            <Pressable onPress={onPressReject}>
+              <View
+                style={[
+                  styles.buttonBox,
+                  { backgroundColor: theme.colors.errorContainer },
+                ]}>
+                <Text
+                  variant="bodyLarge"
+                  style={[styles.buttonText, { color: theme.colors.error }]}>
+                  거절
+                </Text>
+              </View>
+            </Pressable>
+          </>
+        );
+      } else {
+        return (
+          <Pressable disabled={true}>
+            <View
+              style={[
+                styles.buttonBox,
+                { backgroundColor: theme.colors.outline },
+              ]}>
+              <Text
+                variant="bodyLarge"
+                style={[
+                  styles.buttonText,
+                  { color: theme.colors.onPrimaryContainer },
+                ]}>
+                완료됨
+              </Text>
+            </View>
+          </Pressable>
+        );
+      }
+    } else {
+      return null;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Pressable
@@ -105,38 +174,7 @@ const NotificationCard = ({
             </>
           </Card.Content>
           <Card.Actions>
-            <Pressable onPress={onPressAccept}>
-              <View
-                style={[
-                  styles.buttonBox,
-                  { backgroundColor: theme.colors.primary },
-                ]}>
-                <Text
-                  variant="bodyLarge"
-                  style={[
-                    styles.buttonText,
-                    { color: theme.colors.onPrimary },
-                  ]}>
-                  승인
-                </Text>
-              </View>
-            </Pressable>
-            <Pressable onPress={onPressReject}>
-              <View
-                style={[
-                  styles.buttonBox,
-                  { backgroundColor: theme.colors.background },
-                ]}>
-                <Text
-                  variant="bodyLarge"
-                  style={[
-                    styles.buttonText,
-                    { color: theme.colors.onBackground },
-                  ]}>
-                  거절
-                </Text>
-              </View>
-            </Pressable>
+            <View style={styles.buttonContainer}>{renderButton()}</View>
           </Card.Actions>
         </Card>
       </View>
@@ -146,11 +184,12 @@ const NotificationCard = ({
 
 const styles = StyleSheet.create({
   notificationCardContainer: {
-    paddingVertical: 6,
+    padding: 6,
   },
   infoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingVertical: 6,
   },
   avatarContainer: {
     marginRight: 12,
@@ -162,9 +201,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexGrow: 1,
   },
-  bodyContainer: {
+  buttonContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   buttonBox: {
     paddingVertical: 6,
