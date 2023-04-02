@@ -256,6 +256,16 @@ interface Notification {
   readAt: Date | null;
 }
 
+interface NotificationRead extends Notification {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface NotificationUpdate {
+  readAt?: Date;
+}
+
 interface NotificationWorkout extends Notification {
   notificationType: string;
 }

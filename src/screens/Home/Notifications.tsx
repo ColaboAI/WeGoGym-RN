@@ -50,7 +50,7 @@ export default function NotificationsScreen({ navigation }: HomeScreenProps) {
   const renderError = useCallback(
     (resetErrorBoundary: () => void) => (
       <View style={style.errorOrEmptyContainer}>
-        <Text>운동을 불러올 수 없습니다!</Text>
+        <Text>알림을 불러올 수 없습니다!</Text>
         <Button onPress={() => resetErrorBoundary()}>다시 시도</Button>
       </View>
     ),

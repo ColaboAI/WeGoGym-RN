@@ -435,6 +435,22 @@ async function putWorkoutParticipant({
   }
 }
 
+async function putNotification({
+  notificationId,
+}: {
+  notificationId: string;
+}): Promise<NotificationRead> {
+  try {
+    const res = await apiClient.patch(`/notification/${notificationId}`);
+    return res.data;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
 export {
   postLogin,
   postRegister,
@@ -450,6 +466,7 @@ export {
   getWorkoutPromiseById,
   getNotificationWorkout,
   putWorkoutParticipant,
+  putNotification,
   putMyInfo,
   refreshAccessToken,
   deleteUser,
