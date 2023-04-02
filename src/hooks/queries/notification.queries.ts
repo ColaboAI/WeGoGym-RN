@@ -1,6 +1,10 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { Alert } from 'react-native';
-import { getNotificationWorkout } from '/api/api';
+import { getNotificationWorkout, putNotification } from '/api/api';
 
 export function useGetNotificationWorkoutQuery() {
   return useInfiniteQuery({
@@ -30,5 +34,21 @@ export function useGetNotificationWorkoutQuery() {
     },
     suspense: true,
     keepPreviousData: true,
+  });
+}
+// readAt 수정
+export function usePutNotificationMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: putNotification,
+    retry: 1,
+    onError: (error: Error) => {
+      Alert.alert(`알림을 업데이트하는데 실패하였습니다: ${error.message}`);
+      console.log(error);
+    },
+    onSuccess(data) {
+      console.log('알림을 업데이트했습니다.', data);
+      queryClient.invalidateQueries(['getNotificationWorkout']);
+    },
   });
 }
