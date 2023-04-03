@@ -66,23 +66,23 @@ async function onMessageInBackground(
   if (data) {
     if (data.type === 'text_message') {
       await saveMessageToMMKV(data);
-      await notifee.displayNotification({
-        title: message.notification?.title || 'Wegogym',
-        body: message.notification?.body || 'Wegogym',
-        android: {
-          channelId: channelId,
-          pressAction: {
-            id: 'mark-as-read',
-            launchActivity: 'default',
-          },
-        },
-        ios: {
-          categoryId: 'mark-as-read',
-        },
-      });
     }
+    // TODO: increment badge count is not working
   }
-  // TODO: increment badge count is not working
+  await notifee.displayNotification({
+    title: message.notification?.title || 'Wegogym',
+    body: message.notification?.body || 'Wegogym',
+    android: {
+      channelId: channelId,
+      pressAction: {
+        id: 'mark-as-read',
+        launchActivity: 'default',
+      },
+    },
+    ios: {
+      categoryId: 'mark-as-read',
+    },
+  });
   await notifee.incrementBadgeCount();
 }
 
@@ -93,11 +93,34 @@ async function onMessageInForeground(
   // except in chat room screen
   // check if current screen is chat room screen
 
+  const channelId =
+    (await notifee.getChannel('wegogym'))?.id ??
+    (await notifee.createChannel({
+      id: 'wegogym',
+      name: 'Wegogym',
+      importance: AndroidImportance.HIGH,
+    }));
+
   if (data) {
     if (data.type === 'text_message') {
       await saveMessageToMMKV(data);
+      return;
     }
   }
+  await notifee.displayNotification({
+    title: message.notification?.title || 'Wegogym',
+    body: message.notification?.body || 'Wegogym',
+    android: {
+      channelId: channelId,
+      pressAction: {
+        id: 'mark-as-read',
+        launchActivity: 'default',
+      },
+    },
+    ios: {
+      categoryId: 'mark-as-read',
+    },
+  });
 }
 
 export {
