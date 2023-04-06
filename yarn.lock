@@ -1747,26 +1747,26 @@
   integrity sha512-+zDZ20NUnSWghj7Ku5aFphMzuM9JulqCW+aPXT6IfIXFbb8tzYTTOSeRFOtuekJ99ibW2fUCSsjuKNlwDIbHFg==
 
 "@react-native-firebase/app@^17.3.2":
-  version "17.4.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.4.1.tgz#ad0151344348a8890c98a64bc287756db5895c5a"
-  integrity sha512-Fv4ArGXXeLPKikHpGt0t821Sd/fpNEsN+akcXEzrrfSx5wxYTBWd74IS3Pq2gHjHl9DS0fzXPJIfevQT8aXKzw==
+  version "17.4.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.4.2.tgz#29c1959fbc7cd15dc73bcd01c8a228021c8b5c5a"
+  integrity sha512-8oj29shxA2lxwmOxpxJ/nHVSEqK5ebHJW1WUKIBwcLTvfi+EFI7CKzPG+BFpYtdapH5BuK+yQjuReRNBy+oQjQ==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
 "@react-native-firebase/auth@^17.3.2":
-  version "17.4.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-17.4.1.tgz#cd48613f364a0c887650240753de553be9995f05"
-  integrity sha512-2artGcN8Fb9HFXGJQ9U9rtCOUmx7HNnHZrQxlc1BALtClerJObUaWYbao7BHPOb6ot27+DFC1qiDMxhlFhhh1w==
+  version "17.4.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-17.4.2.tgz#d8994ccc99567ad8d5c8af0d99b9455abaffe2fb"
+  integrity sha512-JF6e7vMdHJelos42DqtlPurzzhFBb3OtYeCjhaOmyWwToD1tvCGGO1GkiXbWZcZIOuL6SCXBwvtvCHac+9YZXA==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
     plist "^3.0.5"
 
 "@react-native-firebase/messaging@^17.3.2":
-  version "17.4.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-17.4.1.tgz#11ed73db7eb5b026204a46760e1a1d3a3e8b2499"
-  integrity sha512-Sn4YVD2yOqAZfrY5KMeIFoh2f+JaQX/V/I7dSQX5vZ8RjP9cWVPJlA/CdLdORCe0DhusZMBJJfsJzCteQi8iiw==
+  version "17.4.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-17.4.2.tgz#ebc589bd0e77783f4b4330d71287fd150f9dc120"
+  integrity sha512-WgqDFjx4JfCed459jrFtzYcejIoBbQKBKGM5lSjmH/cIGU+5Kp9g0x5QNrXdZL5dNo91bW+jJB/6JMjOLH56fw==
 
 "@react-native/assets@1.0.0":
   version "1.0.0"
@@ -2467,9 +2467,9 @@ axios-case-converter@^1.1.0:
     tslib "^2.3.0"
 
 axios@^1.3.4:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.3.4.tgz#f5760cefd9cfb51fd2481acf88c05f67c4523024"
-  integrity sha512-toYm+Bsyl6VC5wSkfkbbNB6ROv7KY93PEBBL6xyDczaIHasAiv4wPqQ/c4RjoQzipxRD2W5g21cOqQulZ7rHwQ==
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.3.5.tgz#e07209b39a0d11848e3e341fa087acd71dadc542"
+  integrity sha512-glL/PvG/E+xCWwV8S6nCHcrfg1exGx7vxyUIivIA1iL7BIh6bePylCfVHwp6k13ao7SATxB6imau2kqY+I67kw==
   dependencies:
     follow-redirects "^1.15.0"
     form-data "^4.0.0"
