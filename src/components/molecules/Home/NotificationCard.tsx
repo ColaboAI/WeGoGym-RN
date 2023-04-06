@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Card, Text, useTheme } from 'react-native-paper';
+import { Card, Divider, Text, useTheme } from 'react-native-paper';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import { usePutNotificationMutation } from '/hooks/queries/notification.queries';
 import {
@@ -176,13 +176,16 @@ const NotificationCard = ({
             </>
           </Card.Content>
         </Card>
+        <Divider />
       </View>
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  notificationCardContainer: {},
+  notificationCardContainer: {
+    padding: 3,
+  },
   infoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
