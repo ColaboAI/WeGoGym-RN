@@ -5,7 +5,7 @@ import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import { usePutNotificationMutation } from '/hooks/queries/notification.queries';
 import {
   usePutWorkoutParticipantAcceptMutation,
-  usePutWorkoutParticipantRejectMutation,
+  // usePutWorkoutParticipantRejectMutation,
 } from '/hooks/queries/workout.queries';
 import { getNotificationBody, getRelativeTime } from '/utils/util';
 
@@ -37,8 +37,8 @@ const NotificationCard = ({
   const body = getNotificationBody(notificationType);
   const updateWorkoutParticipantAcceptMutation =
     usePutWorkoutParticipantAcceptMutation();
-  const updateWorkoutParticipantRejectMutation =
-    usePutWorkoutParticipantRejectMutation();
+  // const updateWorkoutParticipantRejectMutation =
+  //   usePutWorkoutParticipantRejectMutation();
   const updateNotificationMutation = usePutNotificationMutation();
 
   const onPressAccept = useCallback(async () => {
@@ -59,23 +59,23 @@ const NotificationCard = ({
     updateWorkoutParticipantAcceptMutation,
   ]);
 
-  const onPressReject = useCallback(async () => {
-    const data = {
-      workoutPromiseId: recipient.workoutPromiseId,
-      userId: sender.userId,
-      workoutParticipant: {
-        status: 'REJECTED',
-      },
-    };
-    updateWorkoutParticipantRejectMutation.mutate(data);
-    updateNotificationMutation.mutate({ notificationId: id });
-  }, [
-    recipient.workoutPromiseId,
-    sender.userId,
-    updateWorkoutParticipantRejectMutation,
-    updateNotificationMutation,
-    id,
-  ]);
+  // const onPressReject = useCallback(async () => {
+  //   const data = {
+  //     workoutPromiseId: recipient.workoutPromiseId,
+  //     userId: sender.userId,
+  //     workoutParticipant: {
+  //       status: 'REJECTED',
+  //     },
+  //   };
+  //   updateWorkoutParticipantRejectMutation.mutate(data);
+  //   updateNotificationMutation.mutate({ notificationId: id });
+  // }, [
+  //   recipient.workoutPromiseId,
+  //   sender.userId,
+  //   updateWorkoutParticipantRejectMutation,
+  //   updateNotificationMutation,
+  //   id,
+  // ]);
 
   const renderButton = () => {
     if (notificationType === 'WORKOUT_REQUEST') {
@@ -89,7 +89,7 @@ const NotificationCard = ({
                   { backgroundColor: theme.colors.primary },
                 ]}>
                 <Text
-                  variant="bodyLarge"
+                  variant="titleSmall"
                   style={[
                     styles.buttonText,
                     { color: theme.colors.onPrimary },
@@ -98,19 +98,19 @@ const NotificationCard = ({
                 </Text>
               </View>
             </Pressable>
-            <Pressable onPress={onPressReject}>
+            {/* <Pressable onPress={onPressReject}>
               <View
                 style={[
                   styles.buttonBox,
                   { backgroundColor: theme.colors.errorContainer },
                 ]}>
                 <Text
-                  variant="bodyLarge"
+                  variant="titleSmall"
                   style={[styles.buttonText, { color: theme.colors.error }]}>
                   거절
                 </Text>
               </View>
-            </Pressable>
+            </Pressable> */}
           </>
         );
       } else {
@@ -119,13 +119,13 @@ const NotificationCard = ({
             <View
               style={[
                 styles.buttonBox,
-                { backgroundColor: theme.colors.outline },
+                { backgroundColor: theme.colors.secondary },
               ]}>
               <Text
-                variant="bodyLarge"
+                variant="titleSmall"
                 style={[
                   styles.buttonText,
-                  { color: theme.colors.onPrimaryContainer },
+                  { color: theme.colors.onSecondary },
                 ]}>
                 완료됨
               </Text>
@@ -142,7 +142,9 @@ const NotificationCard = ({
     <Pressable
       onPress={() => navigateToWorkoutDetails(recipient.workoutPromiseId)}>
       <View key={`notification-${id}`} style={styles.notificationCardContainer}>
-        <Card>
+        <Card
+          mode="contained"
+          style={{ borderRadius: 0, backgroundColor: theme.colors.background }}>
           <Card.Content>
             <>
               <View style={styles.infoContainer}>
@@ -164,17 +166,15 @@ const NotificationCard = ({
                     님{body} {message}{' '}
                     <Text
                       variant="titleSmall"
-                      style={{ color: theme.colors.onPrimaryContainer }}>
+                      style={{ color: theme.colors.onBackground }}>
                       {getRelativeTime(createdAt)}
                     </Text>
                   </Text>
                 </View>
+                <View style={styles.buttonContainer}>{renderButton()}</View>
               </View>
             </>
           </Card.Content>
-          <Card.Actions>
-            <View style={styles.buttonContainer}>{renderButton()}</View>
-          </Card.Actions>
         </Card>
       </View>
     </Pressable>
@@ -182,9 +182,7 @@ const NotificationCard = ({
 };
 
 const styles = StyleSheet.create({
-  notificationCardContainer: {
-    padding: 6,
-  },
+  notificationCardContainer: {},
   infoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -202,7 +200,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    // alignItems: 'center',
   },
   buttonBox: {
     paddingVertical: 6,
