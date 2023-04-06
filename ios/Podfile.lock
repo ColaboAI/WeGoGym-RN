@@ -457,14 +457,14 @@ PODS:
     - React-perflogger (= 0.71.4)
   - RNDateTimePicker (6.7.5):
     - React-Core
-  - RNFBApp (17.4.1):
+  - RNFBApp (17.4.2):
     - Firebase/CoreOnly (= 10.7.0)
     - React-Core
-  - RNFBAuth (17.4.1):
+  - RNFBAuth (17.4.2):
     - Firebase/Auth (= 10.7.0)
     - React-Core
     - RNFBApp
-  - RNFBMessaging (17.4.1):
+  - RNFBMessaging (17.4.2):
     - Firebase/Messaging (= 10.7.0)
     - FirebaseCoreExtension (= 10.7.0)
     - React-Core
@@ -751,9 +751,9 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 8fa50b38df6b992c76537993a2b0553d3b088004
   ReactCommon: 34f9369c376d5f335069dda29552b3e7351b9ec6
   RNDateTimePicker: 65e1d202799460b286ff5e741d8baf54695e8abd
-  RNFBApp: ac422b09f963ae32cd732953610553bddd4c2b12
-  RNFBAuth: 0645815a805a9ebacc37bdf97debd816904399c2
-  RNFBMessaging: 912d2ae75161a0c18238dd5893b8fae6cab5ccb4
+  RNFBApp: 55dbfc574e5ae414f2984394934f79f87eb4b050
+  RNFBAuth: d30acc0f5f169bc28c7fcbf1b45cd061cc647590
+  RNFBMessaging: d365361650cc697294227e1280923f35a31d2501
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNNotifee: bdc064c29f4d558046f51f0c3ae02bab4fd3cd85
   RNReanimated: f0dd6b881808e635ef0673f89642937d6c141314
