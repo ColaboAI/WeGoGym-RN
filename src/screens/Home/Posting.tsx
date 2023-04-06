@@ -299,7 +299,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
             </View>
           </ScrollView>
           <Button
-            mode="contained-tonal"
+            mode="contained"
             style={style.postingButton}
             disabled={hasTitleErrors() || hasContentErrors() || !gymInfo}
             onPress={() => {
