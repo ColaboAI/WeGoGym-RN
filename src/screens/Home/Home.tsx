@@ -201,6 +201,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
                         모집중인 운동 약속만 보기
                       </Text>
                     </View>
+                    <Divider />
                   </>
                 }
                 renderItem={renderItem}
