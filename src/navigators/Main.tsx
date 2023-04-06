@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeStackScreen, ChatStackScreen, UserStackScreen } from '.';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { BottomTabParamList } from './types';
+import { useTheme } from 'react-native-paper';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 // Tab Navigator: Main Root Navigator
@@ -10,13 +11,19 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 // @refresh reset
 
 const MainNavigator = () => {
+  const theme = useTheme();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarStyle: {
+          backgroundColor: theme.colors.background,
+          borderTopColor: theme.colors.onBackground,
+        },
+        tabBarActiveTintColor: theme.colors.onBackground,
+        tabBarInactiveTintColor: theme.colors.onBackground,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-
           if (route.name === '홈') {
             iconName = focused ? 'ios-home' : 'ios-home-outline';
           } else if (route.name === '채팅') {
