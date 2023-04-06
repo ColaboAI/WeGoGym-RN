@@ -1,10 +1,10 @@
-import { StyleSheet, Alert } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { Suspense, useCallback, useEffect } from 'react';
 import ChatListItem from '../../components/organisms/Chat/ChatListItem';
 import { ChatParamList, ChatStackScreenProps } from 'navigators/types';
 import { useMyChatListQuery } from '/hooks/queries/chat.queries';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Button, Headline, Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import {
   InfiniteData,
   useQueryClient,
@@ -82,22 +82,23 @@ function ChatList({ navigation }: ChatListScreenProps) {
     [navigateToChatRoom],
   );
 
+  const renderError = useCallback(
+    (resetErrorBoundary: () => void) => (
+      <View style={style.errorContainer}>
+        <Text>채팅 목록을 불러올 수 없습니다.</Text>
+        <Button onPress={() => resetErrorBoundary()}>다시 시도</Button>
+      </View>
+    ),
+    [],
+  );
+
   return (
     <Suspense fallback={<Text>Loading...</Text>}>
       <ErrorBoundary
         onReset={reset}
-        fallbackRender={({ resetErrorBoundary }) => (
-          <Headline>
-            There was an error!
-            <Button
-              onPress={() => {
-                resetErrorBoundary();
-                Alert.alert("I'm error boundary");
-              }}>
-              Try again
-            </Button>
-          </Headline>
-        )}>
+        fallbackRender={({ resetErrorBoundary }) =>
+          renderError(resetErrorBoundary)
+        }>
         <FlatList
           style={style.container}
           contentContainerStyle={style.contentContainer}
@@ -120,6 +121,16 @@ function ChatList({ navigation }: ChatListScreenProps) {
 }
 const style = StyleSheet.create({
   container: {},
+  errorContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   contentContainer: {
     flexGrow: 1,
   },
