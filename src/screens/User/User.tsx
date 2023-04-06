@@ -1,4 +1,4 @@
-import { StyleSheet, View, SafeAreaView, Alert } from 'react-native';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
 import {
   IconButton,
   Text,
@@ -7,7 +7,6 @@ import {
   List,
   Tooltip,
   Button,
-  Headline,
   Chip,
 } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -54,24 +53,24 @@ export default function UserScreen({ navigation, route }: Props) {
     }
   }, [data?.id, data?.username, id, navigation]);
 
+  const renderError = useCallback(
+    (resetErrorBoundary: () => void) => (
+      <View style={style.errorContainer}>
+        <Text>유저 정보를 불러올 수 없습니다.</Text>
+        <Button onPress={() => resetErrorBoundary()}>다시 시도</Button>
+      </View>
+    ),
+    [],
+  );
+
   return (
     <Suspense fallback={<GymInfoLoader />}>
       <ErrorBoundary
         onReset={reset}
-        fallbackRender={({ resetErrorBoundary }) => (
-          <Headline>
-            There was an error!
-            <Button
-              onPress={() => {
-                resetErrorBoundary();
-                Alert.alert("I'm error boundary");
-              }}>
-              Try again
-            </Button>
-          </Headline>
-        )}>
+        fallbackRender={({ resetErrorBoundary }) =>
+          renderError(resetErrorBoundary)
+        }>
         <SafeAreaView style={style.container}>
-          {/* TODO: 다른 유저 프로필과 내 프로필에서의 action이 달라야함. */}
           {id === 'me' ? (
             <>
               <View style={style.myHeaderContainer}>
@@ -303,6 +302,11 @@ export default function UserScreen({ navigation, route }: Props) {
 const style = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  errorContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   myHeaderContainer: {
     flexDirection: 'row',
