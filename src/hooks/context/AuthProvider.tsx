@@ -8,6 +8,7 @@ import React, {
 import { save, getValueFor, clear, secureMmkv, mmkv } from '@store/secureStore';
 import { postLogin, postRegister, deleteUser } from 'api/api';
 import { Alert } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 type AuthState = {
   token: string | null;
   isLoading: boolean;
@@ -59,6 +60,7 @@ type AuthProviderProps = PropsWithChildren;
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [authState, setAuthState] = useState<AuthState>(initialAuthState);
+  const queryClient = useQueryClient();
 
   const authActions = useMemo(
     () => ({
@@ -90,6 +92,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       signOut: async () => {
         secureMmkv.deleteAllKeys();
         mmkv.deleteAllKeys();
+        queryClient.clear();
 
         setAuthState(prevState => ({
           ...prevState,
@@ -167,6 +170,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         const res = await deleteUser();
         secureMmkv.deleteAllKeys();
         mmkv.deleteAllKeys();
+        queryClient.clear();
         console.log('unRegister', res);
 
         setAuthState(prevState => ({
@@ -177,7 +181,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         }));
       },
     }),
-    [],
+    [queryClient],
   );
 
   useEffect(() => {
