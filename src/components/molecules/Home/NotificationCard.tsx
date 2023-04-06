@@ -77,7 +77,7 @@ const NotificationCard = ({
     id,
   ]);
 
-  const renderButton = useCallback(() => {
+  const renderButton = () => {
     if (notificationType === 'WORKOUT_REQUEST') {
       if (!readAt) {
         return (
@@ -136,8 +136,7 @@ const NotificationCard = ({
     } else {
       return null;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
   return (
     <Pressable
