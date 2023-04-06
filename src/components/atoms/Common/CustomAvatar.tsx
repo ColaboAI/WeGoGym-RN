@@ -13,8 +13,8 @@ function CustomAvatar(props: Props) {
   const theme = useTheme();
   const customStyleFromTheme = {
     text: {
-      color: theme.colors.onSurfaceVariant,
-      backgroundColor: theme.colors.surfaceVariant,
+      color: theme.colors.background,
+      backgroundColor: theme.colors.onBackground,
     },
   };
 
