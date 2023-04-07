@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { AppRegistry, StyleSheet, useColorScheme } from 'react-native';
-import { name as appName } from './app.json';
-import App from './src/App';
+import { StyleSheet, useColorScheme } from 'react-native';
 import {
   adaptNavigationTheme,
   MD3DarkTheme,
@@ -15,8 +13,8 @@ import {
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
 
-import customLightColors from './src/theme/customLightColors.json';
-import customDarkColors from './src/theme/customDarkColors.json';
+import customLightColors from 'theme/customLightColors.json';
+import customDarkColors from 'theme/customDarkColors.json';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AuthProvider from 'hooks/context/AuthProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -24,6 +22,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { onMessageInBackground } from '/utils/notification';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { EventType } from '@notifee/react-native';
+import codePush from 'react-native-code-push';
+import App from './App';
 // https://callstack.github.io/react-native-paper/theming.html
 
 const myLightTheme = {
@@ -82,7 +82,7 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
   }
 });
 
-export default function Main() {
+function Main() {
   const isDarkMode = useColorScheme() === 'dark';
   let theme = isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme;
   return (
@@ -113,13 +113,4 @@ const style = StyleSheet.create({
   },
 });
 
-function HeadlessCheck({ isHeadless }: { isHeadless: boolean }) {
-  if (isHeadless) {
-    // App has been launched in the background by iOS, ignore
-    return null;
-  }
-
-  return <Main />;
-}
-
-AppRegistry.registerComponent(appName, () => HeadlessCheck);
+export default codePush(Main);
