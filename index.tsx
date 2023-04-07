@@ -48,6 +48,7 @@ const CombinedDefaultTheme = {
   colors: {
     ...myLightTheme.colors,
     ...LightTheme.colors,
+    card: myLightTheme.colors.background,
   },
 };
 const CombinedDarkTheme = {
@@ -56,6 +57,7 @@ const CombinedDarkTheme = {
   colors: {
     ...myDarkTheme.colors,
     ...DarkTheme.colors,
+    card: myDarkTheme.colors.background,
   },
 };
 const queryClient = new QueryClient();
