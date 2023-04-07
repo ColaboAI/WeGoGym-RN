@@ -131,7 +131,7 @@ interface UserCreate extends UserBase {
   // TODO: remove ID
   username: string;
   gender: string;
-  age: number;
+  age: string;
   height: number;
   weight: number;
   workoutPerWeek: number;

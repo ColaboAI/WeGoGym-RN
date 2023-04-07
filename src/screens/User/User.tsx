@@ -20,6 +20,7 @@ import { ChatParamList, UserStackScreenProps } from '/navigators/types';
 import InfoCard from 'components/molecules/User/InfoCard';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import { getDirectChatRoom } from '/api/api';
+import { getAge } from '/utils/util';
 type Props = UserStackScreenProps<'User'>;
 export default function UserScreen({ navigation, route }: Props) {
   const id: string =
@@ -203,7 +204,10 @@ export default function UserScreen({ navigation, route }: Props) {
                     data ? data.workoutLevel.split('(')[0] : '정보 없음'
                   }
                 />
-                <InfoCard textTitle="나이" textContent={`${data?.age}세`} />
+                <InfoCard
+                  textTitle="나이"
+                  textContent={data ? getAge(data.age) + '세' : '정보 없음'}
+                />
                 <InfoCard
                   textTitle="성별"
                   textContent={`${

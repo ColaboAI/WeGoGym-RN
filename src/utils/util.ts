@@ -38,7 +38,7 @@ export function getInfo(): UserCreate {
     phoneNumber,
     username,
     gender,
-    age: parseInt(age, 10),
+    age,
     height: parseInt(height, 10),
     weight: parseInt(weight, 10),
     workoutPerWeek: parseInt(workoutPerWeek, 10),
@@ -270,4 +270,21 @@ export function getNotificationBody(notificationType: string): string {
     default:
       return '';
   }
+}
+
+export function getAge(birth: string) {
+  const today = new Date();
+  let age = today.getFullYear() - Number(birth.slice(0, 4));
+  console.log(age);
+  const month = today.getMonth() + 1 - Number(birth.slice(4, 6));
+  console.log(today.getMonth());
+  console.log(Number(birth.slice(4, 6)));
+  console.log(month);
+  if (
+    month < 0 ||
+    (month === 0 && today.getDate() < Number(birth.slice(6, 8)))
+  ) {
+    age--;
+  }
+  return age;
 }

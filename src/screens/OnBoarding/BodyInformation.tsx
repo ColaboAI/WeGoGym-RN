@@ -39,7 +39,8 @@ export default function BodyInformationScreen({ navigation }: Props) {
           <TextInput
             style={style.textInput}
             mode="outlined"
-            label="나이(만)"
+            label="나이"
+            placeholder="ex) 19960624"
             keyboardType="numeric"
             value={age}
             onChangeText={value => setAge(value)}
@@ -47,16 +48,18 @@ export default function BodyInformationScreen({ navigation }: Props) {
           <TextInput
             style={style.textInput}
             mode="outlined"
-            label="키(cm)"
+            label="키"
             keyboardType="numeric"
             value={height}
+            right={<TextInput.Affix text="cm" />}
             onChangeText={value => setHeight(value)}
           />
           <TextInput
             style={style.textInput}
             mode="outlined"
-            label="몸무게(kg)"
+            label="몸무게"
             keyboardType="numeric"
+            right={<TextInput.Affix text="kg" />}
             value={weight}
             onChangeText={value => setWeight(value)}
           />
