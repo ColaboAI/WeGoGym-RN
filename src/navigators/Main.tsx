@@ -16,10 +16,6 @@ const MainNavigator = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: {
-          backgroundColor: theme.colors.background,
-          borderTopColor: theme.colors.onBackground,
-        },
         tabBarActiveTintColor: theme.colors.onBackground,
         tabBarInactiveTintColor: theme.colors.onBackground,
         tabBarIcon: ({ focused, color, size }) => {
