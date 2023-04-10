@@ -147,7 +147,7 @@ interface UserUpdate extends UserBase {
   [key: string]: string | number | null | undefined | Gym;
   username?: string;
   bio: string | null;
-  age?: number;
+  age?: string;
   height?: number;
   weight?: number;
   workoutPerWeek?: number;

@@ -23,6 +23,7 @@ import { usePutMyInfoMutation } from '/hooks/queries/user.queries';
 import StringMenu from '/components/molecules/User/StringMenu';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
+import { getAge } from '/utils/util';
 
 // TODO: bio
 type Props = UserStackScreenProps<'ProfileEdit'>;
@@ -215,7 +216,8 @@ export default function ProfileEdit({ navigation, route }: Props) {
             />
             <InfoEditCardNumeric
               textTitle="age"
-              textContent={myInfoState.age}
+              textContent={getAge(myInfoState.age)}
+              unit="세"
               contentColor={theme.colors.primary}
               setMyInfoState={setMyInfoState}
             />
@@ -226,7 +228,6 @@ export default function ProfileEdit({ navigation, route }: Props) {
               unit="회 / 1주일"
               setMyInfoState={setMyInfoState}
             />
-
             <StringMenu
               title="workoutLevel"
               titleKorean="운동 경력"
@@ -354,14 +355,14 @@ export default function ProfileEdit({ navigation, route }: Props) {
                   />
                 )}
                 {/* TODO: replace this  */}
-                <List.Item
+                {/* <List.Item
                   title="출석률"
                   right={() => <Text variant="bodySmall">80%</Text>}
                 />
                 <List.Item
                   title="운동 약속"
                   right={() => <Text variant="bodySmall">??회</Text>}
-                />
+                /> */}
               </Card.Content>
             </Card>
           </View>
