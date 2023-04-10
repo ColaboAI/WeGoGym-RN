@@ -133,7 +133,7 @@ const ChatInput = (props: ChatInputProps) => {
       const chatURL = `${WS_BASE_URL}/ws/chat/${chatRoomId}/${myId}`;
       webSocket.current = new WebSocket(chatURL);
       webSocket.current.onopen = () => {
-        console.log('websocket connected');
+        onShow('채팅방에 입장했습니다.', 'success', false);
       };
       webSocket.current.onclose = e => {
         console.log(`${e.code}: ${e.reason}`);
@@ -149,7 +149,7 @@ const ChatInput = (props: ChatInputProps) => {
         }, 1000);
       };
     }
-  }, [chatRoomId, myId, onMessageHandler]);
+  }, [chatRoomId, myId, onMessageHandler, onShow]);
 
   useEffect(() => {
     connectWebSocket();
