@@ -126,7 +126,6 @@ const ParticipationBottomSheet = ({
           onPressPostParticipation();
           setIsBottomSheetOpen(false);
           bottomSheetRef.current?.close();
-          Keyboard.dismiss();
         }}>
         참여하기
       </Button>

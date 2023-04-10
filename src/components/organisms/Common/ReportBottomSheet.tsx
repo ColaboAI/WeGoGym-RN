@@ -1,4 +1,4 @@
-import { Alert, Keyboard, Platform, StyleSheet, View } from 'react-native';
+import { Alert, Platform, StyleSheet, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -58,9 +58,10 @@ function ReportBottomSheet({ targetId, type }: Props) {
     };
   }, []);
 
-  const onCloseSheet = useCallback(async () => {
+  const onCloseSheet = useCallback(() => {
     setIsBottomSheetOpen(false);
-    Keyboard.dismiss();
+    setReason('');
+    setContent('');
     bottomSheetRef.current?.close();
   }, [setIsBottomSheetOpen]);
 
@@ -76,16 +77,13 @@ function ReportBottomSheet({ targetId, type }: Props) {
     };
     try {
       await postVOC(_data);
-      setIsBottomSheetOpen(false);
-      setContent('');
-      setReason('');
       Alert.alert('신고 접수가 완료되었습니다.');
     } catch (e) {
       Alert.alert('신고 접수에 실패했습니다.');
     } finally {
       onCloseSheet();
     }
-  }, [content, onCloseSheet, reason, setIsBottomSheetOpen, targetId, type]);
+  }, [content, onCloseSheet, reason, targetId, type]);
 
   return (
     <BottomSheet
@@ -118,7 +116,7 @@ function ReportBottomSheet({ targetId, type }: Props) {
                 backgroundColor: theme.colors.secondaryContainer,
                 color: theme.colors.onSecondaryContainer,
               },
-              styles.textInput,
+              styles.reasonTextInput,
             ]}
           />
           <View style={styles.textLimitBox}>
@@ -199,6 +197,18 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     padding: 12,
     height: 100,
+    borderRadius: 12,
+    color: 'gray',
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 24,
+    textAlign: 'left',
+  },
+  reasonTextInput: {
+    alignSelf: 'stretch',
+    marginHorizontal: 12,
+    marginBottom: 12,
+    padding: 12,
     borderRadius: 12,
     color: 'gray',
     fontSize: 16,
