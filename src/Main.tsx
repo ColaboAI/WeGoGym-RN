@@ -90,17 +90,17 @@ function Main() {
     <GestureHandlerRootView style={style.container}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <PaperProvider
-              settings={{
-                icon: props => <Ionicons {...props} />,
-              }}
-              theme={theme}>
+          <PaperProvider
+            settings={{
+              icon: props => <Ionicons {...props} />,
+            }}
+            theme={theme}>
+            <AuthProvider>
               <NavigationContainer theme={theme}>
                 <App />
               </NavigationContainer>
-            </PaperProvider>
-          </AuthProvider>
+            </AuthProvider>
+          </PaperProvider>
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
