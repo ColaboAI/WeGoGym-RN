@@ -87,6 +87,7 @@ export default function SettingScreen() {
                 Linking.openURL('https://www.instagram.com/wegogym.official/')
               }
             />
+            {/* TODO: voc Item 넣기 */}
           </View>
         </List.Section>
         <List.Section>
