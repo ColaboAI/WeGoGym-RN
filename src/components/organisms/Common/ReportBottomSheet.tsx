@@ -1,4 +1,4 @@
-import { Keyboard, Platform, StyleSheet, View } from 'react-native';
+import { Alert, Keyboard, Platform, StyleSheet, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -7,27 +7,23 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import { Button, IconButton, Text, useTheme } from 'react-native-paper';
 import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
-import { useWorkoutParticipantMutation } from '/hooks/queries/workout.queries';
-
+import { postVOC } from '/api/api';
+import { useAuthActions, useAuthValue } from '/hooks/context/useAuth';
 type Props = {
-  isBottomSheetOpen: boolean;
-  setIsBottomSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  workoutPromiseId: string;
-  username: string;
+  targetId?: string;
+  type?: string;
 };
 
-const ParticipationBottomSheet = ({
-  isBottomSheetOpen,
-  setIsBottomSheetOpen,
-  workoutPromiseId,
-  username,
-}: Props) => {
+function ReportBottomSheet({ targetId, type }: Props) {
   const theme = useTheme();
-  const workoutParticipantMutation = useWorkoutParticipantMutation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const iosSnapPoints = React.useMemo(() => ['50%'], []);
+  const iosSnapPoints = React.useMemo(() => ['75%'], []);
   const androidSnapPoints = React.useMemo(() => ['90%'], []);
-  const [requestMessage, setRequestMessage] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [reason, setReason] = useState<string>('');
+
+  const { isReportBottomSheetOpen: isBottomSheetOpen } = useAuthValue();
+  const { setReportBottomSheetOpen: setIsBottomSheetOpen } = useAuthActions();
 
   const renderBackdrop = useCallback(
     (
@@ -51,20 +47,45 @@ const ParticipationBottomSheet = ({
       bottomSheetRef.current?.close();
     }
     return () => {
-      setRequestMessage('');
+      setIsBottomSheetOpen(false);
     };
-  }, [isBottomSheetOpen]);
+  }, [isBottomSheetOpen, setIsBottomSheetOpen]);
 
-  const onPressPostParticipation = useCallback(async () => {
-    const _data = {
-      workoutParticipant: {
-        name: username,
-        statusMessage: requestMessage,
-      },
-      workoutPromiseId: workoutPromiseId,
+  useEffect(() => {
+    return () => {
+      setReason('');
+      setContent('');
     };
-    workoutParticipantMutation.mutate(_data);
-  }, [workoutPromiseId, username, requestMessage, workoutParticipantMutation]);
+  }, []);
+
+  const onCloseSheet = useCallback(async () => {
+    setIsBottomSheetOpen(false);
+    Keyboard.dismiss();
+    bottomSheetRef.current?.close();
+  }, [setIsBottomSheetOpen]);
+
+  const onPressVOC = useCallback(async () => {
+    if (!type) {
+      return;
+    }
+    const _data: VOC = {
+      reason,
+      content,
+      type: type,
+      defendant: targetId,
+    };
+    try {
+      await postVOC(_data);
+      setIsBottomSheetOpen(false);
+      setContent('');
+      setReason('');
+      Alert.alert('신고 접수가 완료되었습니다.');
+    } catch (e) {
+      Alert.alert('신고 접수에 실패했습니다.');
+    } finally {
+      onCloseSheet();
+    }
+  }, [content, onCloseSheet, reason, setIsBottomSheetOpen, targetId, type]);
 
   return (
     <BottomSheet
@@ -75,32 +96,48 @@ const ParticipationBottomSheet = ({
       handleStyle={{ backgroundColor: theme.colors.background }}
       backgroundStyle={{ backgroundColor: theme.colors.background }}
       enablePanDownToClose={true}
-      onClose={() => {
-        setIsBottomSheetOpen(false);
-        bottomSheetRef.current?.close();
-      }}
+      onClose={onCloseSheet}
       android_keyboardInputMode={'adjustResize'}>
       <BottomSheetView style={styles.container}>
         <View style={styles.titleBox}>
           <Text style={[styles.title, { color: theme.colors.onBackground }]}>
-            운동 파트너에게 보낼 메세지를{'\n'}작성해주세요
+            신고 사유를 작성해주세요.
           </Text>
-          <IconButton
-            icon="close"
-            size={24}
-            onPress={() => {
-              setIsBottomSheetOpen(false);
-              bottomSheetRef.current?.close();
-            }}
-          />
+          <IconButton icon="close" size={24} onPress={onCloseSheet} />
         </View>
         <View>
           <BottomSheetTextInput
-            value={requestMessage}
-            placeholder="ex) 같이 운동해요!"
-            onChangeText={value => setRequestMessage(value)}
+            value={reason}
+            placeholder="ex) 욕설, 비방, 음란성, 사기, 기타"
+            onChangeText={value => setReason(value)}
             returnKeyType="done"
-            maxLength={50}
+            maxLength={30}
+            multiline={true}
+            style={[
+              {
+                backgroundColor: theme.colors.secondaryContainer,
+                color: theme.colors.onSecondaryContainer,
+              },
+              styles.textInput,
+            ]}
+          />
+          <View style={styles.textLimitBox}>
+            <Text style={{ color: theme.colors.primary }}>{reason.length}</Text>
+            <Text> / 30</Text>
+          </View>
+        </View>
+        <View style={styles.titleBox}>
+          <Text style={[styles.title, { color: theme.colors.onBackground }]}>
+            신고하실 내용을 입력해주세요.
+          </Text>
+        </View>
+        <View>
+          <BottomSheetTextInput
+            value={content}
+            placeholder="ex) ***님의 프로필 사진이 부적절합니다."
+            onChangeText={value => setContent(value)}
+            returnKeyType="done"
+            maxLength={500}
             multiline={true}
             style={[
               {
@@ -112,29 +149,24 @@ const ParticipationBottomSheet = ({
           />
           <View style={styles.textLimitBox}>
             <Text style={{ color: theme.colors.primary }}>
-              {requestMessage.length}
+              {content.length}
             </Text>
-            <Text> / 50</Text>
+            <Text> / 500</Text>
           </View>
         </View>
       </BottomSheetView>
       <Button
         mode="contained"
-        disabled={requestMessage.length === 0}
+        disabled={content.length === 0 || reason.length === 0}
         style={styles.buttonBox}
-        onPress={() => {
-          onPressPostParticipation();
-          setIsBottomSheetOpen(false);
-          bottomSheetRef.current?.close();
-          Keyboard.dismiss();
-        }}>
-        참여하기
+        onPress={onPressVOC}>
+        신고하기
       </Button>
     </BottomSheet>
   );
-};
+}
 
-export default ParticipationBottomSheet;
+export default ReportBottomSheet;
 
 const styles = StyleSheet.create({
   container: {

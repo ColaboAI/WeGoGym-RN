@@ -288,7 +288,8 @@ interface NotificationWorkoutListResponse {
 
 interface VOC {
   type: string;
-  plaintiff: string;
-  defendant: string;
+  reason?: string;
+  plaintiff?: string;
+  defendant?: string;
   content: string;
 }

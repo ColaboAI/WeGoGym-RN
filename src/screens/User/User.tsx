@@ -8,6 +8,7 @@ import {
   Tooltip,
   Button,
   Chip,
+  Menu,
 } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -21,6 +22,8 @@ import InfoCard from 'components/molecules/User/InfoCard';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import { getDirectChatRoom } from '/api/api';
 import { getAge } from '/utils/util';
+import { useAuthActions } from '/hooks/context/useAuth';
+
 type Props = UserStackScreenProps<'User'>;
 export default function UserScreen({ navigation, route }: Props) {
   const id: string =
@@ -28,6 +31,8 @@ export default function UserScreen({ navigation, route }: Props) {
   const [isAuthenticated] = useState(true);
   const { data } = useGetUserInfoQuery(id);
   const { reset } = useQueryErrorResetBoundary();
+  const [menuVisible, setMenuVisible] = useState(false);
+  const { setReportBottomSheetOpen, setReportTarget } = useAuthActions();
 
   const handleDirectChatNav = useCallback(async () => {
     try {
@@ -93,6 +98,28 @@ export default function UserScreen({ navigation, route }: Props) {
                     navigation.goBack();
                   }}
                 />
+                {route.name === 'User' && (
+                  <Menu
+                    visible={menuVisible}
+                    onDismiss={() => setMenuVisible(false)}
+                    anchor={
+                      <IconButton
+                        icon="ellipsis-vertical"
+                        onPress={() => {
+                          setMenuVisible(true);
+                        }}
+                      />
+                    }>
+                    <Menu.Item
+                      onPress={() => {
+                        setReportTarget(route.name, route.params?.userId);
+                        setReportBottomSheetOpen(true);
+                        setMenuVisible(false);
+                      }}
+                      title="신고하기"
+                    />
+                  </Menu>
+                )}
               </View>
               <Divider />
             </>
@@ -320,7 +347,7 @@ const style = StyleSheet.create({
   otherHeaderContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
   },
   profileContainer: {
     alignItems: 'center',

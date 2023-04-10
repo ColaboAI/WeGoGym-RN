@@ -9,6 +9,7 @@ import { save, getValueFor, clear, secureMmkv, mmkv } from '@store/secureStore';
 import { postLogin, postRegister, deleteUser } from 'api/api';
 import { Alert } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
+import ReportBottomSheet from '/components/organisms/Common/ReportBottomSheet';
 type AuthState = {
   token: string | null;
   isLoading: boolean;
@@ -16,6 +17,10 @@ type AuthState = {
   error: string | null;
   phoneNumber: string | null;
   userId: string | null;
+
+  reportType?: string;
+  reportTargetId?: string;
+  isReportBottomSheetOpen: boolean;
 };
 
 type AuthActions = {
@@ -27,6 +32,8 @@ type AuthActions = {
   setLoading: (b: boolean) => void;
   getPhoneNumFromStorage: () => Promise<boolean>;
   unRegister: () => Promise<void>;
+  setReportTarget: (type: string, id?: string) => void;
+  setReportBottomSheetOpen: (b: boolean) => void;
 };
 
 const initialAuthState: AuthState = {
@@ -36,6 +43,9 @@ const initialAuthState: AuthState = {
   error: null,
   phoneNumber: null,
   userId: null,
+  reportTargetId: undefined,
+  reportType: undefined,
+  isReportBottomSheetOpen: false,
 };
 
 const initialAuthActions: AuthActions = {
@@ -51,6 +61,9 @@ const initialAuthActions: AuthActions = {
     return false;
   },
   unRegister: async () => {},
+
+  setReportTarget: () => {},
+  setReportBottomSheetOpen: () => {},
 };
 
 const AuthValueContext = createContext<AuthState>(initialAuthState);
@@ -180,6 +193,20 @@ function AuthProvider({ children }: AuthProviderProps) {
           isLoading: false,
         }));
       },
+      setReportTarget: (type: string, id?: string) => {
+        setAuthState(prevState => ({
+          ...prevState,
+          reportType: type,
+          reportTargetId: id,
+        }));
+      },
+
+      setReportBottomSheetOpen: (b: boolean) => {
+        setAuthState(prevState => ({
+          ...prevState,
+          isReportBottomSheetOpen: b,
+        }));
+      },
     }),
     [queryClient],
   );
@@ -207,6 +234,10 @@ function AuthProvider({ children }: AuthProviderProps) {
     <AuthActionsContext.Provider value={authActions}>
       <AuthValueContext.Provider value={authState}>
         {children}
+        <ReportBottomSheet
+          type={authState.reportType}
+          targetId={authState.reportTargetId}
+        />
       </AuthValueContext.Provider>
     </AuthActionsContext.Provider>
   );
