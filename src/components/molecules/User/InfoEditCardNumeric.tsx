@@ -40,6 +40,7 @@ function InfoEditCardNumeric(props: Props) {
             blurOnSubmit={true}
             style={textContentStyle}
             keyboardType={'numeric'}
+            disabled={props.textTitle === 'age' ? true : false}
           />
           {props.unit ? <Text variant="bodySmall">{props.unit}</Text> : null}
         </View>
