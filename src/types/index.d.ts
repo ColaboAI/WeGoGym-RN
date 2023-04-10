@@ -285,3 +285,10 @@ interface NotificationWorkoutListResponse {
   nextCursor: int | null;
   prevCursor: int | null;
 }
+
+interface VOC {
+  type: string;
+  plaintiff: string;
+  defendant: string;
+  content: string;
+}
