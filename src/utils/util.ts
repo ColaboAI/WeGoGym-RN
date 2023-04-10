@@ -275,11 +275,7 @@ export function getNotificationBody(notificationType: string): string {
 export function getAge(birth: string) {
   const today = new Date();
   let age = today.getFullYear() - Number(birth.slice(0, 4));
-  console.log(age);
   const month = today.getMonth() + 1 - Number(birth.slice(4, 6));
-  console.log(today.getMonth());
-  console.log(Number(birth.slice(4, 6)));
-  console.log(month);
   if (
     month < 0 ||
     (month === 0 && today.getDate() < Number(birth.slice(6, 8)))
