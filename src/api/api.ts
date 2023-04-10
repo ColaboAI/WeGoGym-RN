@@ -1,6 +1,4 @@
-import { Alert } from 'react-native';
 import { apiClient } from './client';
-import { AxiosError } from 'axios';
 import { snakeCase } from 'snake-case';
 // TODO: change to https, deployed url
 async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
@@ -10,9 +8,6 @@ async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
     });
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -31,9 +26,6 @@ async function postWorkoutPromise({
     });
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -43,9 +35,6 @@ async function deleteWorkoutPromise(id: string): Promise<void> {
     const res = await apiClient.delete(`/workout-promise/${id}`);
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -66,9 +55,6 @@ async function putWorkoutPromiseInfo({
     });
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -90,9 +76,6 @@ async function postWorkoutParticipant({
     );
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -110,9 +93,6 @@ async function deleteWorkoutParticipant({
     );
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -127,9 +107,6 @@ async function getWorkoutPromise(
     );
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -144,9 +121,6 @@ async function getRecruitingWorkoutPromise(
     );
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -156,9 +130,6 @@ async function getWorkoutPromiseById(id: string): Promise<WorkoutPromiseRead> {
     const res = await apiClient.get(`/workout-promise/${id}`);
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -177,9 +148,6 @@ async function getWorkoutPromiseWrittenByUserId(
     });
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -198,9 +166,6 @@ async function getWorkoutPromiseJoinedByUserId(
     });
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -210,9 +175,6 @@ async function postRegister(params: UserCreate): Promise<UserLoginResponse> {
     const res = await apiClient.post('/user/register', params);
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -231,9 +193,6 @@ async function getUserInfo(id: string): Promise<MyInfoRead> {
     const res = await apiClient.get(`/user/${id}`);
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -291,9 +250,6 @@ async function getRecommendedMates(limit: number): Promise<RecommendedMate[]> {
     const res = await apiClient.get('/user/recommended-mates?limit=' + limit);
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -354,7 +310,6 @@ async function getDirectChatRoom(id: string | undefined): Promise<ChatRoom> {
     const res = await apiClient.get(`/chat/room/direct?user_ids=${id}`);
     return res.data;
   } catch (e) {
-    console.error(e);
     throw e;
   }
 }
@@ -405,9 +360,6 @@ async function getNotificationWorkout(
     });
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -428,9 +380,6 @@ async function putWorkoutParticipant({
     );
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
     throw e;
   }
 }
@@ -444,9 +393,14 @@ async function putNotification({
     const res = await apiClient.patch(`/notification/${notificationId}`);
     return res.data;
   } catch (e) {
-    if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
-    }
+    throw e;
+  }
+}
+
+async function postVOC(voc: VOC): Promise<void> {
+  try {
+    await apiClient.post('/voc/global', voc);
+  } catch (e) {
     throw e;
   }
 }
@@ -480,4 +434,5 @@ export {
   deleteChatRoomMember,
   putMyFCMToken,
   postChatRoomMember,
+  postVOC,
 };
