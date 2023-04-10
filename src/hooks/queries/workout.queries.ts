@@ -18,6 +18,7 @@ import {
   putWorkoutParticipant,
 } from '@api/api';
 import { Alert } from 'react-native';
+import { AxiosError } from 'axios';
 
 export function useWorkoutMutation() {
   const queryClient = useQueryClient();
@@ -58,7 +59,15 @@ export function useWorkoutParticipantMutation() {
   return useMutation({
     mutationFn: postWorkoutParticipant,
     onError: (error: Error) => {
-      Alert.alert(`운동 약속에 참가할 수 없어요: ${error.message}`);
+      if (error instanceof AxiosError) {
+        // TODO: error handling with error.response?.data
+        console.log(error.response?.data);
+        Alert.alert(
+          `${error.response?.data.errorCode}: ${error.response?.data.message}`,
+        );
+      } else {
+        Alert.alert(`운동 약속에 참가할 수 없어요: ${error.message}`);
+      }
     },
     onSuccess(data) {
       console.log(data);
