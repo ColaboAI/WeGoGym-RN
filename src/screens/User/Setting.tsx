@@ -75,6 +75,21 @@ export default function SettingScreen() {
           </View>
         </List.Section>
         <List.Section>
+          <List.Subheader>커뮤니티</List.Subheader>
+          <View style={style.listContainer}>
+            <List.Item
+              title="디스코드"
+              onPress={() => Linking.openURL('https://discord.gg/PCQEujn2')}
+            />
+            <List.Item
+              title="인스타그램"
+              onPress={() =>
+                Linking.openURL('https://www.instagram.com/wegogym.official/')
+              }
+            />
+          </View>
+        </List.Section>
+        <List.Section>
           <List.Subheader>약관 및 정책</List.Subheader>
           <View style={style.listContainer}>
             <List.Item
@@ -95,7 +110,7 @@ export default function SettingScreen() {
             />
           </View>
         </List.Section>
-        <List.Section>
+        {/* <List.Section>
           <List.Subheader>앱 설정</List.Subheader>
           <View style={style.listContainer}>
             <List.Item
@@ -117,7 +132,7 @@ export default function SettingScreen() {
               )}
             />
           </View>
-        </List.Section>
+        </List.Section> */}
         <List.Section>
           <List.Subheader>계정 관리</List.Subheader>
           <View style={style.listContainer}>
