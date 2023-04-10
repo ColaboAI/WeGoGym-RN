@@ -74,3 +74,24 @@ OR run from Xcode:
 1. 제목은 명령문으로 사용하며 과거형을 사용하지 않는다
 1. 본문의 각 행은 72글자 내로 제한
 1. 어떻게 보다는 무엇과 왜를 설명한다
+
+# Deploy
+
+## CodePush
+### Android
+```bash
+appcenter codepush release-react -a ColaboAI/WeGoGym-aOS -d Staging
+```
+```bash
+appcenter codepush release-react -a ColaboAI/WeGoGym-aOS -d {Staging/Production}
+```
+### iOS
+```bash
+appcenter codepush release-react -a ColaboAI/WeGoGym-iOS -d {Staging/Production}
+```
+
+Staging : 개발용 및 테스트용
+Production : 배포용
+용도에 맞게 배포할 것
+
+이후 promote 실시
