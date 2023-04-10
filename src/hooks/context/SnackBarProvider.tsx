@@ -4,7 +4,9 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { StyleSheet } from 'react-native';
 import { Snackbar, Text, useTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type AlertStatus = 'success' | 'error' | 'warning' | 'info';
 
@@ -12,10 +14,11 @@ type SnackBarState = {
   visible: boolean;
   message: string;
   status: AlertStatus;
+  isBottom: boolean;
 };
 
 type SnackBarActions = {
-  onShow: (message: string, status?: AlertStatus) => void;
+  onShow: (message: string, status?: AlertStatus, isBottom?: boolean) => void;
   onDismiss: () => void;
 };
 
@@ -23,6 +26,7 @@ const initialSnackBarState: SnackBarState = {
   visible: false,
   message: '',
   status: 'info',
+  isBottom: true,
 };
 
 const initialSnackBarActions: SnackBarActions = {
@@ -43,11 +47,16 @@ export default function SnackBarProvider({ children }: SnackBarProviderProps) {
 
   const snackBarActions = useMemo(
     () => ({
-      onShow: (message: string, status: AlertStatus = 'info') => {
+      onShow: (
+        message: string,
+        status: AlertStatus = 'info',
+        isBottom = true,
+      ) => {
         setSnackBarState({
           visible: true,
           message,
           status,
+          isBottom,
         });
       },
       onDismiss: () => {
@@ -61,6 +70,15 @@ export default function SnackBarProvider({ children }: SnackBarProviderProps) {
   );
 
   const theme = useTheme();
+  const inset = useSafeAreaInsets();
+
+  const wrapperStyle = useMemo(() => {
+    if (snackBarState.isBottom) {
+      return styles.isBottom;
+    } else {
+      return [{ marginTop: inset.top }, styles.isTop];
+    }
+  }, [inset.top, snackBarState.isBottom]);
 
   const style = useMemo(() => {
     switch (snackBarState.status) {
@@ -96,10 +114,12 @@ export default function SnackBarProvider({ children }: SnackBarProviderProps) {
     <SnackBarActionsContext.Provider value={snackBarActions}>
       <SnackBarValueContext.Provider value={snackBarState}>
         {children}
+
         <Snackbar
           visible={snackBarState.visible}
           onDismiss={snackBarActions.onDismiss}
           duration={3000}
+          wrapperStyle={wrapperStyle}
           style={{ backgroundColor: style.backgroundColor }}
           action={{
             labelStyle: { color: style.textColor },
@@ -118,3 +138,14 @@ export default function SnackBarProvider({ children }: SnackBarProviderProps) {
 }
 
 export { SnackBarValueContext, SnackBarActionsContext };
+
+const styles = StyleSheet.create({
+  isBottom: {
+    position: 'absolute',
+    bottom: 0,
+  },
+  isTop: {
+    position: 'absolute',
+    top: 0,
+  },
+});
