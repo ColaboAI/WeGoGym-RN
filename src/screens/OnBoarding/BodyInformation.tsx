@@ -43,6 +43,7 @@ export default function BodyInformationScreen({ navigation }: Props) {
             placeholder="ex) 19960624"
             keyboardType="numeric"
             value={age}
+            error={age.length > 8 ? true : false}
             onChangeText={value => setAge(value)}
           />
           <TextInput
@@ -67,7 +68,12 @@ export default function BodyInformationScreen({ navigation }: Props) {
         <View style={style.buttonBox}>
           <Button
             mode="contained"
-            disabled={age.length < 1 || height.length < 1 || weight.length < 1}
+            disabled={
+              age.length === 0 ||
+              age.length > 8 ||
+              height.length === 0 ||
+              weight.length === 0
+            }
             onPress={() => {
               save('age', age);
               save('height', height);
