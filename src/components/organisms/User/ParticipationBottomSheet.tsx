@@ -1,4 +1,4 @@
-import { Keyboard, Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import BottomSheet, {
   BottomSheetBackdrop,
