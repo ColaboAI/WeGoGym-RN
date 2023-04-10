@@ -27,7 +27,7 @@ export default function PhoneNumberScreen() {
 
   const phoneNumberButtonChange = useCallback((text: string) => {
     setPhoneNumber(text);
-    if (text.length < 11) {
+    if (text.length < 11 || text.length > 11) {
       setPhoneNumberButtonReady(false);
     } else if (text.length === 11) {
       setPhoneNumberButtonReady(true);
