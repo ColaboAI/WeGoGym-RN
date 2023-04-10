@@ -145,7 +145,6 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
       myInfo.id,
     );
     if (!myParticipation) {
-      console.log(myParticipation);
       return true;
     }
     // 약속 참여자인 경우만 활성화 + 어드민 아닌 경우 채팅방 개설 전까지 비활성화

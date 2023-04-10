@@ -24,6 +24,7 @@ function User({ navigation, route }: Props) {
     <Stack.Navigator
       initialRouteName="User"
       screenOptions={{
+        // eslint-disable-next-line react/no-unstable-nested-components
         header: props => (
           <DefaultNavBarHeader
             title={routeName === 'Setting' ? settingTitle : profileEditTitle}

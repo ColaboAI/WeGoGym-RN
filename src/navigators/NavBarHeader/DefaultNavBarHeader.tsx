@@ -2,9 +2,9 @@ import React from 'react';
 import { Appbar } from 'react-native-paper';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 
-interface Props extends NativeStackHeaderProps {
+type Props = NativeStackHeaderProps & {
   title: string;
-}
+};
 
 const DefaultNavBarHeader = ({ navigation, back, title }: Props) => {
   return (
