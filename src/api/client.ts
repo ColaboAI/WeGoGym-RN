@@ -5,6 +5,7 @@ import applyCaseMiddleware from 'axios-case-converter';
 import { useMemo, useState } from 'react';
 import { Alert, NativeModules, Platform } from 'react-native';
 import { refreshAccessToken } from './api';
+import { BASE_API_URL, WS_API_URL } from '@env';
 // TODO: 개발 환경에서만 사용, 배포시에는 서버 주소로 변경
 const getDevServerAddress = () => {
   const scriptURL = NativeModules.SourceCode.scriptURL;
@@ -13,14 +14,12 @@ const getDevServerAddress = () => {
   return hostname;
 };
 
-// export const BASE_URL = 'https://wegogym-api-dev.colabo.ml/api/v1';
 export const BASE_URL =
-  Platform.OS === 'ios'
+  BASE_API_URL || Platform.OS === 'ios'
     ? `http://${getDevServerAddress()}:8000/api/v1`
     : 'http://10.0.2.2:8000/api/v1';
-// export const WS_BASE_URL = 'wss://wegogym-api-dev.colabo.ml/api/v1';
-export const WS_BASE_URL =
-  Platform.OS === 'ios'
+export const WS_URL =
+  WS_API_URL || Platform.OS === 'ios'
     ? `ws://${getDevServerAddress()}:8000/api/v1`
     : 'ws://10.0.2.2:8000/api/v1';
 type RequestCallback = (token: string) => void;
