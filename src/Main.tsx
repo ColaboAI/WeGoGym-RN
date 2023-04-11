@@ -23,6 +23,7 @@ import { onMessageInBackground } from '/utils/notification';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { EventType } from '@notifee/react-native';
 import codePush from 'react-native-code-push';
+import RNBootSplash from 'react-native-bootsplash';
 import App from './App';
 // https://callstack.github.io/react-native-paper/theming.html
 
@@ -96,7 +97,11 @@ function Main() {
             }}
             theme={theme}>
             <AuthProvider>
-              <NavigationContainer theme={theme}>
+              <NavigationContainer
+                theme={theme}
+                onReady={() => {
+                  RNBootSplash.hide({ fade: true, duration: 500 });
+                }}>
                 <App />
               </NavigationContainer>
             </AuthProvider>
