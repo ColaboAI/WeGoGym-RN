@@ -15,11 +15,11 @@ const getDevServerAddress = () => {
 };
 
 export const BASE_URL =
-  BASE_API_URL || Platform.OS === 'ios'
+  BASE_API_URL ?? Platform.OS === 'ios'
     ? `http://${getDevServerAddress()}:8000/api/v1`
     : 'http://10.0.2.2:8000/api/v1';
 export const WS_URL =
-  WS_API_URL || Platform.OS === 'ios'
+  WS_API_URL ?? Platform.OS === 'ios'
     ? `ws://${getDevServerAddress()}:8000/api/v1`
     : 'ws://10.0.2.2:8000/api/v1';
 type RequestCallback = (token: string) => void;
