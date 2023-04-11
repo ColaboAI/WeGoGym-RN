@@ -117,6 +117,7 @@ export default function ProfileEdit({ navigation, route }: Props) {
       includeBase64: true,
       presentationStyle: 'popover',
       selectionLimit: 1,
+      quality: 0.1,
     };
 
     const res = await launchImageLibrary(options);
