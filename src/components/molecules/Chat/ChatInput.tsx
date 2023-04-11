@@ -10,7 +10,7 @@ import {
 } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { getValueFor } from '/store/secureStore';
-import { WS_BASE_URL } from '/api/client';
+import { WS_URL } from '/api/client';
 import { useSnackBarActions } from '/hooks/context/useSnackbar';
 import { convertObjectKeyToCamelCase } from '/utils/util';
 import { useNavigation } from '@react-navigation/native';
@@ -130,7 +130,7 @@ const ChatInput = (props: ChatInputProps) => {
       webSocket.current = null;
     }
     if (chatRoomId && myId) {
-      const chatURL = `${WS_BASE_URL}/ws/chat/${chatRoomId}/${myId}`;
+      const chatURL = `${WS_URL}/ws/chat/${chatRoomId}/${myId}`;
       webSocket.current = new WebSocket(chatURL);
       webSocket.current.onopen = () => {
         onShow('채팅방에 입장했습니다.', 'success', false);
@@ -224,17 +224,17 @@ const ChatInput = (props: ChatInputProps) => {
   return (
     <TextInput
       mode="outlined"
-      left={
-        // TODO: add image picker
-        <TextInput.Icon
-          mode="contained"
-          icon="camera"
-          containerColor={theme.colors.secondaryContainer}
-          iconColor={theme.colors.onSecondaryContainer}
-          style={{}}
-          onPress={() => console.log('Camera Pressed')}
-        />
-      }
+      // left={
+      //   // TODO: add image picker
+      //   <TextInput.Icon
+      //     mode="contained"
+      //     icon="camera"
+      //     containerColor={theme.colors.secondaryContainer}
+      //     iconColor={theme.colors.onSecondaryContainer}
+      //     style={{}}
+      //     onPress={() => console.log('Camera Pressed')}
+      //   />
+      // }
       right={
         <TextInput.Icon
           mode="contained"
