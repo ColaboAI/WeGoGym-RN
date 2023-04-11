@@ -4,6 +4,7 @@
 // headless check
 #import "RNFBMessagingModule.h"
 #import <CodePush/CodePush.h>
+#import "RNBootSplash.h"
 
 
 @implementation AppDelegate
@@ -15,6 +16,7 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
   [FIRApp configure];
+  [RNBootSplash initWithStoryboard:@"BootSplash" rootView:self.window.rootViewController.view];
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
