@@ -42,6 +42,7 @@ export const requestPermissionToAnalytics = async () => {
           onPress: async () => {
             save('analytics', 'true');
             await analytics().setAnalyticsCollectionEnabled(true);
+            await analytics().setUserId(myId);
           },
           style: 'destructive',
         },
