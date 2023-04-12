@@ -12,6 +12,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { RootStackParamList } from '/navigators/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { AppState } from 'react-native';
+import { requestPermissionToAnalytics } from 'utils/analytics';
 
 async function onAppBootstrap() {
   // Get the token
@@ -22,6 +23,7 @@ async function onAppBootstrap() {
   const token = await messaging().getToken();
   // Check if the user has granted permission, if not, request it
   await checkApplicationPermission();
+  await requestPermissionToAnalytics();
 
   // Save the token to the server, and save it to the store
   await putMyFCMToken(token);
