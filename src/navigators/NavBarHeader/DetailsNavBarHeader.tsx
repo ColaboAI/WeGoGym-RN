@@ -4,7 +4,7 @@ import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { useAuthActions } from '/hooks/context/useAuth';
 import { Route } from '@react-navigation/native';
 type DetailParams = {
-  workoutPromiseId: string;
+  workoutPromiseId?: string;
 };
 type Props = NativeStackHeaderProps & {
   route: Route<string, DetailParams | undefined>;
