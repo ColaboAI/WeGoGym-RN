@@ -12,7 +12,6 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140E68E129E5715C002BDAE0 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 140E68E029E5715B002BDAE0 /* BootSplash.storyboard */; };
-		
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C218F679AC50DB61217E7C72 /* Pods_WeGoGym_WeGoGymTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A58978BFBFCE364B18A5679 /* Pods_WeGoGym_WeGoGymTests.framework */; };
 		F5A21C9F7369880B91439076 /* Pods_WeGoGym.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58BEEC5D32F87C4B487254F9 /* Pods_WeGoGym.framework */; };
@@ -316,8 +315,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6473EDA629C9E50300100247 /* GoogleService-Info.plist in Resources */,
-				641E689C29E681E3003FFEF7 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,8 +324,6 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				641E689B29E681E3003FFEF7 /* GoogleService-Info.plist in Resources */,
-				6473EDA529C9E50300100247 /* GoogleService-Info.plist in Resources */,
 				140E68E129E5715C002BDAE0 /* BootSplash.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -758,7 +753,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = ml.colabo.WeGoGym;
 				PRODUCT_NAME = WeGoGym;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
