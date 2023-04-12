@@ -12,8 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140E68E129E5715C002BDAE0 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 140E68E029E5715B002BDAE0 /* BootSplash.storyboard */; };
-		6473EDA529C9E50300100247 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6473EDA429C9E50300100247 /* GoogleService-Info.plist */; };
-		6473EDA629C9E50300100247 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6473EDA429C9E50300100247 /* GoogleService-Info.plist */; };
+		
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C218F679AC50DB61217E7C72 /* Pods_WeGoGym_WeGoGymTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A58978BFBFCE364B18A5679 /* Pods_WeGoGym_WeGoGymTests.framework */; };
 		F5A21C9F7369880B91439076 /* Pods_WeGoGym.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58BEEC5D32F87C4B487254F9 /* Pods_WeGoGym.framework */; };
@@ -45,6 +44,7 @@
 		511358E6B89F80B304DD5205 /* Pods-WeGoGym-WeGoGymTests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.staging.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.staging.xcconfig"; sourceTree = "<group>"; };
 		53D162462AC66259A8263F02 /* Pods-WeGoGym-WeGoGymTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.release.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.release.xcconfig"; sourceTree = "<group>"; };
 		58BEEC5D32F87C4B487254F9 /* Pods_WeGoGym.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeGoGym.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		641E689A29E681E3003FFEF7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		643CE69529443D24002FE9BB /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		643CE69629443D24002FE9BB /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		643CE69729443D24002FE9BB /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
@@ -110,12 +110,12 @@
 		13B07FAE1A68108700A75B9A /* WeGoGym */ = {
 			isa = PBXGroup;
 			children = (
+				641E689729E68167003FFEF7 /* Firebase */,
 				14605921295D7C7E0077C855 /* WeGoGym.entitlements */,
 				643CE69429443C46002FE9BB /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				6473EDA429C9E50300100247 /* GoogleService-Info.plist */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				140E68E029E5715B002BDAE0 /* BootSplash.storyboard */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -132,6 +132,32 @@
 				3A58978BFBFCE364B18A5679 /* Pods_WeGoGym_WeGoGymTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		641E689729E68167003FFEF7 /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				641E689829E68167003FFEF7 /* Prod */,
+				641E689929E68167003FFEF7 /* Dev */,
+			);
+			name = Firebase;
+			path = WeGoGym/Firebase;
+			sourceTree = "<group>";
+		};
+		641E689829E68167003FFEF7 /* Prod */ = {
+			isa = PBXGroup;
+			children = (
+				641E689A29E681E3003FFEF7 /* GoogleService-Info.plist */,
+			);
+			path = Prod;
+			sourceTree = "<group>";
+		};
+		641E689929E68167003FFEF7 /* Dev */ = {
+			isa = PBXGroup;
+			children = (
+				6473EDA429C9E50300100247 /* GoogleService-Info.plist */,
+			);
+			path = Dev;
 			sourceTree = "<group>";
 		};
 		643CE69429443C46002FE9BB /* Fonts */ = {
@@ -233,6 +259,7 @@
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
+				641E689D29E68236003FFEF7 /* Set up Google service info plist */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				F064E6565F855D234A53AD07 /* [CP] Embed Pods Frameworks */,
@@ -290,6 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6473EDA629C9E50300100247 /* GoogleService-Info.plist in Resources */,
+				641E689C29E681E3003FFEF7 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,6 +327,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				641E689B29E681E3003FFEF7 /* GoogleService-Info.plist in Resources */,
 				6473EDA529C9E50300100247 /* GoogleService-Info.plist in Resources */,
 				140E68E129E5715C002BDAE0 /* BootSplash.storyboard in Resources */,
 			);
@@ -361,6 +390,24 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		641E689D29E68236003FFEF7 /* Set up Google service info plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Set up Google service info plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n# Name of the resource we're selectively copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\n\n# Get references to dev and prod versions of the GoogleService-Info.plist\n# NOTE: These should only live on the file system and should NOT be part of the target (since we'll be adding them to the target manually)\nGOOGLESERVICE_INFO_DEV=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Dev/${GOOGLESERVICE_INFO_PLIST}\nGOOGLESERVICE_INFO_PROD=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Prod/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure the dev version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_DEV}\"\nif [ ! -f $GOOGLESERVICE_INFO_DEV ]\nthen\n    echo \"No Development GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Make sure the prod version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_PROD}\"\nif [ ! -f $GOOGLESERVICE_INFO_PROD ]\nthen\n    echo \"No Production GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Get a reference to the destination location for the GoogleService-Info.plist\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Release builds\nif [ \"${CONFIGURATION}\" == \"Release\" ] || [ \"${CONFIGURATION}\" == \"Staging\" ]\nthen\n    echo \"Using ${GOOGLESERVICE_INFO_PROD}\"\n    cp \"${GOOGLESERVICE_INFO_PROD}\" \"${PLIST_DESTINATION}\"\nelse\n    echo \"Using ${GOOGLESERVICE_INFO_DEV}\"\n    cp \"${GOOGLESERVICE_INFO_DEV}\" \"${PLIST_DESTINATION}\"\nfi\n\n";
 		};
 		A20AF12C20E43D2C35CA0C7B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
