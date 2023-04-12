@@ -53,13 +53,13 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>localhost</key>
+			<!-- <key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
 				<key>NSIncludesSubdomains</key>
 				<true/>
-			</dict>
+			</dict> -->
 			<key>openapi.seoul.go.kr</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
@@ -67,7 +67,7 @@
 				<key>NSExceptionMinimumTLSVersion</key>
 				<string>TLSv1.1</string>
 				<key>NSIncludesSubdomains</key>
-				<true/>
+				<false/>
 			</dict>
 		</dict>
 	</dict>
