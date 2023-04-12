@@ -18,6 +18,7 @@ export default function GymMateRecommendation({
   //   use query to get friend list
   const { data: friendList, refetch } = useGetRecommendedMatesQuery();
 
+  // TODO: Refetching is not working
   useEffect(() => {
     if (isRefreshing) {
       refetch();
