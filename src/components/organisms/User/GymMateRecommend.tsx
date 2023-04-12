@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import FriendListLoader from 'components/molecules/Home/FriendListLoader';
@@ -8,13 +8,22 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 type Props = {
   navigateToUserDetails: (id: string) => void;
+  isRefreshing: boolean;
 };
 
 export default function GymMateRecommendation({
   navigateToUserDetails,
+  isRefreshing,
 }: Props) {
   //   use query to get friend list
-  const { data: friendList } = useGetRecommendedMatesQuery();
+  const { data: friendList, refetch } = useGetRecommendedMatesQuery();
+
+  useEffect(() => {
+    if (isRefreshing) {
+      refetch();
+    }
+  }, [isRefreshing, refetch]);
+
   return (
     <>
       <View style={styles.title}>

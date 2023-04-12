@@ -183,6 +183,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
                 ListHeaderComponent={
                   <>
                     <GymMateRecommendation
+                      isRefreshing={refreshing}
                       navigateToUserDetails={navigateToUserDetails}
                     />
                     <View style={style.isRecruitingContainer}>
