@@ -16,23 +16,28 @@ import {
 } from 'react-native-paper';
 import CustomToolbar from 'components/organisms/CustomToolbar';
 import { useAuthActions } from 'hooks/context/useAuth';
+import { getValueFor } from '/store/secureStore';
 // type Props = AuthStackScreenProps<'PhoneNumberLogin'>;
 
 export default function PhoneNumberScreen() {
   const theme = useTheme();
   const authActions = useAuthActions();
-  const [phoneNumber, setPhoneNumber] = React.useState<string>('');
-  const [phoneNumberButtonReady, setPhoneNumberButtonReady] =
-    React.useState<boolean>(false);
+
+  const [phoneNumber, setPhoneNumber] = React.useState<string>(
+    getValueFor('phoneNumber') || '',
+  );
 
   const phoneNumberButtonChange = useCallback((text: string) => {
     setPhoneNumber(text);
-    if (text.length < 11 || text.length > 11) {
-      setPhoneNumberButtonReady(false);
-    } else if (text.length === 11) {
-      setPhoneNumberButtonReady(true);
-    }
   }, []);
+
+  const isPhoneNumber = useCallback(() => {
+    if (phoneNumber.length < 11 || phoneNumber.length > 11) {
+      return false;
+    } else if (phoneNumber.length === 11) {
+      return true;
+    }
+  }, [phoneNumber.length]);
 
   const onPressLogin = useCallback(async () => {
     await authActions.signIn(phoneNumber);
@@ -75,7 +80,7 @@ export default function PhoneNumberScreen() {
             <View style={style.buttonBox}>
               <Button
                 mode="contained"
-                disabled={phoneNumberButtonReady ? false : true}
+                disabled={isPhoneNumber() ? false : true}
                 onPress={onPressLogin}>
                 로그인
               </Button>

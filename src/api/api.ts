@@ -1,5 +1,7 @@
+import { AxiosError } from 'axios';
 import { apiClient } from './client';
 import { snakeCase } from 'snake-case';
+import { Alert } from 'react-native';
 // TODO: change to https, deployed url
 async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
   try {
@@ -404,6 +406,35 @@ async function postVOC(voc: VOC): Promise<void> {
     throw e;
   }
 }
+// React Query 사용 X
+async function checkPhoneNumber(phoneNumber: string): Promise<boolean> {
+  try {
+    const res = await apiClient.get<CheckUserInfoResponse>(
+      `/user/check/?phone_number=${phoneNumber}`,
+    );
+    return res.data.phoneNumberExists === true;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
+
+// React Query 사용 X
+async function checkUsername(username: string): Promise<boolean> {
+  try {
+    const res = await apiClient.get<CheckUserInfoResponse>(
+      `/user/check/?username=${username}`,
+    );
+    return res.data.usernameExists === true;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      Alert.alert(e.response?.data.message);
+    }
+    throw e;
+  }
+}
 
 export {
   postLogin,
@@ -435,4 +466,6 @@ export {
   putMyFCMToken,
   postChatRoomMember,
   postVOC,
+  checkUsername,
+  checkPhoneNumber,
 };

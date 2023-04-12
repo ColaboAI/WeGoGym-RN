@@ -293,3 +293,8 @@ interface VOC {
   defendant?: string;
   content: string;
 }
+
+interface CheckUserInfoResponse {
+  phoneNumberExists: boolean | null;
+  usernameExists: boolean | null;
+}

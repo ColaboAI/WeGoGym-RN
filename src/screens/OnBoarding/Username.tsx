@@ -10,10 +10,23 @@ import { Button, Headline, TextInput, useTheme } from 'react-native-paper';
 import { save } from '@store/secureStore';
 
 import { AuthStackScreenProps } from 'navigators/types';
+import { checkUsername } from '/api/api';
+import { useSnackBarActions } from '/hooks/context/useSnackbar';
 type Props = AuthStackScreenProps<'Username'>;
 export default function UsernameScreen({ navigation }: Props) {
   const theme = useTheme();
   const [username, setUsername] = React.useState<string>('');
+  const { onShow } = useSnackBarActions();
+  const handlePress = React.useCallback(async () => {
+    save('username', username);
+    const isUsernameExist = await checkUsername(username);
+    if (isUsernameExist) {
+      onShow('이미 존재하는 닉네임입니다.', 'error');
+      return;
+    } else {
+      navigation.navigate('Gender');
+    }
+  }, [navigation, onShow, username]);
 
   return (
     <TouchableWithoutFeedback
@@ -43,10 +56,7 @@ export default function UsernameScreen({ navigation }: Props) {
           <Button
             mode="contained"
             disabled={username.length < 1}
-            onPress={() => {
-              save('username', username);
-              navigation.navigate('Gender');
-            }}>
+            onPress={handlePress}>
             확인
           </Button>
         </View>

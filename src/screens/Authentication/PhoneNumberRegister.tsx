@@ -23,6 +23,7 @@ import { save } from '@store/secureStore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { AuthStackScreenProps } from 'navigators/types';
 import CustomToolbar from 'components/organisms/CustomToolbar';
+import { checkPhoneNumber } from '/api/api';
 
 type Props = AuthStackScreenProps<'PhoneNumberRegister'>;
 
@@ -33,7 +34,8 @@ export default function PhoneNumberScreen({ navigation }: Props) {
   const [phoneNumberButtonReady, setPhoneNumberButtonReady] =
     React.useState<boolean>(false);
   const [codeButtonReady, setCodeButtonReady] = React.useState<boolean>(false);
-  const [confirm, setConfirm] = React.useState<any>(null);
+  const [confirm, setConfirm] =
+    React.useState<FirebaseAuthTypes.ConfirmationResult | null>(null);
   const [isButtonClicked, setIsButtonClicked] = React.useState<boolean>(false);
 
   const [isAgreedToS, setIsAgreedToS] = React.useState<boolean>(false);
@@ -55,6 +57,12 @@ export default function PhoneNumberScreen({ navigation }: Props) {
 
   async function signInWithPhoneNumber(_phoneNumber: string) {
     save('phoneNumber', phoneNumber);
+    const isPhoneNumberExist = await checkPhoneNumber(_phoneNumber);
+    if (isPhoneNumberExist) {
+      Alert.alert('이미 가입된 휴대폰 번호입니다. 로그인 페이지로 이동합니다.');
+      navigation.replace('PhoneNumberLogin');
+      return;
+    }
     const fbAuth = auth();
     try {
       const confirmation = await fbAuth.signInWithPhoneNumber(
@@ -76,6 +84,9 @@ export default function PhoneNumberScreen({ navigation }: Props) {
   async function confirmCode() {
     setIsButtonClicked(true);
     try {
+      if (confirm === null) {
+        return;
+      }
       await confirm.confirm(code);
       Alert.alert('인증이 완료되었습니다.');
       navigation.navigate('Username');
