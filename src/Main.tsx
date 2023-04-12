@@ -11,6 +11,7 @@ import {
   NavigationContainer,
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
+  useNavigationContainerRef,
 } from '@react-navigation/native';
 
 import customLightColors from 'theme/customLightColors.json';
@@ -25,6 +26,9 @@ import notifee, { EventType } from '@notifee/react-native';
 import codePush from 'react-native-code-push';
 import RNBootSplash from 'react-native-bootsplash';
 import App from './App';
+import { useRef } from 'react';
+import analytics from '@react-native-firebase/analytics';
+
 // https://callstack.github.io/react-native-paper/theming.html
 
 const myLightTheme = {
@@ -85,6 +89,8 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
 
 function Main() {
   const isDarkMode = useColorScheme() === 'dark';
+  const routeNameRef = useRef<string>();
+  const navigationRef = useNavigationContainerRef();
   let theme = isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme;
   return (
     // Add Store Provider here
@@ -98,9 +104,31 @@ function Main() {
             theme={theme}>
             <AuthProvider>
               <NavigationContainer
+                ref={navigationRef}
                 theme={theme}
                 onReady={() => {
-                  RNBootSplash.hide({ fade: true, duration: 500 });
+                  routeNameRef.current = navigationRef.getCurrentRoute()?.name;
+                  RNBootSplash.hide({
+                    fade: true,
+                    duration: 500,
+                  });
+                }}
+                onStateChange={async () => {
+                  const previousRouteName = routeNameRef.current;
+                  const currentRoute = navigationRef.getCurrentRoute();
+                  const currentRouteName = `${
+                    currentRoute?.name
+                  }_${Object.values(currentRoute?.params || {}).join('/')}`;
+
+                  if (currentRoute && previousRouteName !== currentRouteName) {
+                    await analytics().logScreenView({
+                      screen_class: currentRoute.name,
+                      screen_name: currentRouteName,
+                    });
+                  }
+
+                  // Save the current route name for later comparision
+                  routeNameRef.current = currentRouteName;
                 }}>
                 <App />
               </NavigationContainer>
