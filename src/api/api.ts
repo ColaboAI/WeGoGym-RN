@@ -210,9 +210,9 @@ async function putMyInfo(
       if (params[key] !== undefined && params[key] !== null) {
         const value = params[key];
         const newKey = snakeCase(key);
-        if (newKey === 'gym_info') {
-          console.log('GymInfo: ', value);
-        }
+        // if (newKey === 'gym_info') {
+        //   console.log('GymInfo: ', value);
+        // }
         if (typeof value === 'string') {
           data[newKey] = value.trim();
         } else {

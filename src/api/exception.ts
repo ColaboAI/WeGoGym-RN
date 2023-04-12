@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 
-export function handleNetworkErrorAlert(res: Response) {
+export function handleNetworkErrorMessage(res: Response) {
   let message = '';
   if (res.status === 401) {
     message = '로그인이 만료되었습니다. 다시 로그인해주세요.';

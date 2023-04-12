@@ -3,10 +3,11 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import { Alert } from 'react-native';
 import { getNotificationWorkout, putNotification } from '/api/api';
+import { useSnackBarActions } from '../context/useSnackbar';
 
 export function useGetNotificationWorkoutQuery() {
+  const { onShow } = useSnackBarActions();
   return useInfiniteQuery({
     queryKey: ['getNotificationWorkout'],
     queryFn: ({ pageParam = 0 }) => getNotificationWorkout(pageParam),
@@ -23,14 +24,11 @@ export function useGetNotificationWorkoutQuery() {
       return firstPage.prevCursor;
     },
     retry: 1,
-    onError: (error: Error) => {
-      Alert.alert(
-        `운동 약속 알림을 가져오는데 실패하였습니다: ${error.message}`,
+    onError: (error: CustomError) => {
+      onShow(
+        `운동 약속 알림을 가져오는데 실패하였습니다: ${error.response?.data.message}`,
+        'error',
       );
-      console.log(error);
-    },
-    onSuccess(data) {
-      console.log('운동 약속 알림을 가져왔습니다.', data);
     },
     suspense: true,
     keepPreviousData: true,
@@ -38,16 +36,18 @@ export function useGetNotificationWorkoutQuery() {
 }
 // readAt 수정
 export function usePutNotificationMutation() {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: putNotification,
     retry: 1,
-    onError: (error: Error) => {
-      Alert.alert(`알림을 업데이트하는데 실패하였습니다: ${error.message}`);
-      console.log(error);
+    onError: (error: CustomError) => {
+      onShow(
+        `알림을 업데이트하는데 실패하였습니다: ${error.response?.data.message}`,
+        'error',
+      );
     },
-    onSuccess(data) {
-      console.log('알림을 업데이트했습니다.', data);
+    onSuccess() {
       queryClient.invalidateQueries(['getNotificationWorkout']);
     },
   });

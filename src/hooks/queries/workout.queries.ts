@@ -19,17 +19,19 @@ import {
 } from '@api/api';
 import { Alert } from 'react-native';
 import { AxiosError } from 'axios';
+import { useSnackBarActions } from '../context/useSnackbar';
 
 export function useWorkoutMutation() {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: postWorkoutPromise,
-    onError: (error: Error) => {
+    onError: (error: CustomError) => {
+      onShow(`운동 약속을 만들 수 없어요: ${error.response?.data}`, 'error');
       Alert.alert(`운동 약속을 만들 수 없어요: ${error.message}`);
     },
-    onSuccess(data) {
-      console.log(data);
-      Alert.alert('운동 약속을 만들었어요!');
+    onSuccess() {
+      onShow('운동 약속을 만들었어요!', 'success');
       queryClient.invalidateQueries(['getWorkout']);
       queryClient.invalidateQueries(['getRecruitingWorkout']);
       queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
@@ -38,15 +40,18 @@ export function useWorkoutMutation() {
 }
 
 export function useWorkoutDeleteMutation() {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteWorkoutPromise,
-    onError: (error: Error) => {
-      Alert.alert(`운동 약속을 삭제할 수 없어요: ${error.message}`);
+    onError: (error: CustomError) => {
+      onShow(
+        `운동 약속을 삭제할 수 없어요: ${error.response?.data.message}`,
+        'error',
+      );
     },
-    onSuccess(data) {
-      console.log(data);
-      Alert.alert('운동 약속을 삭제했어요!');
+    onSuccess() {
+      onShow('운동 약속을 삭제했어요!', 'success');
       queryClient.invalidateQueries(['getWorkout']);
       queryClient.invalidateQueries(['getRecruitingWorkout']);
       queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
@@ -55,38 +60,47 @@ export function useWorkoutDeleteMutation() {
 }
 
 export function useWorkoutParticipantMutation() {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: postWorkoutParticipant,
-    onError: (error: Error) => {
+    onError: (error: CustomError) => {
       if (error instanceof AxiosError) {
         // TODO: error handling with error.response?.data
-        console.log(error.response?.data);
-        Alert.alert(
+
+        onShow(
           `${error.response?.data.errorCode}: ${error.response?.data.message}`,
+          'error',
         );
       } else {
-        Alert.alert(`운동 약속에 참가할 수 없어요: ${error.message}`);
+        onShow(`운동 약속에 참가할 수 없어요: ${error.message}`, 'error');
       }
     },
     onSuccess(data) {
-      console.log(data);
-      Alert.alert('운동 약속에 참가 신청을 완료하였어요! 승인을 기다려주세요.');
+      onShow(
+        '운동 약속에 참가 신청을 완료하였어요! 승인을 기다려주세요.',
+        'success',
+      );
       queryClient.invalidateQueries(['getWorkoutById', data.workoutPromiseId]);
     },
   });
 }
 
 export function useWorkoutParticipantDeleteMutation(workoutPromiseId: string) {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteWorkoutParticipant,
-    onError: (error: Error) => {
-      Alert.alert(`운동 약속을 취소할 수 없어요: ${error.message}`);
+    onError: (error: CustomError) => {
+      onShow(
+        `운동 약속을 취소할 수 없어요: ${error.response?.data.message}`,
+        'error',
+      );
     },
     onSuccess() {
-      Alert.alert(
+      onShow(
         '운동 약속 참가 취소 완료하였어요! 다른 운동 약속에 참가해보세요!',
+        'success',
       );
       queryClient.invalidateQueries(['getWorkoutById', workoutPromiseId]);
       queryClient.invalidateQueries(['getWorkoutJoinedByUserId']);
@@ -97,6 +111,7 @@ export function useWorkoutParticipantDeleteMutation(workoutPromiseId: string) {
 }
 
 export function useGetWorkoutQuery() {
+  const { onShow } = useSnackBarActions();
   return useInfiniteQuery({
     queryKey: ['getWorkout'],
     queryFn: ({ pageParam = 0 }) => getWorkoutPromise(pageParam),
@@ -114,11 +129,10 @@ export function useGetWorkoutQuery() {
     },
     retry: 1,
     onError: (error: Error) => {
-      Alert.alert(`운동 약속을 가져오는데 실패하였습니다: ${error.message}`);
-      console.log(error);
-    },
-    onSuccess(data) {
-      console.log('운동 약속을 가져왔습니다 :', data);
+      onShow(
+        `운동 약속을 가져오는데 실패하였습니다: ${error.message}`,
+        'error',
+      );
     },
     suspense: true,
     keepPreviousData: true,
@@ -126,6 +140,7 @@ export function useGetWorkoutQuery() {
 }
 
 export function useGetRecruitingWorkoutQuery() {
+  const { onShow } = useSnackBarActions();
   return useInfiniteQuery({
     queryKey: ['getRecruitingWorkout'],
     queryFn: ({ pageParam = 0 }) => getRecruitingWorkoutPromise(pageParam),
@@ -142,12 +157,11 @@ export function useGetRecruitingWorkoutQuery() {
       }
       return firstPage.prevCursor;
     },
-    onError: (error: Error) => {
-      Alert.alert(`운동 약속을 가져오는데 실패하였습니다: ${error.message}`);
-      console.log(error);
-    },
-    onSuccess(data) {
-      console.log('운동 약속을 가져왔습니다.', data);
+    onError: (error: CustomError) => {
+      onShow(
+        `운동 약속을 가져오는데 실패하였습니다: ${error.response?.data.message}`,
+        'error',
+      );
     },
     suspense: true,
     keepPreviousData: true,
@@ -155,13 +169,15 @@ export function useGetRecruitingWorkoutQuery() {
 }
 
 export function useGetWorkoutByIdQuery(id: string) {
+  const { onShow } = useSnackBarActions();
   return useQuery({
     queryKey: ['getWorkoutById', id],
     queryFn: () => getWorkoutPromiseById(id),
     retry: 1,
-    onError: (error: Error) => {
-      Alert.alert(
-        `운동 약속 정보를 가져오는데 실패하였습니다: ${error.message}`,
+    onError: (error: CustomError) => {
+      onShow(
+        `운동 약속 정보를 가져오는데 실패하였습니다: ${error.response?.data.message}`,
+        'error',
       );
       console.log(error);
     },
@@ -170,6 +186,7 @@ export function useGetWorkoutByIdQuery(id: string) {
 }
 
 export function useGetWorkoutWrittenByUserIdQuery(userId: string) {
+  const { onShow } = useSnackBarActions();
   return useInfiniteQuery({
     queryKey: ['getWorkoutWrittenByUserId', userId],
     queryFn: ({ pageParam = 0 }) =>
@@ -187,14 +204,11 @@ export function useGetWorkoutWrittenByUserIdQuery(userId: string) {
       }
       return firstPage.prevCursor;
     },
-    onError: (error: Error) => {
-      Alert.alert(
-        `내가 만든 운동 약속을 가져오는데 실패하였습니다: ${error.message}`,
+    onError: (error: CustomError) => {
+      onShow(
+        `내가 만든 운동 약속을 가져오는데 실패하였습니다: ${error.response?.data.message}`,
+        'error',
       );
-      console.log(error);
-    },
-    onSuccess(data) {
-      console.log('내가 만든 운동 약속', data);
     },
     suspense: true,
     keepPreviousData: true,
@@ -202,6 +216,7 @@ export function useGetWorkoutWrittenByUserIdQuery(userId: string) {
 }
 
 export function useGetWorkoutJoinedByUserIdQuery(userId: string) {
+  const { onShow } = useSnackBarActions();
   return useInfiniteQuery({
     queryKey: ['getWorkoutJoinedByUserId', userId],
     queryFn: ({ pageParam = 0 }) =>
@@ -219,14 +234,11 @@ export function useGetWorkoutJoinedByUserIdQuery(userId: string) {
       }
       return firstPage.prevCursor;
     },
-    onError: (error: Error) => {
-      Alert.alert(
-        `내가 참여한 운동 약속을 가져오는데 실패하였습니다: ${error.message}`,
+    onError: (error: CustomError) => {
+      onShow(
+        `내가 참여한 운동 약속을 가져오는데 실패하였습니다: ${error.response?.data.message}`,
+        'error',
       );
-      console.log(error);
-    },
-    onSuccess(data) {
-      console.log('내가 참여한 운동 약속', data);
     },
     suspense: true,
     keepPreviousData: true,
@@ -234,6 +246,7 @@ export function useGetWorkoutJoinedByUserIdQuery(userId: string) {
 }
 
 export function usePutWorkoutStatusMutation() {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: putWorkoutPromiseInfo,
@@ -241,8 +254,7 @@ export function usePutWorkoutStatusMutation() {
       Alert.alert(`모집을 마감할 수 없습니다: ${error.message}`);
     },
     onSuccess(data) {
-      console.log(data);
-      Alert.alert('모집 마감을 완료하였어요!');
+      onShow('모집 마감을 완료하였어요!');
       queryClient.invalidateQueries(['getWorkout']);
       queryClient.invalidateQueries(['getRecruitingWorkout']);
       queryClient.invalidateQueries(['getWorkoutById', data.id]);
@@ -251,15 +263,18 @@ export function usePutWorkoutStatusMutation() {
 }
 
 export function usePutWorkoutMutation() {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: putWorkoutPromiseInfo,
-    onError: (error: Error) => {
-      Alert.alert(`운동 약속을 수정할 수 없어요: ${error.message}`);
+    onError: (error: CustomError) => {
+      onShow(
+        `운동 약속을 수정할 수 없어요: ${error.response?.data.message}`,
+        'error',
+      );
     },
     onSuccess(data) {
-      console.log(data);
-      Alert.alert('운동 수정을 완료하였어요!');
+      onShow('운동 수정을 완료하였어요!');
       queryClient.invalidateQueries(['getWorkout']);
       queryClient.invalidateQueries(['getRecruitingWorkout']);
       queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
@@ -269,15 +284,15 @@ export function usePutWorkoutMutation() {
 }
 
 export function usePutWorkoutParticipantAcceptMutation() {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: putWorkoutParticipant,
-    onError: (error: Error) => {
-      Alert.alert(`승인할 수 없습니다. : ${error.message}`);
+    onError: (error: CustomError) => {
+      onShow(`승인할 수 없습니다. : ${error.response?.data.message}`, 'error');
     },
-    onSuccess(data) {
-      console.log(data);
-      Alert.alert('승인 완료했습니다.');
+    onSuccess() {
+      onShow('승인 완료했습니다.');
       queryClient.invalidateQueries(['getWorkout']);
       queryClient.invalidateQueries(['getRecruitingWorkout']);
       queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);
@@ -287,15 +302,15 @@ export function usePutWorkoutParticipantAcceptMutation() {
 }
 
 export function usePutWorkoutParticipantRejectMutation() {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: putWorkoutParticipant,
-    onError: (error: Error) => {
-      Alert.alert(`거절할 수 없습니다. : ${error.message}`);
+    onError: (error: CustomError) => {
+      onShow(`거절할 수 없습니다. : ${error.response?.data.message}`, 'error');
     },
-    onSuccess(data) {
-      console.log(data);
-      Alert.alert('거절 완료했습니다.');
+    onSuccess() {
+      onShow('거절 완료했습니다.');
       queryClient.invalidateQueries(['getWorkout']);
       queryClient.invalidateQueries(['getRecruitingWorkout']);
       queryClient.invalidateQueries(['getWorkoutWrittenByUserId']);

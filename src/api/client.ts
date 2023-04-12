@@ -81,10 +81,8 @@ function useAxiosInterceptor() {
         addRefreshSubscriber((token: string) => {
           try {
             originalRequest.headers.Authorization = 'Bearer ' + token;
-            console.log('retryOriginalRequest: ', originalRequest);
             resolve(apiClient(originalRequest));
           } catch (err) {
-            console.log('retryOriginalRequest err: ', err);
             reject(err);
           }
         });

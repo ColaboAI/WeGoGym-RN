@@ -298,3 +298,11 @@ interface CheckUserInfoResponse {
   phoneNumberExists: boolean | null;
   usernameExists: boolean | null;
 }
+interface CustomError extends Error {
+  response?: {
+    data: {
+      errorCode: string;
+      message: string;
+    };
+  };
+}

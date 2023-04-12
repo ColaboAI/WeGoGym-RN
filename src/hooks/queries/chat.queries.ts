@@ -11,13 +11,13 @@ import {
   getMyChatList,
   postChatRoom,
 } from '@api/api';
-import { Alert } from 'react-native';
-import { AxiosError } from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { ChatStackScreenProps } from '/navigators/types';
 import { getChatRoomNameFromMembers } from '/utils/util';
+import { useSnackBarActions } from '../context/useSnackbar';
 
 export function useMyChatListQuery() {
+  const { onShow } = useSnackBarActions();
   return useInfiniteQuery({
     queryKey: ['chatList'],
     queryFn: ({ pageParam = 0 }) =>
@@ -25,8 +25,11 @@ export function useMyChatListQuery() {
         offset: pageParam,
       }),
     retry: 1,
-    onError: (error: AxiosError) => {
-      Alert.alert(`채팅 목록을 가져오는데 실패하였습니다: ${error.message}`);
+    onError: (error: CustomError) => {
+      onShow(
+        `채팅 목록을 가져오는데 실패하였습니다: ${error.response?.data.message}`,
+        'error',
+      );
     },
     suspense: true,
     getNextPageParam: (lastPage, _) => {
@@ -41,20 +44,21 @@ export function useMyChatListQuery() {
       }
       return firstPage.nextCursor;
     },
-    onSuccess(data) {
-      console.log('채팅 목록을 가져왔습니다: ', data.pages, data.pageParams);
-    },
   });
 }
 
 export function useChatRoomQuery(chatRoomId: string | undefined) {
+  const { onShow } = useSnackBarActions();
   const nav = useNavigation<ChatStackScreenProps<'ChatRoom'>['navigation']>();
   return useQuery({
     queryKey: ['chatRoom', chatRoomId],
     queryFn: () => getChatRoom(chatRoomId),
     retry: 1,
-    onError: (error: AxiosError) => {
-      Alert.alert(`채팅방 정보를 가져오는데 실패하였습니다: ${error.message}`);
+    onError: (error: CustomError) => {
+      onShow(
+        `채팅방 정보를 가져오는데 실패하였습니다: ${error.response?.data.message}`,
+        'error',
+      );
     },
     async onSuccess(data) {
       nav.setParams({
@@ -71,15 +75,16 @@ export function useChatRoomQuery(chatRoomId: string | undefined) {
 }
 
 export function useChatRoomMessagesQuery(chatRoomId: string | undefined) {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useInfiniteQuery({
     queryKey: ['chatMessages', chatRoomId],
 
     queryFn: ({ pageParam = 0 }) => getChatMessages(chatRoomId, pageParam),
     retry: 1,
-    onError: (error: AxiosError) => {
-      Alert.alert(
-        `채팅 메시지를 가져오는데 실패하였습니다: ${error.code}, ${error.message}`,
+    onError: (error: CustomError) => {
+      onShow(
+        `채팅 메시지를 가져오는데 실패하였습니다: ${error.response?.data.message}`,
       );
     },
     onSuccess() {
@@ -131,16 +136,14 @@ export function useChatRoomMessagesQuery(chatRoomId: string | undefined) {
 export function useChatRoomMutation() {
   const queryClient = useQueryClient();
   const nav = useNavigation<ChatStackScreenProps<'ChatRoom'>['navigation']>();
-
+  const { onShow } = useSnackBarActions();
   return useMutation({
     mutationFn: postChatRoom,
     retry: 0,
-    onError: (error: AxiosError) => {
-      Alert.alert(`채팅방 생성에 실패하였습니다: ${error.message}`);
+    onError: (error: CustomError) => {
+      onShow(`채팅방 생성에 실패하였습니다: ${error.response?.data.message}`);
     },
     onSuccess(data) {
-      console.log('채팅방을 생성했습니다: ', data);
-
       nav.setParams({
         chatRoomId: data.id,
         chatRoomMembers: data.members,

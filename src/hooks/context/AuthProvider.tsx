@@ -180,11 +180,10 @@ function AuthProvider({ children }: AuthProviderProps) {
         return false;
       },
       unRegister: async () => {
-        const res = await deleteUser();
+        await deleteUser();
         secureMmkv.deleteAllKeys();
         mmkv.deleteAllKeys();
         queryClient.clear();
-        console.log('unRegister', res);
 
         setAuthState(prevState => ({
           ...prevState,

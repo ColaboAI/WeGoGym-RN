@@ -142,8 +142,7 @@ const ChatInput = (props: ChatInputProps) => {
 
       webSocket.current.onmessage = onMessageHandler;
 
-      webSocket.current.onerror = e => {
-        console.log(e);
+      webSocket.current.onerror = () => {
         setTimeout(() => {
           connectWebSocket();
         }, 1000);
@@ -165,19 +164,16 @@ const ChatInput = (props: ChatInputProps) => {
   const createDirectChatRoom = useCallback(async () => {
     if (userId && myId) {
       try {
-        console.log('create Direct chat room');
         const res = await chatRoomMutation.mutateAsync({
           adminUserId: myId,
           membersUserIds: [myId, userId],
           isGroupChat: false,
           isPrivate: true,
         });
-        console.log(res);
         nav.setParams({
           chatRoomId: res.id,
         });
       } catch (e) {
-        console.log(e);
         onShow('채팅방 생성에 실패했습니다.', 'error');
       }
     }
@@ -206,7 +202,6 @@ const ChatInput = (props: ChatInputProps) => {
         await createDirectChatRoom();
       } else {
         // TODO: error handling
-        console.log('No user id', userId, myId);
         nav.navigate('ChatList');
       }
     }

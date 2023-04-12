@@ -5,37 +5,38 @@ import {
   postRegister,
   putMyInfo,
 } from '@api/api';
-import { Alert } from 'react-native';
 import { AxiosError } from 'axios';
-import { clear } from '/store/secureStore';
+import { useSnackBarActions } from '../context/useSnackbar';
 
 export function useRegisterMutation() {
+  const { onShow } = useSnackBarActions();
   return useMutation({
     mutationFn: postRegister,
     onError: (error: Error) => {
-      Alert.alert(`회원가입에 실패하였습니다: ${error.message}`);
+      onShow(`회원가입에 실패하였습니다: ${error.message}`, 'error');
     },
-    onSuccess(data) {
-      Alert.alert(`회원가입에 성공하였습니다!: ${data.token}`);
+    onSuccess() {
+      onShow('회원가입에 성공하였습니다!', 'success');
     },
   });
 }
 
 export function useGetUserInfoQuery(id: string) {
+  const { onShow } = useSnackBarActions();
   return useQuery({
     queryKey: ['getUserInfo', id],
     queryFn: () => getUserInfo(id),
     retry: 1,
     onError: async (error: AxiosError) => {
-      Alert.alert(`유저 정보를 가져오는데 실패하였습니다: ${error.message}`);
-      // TODO: Refactor this
-      if (error.response?.status === 404 || error.response?.status === 500) {
-        clear('token');
-        clear('refreshToken');
-        clear('phoneNumber');
+      if (error.status === 404) {
+        onShow('존재하지 않는 유저입니다.', 'error');
+      } else if (error.status === 500) {
+        onShow('서버에 문제가 발생하였습니다.', 'error');
+      } else if (error.status === 401) {
+        onShow('로그인이 필요합니다.', 'error');
+      } else {
+        onShow('유저 정보를 가져오는데 실패하였습니다.', 'error');
       }
-
-      console.log(error);
     },
     // Type myInfoRead
     suspense: true,
@@ -43,17 +44,23 @@ export function useGetUserInfoQuery(id: string) {
 }
 
 export function usePutMyInfoMutation() {
+  const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ user, img }: { user: UserUpdate; img: FormData }) =>
       putMyInfo(user, img),
     onError: (error: Error) => {
-      Alert.alert(`내 정보를 수정하는데 실패하였습니다: ${error.message}`);
-      console.log(error);
+      if (error instanceof AxiosError) {
+        onShow(
+          error.response?.data.message ?? '내 정보를 수정하는데 실패하였습니다',
+          'error',
+        );
+      } else {
+        onShow('내 정보를 수정하는데 실패하였습니다.', 'error');
+      }
     },
-    onSuccess(data) {
-      Alert.alert('내 정보를 수정하는데 성공하였습니다!');
-      console.log(data);
+    onSuccess() {
+      onShow('내 정보를 수정하였습니다.', 'success');
       // invalidate the query to refetch the data
       queryClient.invalidateQueries({ queryKey: ['getUserInfo', 'me'] });
     },
@@ -61,17 +68,13 @@ export function usePutMyInfoMutation() {
 }
 
 export function useGetRecommendedMatesQuery(limit: number = 3) {
+  const { onShow } = useSnackBarActions();
   return useQuery({
     queryKey: ['getRecommendedMates', limit],
     queryFn: () => getRecommendedMates(limit),
     retry: 1,
-    onError: async (error: AxiosError) => {
-      Alert.alert(
-        `매칭을 위한 정보를 가져오는데 실패하였습니다: ${error.message}`,
-      );
-    },
-    onSuccess(data) {
-      console.log(data);
+    onError: async () => {
+      onShow('매칭을 위한 정보를 가져오는데 실패하였습니다.', 'error');
     },
     suspense: true,
   });

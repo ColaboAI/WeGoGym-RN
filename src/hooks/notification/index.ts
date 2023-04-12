@@ -75,7 +75,6 @@ export function useNotification() {
     const handleAppStateChange = async (nextAppState: string) => {
       if (nextAppState === 'active') {
         const disNotifications = await notifee.getDisplayedNotifications();
-        console.log('disNotifications', disNotifications);
         disNotifications.forEach(async dn => {
           const {
             notification: { data },
@@ -86,7 +85,6 @@ export function useNotification() {
           if (data.type === 'text_message') {
             await queryClient.invalidateQueries(['chatList'], {
               refetchPage: (page: ChatRoomListResponse) => {
-                console.log('page', page);
                 const isTargetPage = page.items.some(
                   item => item.id === data.chat_room_id,
                 );
