@@ -6,7 +6,7 @@ import { PermissionsAndroid } from 'react-native';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import { Platform } from 'react-native';
 import { mmkv } from '/store/secureStore';
-import { convertObjectKeyToCamelCase } from '../util';
+import { convertObjectKeyToCamelCase } from 'utils/util';
 
 async function checkApplicationPermission() {
   if (Platform.OS === 'android') {
