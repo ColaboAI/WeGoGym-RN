@@ -39,7 +39,7 @@ export default function BodyInformationScreen({ navigation }: Props) {
           <TextInput
             style={style.textInput}
             mode="outlined"
-            label="나이"
+            label="생년월일"
             placeholder="ex) 19960624"
             keyboardType="numeric"
             value={age}
