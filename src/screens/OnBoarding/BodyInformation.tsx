@@ -17,7 +17,8 @@ export default function BodyInformationScreen({ navigation }: Props) {
   const [age, setAge] = React.useState<string>('');
   const [height, setHeight] = React.useState<string>('');
   const [weight, setWeight] = React.useState<string>('');
-
+  const ageRegex =
+    /^(19[0-9][0-9]|20\d{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])$/;
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -30,7 +31,6 @@ export default function BodyInformationScreen({ navigation }: Props) {
               color: theme.colors.secondary,
               fontWeight: 'bold',
               fontSize: 24,
-              // backgroundColor: '#000000',
             }}>
             신체 정보를 알려주세요.
           </Headline>
@@ -43,7 +43,7 @@ export default function BodyInformationScreen({ navigation }: Props) {
             placeholder="ex) 19960624"
             keyboardType="numeric"
             value={age}
-            error={age.length > 8 ? true : false}
+            error={ageRegex.test(age) ? false : true}
             onChangeText={value => setAge(value)}
           />
           <TextInput
@@ -69,8 +69,7 @@ export default function BodyInformationScreen({ navigation }: Props) {
           <Button
             mode="contained"
             disabled={
-              age.length === 0 ||
-              age.length > 8 ||
+              ageRegex.test(age) === false ||
               height.length === 0 ||
               weight.length === 0
             }
