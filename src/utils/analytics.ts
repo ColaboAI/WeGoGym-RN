@@ -1,7 +1,7 @@
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import analytics from '@react-native-firebase/analytics';
 import { Alert, Platform } from 'react-native';
-import { clear, getValueFor, save } from '/store/secureStore';
+import { getValueFor, save } from '/store/secureStore';
 export const requestPermissionToAnalytics = async () => {
   const myId = getValueFor('userId');
   const result = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
@@ -32,7 +32,7 @@ export const requestPermissionToAnalytics = async () => {
         {
           text: '거부',
           onPress: async () => {
-            clear('analytics');
+            save('analytics', 'false');
             await analytics().setAnalyticsCollectionEnabled(false);
           },
           style: 'cancel',

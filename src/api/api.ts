@@ -410,12 +410,12 @@ async function postVOC(voc: VOC): Promise<void> {
 async function checkPhoneNumber(phoneNumber: string): Promise<boolean> {
   try {
     const res = await apiClient.get<CheckUserInfoResponse>(
-      `/user/check/?phone_number=${phoneNumber}`,
+      `/user/check?phone_number=${phoneNumber}`,
     );
     return res.data.phoneNumberExists === true;
   } catch (e) {
     if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
+      Alert.alert(`${e.message}: ${e.response?.data.message}`);
     }
     throw e;
   }
@@ -425,12 +425,12 @@ async function checkPhoneNumber(phoneNumber: string): Promise<boolean> {
 async function checkUsername(username: string): Promise<boolean> {
   try {
     const res = await apiClient.get<CheckUserInfoResponse>(
-      `/user/check/?username=${username}`,
+      `/user/check?username=${username}`,
     );
     return res.data.usernameExists === true;
   } catch (e) {
     if (e instanceof AxiosError) {
-      Alert.alert(e.response?.data.message);
+      Alert.alert(`${e.code} ${e.message}: ${e.response?.data.message}`);
     }
     throw e;
   }

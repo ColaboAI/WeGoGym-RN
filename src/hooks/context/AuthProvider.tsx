@@ -6,7 +6,12 @@ import React, {
   useState,
 } from 'react';
 import { save, getValueFor, clear, secureMmkv, mmkv } from '@store/secureStore';
-import { postLogin, postRegister, deleteUser } from 'api/api';
+import {
+  postLogin,
+  postRegister,
+  deleteUser,
+  refreshAccessToken,
+} from 'api/api';
 import { Alert } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import ReportBottomSheet from '/components/organisms/Common/ReportBottomSheet';
@@ -214,12 +219,18 @@ function AuthProvider({ children }: AuthProviderProps) {
     const bootstrapAsync = async () => {
       try {
         const isToken = await authActions.getTokenFromStorage();
-        const phoneNumber = getValueFor('phoneNumber');
+        const token = getValueFor('token');
+        const refreshToken = getValueFor('refreshToken');
         if (!isToken) {
-          if (phoneNumber) {
-            await authActions.signIn(phoneNumber);
-          } else {
-            await authActions.signOut();
+          await authActions.signOut();
+        } else {
+          if (token && refreshToken) {
+            const { token: newToken, refreshToken: newRefreshToken } =
+              await refreshAccessToken({
+                token,
+                refreshToken,
+              });
+            await authActions.refreshToken(newToken, newRefreshToken);
           }
         }
       } catch (e) {
