@@ -77,7 +77,9 @@ function ReportBottomSheet({ targetId, type }: Props) {
     };
     try {
       await postVOC(_data);
-      Alert.alert('신고 접수가 완료되었습니다.');
+      Alert.alert(
+        '신고 접수가 완료되었습니다. 검토까지는 최대 24시간이 소요됩니다.',
+      );
     } catch (e) {
       Alert.alert('신고 접수에 실패했습니다.');
     } finally {
@@ -102,6 +104,15 @@ function ReportBottomSheet({ targetId, type }: Props) {
             신고 사유를 작성해주세요.
           </Text>
           <IconButton icon="close" size={24} onPress={onCloseSheet} />
+        </View>
+        <View style={styles.subtitleBox}>
+          <Text
+            variant="bodySmall"
+            style={{ color: theme.colors.onBackground }}>
+            신고 사유에 맞지 않는 신고를 했을 경우, 해당 신고는 처리되지
+            않습니다. 누적 신고 횟수가 3회 이상인 유저의 경우 서비스 이용이
+            제한될 수 있습니다.
+          </Text>
         </View>
         <View>
           <BottomSheetTextInput
@@ -184,6 +195,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     lineHeight: 24,
+  },
+  subtitleBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 12,
+    marginBottom: 12,
   },
   textLimitBox: {
     flexDirection: 'row',
