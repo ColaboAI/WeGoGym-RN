@@ -243,8 +243,12 @@ async function putMyFCMToken(token: string): Promise<void> {
 async function refreshAccessToken(
   param: RefreshTokenRequest,
 ): Promise<UserLoginResponse> {
-  const res = await apiClient.post('/auth/refresh', param);
-  return res.data;
+  try {
+    const res = await apiClient.post('/auth/refresh', param);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
 }
 
 async function getRecommendedMates(limit: number): Promise<RecommendedMate[]> {

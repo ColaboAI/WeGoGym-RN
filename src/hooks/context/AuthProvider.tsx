@@ -231,6 +231,8 @@ function AuthProvider({ children }: AuthProviderProps) {
                 refreshToken,
               });
             await authActions.refreshToken(newToken, newRefreshToken);
+          } else {
+            await authActions.signOut();
           }
         }
       } catch (e) {
