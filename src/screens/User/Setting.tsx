@@ -109,6 +109,12 @@ export default function SettingScreen() {
                 )
               }
             />
+            <List.Item
+              title="고객센터"
+              onPress={() =>
+                Alert.alert('아래 메일로 문의해주세요', 'colaboai@gmail.com')
+              }
+            />
           </View>
         </List.Section>
         {/* <List.Section>
@@ -160,6 +166,6 @@ const style = StyleSheet.create({
     flex: 1,
   },
   listContainer: {
-    margin: '2%',
+    margin: '1%',
   },
 });
