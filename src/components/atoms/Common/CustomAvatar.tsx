@@ -46,6 +46,6 @@ function CustomAvatar(props: Props) {
 export default CustomAvatar;
 
 const styles = StyleSheet.create({
-  avatarContainer: { borderRadius: 100 },
+  avatarContainer: { borderRadius: 100, alignSelf: 'center' },
   avatar: {},
 });

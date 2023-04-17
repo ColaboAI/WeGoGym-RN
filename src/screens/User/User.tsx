@@ -23,15 +23,17 @@ import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import { getDirectChatRoom } from '/api/api';
 import { getAge } from '/utils/util';
 import { useAuthActions } from '/hooks/context/useAuth';
+import UserBlockModal from '/components/organisms/Common/UserBlockModal';
 
 type Props = UserStackScreenProps<'User'>;
 export default function UserScreen({ navigation, route }: Props) {
   const id: string =
     route.params && route.params.userId ? route.params.userId : 'me';
-  const [isAuthenticated] = useState(true);
+  const [isAuthenticated] = useState(false);
   const { data } = useGetUserInfoQuery(id);
   const { reset } = useQueryErrorResetBoundary();
   const [menuVisible, setMenuVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { setReportBottomSheetOpen, setReportTarget } = useAuthActions();
 
   const handleDirectChatNav = useCallback(async () => {
@@ -117,6 +119,13 @@ export default function UserScreen({ navigation, route }: Props) {
                         setMenuVisible(false);
                       }}
                       title="신고하기"
+                    />
+                    <Menu.Item
+                      onPress={() => {
+                        setIsModalOpen(true);
+                        setMenuVisible(false);
+                      }}
+                      title="차단하기"
                     />
                   </Menu>
                 )}
@@ -325,6 +334,11 @@ export default function UserScreen({ navigation, route }: Props) {
               </View>
             </View>
           </ScrollView>
+          <UserBlockModal
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            userId={data?.id}
+          />
         </SafeAreaView>
       </ErrorBoundary>
     </Suspense>
