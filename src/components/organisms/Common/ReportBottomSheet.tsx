@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   buttonBox: {
-    margin: 12,
+    margin: '5%',
     borderRadius: 10,
   },
 });
