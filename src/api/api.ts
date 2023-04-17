@@ -440,6 +440,31 @@ async function checkUsername(username: string): Promise<boolean> {
   }
 }
 
+async function postBlockUser(userId: string): Promise<void> {
+  try {
+    await apiClient.post(`/user/block/${userId}`);
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function deleteBlockUser(userId: string): Promise<void> {
+  try {
+    await apiClient.delete(`/user/block/${userId}`);
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function getMyBlockedList(): Promise<RecommendedMate[]> {
+  try {
+    const res = await apiClient.get('/user/block');
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export {
   postLogin,
   postRegister,
@@ -472,4 +497,7 @@ export {
   postVOC,
   checkUsername,
   checkPhoneNumber,
+  postBlockUser,
+  deleteBlockUser,
+  getMyBlockedList,
 };
