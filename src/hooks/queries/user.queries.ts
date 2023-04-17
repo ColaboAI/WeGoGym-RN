@@ -4,6 +4,7 @@ import {
   getRecommendedMates,
   postRegister,
   putMyInfo,
+  getMyBlockedList,
 } from '@api/api';
 import { AxiosError } from 'axios';
 import { useSnackBarActions } from '../context/useSnackbar';
@@ -77,5 +78,17 @@ export function useGetRecommendedMatesQuery(limit: number = 3) {
       onShow('매칭을 위한 정보를 가져오는데 실패하였습니다.', 'error');
     },
     suspense: true,
+  });
+}
+
+export function useGetMyBlockedListQuery() {
+  const { onShow } = useSnackBarActions();
+  return useQuery({
+    queryKey: ['getMyBlockedList'],
+    queryFn: getMyBlockedList,
+    retry: 1,
+    onError: async () => {
+      onShow('차단한 유저 목록을 가져오는데 실패하였습니다.', 'error');
+    },
   });
 }
