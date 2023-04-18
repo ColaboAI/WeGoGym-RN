@@ -167,16 +167,14 @@ export default function SettingScreen() {
           </View>
         </List.Section>
         <List.Section>
-          <List.Subheader>커뮤니티</List.Subheader>
+          <List.Subheader>앱 이용</List.Subheader>
           <View style={style.listContainer}>
             <List.Item
-              title="디스코드"
-              onPress={() => Linking.openURL('https://discord.gg/PCQEujn2')}
-            />
-            <List.Item
-              title="인스타그램"
+              title="안내 및 공지사항"
               onPress={() =>
-                Linking.openURL('https://www.instagram.com/wegogym.official/')
+                Linking.openURL(
+                  'https://colaboai.notion.site/WeGoGym-cf3200d73cee4f64b917a99b18f0634c',
+                )
               }
             />
             {/* TODO: voc Item 넣기 */}
