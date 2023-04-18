@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "465388501088-4jafrnnijn9rssfhbqo0pbsd1b3l3igh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wegogym",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "465388501088-svdc5qsmvhd0svhinkg24i243htlh96r.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -31,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "465388501088-ggbd08jgpi0lpr80tamupukdhesss5of.apps.googleusercontent.com",
+              "client_id": "465388501088-0drp37ri44vp0fpchbjspn5pfnkr3p87.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "WeGoGym.ios"
+                "bundle_id": "ml.colabo.WeGoGym"
               }
             }
           ]
