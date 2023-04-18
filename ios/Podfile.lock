@@ -520,10 +520,10 @@ PODS:
     - RNFBApp
   - RNGestureHandler (2.9.0):
     - React-Core
-  - RNNotifee (7.6.1):
+  - RNNotifee (7.7.1):
     - React-Core
-    - RNNotifee/NotifeeCore (= 7.6.1)
-  - RNNotifee/NotifeeCore (7.6.1):
+    - RNNotifee/NotifeeCore (= 7.7.1)
+  - RNNotifee/NotifeeCore (7.7.1):
     - React-Core
   - RNPermissions (3.8.0):
     - React-Core
@@ -821,7 +821,7 @@ SPEC CHECKSUMS:
   RNFBAuth: d30acc0f5f169bc28c7fcbf1b45cd061cc647590
   RNFBMessaging: d365361650cc697294227e1280923f35a31d2501
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
-  RNNotifee: bdc064c29f4d558046f51f0c3ae02bab4fd3cd85
+  RNNotifee: 05692d7bb42b6c718a3906aeb8431c48ff2e8097
   RNPermissions: df77613085e5cb11abbe34322bbf1f46c5a02fef
   RNReanimated: f0dd6b881808e635ef0673f89642937d6c141314
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f

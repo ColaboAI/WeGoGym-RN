@@ -1536,10 +1536,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@notifee/react-native@^7.6.1":
-  version "7.6.1"
-  resolved "https://registry.yarnpkg.com/@notifee/react-native/-/react-native-7.6.1.tgz#e215428787396ec57ea424106cc88666f7efe70d"
-  integrity sha512-OjhLPODh6FICYZmF9/0UZbcl2JPaPpcrWi1Cvs/OLFbPSJTIEwPZgXFrCHv/cA3wUX4YQCXreSqQGSVQgvNItQ==
+"@notifee/react-native@^7.7.1":
+  version "7.7.1"
+  resolved "https://registry.yarnpkg.com/@notifee/react-native/-/react-native-7.7.1.tgz#ce3f982fb7354519406cb7716f8e861bab0056ce"
+  integrity sha512-E+W91ulI4dxdIrhK6YCyjWqXgrUsVNZYYCSn3gDADmveuR2Yd2uGvbbSW2vUIFU4N4gQQT/5HJdk9Jk83KHbVA==
 
 "@react-native-community/cli-clean@^10.1.1":
   version "10.1.1"
@@ -1751,7 +1751,7 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-17.4.2.tgz#f1d2e6e7dcb7152ef29962d5bbcb653194a6385f"
   integrity sha512-hWidKfex0Yv/1cJ+WPQ/UMwSoSFnehEn3CQBhFTSKXdo8OrIymCpv74/9q3IWpvBRICCtgbRF8ZpqITJv6TCmA==
 
-"@react-native-firebase/app@^17.3.2":
+"@react-native-firebase/app@^17.4.2":
   version "17.4.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.4.2.tgz#29c1959fbc7cd15dc73bcd01c8a228021c8b5c5a"
   integrity sha512-8oj29shxA2lxwmOxpxJ/nHVSEqK5ebHJW1WUKIBwcLTvfi+EFI7CKzPG+BFpYtdapH5BuK+yQjuReRNBy+oQjQ==
@@ -1760,7 +1760,7 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/auth@^17.3.2":
+"@react-native-firebase/auth@^17.4.2":
   version "17.4.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-17.4.2.tgz#d8994ccc99567ad8d5c8af0d99b9455abaffe2fb"
   integrity sha512-JF6e7vMdHJelos42DqtlPurzzhFBb3OtYeCjhaOmyWwToD1tvCGGO1GkiXbWZcZIOuL6SCXBwvtvCHac+9YZXA==
@@ -1768,7 +1768,7 @@
     "@expo/config-plugins" "^5.0.4"
     plist "^3.0.5"
 
-"@react-native-firebase/messaging@^17.3.2":
+"@react-native-firebase/messaging@^17.4.2":
   version "17.4.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-17.4.2.tgz#ebc589bd0e77783f4b4330d71287fd150f9dc120"
   integrity sha512-WgqDFjx4JfCed459jrFtzYcejIoBbQKBKGM5lSjmH/cIGU+5Kp9g0x5QNrXdZL5dNo91bW+jJB/6JMjOLH56fw==

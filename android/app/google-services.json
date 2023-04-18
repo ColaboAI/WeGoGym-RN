@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "465388501088-4jafrnnijn9rssfhbqo0pbsd1b3l3igh.apps.googleusercontent.com",
+          "client_id": "465388501088-dlnd0masu2gae10sjdk1ogekqmni22hm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.wegogym",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "certificate_hash": "ef7295764d076ae18c895e2798318bfa64c5a78d"
           }
         },
         {
