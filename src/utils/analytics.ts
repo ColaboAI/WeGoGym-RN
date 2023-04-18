@@ -1,54 +1,33 @@
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import analytics from '@react-native-firebase/analytics';
-import { Alert, Platform } from 'react-native';
-import { getValueFor, save } from '/store/secureStore';
+import { getValueFor } from '/store/secureStore';
+import { Platform } from 'react-native';
 export const requestPermissionToAnalytics = async () => {
-  const result = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
-  if (result === RESULTS.DENIED) {
-    // The permission has not been requested, so request it.
-    const res = await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
-    if (res === RESULTS.GRANTED) {
-      // The permission has been granted.
+  if (Platform.OS === 'ios') {
+    const result = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+    if (result === RESULTS.DENIED) {
+      // The permission has not been requested, so request it.
+      const res = await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+      if (res === RESULTS.GRANTED) {
+        // The permission has been granted.
+        const myId = getValueFor('userId');
+        await analytics().setAnalyticsCollectionEnabled(true);
+        if (myId) {
+          await analytics().setUserId(myId);
+        }
+      }
+    } else if (result === RESULTS.GRANTED) {
       const myId = getValueFor('userId');
       await analytics().setAnalyticsCollectionEnabled(true);
-      await analytics().setUserId(myId);
+      if (myId) {
+        await analytics().setUserId(myId);
+      }
     }
-  } else if (result === RESULTS.GRANTED) {
+  } else if (Platform.OS === 'android') {
     const myId = getValueFor('userId');
     await analytics().setAnalyticsCollectionEnabled(true);
-    await analytics().setUserId(myId);
-  }
-
-  if (Platform.OS === 'android') {
-    const analyticsEnabled = getValueFor('analytics');
-
-    if (analyticsEnabled) {
-      return;
+    if (myId) {
+      await analytics().setUserId(myId);
     }
-
-    Alert.alert(
-      'WeGoGym은 앱 성능 개선을 위해 이용자의 앱 사용 정보를 수집합니다.',
-      '수집된 정보는 이용자의 개인정보가 아니며, 이용자의 개인정보를 포함하지 않습니다.',
-      [
-        {
-          text: '거부',
-          onPress: async () => {
-            save('analytics', 'false');
-            await analytics().setAnalyticsCollectionEnabled(false);
-          },
-          style: 'cancel',
-        },
-        {
-          text: '허용',
-          onPress: async () => {
-            const myId = getValueFor('userId');
-            save('analytics', 'true');
-            await analytics().setAnalyticsCollectionEnabled(true);
-            await analytics().setUserId(myId);
-          },
-          style: 'destructive',
-        },
-      ],
-    );
   }
 };

@@ -114,6 +114,11 @@ export function useNotification() {
   }, [navigation, onInitialNotification, queryClient]);
 
   useEffect(() => {
+    if (AppState.currentState === 'active') {
+      checkPermission();
+      return () => {};
+    }
+
     const listener = AppState.addEventListener('change', status => {
       if (status === 'active') {
         checkPermission();
