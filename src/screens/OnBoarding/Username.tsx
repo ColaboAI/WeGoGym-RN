@@ -4,6 +4,8 @@ import {
   SafeAreaView,
   Keyboard,
   TouchableWithoutFeedback,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React from 'react';
 import { Button, Headline, TextInput, useTheme } from 'react-native-paper';
@@ -12,6 +14,7 @@ import { save } from '@store/secureStore';
 import { AuthStackScreenProps } from 'navigators/types';
 import { checkUsername } from '/api/api';
 import { useSnackBarActions } from '/hooks/context/useSnackbar';
+import CustomToolbar from '/components/organisms/CustomToolbar';
 type Props = AuthStackScreenProps<'Username'>;
 export default function UsernameScreen({ navigation }: Props) {
   const theme = useTheme();
@@ -29,39 +32,46 @@ export default function UsernameScreen({ navigation }: Props) {
   }, [navigation, onShow, username]);
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}>
-      <SafeAreaView style={style.container}>
-        <View style={style.headlineBox}>
-          <Headline
-            style={{
-              color: theme.colors.secondary,
-              fontWeight: 'bold',
-              fontSize: 24,
-            }}>
-            저희가 어떻게 불러드리면 될까요?
-          </Headline>
-        </View>
-        <View style={style.textInputBox}>
-          <TextInput
-            mode="outlined"
-            label="닉네임"
-            value={username}
-            onChangeText={value => setUsername(value)}
-          />
-        </View>
-        <View style={style.buttonBox}>
-          <Button
-            mode="contained"
-            disabled={username.length < 1}
-            onPress={handlePress}>
-            확인
-          </Button>
-        </View>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={style.container}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}>
+        <SafeAreaView style={style.container}>
+          <View style={style.headlineBox}>
+            <Headline
+              style={{
+                color: theme.colors.secondary,
+                fontWeight: 'bold',
+                fontSize: 24,
+              }}>
+              저희가 어떻게 불러드리면 될까요?
+            </Headline>
+          </View>
+          <View style={style.textInputBox}>
+            <TextInput
+              mode="outlined"
+              label="닉네임"
+              value={username}
+              inputAccessoryViewID="usernameConfirmBtn"
+              onChangeText={value => setUsername(value)}
+            />
+          </View>
+          <CustomToolbar nativeID="usernameConfirmBtn">
+            <View style={style.buttonBox}>
+              <Button
+                mode="contained"
+                disabled={username.length < 1}
+                onPress={handlePress}>
+                확인
+              </Button>
+            </View>
+          </CustomToolbar>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 const style = StyleSheet.create({
@@ -71,18 +81,21 @@ const style = StyleSheet.create({
   headlineBox: {
     flex: 1,
     margin: '5%',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
   },
   textInputBox: {
-    flex: 1,
+    flex: 2,
     width: '90%',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     margin: '5%',
   },
   buttonBox: {
-    flex: 3,
+    flex: 1,
     width: '90%',
-    justifyContent: 'flex-start',
-    margin: '5%',
+
+    justifySelf: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: Platform.OS === 'ios' ? '5%' : '0%',
+    paddingBottom: Platform.OS === 'ios' ? 5 : 0,
   },
 });

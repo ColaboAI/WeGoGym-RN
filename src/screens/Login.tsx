@@ -67,7 +67,7 @@ const style = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   imageBox: {
-    flexGrow: 2,
+    flexGrow: 1,
     justifyContent: 'center',
   },
   buttonBox: {
@@ -76,5 +76,5 @@ const style = StyleSheet.create({
     justifyContent: 'space-evenly',
     bottom: '5%',
   },
-  button: { paddingVertical: 10 },
+  button: { paddingVertical: '5%' },
 });

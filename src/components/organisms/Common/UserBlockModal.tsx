@@ -64,10 +64,7 @@ const UserBlockModal = (props: Props) => {
       snapPoints={Platform.OS === 'ios' ? iosSnapPoints : androidSnapPoints}
       enablePanDownToClose={true}
       backgroundStyle={{ backgroundColor: theme.colors.background }}
-      onClose={() => {
-        props.setIsModalOpen(false);
-        bottomSheetRef.current?.close();
-      }}
+      onClose={closeModal}
       style={styles.bottomSheet}
       backdropComponent={renderBackdrop}>
       <BottomSheetView style={styles.container}>

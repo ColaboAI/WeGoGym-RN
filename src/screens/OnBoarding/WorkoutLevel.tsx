@@ -72,7 +72,7 @@ const style = StyleSheet.create({
   headlineBox: {
     flex: 1,
     margin: '5%',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
   },
   workoutLevelBox: {
     flex: 2,
@@ -84,7 +84,7 @@ const style = StyleSheet.create({
     margin: '1%',
   },
   buttonBox: {
-    flex: 2,
+    flex: 1,
     width: '90%',
     alignSelf: 'center',
     margin: '5%',

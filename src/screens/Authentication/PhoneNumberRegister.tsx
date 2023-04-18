@@ -1,12 +1,12 @@
 import {
   StyleSheet,
   View,
-  SafeAreaView,
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
   Linking,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, { useCallback, useEffect } from 'react';
 import {
@@ -118,11 +118,13 @@ export default function PhoneNumberScreen({ navigation }: Props) {
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}>
-      <SafeAreaView style={style.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={style.container}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}>
         {confirm === null ? (
           <>
             <View style={style.headlineBox}>
@@ -256,8 +258,8 @@ export default function PhoneNumberScreen({ navigation }: Props) {
             </CustomToolbar>
           </>
         )}
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 const style = StyleSheet.create({
@@ -270,7 +272,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   textInputBox: {
-    flex: 3,
+    flexShrink: 1,
     width: '90%',
     justifyContent: 'flex-start',
     margin: '5%',

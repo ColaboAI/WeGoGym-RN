@@ -101,7 +101,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   textInputBox: {
-    flex: 3,
+    flex: 2,
     width: '90%',
     justifyContent: 'flex-start',
     margin: '5%',
