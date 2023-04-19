@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeStackScreen, ChatStackScreen, UserStackScreen } from '.';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { BottomTabParamList } from './types';
 import { useTheme } from 'react-native-paper';
+import { onAppBootstrap } from '/hooks/notification';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 // Tab Navigator: Main Root Navigator
@@ -12,6 +13,9 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const MainNavigator = () => {
   const theme = useTheme();
+  useEffect(() => {
+    onAppBootstrap();
+  }, []);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

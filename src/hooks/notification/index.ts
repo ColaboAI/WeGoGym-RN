@@ -14,7 +14,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { AppState } from 'react-native';
 import { requestPermissionToAnalytics } from '/utils/analytics';
 
-async function onAppBootstrap() {
+export async function onAppBootstrap() {
+  // Register the device with FCM
+  await messaging().registerDeviceForRemoteMessages();
   // Get the token
   const wggAccessToken = getValueFor('token');
   if (!wggAccessToken) {
@@ -105,8 +107,6 @@ export function useNotification() {
     AppState.addEventListener('change', handleAppStateChange);
   }, [queryClient]);
   useEffect(() => {
-    // FcmToken을 서버에 저장
-    onAppBootstrap();
     // 앱이 foreground에서 Notification을 받았을 때
     messaging().onMessage(onMessageInForeground);
     // 알람을 눌러서 앱이 실행되었을 때
