@@ -41,6 +41,34 @@ export default function PhoneNumberScreen({ navigation }: Props) {
   const [isAgreedToS, setIsAgreedToS] = React.useState<boolean>(false);
   const [isAgreedPP, setIsAgreedPP] = React.useState<boolean>(false);
 
+  const [isLoadingSendSMS, setIsLoadingSendSMS] =
+    React.useState<boolean>(false);
+  // Handle login
+  const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
+    if (user) {
+      // Some Android devices can automatically process the verification code (OTP) message, and the user would NOT need to enter the code.
+      // Actually, if he/she tries to enter it, he/she will get an error message because the code was already used in the background.
+      // In this function, make sure you hide the component(s) for entering the code and/or navigate away from this screen.
+      // It is also recommended to display a message to the user informing him/her that he/she has successfully logged in.
+      Alert.alert('인증이 완료되었습니다.');
+      navigation.navigate('Username');
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged);
+    return () => {
+      unsubscribe();
+      setConfirm(null);
+      setCode('');
+      setPhoneNumber('');
+      setIsAgreedPP(false);
+      setIsAgreedToS(false);
+      setPhoneNumberButtonReady(false);
+    }; // unsubscribe on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // clean up
   useEffect(() => {
     return () => {
@@ -56,11 +84,14 @@ export default function PhoneNumberScreen({ navigation }: Props) {
   }, []);
 
   async function signInWithPhoneNumber(_phoneNumber: string) {
+    setIsLoadingSendSMS(true);
     save('phoneNumber', phoneNumber);
+
     const isPhoneNumberExist = await checkPhoneNumber(_phoneNumber);
     if (isPhoneNumberExist) {
       Alert.alert('이미 가입된 휴대폰 번호입니다. 로그인 페이지로 이동합니다.');
       navigation.replace('PhoneNumberLogin');
+      setIsLoadingSendSMS(false);
       return;
     }
     const fbAuth = auth();
@@ -78,6 +109,8 @@ export default function PhoneNumberScreen({ navigation }: Props) {
         Alert.alert('오류가 발생했습니다.', err.message);
         setIsButtonClicked(false);
       }
+    } finally {
+      setIsLoadingSendSMS(false);
     }
   }
 
@@ -206,6 +239,7 @@ export default function PhoneNumberScreen({ navigation }: Props) {
               <View style={style.buttonBox}>
                 <Button
                   mode="contained"
+                  loading={isLoadingSendSMS}
                   disabled={
                     phoneNumberButtonReady && isAgreedPP && isAgreedToS
                       ? false
