@@ -44,24 +44,26 @@ export default function PhoneNumberScreen({ navigation }: Props) {
   const [isLoadingSendSMS, setIsLoadingSendSMS] =
     React.useState<boolean>(false);
   // Handle login
-  const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
-    if (user) {
-      // Some Android devices can automatically process the verification code (OTP) message, and the user would NOT need to enter the code.
-      // Actually, if he/she tries to enter it, he/she will get an error message because the code was already used in the background.
-      // In this function, make sure you hide the component(s) for entering the code and/or navigate away from this screen.
-      // It is also recommended to display a message to the user informing him/her that he/she has successfully logged in.
-      Alert.alert('인증이 완료되었습니다.');
-      navigation.navigate('Username');
-    }
-  };
+  const onAuthStateChanged = useCallback(
+    (user: FirebaseAuthTypes.User | null) => {
+      if (user) {
+        // Some Android devices can automatically process the verification code (OTP) message, and the user would NOT need to enter the code.
+        // Actually, if he/she tries to enter it, he/she will get an error message because the code was already used in the background.
+        // In this function, make sure you hide the component(s) for entering the code and/or navigate away from this screen.
+        // It is also recommended to display a message to the user informing him/her that he/she has successfully logged in.
+        Alert.alert('인증이 완료되었습니다.');
+        navigation.navigate('Username');
+      }
+    },
+    [navigation],
+  );
 
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged);
     return () => {
       unsubscribe();
     }; // unsubscribe on unmount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onAuthStateChanged]);
 
   // clean up
   useEffect(() => {
