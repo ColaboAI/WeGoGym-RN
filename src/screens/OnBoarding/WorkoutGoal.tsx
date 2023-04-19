@@ -88,7 +88,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   workoutGoalBox: {
-    flexGrow: 2,
+    flex: 2,
     width: '90%',
     justifyContent: 'center',
     margin: '5%',
