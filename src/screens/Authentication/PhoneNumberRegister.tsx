@@ -59,12 +59,6 @@ export default function PhoneNumberScreen({ navigation }: Props) {
     const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged);
     return () => {
       unsubscribe();
-      setConfirm(null);
-      setCode('');
-      setPhoneNumber('');
-      setIsAgreedPP(false);
-      setIsAgreedToS(false);
-      setPhoneNumberButtonReady(false);
     }; // unsubscribe on unmount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
