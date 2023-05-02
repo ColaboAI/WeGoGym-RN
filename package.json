@@ -13,7 +13,7 @@
     "postinstall": "react-native setup-ios-permissions && patch-package"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "5.0.0-alpha.0",
+    "@gorhom/bottom-sheet": "4.4.6",
     "@notifee/react-native": "^7.7.1",
     "@react-native-community/datetimepicker": "^6.7.5",
     "@react-native-firebase/analytics": "^17.4.2",
