@@ -50,8 +50,6 @@ async function saveMessageToMMKV(data: { [key: string]: string }) {
   }
 }
 
-// TODO: MMKV에 current message 저장 후 => 앱이 실행되면 해당 메시지를 client에 최신화, MMKV에서 삭제
-// TODO: 앱 실행 중인 경우 알람 보이지 않게?
 async function onMessageInBackground(
   message: FirebaseMessagingTypes.RemoteMessage,
 ) {
@@ -69,7 +67,6 @@ async function onMessageInBackground(
     }
     // TODO: increment badge count is not working
   }
-  await notifee.incrementBadgeCount();
   await notifee.displayNotification({
     title: message.notification?.title || 'Wegogym',
     body: message.notification?.body || 'Wegogym',
@@ -86,6 +83,7 @@ async function onMessageInBackground(
       sound: 'default',
     },
   });
+  await notifee.incrementBadgeCount(0);
 }
 
 async function onMessageInForeground(
@@ -112,7 +110,6 @@ async function onMessageInForeground(
       return;
     }
   }
-  await notifee.incrementBadgeCount();
   await notifee.displayNotification({
     title: message.notification?.title || 'Wegogym',
     body: message.notification?.body || 'Wegogym',
@@ -130,6 +127,7 @@ async function onMessageInForeground(
       sound: 'default',
     },
   });
+  await notifee.incrementBadgeCount();
 }
 
 export {
