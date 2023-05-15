@@ -167,13 +167,15 @@ export function useChatRoomMutation() {
             };
           }
           const newPage0 = {
-            ...oldData.pages[0],
+            nextCursor: oldData.pages[0].nextCursor
+              ? oldData.pages[0].nextCursor + 1
+              : null,
             items: [data, ...oldData.pages[0].items],
             total: oldData.pages[0].total + 1,
           };
           return {
-            ...oldData,
             pages: [newPage0, ...oldData.pages.slice(1)],
+            pageParams: [...oldData.pageParams],
           };
         },
       );
