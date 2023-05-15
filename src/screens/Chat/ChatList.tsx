@@ -111,7 +111,6 @@ function ChatList({ navigation }: ChatListScreenProps) {
             if (hasNextPage) {
               fetchNextPage();
             }
-            console.log('onEndReached');
           }}
           onEndReachedThreshold={0.7}
         />
