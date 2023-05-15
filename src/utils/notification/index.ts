@@ -65,7 +65,6 @@ async function onMessageInBackground(
     if (data.type === 'text_message') {
       await saveMessageToMMKV(data);
     }
-    // TODO: increment badge count is not working
   }
   await notifee.displayNotification({
     title: message.notification?.title || 'Wegogym',
@@ -83,7 +82,7 @@ async function onMessageInBackground(
       sound: 'default',
     },
   });
-  await notifee.incrementBadgeCount(0);
+  await notifee.incrementBadgeCount();
 }
 
 async function onMessageInForeground(
@@ -107,7 +106,6 @@ async function onMessageInForeground(
         return;
       }
       await saveMessageToMMKV(data);
-      return;
     }
   }
   await notifee.displayNotification({
@@ -120,7 +118,7 @@ async function onMessageInForeground(
         launchActivity: 'default',
       },
       sound: 'default',
-      vibrationPattern: [300],
+      vibrationPattern: [300, 500],
     },
     ios: {
       categoryId: 'mark-as-read',
