@@ -69,6 +69,7 @@ async function onMessageInBackground(
     }
     // TODO: increment badge count is not working
   }
+  await notifee.incrementBadgeCount();
   await notifee.displayNotification({
     title: message.notification?.title || 'Wegogym',
     body: message.notification?.body || 'Wegogym',
@@ -78,12 +79,13 @@ async function onMessageInBackground(
         id: 'mark-as-read',
         launchActivity: 'default',
       },
+      sound: 'default',
     },
     ios: {
       categoryId: 'mark-as-read',
+      sound: 'default',
     },
   });
-  await notifee.incrementBadgeCount();
 }
 
 async function onMessageInForeground(
@@ -103,10 +105,14 @@ async function onMessageInForeground(
 
   if (data) {
     if (data.type === 'text_message') {
+      if (data.chat_room_id === mmkv.getString('currentChatRoomId')) {
+        return;
+      }
       await saveMessageToMMKV(data);
       return;
     }
   }
+  await notifee.incrementBadgeCount();
   await notifee.displayNotification({
     title: message.notification?.title || 'Wegogym',
     body: message.notification?.body || 'Wegogym',
@@ -116,9 +122,12 @@ async function onMessageInForeground(
         id: 'mark-as-read',
         launchActivity: 'default',
       },
+      sound: 'default',
+      vibrationPattern: [300],
     },
     ios: {
       categoryId: 'mark-as-read',
+      sound: 'default',
     },
   });
 }
