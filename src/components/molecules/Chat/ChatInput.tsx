@@ -8,7 +8,6 @@ import {
   UseMutationResult,
   useQueryClient,
 } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 import { getValueFor } from '/store/secureStore';
 import { WS_URL } from '/api/client';
 import { useSnackBarActions } from '/hooks/context/useSnackbar';
@@ -21,7 +20,7 @@ export type ChatInputProps = ChatParamList & {
   setIsTyping: (typing: boolean) => void;
   chatRoomMutation: UseMutationResult<
     ChatRoom,
-    AxiosError<unknown, any>,
+    CustomError,
     ChatRoomCreate,
     unknown
   >;
