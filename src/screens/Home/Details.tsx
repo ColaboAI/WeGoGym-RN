@@ -463,7 +463,11 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                     <Button
                       mode="contained"
                       onPress={onRecruitEnd}
-                      style={style.button}>
+                      style={style.button}
+                      disabled={
+                        isAcceptedParticipant(query.data.participants).length <
+                        2
+                      }>
                       모집 완료
                     </Button>
                   ) : isRecruitedEnded(query.data.status) ? (
