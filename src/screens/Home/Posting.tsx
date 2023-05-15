@@ -26,8 +26,8 @@ import { useWorkoutMutation } from '/hooks/queries/workout.queries';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const MAX_NUMBER = 5;
-const MIN_NUMBER = 1;
+const MAX_NUMBER = 10;
+const MIN_NUMBER = 2;
 
 type HomeScreenProps = HomeStackScreenProps<'Posting'>;
 
