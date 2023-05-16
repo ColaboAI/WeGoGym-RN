@@ -60,9 +60,8 @@ export default function PhoneNumberScreen({ navigation }: Props) {
 
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged);
-    return () => {
-      unsubscribe();
-    }; // unsubscribe on unmount
+    return unsubscribe;
+    // unsubscribe on unmount
   }, [onAuthStateChanged]);
 
   // clean up

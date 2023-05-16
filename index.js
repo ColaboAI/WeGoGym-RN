@@ -13,14 +13,6 @@ TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.autoCorrect = false;
 TextInput.defaultProps.allowFontScaling = false;
 
-function HeadlessCheck({ isHeadless }) {
-  if (isHeadless) {
-    // App has been launched in the background by iOS, ignore
-    return null;
-  }
-  return <Main />;
-}
-
 messaging().setBackgroundMessageHandler(onMessageInBackground);
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   const { notification, pressAction } = detail;
@@ -41,5 +33,13 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
     await notifee.cancelNotification(notification.id);
   }
 });
+
+function HeadlessCheck({ isHeadless }) {
+  if (isHeadless) {
+    // App has been launched in the background by iOS, ignore
+    return null;
+  }
+  return <Main />;
+}
 
 AppRegistry.registerComponent(appName, () => HeadlessCheck);

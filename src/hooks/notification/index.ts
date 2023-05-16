@@ -110,9 +110,11 @@ export function useNotification() {
   }, [queryClient]);
   useEffect(() => {
     // 앱이 foreground에서 Notification을 받았을 때
-    messaging().onMessage(onMessageInForeground);
+    const unsub = messaging().onMessage(onMessageInForeground);
     // 알람을 눌러서 앱이 실행되었을 때
     onInitialNotification();
+
+    return unsub;
   }, [navigation, onInitialNotification, queryClient]);
 
   useEffect(() => {
