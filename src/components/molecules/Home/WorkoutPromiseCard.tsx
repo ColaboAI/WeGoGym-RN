@@ -18,7 +18,7 @@ const WorkoutPromiseCard = ({
   maxParticipants,
   promiseTime,
   gymInfo,
-  updatedAt,
+  createdAt,
   participants,
 }: WorkoutPromiseRead) => {
   // admin user 탈퇴 대응
@@ -99,7 +99,7 @@ const WorkoutPromiseCard = ({
                   <Text
                     variant="labelSmall"
                     style={{ color: theme.colors.onBackground }}>
-                    {getRelativeTime(updatedAt)}
+                    {getRelativeTime(createdAt)}
                   </Text>
                 </View>
               </>
