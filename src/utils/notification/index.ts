@@ -85,6 +85,7 @@ async function onMessageInBackground(
   await notifee.incrementBadgeCount();
 }
 
+// TODO: handle notification when app is in foreground (duplicate notification)
 async function onMessageInForeground(
   message: FirebaseMessagingTypes.RemoteMessage,
 ) {
