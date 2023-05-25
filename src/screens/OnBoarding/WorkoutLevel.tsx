@@ -60,7 +60,7 @@ export default function WorkoutLevelScreen({ navigation }: Props) {
           disabled={!workoutLevel}
           onPress={() => {
             save('workoutLevel', workoutLevel);
-            navigation.navigate('WorkoutGoal');
+            navigation.navigate('WorkoutStyleAndRoutine');
           }}>
           확인
         </Button>
