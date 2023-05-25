@@ -1,6 +1,6 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
-import { Button, Headline, useTheme } from 'react-native-paper';
+import { Button, Headline, useTheme, Text } from 'react-native-paper';
 import { save } from '@store/secureStore';
 import { AuthStackScreenProps } from 'navigators/types';
 
@@ -25,6 +25,9 @@ export default function WorkoutTimePerDayScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={style.container}>
+      <Text style={[style.helperTextBox, { color: theme.colors.outline }]}>
+        프로필을 완성하기 위해 몇 가지만 여쭤볼게요. 잠깐이면 됩니다!
+      </Text>
       <View style={style.headlineBox}>
         <Headline
           style={{
@@ -60,6 +63,12 @@ export default function WorkoutTimePerDayScreen({ navigation }: Props) {
 const style = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  helperTextBox: {
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    fontSize: 12,
+    marginHorizontal: '5%',
   },
   headlineBox: {
     flex: 1,

@@ -8,7 +8,13 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import React from 'react';
-import { Button, Headline, TextInput, useTheme } from 'react-native-paper';
+import {
+  Button,
+  Headline,
+  TextInput,
+  useTheme,
+  Text,
+} from 'react-native-paper';
 import { save } from '@store/secureStore';
 
 import { AuthStackScreenProps } from 'navigators/types';
@@ -40,6 +46,9 @@ export default function UsernameScreen({ navigation }: Props) {
           Keyboard.dismiss();
         }}>
         <SafeAreaView style={style.container}>
+          <Text style={[style.helperTextBox, { color: theme.colors.outline }]}>
+            프로필을 완성하기 위해 몇 가지만 여쭤볼게요. 잠깐이면 됩니다!
+          </Text>
           <View style={style.headlineBox}>
             <Headline
               style={{
@@ -78,6 +87,12 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
   },
+  helperTextBox: {
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    fontSize: 12,
+    marginHorizontal: '5%',
+  },
   headlineBox: {
     flex: 1,
     margin: '5%',
@@ -92,7 +107,6 @@ const style = StyleSheet.create({
   buttonBox: {
     flex: 1,
     width: '90%',
-
     justifySelf: 'center',
     justifyContent: 'center',
     paddingHorizontal: Platform.OS === 'ios' ? '5%' : '0%',

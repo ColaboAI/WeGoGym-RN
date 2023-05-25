@@ -8,7 +8,13 @@ import {
   Platform,
 } from 'react-native';
 import React from 'react';
-import { Button, Headline, TextInput, useTheme } from 'react-native-paper';
+import {
+  Button,
+  Headline,
+  Text,
+  TextInput,
+  useTheme,
+} from 'react-native-paper';
 import { save } from '@store/secureStore';
 import { AuthStackScreenProps } from 'navigators/types';
 import CustomToolbar from '/components/organisms/CustomToolbar';
@@ -32,6 +38,9 @@ export default function BodyInformationScreen({ navigation }: Props) {
           Keyboard.dismiss();
         }}>
         <SafeAreaView style={style.container}>
+          <Text style={[style.helperTextBox, { color: theme.colors.outline }]}>
+            프로필을 완성하기 위해 몇 가지만 여쭤볼게요. 잠깐이면 됩니다!
+          </Text>
           <View style={style.headlineBox}>
             <Headline
               style={{
@@ -104,6 +113,12 @@ export default function BodyInformationScreen({ navigation }: Props) {
 const style = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  helperTextBox: {
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    fontSize: 12,
+    marginHorizontal: '5%',
   },
   headlineBox: {
     flex: 1,
