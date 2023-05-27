@@ -32,7 +32,7 @@ export default function WorkoutGoalScreen() {
   return (
     <SafeAreaView style={style.container}>
       <Text style={[style.helperTextBox, { color: theme.colors.outline }]}>
-        프로필을 완성하기 위해 몇 가지만 여쭤볼게요. 잠깐이면 됩니다!
+        마지막 질문이에요!
       </Text>
       <View style={style.headlineBox}>
         <Headline
