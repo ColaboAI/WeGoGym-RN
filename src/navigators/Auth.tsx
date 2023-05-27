@@ -14,6 +14,7 @@ import {
   WorkoutLevelScreen,
   WorkoutStyleAndRoutineScreen,
   ActivityAreaScreen,
+  WorkoutPartnerGenderScreen,
   WorkoutGoalScreen,
 } from '../screens';
 import AuthNavBarHeader from './NavBarHeader/AuthNavBarHeader';
@@ -64,6 +65,10 @@ function Auth() {
         component={WorkoutStyleAndRoutineScreen}
       />
       <Stack.Screen name="ActivityArea" component={ActivityAreaScreen} />
+      <Stack.Screen
+        name="WorkoutPartnerGender"
+        component={WorkoutPartnerGenderScreen}
+      />
       <Stack.Screen name="WorkoutGoal" component={WorkoutGoalScreen} />
     </Stack.Navigator>
   );

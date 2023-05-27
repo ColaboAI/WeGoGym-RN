@@ -222,7 +222,7 @@ export default function ActivityAreaScreen({ navigation }: Props) {
           onPress={() => {
             save('city', selectedCity);
             save('district', selectedDistrict);
-            navigation.navigate('WorkoutGoal');
+            navigation.navigate('WorkoutPartnerGender');
           }}>
           확인
         </Button>

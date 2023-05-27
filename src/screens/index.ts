@@ -22,3 +22,4 @@ export { default as WorkoutTimePeriodScreen } from './OnBoarding/WorkoutTimePeri
 export { default as WorkoutTimePerDayScreen } from './OnBoarding/WorkoutTimePerDay';
 export { default as WorkoutStyleAndRoutineScreen } from './OnBoarding/WorkoutStyleAndRoutine';
 export { default as ActivityAreaScreen } from './OnBoarding/ActivityArea';
+export { default as WorkoutPartnerGenderScreen } from './OnBoarding/WorkoutPartnerGender';
