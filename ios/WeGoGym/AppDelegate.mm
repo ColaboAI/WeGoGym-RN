@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 #import <Firebase.h>
+#import <GoogleMaps/GoogleMaps.h>
 #import <React/RCTBundleURLProvider.h>
 // headless check
 #import "RNFBMessagingModule.h"
@@ -11,6 +12,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSServices provideAPIKey:@"AIzaSyB1tM37ODNnChN3zprnAQv9KWESBZWw8aw"]; // add this line using the api key obtained from Google Console
   self.moduleName=@"WeGoGym";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
