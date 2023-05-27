@@ -5,7 +5,7 @@ import {
   checkApplicationPermission,
   onMessageInForeground,
 } from '/utils/notification';
-import { getValueFor, save } from '/store/secureStore';
+import { getValueFor, save, secureMmkv } from '/store/secureStore';
 import notifee from '@notifee/react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -15,18 +15,20 @@ import { AppState } from 'react-native';
 import { requestPermissionToAnalytics } from '/utils/analytics';
 
 export async function onAppBootstrap() {
-  // Register the device with FCM
-  await messaging().registerDeviceForRemoteMessages();
   // Get the token
   const wggAccessToken = getValueFor('token');
   if (!wggAccessToken) {
     return;
   }
   const token = await messaging().getToken();
+  try {
+    await putMyFCMToken(token);
+  } catch (e) {
+    secureMmkv.deleteAllKeys();
+  }
   // Check if the user has granted permission, if not, request it
 
   // Save the token to the server, and save it to the store
-  await putMyFCMToken(token);
   save('fcmToken', token);
   // 어떤 Notification을 눌러서 앱이 실행되었는지 확인, 그에 따라 화면 이동
 }
@@ -108,9 +110,11 @@ export function useNotification() {
   }, [queryClient]);
   useEffect(() => {
     // 앱이 foreground에서 Notification을 받았을 때
-    messaging().onMessage(onMessageInForeground);
+    const unsub = messaging().onMessage(onMessageInForeground);
     // 알람을 눌러서 앱이 실행되었을 때
     onInitialNotification();
+
+    return unsub;
   }, [navigation, onInitialNotification, queryClient]);
 
   useEffect(() => {

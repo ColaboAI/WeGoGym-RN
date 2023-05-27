@@ -8,6 +8,8 @@ import {
 } from '@api/api';
 import { AxiosError } from 'axios';
 import { useSnackBarActions } from '../context/useSnackbar';
+import { Alert } from 'react-native';
+import { secureMmkv } from '/store/secureStore';
 
 export function useRegisterMutation() {
   const { onShow } = useSnackBarActions();
@@ -23,20 +25,20 @@ export function useRegisterMutation() {
 }
 
 export function useGetUserInfoQuery(id: string) {
-  const { onShow } = useSnackBarActions();
   return useQuery({
     queryKey: ['getUserInfo', id],
     queryFn: () => getUserInfo(id),
-    retry: 1,
-    onError: async (error: AxiosError) => {
-      if (error.status === 404) {
-        onShow('존재하지 않는 유저입니다.', 'error');
-      } else if (error.status === 500) {
-        onShow('서버에 문제가 발생하였습니다.', 'error');
-      } else if (error.status === 401) {
-        onShow('로그인이 필요합니다.', 'error');
+    retry: 0,
+    onError: (error: AxiosError) => {
+      if (error.response?.status === 404) {
+        Alert.alert('존재하지 않는 사용자입니다.');
+        if (id === 'me') {
+          secureMmkv.deleteAllKeys();
+        }
+      } else if (error.response?.status === 403) {
+        Alert.alert('비공개 계정입니다.');
       } else {
-        onShow('유저 정보를 가져오는데 실패하였습니다.', 'error');
+        Alert.alert('사용자 정보를 불러오는데 실패하였습니다.');
       }
     },
     // Type myInfoRead

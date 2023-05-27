@@ -20,9 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AuthProvider from 'hooks/context/AuthProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { onMessageInBackground } from '/utils/notification';
-import messaging from '@react-native-firebase/messaging';
-import notifee, { EventType } from '@notifee/react-native';
+
 import codePush from 'react-native-code-push';
 import RNBootSplash from 'react-native-bootsplash';
 import App from './App';
@@ -66,26 +64,6 @@ const CombinedDarkTheme = {
   },
 };
 const queryClient = new QueryClient();
-messaging().setBackgroundMessageHandler(onMessageInBackground);
-notifee.onBackgroundEvent(async ({ type, detail }) => {
-  const { notification, pressAction } = detail;
-  if (
-    notification === undefined ||
-    pressAction === undefined ||
-    type === undefined ||
-    notification.id === undefined
-  ) {
-    return;
-  }
-  // Check if the user pressed the "Mark as read" action
-  if (type === EventType.ACTION_PRESS && pressAction.id === 'mark-as-read') {
-    // Decrement the count by 1
-    await notifee.decrementBadgeCount();
-
-    // Remove the notification
-    await notifee.cancelNotification(notification.id);
-  }
-});
 
 function Main() {
   const isDarkMode = useColorScheme() === 'dark';

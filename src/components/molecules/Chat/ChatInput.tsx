@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { TextInput, useTheme } from 'react-native-paper';
-import { Alert, StyleSheet } from 'react-native';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { ChatParamList, ChatStackScreenProps } from '/navigators/types';
 import {
   InfiniteData,
   UseMutationResult,
   useQueryClient,
 } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 import { getValueFor } from '/store/secureStore';
 import { WS_URL } from '/api/client';
 import { useSnackBarActions } from '/hooks/context/useSnackbar';
@@ -21,7 +19,7 @@ export type ChatInputProps = ChatParamList & {
   setIsTyping: (typing: boolean) => void;
   chatRoomMutation: UseMutationResult<
     ChatRoom,
-    AxiosError<unknown, any>,
+    CustomError,
     ChatRoomCreate,
     unknown
   >;
@@ -124,7 +122,7 @@ const ChatInput = (props: ChatInputProps) => {
     },
     [chatRoomId, queryClient],
   );
-  const connectWebSocket = useCallback(() => {
+  const connectWebSocket = useCallback(async () => {
     if (webSocket.current) {
       webSocket.current.close();
       webSocket.current = null;
@@ -137,7 +135,6 @@ const ChatInput = (props: ChatInputProps) => {
       };
       webSocket.current.onclose = e => {
         console.log(`${e.code}: ${e.reason}`);
-        // reconnect websocket
       };
 
       webSocket.current.onmessage = onMessageHandler;
@@ -170,95 +167,127 @@ const ChatInput = (props: ChatInputProps) => {
           isGroupChat: false,
           isPrivate: true,
         });
-        nav.setParams({
-          chatRoomId: res.id,
-        });
+        return res.id;
       } catch (e) {
         onShow('채팅방 생성에 실패했습니다.', 'error');
       }
     }
-  }, [chatRoomMutation, myId, nav, onShow, userId]);
+  }, [chatRoomMutation, myId, onShow, userId]);
+
+  const sendWebsocketMessage = useCallback(async () => {
+    if (webSocket.current && webSocket.current.readyState === 1) {
+      webSocket.current.send(
+        JSON.stringify({
+          type: 'text_message',
+          text: inputText,
+        }),
+      );
+      setInputText('');
+      setIsTyping(false);
+    } else {
+      connectWebSocket();
+      setTimeout(async () => {
+        await sendWebsocketMessage();
+      }, 100);
+    }
+  }, [connectWebSocket, inputText, setInputText, setIsTyping]);
 
   const handleSubmit = useCallback(async () => {
     if (chatRoomId !== undefined && myId) {
       if (inputText.length > 0) {
-        // send message
-        if (webSocket.current && webSocket.current.readyState === 1) {
-          webSocket.current.send(
-            JSON.stringify({
-              type: 'text_message',
-              text: inputText,
-            }),
-          );
-          setInputText('');
-          setIsTyping(false);
-        } else {
-          Alert.alert('채팅방과의 연결이 끊어졌습니다.', '다시 시도해주세요.');
-        }
+        await sendWebsocketMessage();
       }
     } else {
       // create direct chat room
       if (userId && myId) {
-        await createDirectChatRoom();
+        const chatId = await createDirectChatRoom();
+        if (chatId) {
+          if (inputText.length > 0) {
+            connectWebSocket();
+            await sendWebsocketMessage();
+          }
+        }
       } else {
         // TODO: error handling
         nav.navigate('ChatList');
       }
     }
   }, [
-    nav,
     chatRoomId,
-    createDirectChatRoom,
-    inputText,
     myId,
-    setInputText,
-    setIsTyping,
+    inputText.length,
+    sendWebsocketMessage,
     userId,
+    createDirectChatRoom,
+    connectWebSocket,
+    nav,
   ]);
 
   return (
-    <TextInput
-      mode="outlined"
-      // left={
-      //   // TODO: add image picker
-      //   <TextInput.Icon
-      //     mode="contained"
-      //     icon="camera"
-      //     containerColor={theme.colors.secondaryContainer}
-      //     iconColor={theme.colors.onSecondaryContainer}
-      //     style={{}}
-      //     onPress={() => console.log('Camera Pressed')}
-      //   />
-      // }
-      right={
-        <TextInput.Icon
-          mode="contained"
-          icon="arrow-up"
-          containerColor={theme.colors.primaryContainer}
-          iconColor={theme.colors.onPrimaryContainer}
-          onPress={() => handleSubmit()}
-          disabled={chatRoomMutation.isLoading}
+    <View style={styles.container}>
+      <View style={styles.textInputContainer}>
+        <TextInput
+          mode="outlined"
+          // left={
+          //   // TODO: add image picker
+          //   <TextInput.Icon
+          //     mode="contained"
+          //     icon="camera"
+          //     containerColor={theme.colors.secondaryContainer}
+          //     iconColor={theme.colors.onSecondaryContainer}
+          //     style={{}}
+          //     onPress={() => console.log('Camera Pressed')}
+          //   />
+          // }
+          right={
+            <TextInput.Icon
+              style={styles.sendBtnIcon}
+              mode="contained"
+              icon="arrow-up"
+              containerColor={theme.colors.primaryContainer}
+              iconColor={theme.colors.onPrimaryContainer}
+              onPress={() => handleSubmit()}
+              disabled={chatRoomMutation.isLoading}
+            />
+          }
+          value={inputText}
+          onChangeText={txt => setInputText(txt)}
+          onTextInput={() => setIsTyping(true)}
+          onEndEditing={() => setIsTyping(false)}
+          style={styles.chatInputBar}
+          outlineStyle={styles.outline}
+          multiline={true}
         />
-      }
-      value={inputText}
-      onChangeText={txt => setInputText(txt)}
-      onTextInput={() => setIsTyping(true)}
-      onEndEditing={() => setIsTyping(false)}
-      style={styles.ChatInputBar}
-      outlineStyle={styles.Outline}
-      multiline={true}
-    />
+      </View>
+    </View>
   );
 };
 
 export default ChatInput;
 
 const styles = StyleSheet.create({
-  ChatInputBar: {
+  chatInputBar: {
     maxHeight: 80,
+    width: '100%',
   },
-  Outline: {
-    borderRadius: 25,
-    top: Platform.OS === 'ios' ? 0 : 6,
+  textInputContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
+    marginHorizontal: 10,
+    marginVertical: 5,
+  },
+  outline: {
+    borderRadius: 20,
+  },
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  sendBtnIcon: {
+    top: Platform.OS === 'ios' ? 2 : 0,
   },
 });

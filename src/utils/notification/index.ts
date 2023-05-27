@@ -50,8 +50,6 @@ async function saveMessageToMMKV(data: { [key: string]: string }) {
   }
 }
 
-// TODO: MMKV에 current message 저장 후 => 앱이 실행되면 해당 메시지를 client에 최신화, MMKV에서 삭제
-// TODO: 앱 실행 중인 경우 알람 보이지 않게?
 async function onMessageInBackground(
   message: FirebaseMessagingTypes.RemoteMessage,
 ) {
@@ -67,7 +65,6 @@ async function onMessageInBackground(
     if (data.type === 'text_message') {
       await saveMessageToMMKV(data);
     }
-    // TODO: increment badge count is not working
   }
   await notifee.displayNotification({
     title: message.notification?.title || 'Wegogym',
@@ -78,14 +75,17 @@ async function onMessageInBackground(
         id: 'mark-as-read',
         launchActivity: 'default',
       },
+      sound: 'default',
     },
     ios: {
       categoryId: 'mark-as-read',
+      sound: 'default',
     },
   });
   await notifee.incrementBadgeCount();
 }
 
+// TODO: handle notification when app is in foreground (duplicate notification)
 async function onMessageInForeground(
   message: FirebaseMessagingTypes.RemoteMessage,
 ) {
@@ -103,8 +103,10 @@ async function onMessageInForeground(
 
   if (data) {
     if (data.type === 'text_message') {
+      if (data.chat_room_id === mmkv.getString('currentChatRoomId')) {
+        return;
+      }
       await saveMessageToMMKV(data);
-      return;
     }
   }
   await notifee.displayNotification({
@@ -116,11 +118,15 @@ async function onMessageInForeground(
         id: 'mark-as-read',
         launchActivity: 'default',
       },
+      sound: 'default',
+      vibrationPattern: [300, 500],
     },
     ios: {
       categoryId: 'mark-as-read',
+      sound: 'default',
     },
   });
+  await notifee.incrementBadgeCount();
 }
 
 export {
