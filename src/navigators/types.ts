@@ -40,6 +40,7 @@ export type AuthStackParamList = {
   WorkoutPerWeek: undefined;
   WorkoutLevel: undefined;
   WorkoutStyleAndRoutine: undefined;
+  ActivityArea: undefined;
   WorkoutGoal: undefined;
 };
 

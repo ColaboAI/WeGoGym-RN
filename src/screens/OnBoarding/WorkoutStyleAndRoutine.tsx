@@ -99,7 +99,7 @@ export default function WorkoutStyleAndRoutineScreen({ navigation }: Props) {
           onPress={() => {
             save('workoutStyle', workoutStyle);
             save('workoutRoutine', workoutRoutine);
-            navigation.navigate('WorkoutGoal');
+            navigation.navigate('ActivityArea');
           }}>
           확인
         </Button>
@@ -135,10 +135,12 @@ const style = StyleSheet.create({
   horizontalButtonContainer: {
     flexDirection: 'row',
     paddingVertical: 12,
+    paddingBottom: 12,
   },
   button: {
     flexDirection: 'row',
     marginHorizontal: 5,
+    marginVertical: 5,
   },
   buttonBox: {
     flex: 1,
