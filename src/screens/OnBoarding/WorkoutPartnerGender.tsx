@@ -10,7 +10,7 @@ export default function WorkoutPartnerGenderScreen({ navigation }: Props) {
   const theme = useTheme();
   const buttonText = ['🙍‍♂️ 남성', '🙍‍♀️ 여성', '상관 없음'];
   const genders = ['male', 'female', 'noMatter'];
-  const [workoutParterGender, setWorkoutParterGender] = useState<string>('');
+  const [workoutPartnerGender, setWorkoutPartnerGender] = useState<string>('');
   const [selectedId, setSelectedId] = useState<number>(-1);
   const getButton = (id: number) => {
     return (
@@ -18,7 +18,7 @@ export default function WorkoutPartnerGenderScreen({ navigation }: Props) {
         style={[style.button]}
         mode={id === selectedId ? 'contained' : 'elevated'}
         onPress={() => {
-          setWorkoutParterGender(genders[id]);
+          setWorkoutPartnerGender(genders[id]);
           setSelectedId(id);
         }}>
         {buttonText[id]}
@@ -51,9 +51,9 @@ export default function WorkoutPartnerGenderScreen({ navigation }: Props) {
       <View style={style.buttonBox}>
         <Button
           mode="contained"
-          disabled={!workoutParterGender}
+          disabled={!workoutPartnerGender}
           onPress={() => {
-            save('workoutParterGender', workoutParterGender);
+            save('workoutPartnerGender', workoutPartnerGender);
             navigation.navigate('WorkoutGoal');
           }}>
           확인
