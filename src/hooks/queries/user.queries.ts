@@ -12,7 +12,8 @@ import { useSnackBarActions } from '../context/useSnackbar';
 export function useRegisterMutation() {
   const { onShow } = useSnackBarActions();
   return useMutation({
-    mutationFn: postRegister,
+    mutationFn: ({ user, img }: { user: UserCreate; img: FormData }) =>
+      postRegister(user, img),
     onError: (error: Error) => {
       onShow(`회원가입에 실패하였습니다: ${error.message}`, 'error');
     },
