@@ -33,6 +33,11 @@ export function getInfo(): UserCreate {
   const workoutTimePerDay = getValueFor('workoutTimePerDay') ?? '';
   const workoutLevel = getValueFor('workoutLevel') ?? '';
   const workoutGoal = getValueFor('workoutGoal') ?? '';
+  const workoutStyle = getValueFor('workoutStyle') ?? '';
+  const workoutRoutine = getValueFor('workoutRoutine') ?? '';
+  const city = getValueFor('city') ?? '';
+  const district = getValueFor('district') ?? '';
+  const workoutPartnerGender = getValueFor('workoutPartnerGender') ?? '';
 
   const info = {
     phoneNumber,
@@ -46,6 +51,11 @@ export function getInfo(): UserCreate {
     workoutTimePerDay,
     workoutLevel,
     workoutGoal,
+    workoutStyle,
+    workoutRoutine,
+    city,
+    district,
+    workoutPartnerGender,
   };
   return info;
 }
