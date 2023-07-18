@@ -31,20 +31,18 @@ export default function LoginScreen({ navigation }: Props) {
       </View>
       <View style={style.imageBox}>
         <Image
-          style={{ height: 350, width: 350 }}
+          style={{ height: 300, width: 300 }}
           resizeMode="contain"
           source={require('../asset/image/gymmate.png')}
         />
       </View>
       <View style={style.buttonBox}>
         <Button
-          icon="call-sharp"
           mode="contained"
           onPress={() => navigation.navigate('PhoneNumberRegister')}>
           가입하기
         </Button>
         <Button
-          icon="call-sharp"
           mode="contained"
           onPress={() => navigation.navigate('PhoneNumberLogin')}>
           로그인
