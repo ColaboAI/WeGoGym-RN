@@ -23,3 +23,4 @@ export { default as WorkoutTimePerDayScreen } from './OnBoarding/WorkoutTimePerD
 export { default as WorkoutStyleAndRoutineScreen } from './OnBoarding/WorkoutStyleAndRoutine';
 export { default as ActivityAreaScreen } from './OnBoarding/ActivityArea';
 export { default as WorkoutPartnerGenderScreen } from './OnBoarding/WorkoutPartnerGender';
+export { default as ProfileImageScreen } from './OnBoarding/ProfileImage';
