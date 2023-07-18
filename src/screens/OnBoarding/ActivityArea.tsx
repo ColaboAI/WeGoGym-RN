@@ -136,33 +136,6 @@ export default function ActivityAreaScreen({ navigation }: Props) {
       </View>
       <View style={style.menuContainer}>
         <View style={style.menuBox}>
-          {/* <Menu
-            visible={cityMenuVisible}
-            onDismiss={() => setCityMenuVisible(false)}
-            anchor={
-              <Button
-                mode="outlined"
-                style={{ backgroundColor: 'white' }}
-                onPress={() => setCityMenuVisible(true)}>
-                {selectedCity ? selectedCity : '시/도'}
-              </Button>
-            }
-            anchorPosition="bottom">
-            {cities.map((city, index) => (
-              <Menu.Item
-                onPress={() => {
-                  setSelectedCity(city.city);
-                  setCityIndex(index);
-                  setDistrictMenuVisible(false);
-                  setSelectedDistrict('');
-                  setDistrictIndex(0);
-                  setCityMenuVisible(false);
-                }}
-                title={city.city}
-                key={index}
-              />
-            ))}
-          </Menu> */}
           <Picker
             selectedValue={selectedCity}
             style={{ height: 50, width: 180 }}
@@ -178,31 +151,6 @@ export default function ActivityAreaScreen({ navigation }: Props) {
           </Picker>
         </View>
         <View style={style.menuBox}>
-          {/* <Menu
-            visible={districtMenuVisible}
-            onDismiss={() => setDistrictMenuVisible(false)}
-            anchor={
-              <Button
-                mode="outlined"
-                style={{ backgroundColor: 'white' }}
-                disabled={!selectedCity}
-                onPress={() => setDistrictMenuVisible(true)}>
-                {selectedDistrict ? selectedDistrict : '군/구'}
-              </Button>
-            }
-            anchorPosition="bottom">
-            {districts[cityIndex].district.map((district, index) => (
-              <Menu.Item
-                onPress={() => {
-                  setSelectedDistrict(district);
-                  setDistrictIndex(index);
-                  setDistrictMenuVisible(false);
-                }}
-                title={district}
-                key={index}
-              />
-            ))}
-          </Menu> */}
           <Picker
             selectedValue={selectedDistrict}
             style={{ height: 50, width: 180 }}
