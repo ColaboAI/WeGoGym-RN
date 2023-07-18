@@ -1,13 +1,13 @@
-import { StyleSheet, View, SafeAreaView, Alert } from 'react-native';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Headline, useTheme, Text } from 'react-native-paper';
 import { save } from '@store/secureStore';
-import { getGoal, getInfo } from '../../utils/util';
-import { useAuthActions } from 'hooks/context/useAuth';
+import { getGoal } from '../../utils/util';
+import { AuthStackScreenProps } from '/navigators/types';
+type Props = AuthStackScreenProps<'WorkoutGoal'>;
 
-export default function WorkoutGoalScreen() {
+export default function WorkoutGoalScreen({ navigation }: Props) {
   const theme = useTheme();
-  const { signUp } = useAuthActions();
   const [isSelected, setIsSelected] = useState<WorkoutGoal[]>([
     { id: 0, goal: '💪🏻 근성장', select: false },
     { id: 1, goal: '🚴🏻 체력 증진', select: false },
@@ -32,7 +32,7 @@ export default function WorkoutGoalScreen() {
   return (
     <SafeAreaView style={style.container}>
       <Text style={[style.helperTextBox, { color: theme.colors.outline }]}>
-        마지막 질문이에요!
+        프로필을 완성하기 위해 몇 가지만 여쭤볼게요. 잠깐이면 됩니다!
       </Text>
       <View style={style.headlineBox}>
         <Headline
@@ -67,13 +67,7 @@ export default function WorkoutGoalScreen() {
           onPress={() => {
             const workoutGoal = getGoal(isSelected);
             save('workoutGoal', workoutGoal);
-
-            const info = getInfo();
-            if (info) {
-              signUp(info);
-            } else {
-              Alert.alert('회원가입에 실패했습니다.', '다시 시도해주세요.');
-            }
+            navigation.navigate('ProfileImage');
           }}>
           확인
         </Button>
