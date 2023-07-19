@@ -191,7 +191,6 @@ async function postRegister(
       }
     });
     formData.append('data', JSON.stringify(data));
-    console.log('formData', formData);
     const res = await apiClient.post('/user/register', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
