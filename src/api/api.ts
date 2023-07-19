@@ -241,7 +241,6 @@ async function putMyInfo(
       }
     });
     formData.append('data', JSON.stringify(data));
-    console.log('formData: ', formData);
     const res = await apiClient.patch('/user/me', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
