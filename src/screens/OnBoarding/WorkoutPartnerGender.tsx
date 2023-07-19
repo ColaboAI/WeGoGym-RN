@@ -1,33 +1,27 @@
-import { StyleSheet, View, SafeAreaView, Text } from 'react-native';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
-import { Button, Headline, useTheme } from 'react-native-paper';
+import { Button, Headline, useTheme, Text } from 'react-native-paper';
 import { save } from '@store/secureStore';
 import { AuthStackScreenProps } from 'navigators/types';
 
-type Props = AuthStackScreenProps<'WorkoutLevel'>;
-export default function WorkoutLevelScreen({ navigation }: Props) {
+type Props = AuthStackScreenProps<'WorkoutPartnerGender'>;
+
+export default function WorkoutPartnerGenderScreen({ navigation }: Props) {
   const theme = useTheme();
-  const buttons = [
-    '입문(1년 미만)',
-    '초급(1년 이상 3년 미만)',
-    '중급(3년 이상 5년 미만)',
-    '고급(5년 이상)',
-    '전문가',
-  ];
-
-  const [workoutLevel, setWorkoutLevel] = useState<string>('');
-
+  const buttonText = ['🙍‍♂️ 남성', '🙍‍♀️ 여성', '상관 없음'];
+  const genders = ['male', 'female', 'noMatter'];
+  const [workoutPartnerGender, setWorkoutPartnerGender] = useState<string>('');
+  const [selectedId, setSelectedId] = useState<number>(-1);
   const getButton = (id: number) => {
     return (
       <Button
         style={[style.button]}
-        mode={
-          buttons[id].split('(')[0] === workoutLevel ? 'contained' : 'elevated'
-        }
+        mode={id === selectedId ? 'contained' : 'elevated'}
         onPress={() => {
-          setWorkoutLevel(buttons[id].split('(')[0]);
+          setWorkoutPartnerGender(genders[id]);
+          setSelectedId(id);
         }}>
-        {buttons[id]}
+        {buttonText[id]}
       </Button>
     );
   };
@@ -44,23 +38,23 @@ export default function WorkoutLevelScreen({ navigation }: Props) {
             fontWeight: 'bold',
             fontSize: 24,
           }}>
-          운동 경력이 어느 정도 되시나요?
+          선호하는 운동 친구의 성별은 무엇인가요?
         </Headline>
       </View>
-      <View style={style.workoutLevelBox}>
-        {getButton(0)}
-        {getButton(1)}
-        {getButton(2)}
-        {getButton(3)}
-        {getButton(4)}
+      <View style={style.genderBox}>
+        <View style={style.genderButtonBox}>
+          {getButton(0)}
+          {getButton(1)}
+          {getButton(2)}
+        </View>
       </View>
       <View style={style.buttonBox}>
         <Button
           mode="contained"
-          disabled={!workoutLevel}
+          disabled={!workoutPartnerGender}
           onPress={() => {
-            save('workoutLevel', workoutLevel);
-            navigation.navigate('WorkoutStyleAndRoutine');
+            save('workoutPartnerGender', workoutPartnerGender);
+            navigation.navigate('WorkoutGoal');
           }}>
           확인
         </Button>
@@ -81,16 +75,18 @@ const style = StyleSheet.create({
   headlineBox: {
     flex: 1,
     margin: '5%',
-    justifyContent: 'center',
   },
-  workoutLevelBox: {
+  genderBox: {
     flex: 2,
     width: '90%',
     justifyContent: 'center',
     margin: '5%',
   },
+  genderButtonBox: {
+    margin: '3%',
+  },
   button: {
-    margin: '1%',
+    margin: '2%',
   },
   buttonBox: {
     flex: 1,

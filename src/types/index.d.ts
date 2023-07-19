@@ -128,6 +128,7 @@ interface UserBase {
 }
 
 interface UserCreate extends UserBase {
+  [key: string]: string | number | null | undefined;
   // TODO: remove ID
   username: string;
   gender: string;
@@ -140,6 +141,16 @@ interface UserCreate extends UserBase {
   // 한번 운동하면 몇시간?
   workoutTimePerDay: string;
   workoutLevel: string;
+  // 운동 스타일 (ex. 유산소, 근력)
+  workoutStyle: string;
+  // 운동 분할 (ex. 3분할)
+  workoutRoutine: string;
+  // 선호하는 운동 파트너 성별
+  workoutPartnerGender: string;
+  // 시/도
+  city: string;
+  // 구/군
+  district: string;
   workoutGoal: string;
 }
 

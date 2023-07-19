@@ -20,3 +20,7 @@ export { default as WorkoutGoalScreen } from './OnBoarding/WorkoutGoal';
 export { default as WorkoutLevelScreen } from './OnBoarding/WorkoutLevel';
 export { default as WorkoutTimePeriodScreen } from './OnBoarding/WorkoutTimePeriod';
 export { default as WorkoutTimePerDayScreen } from './OnBoarding/WorkoutTimePerDay';
+export { default as WorkoutStyleAndRoutineScreen } from './OnBoarding/WorkoutStyleAndRoutine';
+export { default as ActivityAreaScreen } from './OnBoarding/ActivityArea';
+export { default as WorkoutPartnerGenderScreen } from './OnBoarding/WorkoutPartnerGender';
+export { default as ProfileImageScreen } from './OnBoarding/ProfileImage';

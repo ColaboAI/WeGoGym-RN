@@ -37,9 +37,13 @@ export type AuthStackParamList = {
   BodyInformation: undefined;
   WorkoutTimePeriod: undefined;
   WorkoutTimePerDay: undefined;
-  WorkoutGoal: undefined;
   WorkoutPerWeek: undefined;
   WorkoutLevel: undefined;
+  WorkoutStyleAndRoutine: undefined;
+  ActivityArea: undefined;
+  WorkoutPartnerGender: undefined;
+  ProfileImage: undefined;
+  WorkoutGoal: undefined;
 };
 
 // TODO: Refactor this to myinfo type

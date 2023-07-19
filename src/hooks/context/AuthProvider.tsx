@@ -31,7 +31,7 @@ type AuthState = {
 type AuthActions = {
   signIn: (phoneNumber: string | null) => void;
   signOut: () => void;
-  signUp: (userInfo: UserCreate) => void;
+  signUp: (userInfo: UserCreate, formData: FormData) => void;
   getTokenFromStorage: () => Promise<boolean>;
   refreshToken: (a: string, b: string) => void;
   setLoading: (b: boolean) => void;
@@ -119,13 +119,16 @@ function AuthProvider({ children }: AuthProviderProps) {
           isLoading: false,
         }));
       },
-      signUp: async (userInfo: UserCreate) => {
+      signUp: async (userInfo: UserCreate, file: FormData) => {
         setAuthState(prev => ({
           ...prev,
           isLoading: true,
         }));
         try {
-          const { token, refreshToken, userId } = await postRegister(userInfo);
+          const { token, refreshToken, userId } = await postRegister(
+            userInfo,
+            file,
+          );
           save('token', token);
           save('refreshToken', refreshToken);
           save('userId', userId);

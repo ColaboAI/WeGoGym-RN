@@ -1,27 +1,15 @@
 import { StyleSheet, View, SafeAreaView } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Headline, useTheme, Text } from 'react-native-paper';
 import { save } from '@store/secureStore';
 import { AuthStackScreenProps } from 'navigators/types';
-
-type Props = AuthStackScreenProps<'WorkoutTimePerDay'>;
-export default function WorkoutTimePerDayScreen({ navigation }: Props) {
+import { ActivityAreaPicker } from '/components/organisms/Common/ActivityAreaPicker';
+type Props = AuthStackScreenProps<'ActivityArea'>;
+export default function ActivityAreaScreen({ navigation }: Props) {
   const theme = useTheme();
-  const buttons = ['0 ~ 1시간', '1 ~ 2시간', '2 ~ 3시간', '3시간 이상'];
-  const [howLong, setHowLong] = useState<string>('');
-
-  const getButton = (id: number) => {
-    return (
-      <Button
-        style={[style.button]}
-        mode={buttons[id] === howLong ? 'contained' : 'elevated'}
-        onPress={() => {
-          setHowLong(buttons[id]);
-        }}>
-        {buttons[id]}
-      </Button>
-    );
-  };
+  const [selectedCity, setSelectedCity] = React.useState<string>('서울특별시');
+  const [selectedDistrict, setSelectedDistrict] =
+    React.useState<string>('강남구');
 
   return (
     <SafeAreaView style={style.container}>
@@ -35,24 +23,28 @@ export default function WorkoutTimePerDayScreen({ navigation }: Props) {
             fontWeight: 'bold',
             fontSize: 24,
           }}>
-          보통 운동을 몇 시간 정도 하시나요?
+          주로 활동하는 지역은 어디인가요?
         </Headline>
+        <Text style={[style.textBox, { color: theme.colors.outline }]}>
+          선택하신 지역의 운동 친구를 만날 수 있어요.
+        </Text>
       </View>
-      <View style={style.workoutTimePerDayBox}>
-        <View style={style.workoutTimePerDayButtonBox}>
-          {getButton(0)}
-          {getButton(1)}
-          {getButton(2)}
-          {getButton(3)}
-        </View>
+      <View style={style.pickerContainer}>
+        <ActivityAreaPicker
+          city={selectedCity}
+          district={selectedDistrict}
+          setCity={setSelectedCity}
+          setDistrict={setSelectedDistrict}
+          customStyle={{ height: 50, width: 180 }}
+        />
       </View>
       <View style={style.buttonBox}>
         <Button
           mode="contained"
-          disabled={!howLong}
           onPress={() => {
-            save('workoutTimePerDay', howLong);
-            navigation.navigate('WorkoutPerWeek');
+            save('city', selectedCity);
+            save('district', selectedDistrict);
+            navigation.navigate('WorkoutPartnerGender');
           }}>
           확인
         </Button>
@@ -70,19 +62,26 @@ const style = StyleSheet.create({
     fontSize: 12,
     marginHorizontal: '5%',
   },
+  textBox: {
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
   headlineBox: {
     flex: 1,
     margin: '5%',
     justifyContent: 'center',
   },
-  workoutTimePerDayBox: {
+  pickerContainer: {
     flex: 2,
-    width: '90%',
-    justifyContent: 'center',
+    flexDirection: 'row',
     margin: '5%',
+    justifyContent: 'center',
   },
-  workoutTimePerDayButtonBox: {
-    margin: '3%',
+  menuBox: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   button: {
     margin: '2%',

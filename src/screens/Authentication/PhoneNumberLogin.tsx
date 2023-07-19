@@ -5,18 +5,14 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Platform,
+  Alert,
 } from 'react-native';
 import React, { useCallback } from 'react';
-import {
-  Button,
-  Headline,
-  Text,
-  TextInput,
-  useTheme,
-} from 'react-native-paper';
+import { Button, Headline, TextInput, useTheme } from 'react-native-paper';
 import CustomToolbar from 'components/organisms/CustomToolbar';
 import { useAuthActions } from 'hooks/context/useAuth';
 import { getValueFor } from '/store/secureStore';
+import { checkPhoneNumber } from '/api/api';
 // type Props = AuthStackScreenProps<'PhoneNumberLogin'>;
 
 export default function PhoneNumberScreen() {
@@ -40,7 +36,16 @@ export default function PhoneNumberScreen() {
   }, [phoneNumber.length]);
 
   const onPressLogin = useCallback(async () => {
-    await authActions.signIn(phoneNumber);
+    const isPhoneNumberExist = await checkPhoneNumber(phoneNumber);
+    if (!isPhoneNumberExist) {
+      Alert.alert('로그인 정보를 확인해주세요.');
+      return;
+    }
+    try {
+      await authActions.signIn(phoneNumber);
+    } catch (error) {
+      Alert.alert('오류가 발생했습니다.');
+    }
   }, [authActions, phoneNumber]);
 
   return (
@@ -59,9 +64,6 @@ export default function PhoneNumberScreen() {
               }}>
               휴대폰 번호를 입력해주세요.
             </Headline>
-            <Text style={{ color: theme.colors.outline, fontWeight: 'bold' }}>
-              본인 인증을 위해 필요합니다.
-            </Text>
           </View>
 
           <View style={style.textInputBox}>

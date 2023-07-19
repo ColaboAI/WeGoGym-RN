@@ -172,9 +172,29 @@ async function getWorkoutPromiseJoinedByUserId(
   }
 }
 
-async function postRegister(params: UserCreate): Promise<UserLoginResponse> {
+async function postRegister(
+  params: UserCreate,
+  formData: FormData,
+): Promise<UserLoginResponse> {
+  const data = {} as UserCreate;
   try {
-    const res = await apiClient.post('/user/register', params);
+    Object.keys(params).forEach(key => {
+      if (params[key] !== undefined && params[key] !== null) {
+        const value = params[key];
+        const newKey = snakeCase(key);
+        if (typeof value === 'string') {
+          data[newKey] = value.trim();
+        } else {
+          data[newKey] = value;
+        }
+      }
+    });
+    formData.append('data', JSON.stringify(data));
+    const res = await apiClient.post('/user/register', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return res.data;
   } catch (e) {
     throw e;

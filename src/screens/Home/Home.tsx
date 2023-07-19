@@ -3,7 +3,6 @@ import {
   IconButton,
   Text,
   Divider,
-  Banner,
   ActivityIndicator,
   Button,
 } from 'react-native-paper';
@@ -21,7 +20,6 @@ import {
 import GymMateRecommendation from '/components/organisms/User/GymMateRecommend';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
-import { getValueFor, save } from '/store/secureStore';
 import TextLogo from '/asset/svg/TextLogo';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 // TODO:
@@ -44,9 +42,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   } = useGetRecruitingWorkoutQuery();
 
   const [isCheck, setIsCheck] = useState<boolean>(false);
-  const [visible, setVisible] = useState<string | null>(
-    getValueFor('isFirstTime'),
-  );
+
   const { reset } = useQueryErrorResetBoundary();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -62,29 +58,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
       navigation.push('User', { userId: id });
     },
     [navigation],
-  );
-
-  const renderBanner = useCallback(
-    () => (
-      <View style={style.bannerContainer}>
-        <Banner
-          elevation={2}
-          visible={visible === 'false' ? false : true}
-          actions={[
-            {
-              label: '닫기',
-              onPress: () => {
-                save('isFirstTime', 'false');
-                setVisible('false');
-              },
-            },
-          ]}
-          contentStyle={style.banner}>
-          🎉 2023년 3월 1일부터 위고짐 서비스를 시작합니다. 🎉
-        </Banner>
-      </View>
-    ),
-    [visible],
   );
 
   const renderError = useCallback(
@@ -141,7 +114,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           </View>
         </View>
         <Divider />
-        {renderBanner()}
         <Suspense fallback={<WorkoutPromiseLoader />}>
           <ErrorBoundary
             onReset={reset}
@@ -170,12 +142,10 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
                     if (hasNextPage) {
                       fetchNextPage();
                     }
-                    console.log('end reached');
                   } else {
                     if (hasNextRecruitingWorkoutPage) {
                       fetchNextRecruitingWorkoutPage();
                     }
-                    console.log('end reached');
                   }
                 }}
                 onEndReachedThreshold={0.1}

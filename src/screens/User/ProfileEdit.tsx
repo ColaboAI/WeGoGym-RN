@@ -24,6 +24,7 @@ import StringMenu from '/components/molecules/User/StringMenu';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import { getAge } from '/utils/util';
+import { ActivityAreaPicker } from '/components/organisms/Common/ActivityAreaPicker';
 
 // TODO: bio
 type Props = UserStackScreenProps<'ProfileEdit'>;
@@ -50,6 +51,10 @@ export default function ProfileEdit({ navigation, route }: Props) {
     { id: 8, goal: '🧍🏻 마른 몸 벗어나기', select: false },
     { id: 9, goal: '🍎 애플힙 만들기', select: false },
   ];
+  const [selectedCity, setSelectedCity] = useState<string>(myInfo.city);
+  const [selectedDistrict, setSelectedDistrict] = useState<string>(
+    myInfo.district,
+  );
 
   const initWorkoutGoal = (goals: string[]) => {
     const newWorkoutGoalList = workoutGoalList.map(item => {
@@ -91,6 +96,8 @@ export default function ProfileEdit({ navigation, route }: Props) {
       .filter(item => item !== undefined);
     const myInfoUpdate: UserUpdate = {
       ...myInfoState,
+      city: selectedCity,
+      district: selectedDistrict,
       workoutGoal: newMyGoal.join(','),
       gymInfo: gymInfo,
     };
@@ -108,6 +115,8 @@ export default function ProfileEdit({ navigation, route }: Props) {
     myWorkoutGoalState,
     navigation,
     putMyInfoMutation,
+    selectedCity,
+    selectedDistrict,
     selectedImage,
   ]);
 
@@ -301,7 +310,7 @@ export default function ProfileEdit({ navigation, route }: Props) {
                   }}
                   blurOnSubmit={true}
                 />
-                <TextInput
+                {/* <TextInput
                   mode="outlined"
                   label={'동네'}
                   placeholder={'서울특별시 관악구'}
@@ -321,7 +330,19 @@ export default function ProfileEdit({ navigation, route }: Props) {
                     }
                   }}
                   blurOnSubmit={true}
-                />
+                /> */}
+
+                <View style={style.pickerContainer}>
+                  <Text style={style.pickerTitle}>동네</Text>
+                  <ActivityAreaPicker
+                    city={selectedCity}
+                    district={selectedDistrict}
+                    setCity={setSelectedCity}
+                    setDistrict={setSelectedDistrict}
+                    customStyle={style.pickerStyle}
+                    customItemStyle={style.pickerItemStyle}
+                  />
+                </View>
                 {gymInfo !== null ? (
                   <List.Item
                     title="헬스장"
@@ -430,6 +451,25 @@ const style = StyleSheet.create({
   },
   infoContainer: {
     padding: 12,
+  },
+  pickerTitle: {
+    alignSelf: 'flex-start',
+    paddingLeft: 12,
+    marginVertical: 8,
+    fontSize: 16,
+  },
+  pickerContainer: {
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  pickerStyle: {
+    height: 50,
+    width: 150,
+  },
+  pickerItemStyle: {
+    height: 50,
+    width: 150,
+    fontSize: 12,
   },
   chip: {
     flexDirection: 'row',
