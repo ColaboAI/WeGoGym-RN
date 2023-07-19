@@ -177,7 +177,6 @@ async function postRegister(
   formData: FormData,
 ): Promise<UserLoginResponse> {
   const data = {} as UserCreate;
-  console.log('params', params);
   try {
     Object.keys(params).forEach(key => {
       if (params[key] !== undefined && params[key] !== null) {
