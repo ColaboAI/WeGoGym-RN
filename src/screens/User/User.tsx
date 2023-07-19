@@ -280,8 +280,9 @@ export default function UserScreen({ navigation, route }: Props) {
                       title="동네"
                       right={() => (
                         <Text variant="bodySmall">
-                          {data?.address ??
-                            '동네를 등록하고 친구를 찾아보세요!'}
+                          {data?.city && data?.district
+                            ? `${data.city} ${data.district}`
+                            : '동네를 등록하고 친구를 찾아보세요!'}
                         </Text>
                       )}
                     />
