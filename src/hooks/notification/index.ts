@@ -15,8 +15,6 @@ import { AppState } from 'react-native';
 import { requestPermissionToAnalytics } from '/utils/analytics';
 
 export async function onAppBootstrap() {
-  // Register the device with FCM
-  await messaging().registerDeviceForRemoteMessages();
   // Get the token
   const wggAccessToken = getValueFor('token');
   if (!wggAccessToken) {
