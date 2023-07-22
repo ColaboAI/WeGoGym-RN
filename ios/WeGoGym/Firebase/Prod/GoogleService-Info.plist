@@ -7,9 +7,9 @@
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.465388501088-0drp37ri44vp0fpchbjspn5pfnkr3p87</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>465388501088-4jafrnnijn9rssfhbqo0pbsd1b3l3igh.apps.googleusercontent.com</string>
+	<string>465388501088-dlnd0masu2gae10sjdk1ogekqmni22hm.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDplXqwdNfqud6VDZ1YP5ljDXRt6uUW-Sg</string>
+	<string>AIzaSyAMpmwVrE9dLJD3oZIjqKbbKUQocEG50RM</string>
 	<key>GCM_SENDER_ID</key>
 	<string>465388501088</string>
 	<key>PLIST_VERSION</key>
@@ -21,15 +21,15 @@
 	<key>STORAGE_BUCKET</key>
 	<string>wegogym-687a7.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:465388501088:ios:e4cc3fec18f9b59fb42b05</string>
 </dict>
