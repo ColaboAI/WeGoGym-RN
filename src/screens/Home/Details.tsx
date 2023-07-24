@@ -5,6 +5,7 @@ import {
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
+  Pressable,
 } from 'react-native';
 import React, { Suspense, useCallback, useMemo, useState } from 'react';
 import { HomeStackScreenProps } from 'navigators/types';
@@ -293,6 +294,13 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
     }
   };
 
+  const navigateToUserDetails = useCallback(
+    (id: string) => {
+      navigation.push('User', { userId: id });
+    },
+    [navigation],
+  );
+
   return (
     <Suspense fallback={<WorkoutPromiseLoader />}>
       <ErrorBoundary
@@ -430,12 +438,18 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                             <View
                               key={participant.id}
                               style={style.participantBox}>
-                              <CustomAvatar
-                                size={40}
-                                profilePic={participant.user.profilePic}
-                                username={participant.user.username}
-                                style={style.avatar}
-                              />
+                              <Pressable
+                                disabled={participant.userId === myInfo.id}
+                                onPress={() => {
+                                  navigateToUserDetails(participant.userId);
+                                }}>
+                                <CustomAvatar
+                                  size={40}
+                                  profilePic={participant.user.profilePic}
+                                  username={participant.user.username}
+                                  style={style.avatar}
+                                />
+                              </Pressable>
                               {participant.isAdmin ? (
                                 <View
                                   style={[
