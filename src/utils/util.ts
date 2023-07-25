@@ -190,6 +190,24 @@ export function getRelativeTime(date: Date | string) {
   }
 }
 
+export function getDday(date: Date | string) {
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+  const today = new Date();
+  const delta = date.getTime() - today.getTime();
+
+  let differDay = delta / (1000 * 3600 * 24);
+
+  if (differDay < 0) {
+    return `D+${Math.floor(Math.abs(differDay))}`;
+  } else if (differDay === 0) {
+    return 'D-day';
+  } else {
+    return `D-${Math.floor(differDay)}`;
+  }
+}
+
 // admin인가
 export function isAdmin(userId: string, adminUserId: string) {
   return userId === adminUserId;
