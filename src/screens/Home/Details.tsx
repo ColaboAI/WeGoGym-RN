@@ -19,6 +19,7 @@ import {
   IconButton,
 } from 'react-native-paper';
 import {
+  getDday,
   getLocaleDate,
   getLocaleTime,
   getMyParticipant,
@@ -329,7 +330,12 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                     <View style={style.headerBox}>
                       <View style={style.chipBox}>
                         {isRecruiting(query.data.status) ? (
-                          <Chip style={style.chip}>모집 중</Chip>
+                          <>
+                            <Chip style={style.chip}>모집 중</Chip>
+                            <Chip style={style.chip}>
+                              {getDday(query.data.promiseTime)}
+                            </Chip>
+                          </>
                         ) : (
                           <Chip
                             style={[
