@@ -39,6 +39,8 @@
     },
     "surfaceDisabled": "rgba(27, 28, 23, 0.12)",
     "onSurfaceDisabled": "rgba(27, 28, 23, 0.38)",
-    "backdrop": "rgba(47, 49, 38, 0.4)"
+    "backdrop": "rgba(47, 49, 38, 0.4)",
+    "custom0": "rgba(225,230,195,100)",
+    "onCustom0": "rgb(255, 255, 255)"
   }
 }
