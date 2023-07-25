@@ -198,11 +198,10 @@ export function getDday(date: Date | string) {
   const delta = date.getTime() - today.getTime();
 
   let differDay = delta / (1000 * 3600 * 24);
-
-  if (differDay < 0) {
+  if (Math.abs(differDay) < 1) {
+    return '오늘';
+  } else if (differDay < 0) {
     return `D+${Math.floor(Math.abs(differDay))}`;
-  } else if (differDay === 0) {
-    return 'D-day';
   } else {
     return `D-${Math.floor(differDay)}`;
   }
