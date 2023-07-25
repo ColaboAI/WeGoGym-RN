@@ -303,7 +303,13 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   );
 
   return (
-    <Suspense fallback={<WorkoutPromiseLoader />}>
+    <Suspense
+      fallback={
+        <WorkoutPromiseLoader
+          backgroundColor={theme.colors.background}
+          foregroundColor={theme.colors.surfaceVariant}
+        />
+      }>
       <ErrorBoundary
         onReset={reset}
         fallbackRender={({ resetErrorBoundary }) => (
@@ -441,9 +447,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                       <View style={style.participantList}>
                         {isAcceptedParticipant(query.data.participants).map(
                           participant => (
-                            <View
-                              key={participant.id}
-                              style={style.participantBox}>
+                            <View key={participant.id} style={style.avatarBox}>
                               <Pressable
                                 disabled={participant.userId === myInfo.id}
                                 onPress={() => {
@@ -517,7 +521,10 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                   )}
                 </View>
               ) : (
-                <WorkoutPromiseLoader />
+                <WorkoutPromiseLoader
+                  backgroundColor={theme.colors.background}
+                  foregroundColor={theme.colors.surfaceVariant}
+                />
               )}
             </TouchableWithoutFeedback>
             {myInfo ? (
@@ -566,7 +573,6 @@ const style = StyleSheet.create({
     marginHorizontal: 12,
     marginBottom: 12,
   },
-
   iconBox: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -604,16 +610,20 @@ const style = StyleSheet.create({
   },
   participant: {
     flexDirection: 'row',
-    marginBottom: 4,
+    marginBottom: 12,
   },
   participantList: {
-    flexDirection: 'row',
     flexWrap: 'wrap',
+    flexDirection: 'row',
   },
   participantBox: {
-    alignItems: 'center',
-    marginRight: 4,
+    flexDirection: 'row',
   },
+  avatarBox: {
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  usernameBox: {},
   adminIconBox: {
     position: 'absolute',
     bottom: 0,

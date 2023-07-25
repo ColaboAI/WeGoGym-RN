@@ -49,7 +49,7 @@ const WorkoutPromiseCard = ({
                     style={[
                       style.tagBox,
                       {
-                        backgroundColor: theme.colors.custom0,
+                        backgroundColor: theme.colors.surfaceVariant,
                       },
                     ]}>
                     <Text style={style.tagText}>모집 중</Text>
@@ -57,7 +57,7 @@ const WorkoutPromiseCard = ({
                   <View
                     style={[
                       style.tagBox,
-                      { backgroundColor: theme.colors.custom0 },
+                      { backgroundColor: theme.colors.surfaceVariant },
                     ]}>
                     <Text style={style.tagText}>{getDday(promiseTime)}</Text>
                   </View>
@@ -141,7 +141,10 @@ const WorkoutPromiseCard = ({
           <Divider />
         </>
       ) : (
-        <WorkoutPromiseLoader />
+        <WorkoutPromiseLoader
+          backgroundColor={theme.colors.background}
+          foregroundColor={theme.colors.surfaceVariant}
+        />
       )}
     </View>
   );

@@ -5,6 +5,7 @@ import {
   Divider,
   ActivityIndicator,
   Button,
+  useTheme,
 } from 'react-native-paper';
 import React, { Suspense, useCallback, useState } from 'react';
 import WorkoutPromiseCard from 'components/molecules/Home/WorkoutPromiseCard';
@@ -22,8 +23,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import TextLogo from '/asset/svg/TextLogo';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
-// TODO:
-// 페이지네이션 구현 (당겨서 새로고침)
+
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const {
     data: workoutPromiseList,
@@ -45,7 +45,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
   const { reset } = useQueryErrorResetBoundary();
   const [refreshing, setRefreshing] = useState(false);
-
+  const theme = useTheme();
   const navigateToPromiseDetails = useCallback(
     (id: string) => {
       navigation.navigate('Details', { workoutPromiseId: id });
@@ -114,7 +114,13 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           </View>
         </View>
         <Divider />
-        <Suspense fallback={<WorkoutPromiseLoader />}>
+        <Suspense
+          fallback={
+            <WorkoutPromiseLoader
+              backgroundColor={theme.colors.background}
+              foregroundColor={theme.colors.surfaceVariant}
+            />
+          }>
           <ErrorBoundary
             onReset={reset}
             fallbackRender={({ resetErrorBoundary }) =>

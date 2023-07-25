@@ -64,7 +64,13 @@ export default function NotificationsScreen({ navigation }: HomeScreenProps) {
   }, [refetch]);
 
   return (
-    <Suspense fallback={<WorkoutPromiseLoader />}>
+    <Suspense
+      fallback={
+        <WorkoutPromiseLoader
+          backgroundColor={theme.colors.background}
+          foregroundColor={theme.colors.surfaceVariant}
+        />
+      }>
       <ErrorBoundary
         onReset={reset}
         fallbackRender={({ resetErrorBoundary }) =>
