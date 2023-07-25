@@ -2,10 +2,12 @@ import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Text, Card, useTheme, Divider } from 'react-native-paper';
 import {
+  getDday,
   getLocaleDate,
   getLocaleTime,
   getRelativeTime,
   isAcceptedParticipant,
+  isRecruiting,
 } from 'utils/util';
 import WorkoutPromiseLoader from './WorkoutPromiseLoader';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -20,6 +22,7 @@ const WorkoutPromiseCard = ({
   gymInfo,
   createdAt,
   participants,
+  status,
 }: WorkoutPromiseRead) => {
   // admin user 탈퇴 대응
   const adminPar = participants.find(
@@ -39,6 +42,36 @@ const WorkoutPromiseCard = ({
               borderRadius: 0,
               backgroundColor: theme.colors.background,
             }}>
+            <View style={style.hashTagContainer}>
+              {isRecruiting(status) ? (
+                <>
+                  <View
+                    style={[
+                      style.tagBox,
+                      {
+                        backgroundColor: theme.colors.custom0,
+                      },
+                    ]}>
+                    <Text style={style.tagText}>모집 중</Text>
+                  </View>
+                  <View
+                    style={[
+                      style.tagBox,
+                      { backgroundColor: theme.colors.custom0 },
+                    ]}>
+                    <Text style={style.tagText}>{getDday(promiseTime)}</Text>
+                  </View>
+                </>
+              ) : (
+                <View
+                  style={[
+                    style.tagBox,
+                    { backgroundColor: theme.colors.surfaceDisabled },
+                  ]}>
+                  <Text style={style.tagText}>모집 완료</Text>
+                </View>
+              )}
+            </View>
             <Card.Title
               title={title}
               left={props => (
@@ -116,17 +149,32 @@ const WorkoutPromiseCard = ({
 
 const style = StyleSheet.create({
   promiseCardContainer: {
-    padding: 6,
+    padding: 3,
+  },
+  hashTagContainer: {
+    flexDirection: 'row',
+
+    marginHorizontal: 12,
+    marginTop: 6,
+  },
+  tagBox: {
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginRight: 5,
+  },
+  tagText: {
+    fontSize: 12,
+    paddingVertical: 5,
   },
   leftBox: {
-    marginRight: 0,
+    marginRight: 3,
     marginBottom: 5,
   },
   rightBox: { marginRight: 12, marginBottom: 5 },
   infoBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 3,
   },
   icon: {
     marginRight: 6,
