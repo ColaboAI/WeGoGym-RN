@@ -150,7 +150,10 @@ const GymBottomSheet = (props: Props) => {
           contentContainerStyle={styles.contentContainer}
         />
       ) : (
-        <GymInfoLoader />
+        <GymInfoLoader
+          backgroundColor={theme.colors.background}
+          foregroundColor={theme.colors.surfaceVariant}
+        />
       )}
     </BottomSheet>
   );
