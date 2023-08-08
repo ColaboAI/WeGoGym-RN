@@ -15,12 +15,13 @@ import { HomeStackParamList, CustomTabScreenProps } from './types';
 import DefaultNavBarHeader from './NavBarHeader/DefaultNavBarHeader';
 import MyWorkoutPromisesScreen from '/screens/Home/MyWorkoutPromises';
 import PromiseEditScreen from '/screens/Home/PromiseEdit';
+import PostingNavBarHeader from './NavBarHeader/PostingNavBarHeader';
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 type Props = CustomTabScreenProps<'홈'>;
 
 function Home({ navigation, route }: Props) {
   const notificationTitle = '알림';
-  const postingTitle = '운동 약속 글쓰기';
+  const postingTitle = '운동 약속 만들기';
   const myWorkoutPromisesTitle = '나의 운동 약속';
   const promiseEditTitle = '운동 약속 수정하기';
   useLayoutEffect(() => {
@@ -78,7 +79,7 @@ function Home({ navigation, route }: Props) {
         component={PostingScreen}
         options={{
           header: props => (
-            <DefaultNavBarHeader title={postingTitle} {...props} />
+            <PostingNavBarHeader title={postingTitle} {...props} />
           ),
         }}
       />
