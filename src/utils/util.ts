@@ -21,6 +21,13 @@ export function getGoal(goals: WorkoutGoal[]) {
     .join(',');
 }
 
+export function getWorkoutPart(parts: WorkoutPart[]) {
+  return parts
+    .filter(part => part.select === true)
+    .map(part => part.part)
+    .join(',');
+}
+
 export function getInfo(): UserCreate {
   const phoneNumber = getValueFor('phoneNumber') ?? '';
   const username = getValueFor('username') ?? '';
