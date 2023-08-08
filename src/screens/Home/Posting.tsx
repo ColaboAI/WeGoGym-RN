@@ -13,13 +13,17 @@ import {
   TextInput,
   HelperText,
   IconButton,
-  Switch,
 } from 'react-native-paper';
-
+import { useSnackBarActions } from '/hooks/context/useSnackbar';
 import DateTimeModal, {
   DatePickerState,
 } from 'components/organisms/Common/DateTimeModal';
-import { getLocaleDate, getLocaleTime, isToday } from 'utils/util';
+import {
+  getLocaleDate,
+  getLocaleTime,
+  getWorkoutPart,
+  isToday,
+} from 'utils/util';
 import { HomeStackScreenProps } from 'navigators/types';
 import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
 import { useWorkoutMutation } from '/hooks/queries/workout.queries';
@@ -44,19 +48,32 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
   const [description, setDescription] = useState<string>('');
   const [descriptionFocus, setDescriptionFocus] = useState<boolean>(false);
   const [number, setNumber] = useState<number>(3);
-  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [isSelected, setIsSelected] = useState<WorkoutPart[]>([
+    { id: 0, part: '가슴', select: false },
+    { id: 1, part: '등', select: false },
+    { id: 2, part: '어깨', select: false },
+    { id: 3, part: '하체', select: false },
+    { id: 4, part: '이두', select: false },
+    { id: 5, part: '삼두', select: false },
+    { id: 6, part: '팔', select: false },
+    { id: 7, part: '상체', select: false },
+    { id: 8, part: '유산소', select: false },
+  ]);
+  const { onShow } = useSnackBarActions();
+
+  // const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const inset = useSafeAreaInsets();
 
   // date picker
   const [promiseDateState, setPromiseDateState] = useState<DatePickerState>(
     initialDatePickerState,
   );
-  const [recruitEndDateState, setRecruitEndDateState] =
-    useState<DatePickerState>({
-      visible: false,
-      date: new Date(new Date().setDate(new Date().getDate() + 1)),
-      mode: 'datetime',
-    });
+  // const [recruitEndDateState, setRecruitEndDateState] =
+  //   useState<DatePickerState>({
+  //     visible: false,
+  //     date: new Date(new Date().setDate(new Date().getDate() + 1)),
+  //     mode: 'datetime',
+  //   });
 
   // bottom sheet
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
@@ -69,6 +86,20 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
   const hasContentErrors = useCallback(() => {
     return descriptionFocus && description.length === 0;
   }, [descriptionFocus, description]);
+
+  const onToggle = (id: number) => {
+    const updatedSelected = isSelected.map(part =>
+      part.id === id ? { ...part, select: !part.select } : part,
+    );
+
+    const selectedCount = updatedSelected.filter(part => part.select).length;
+
+    if (selectedCount <= 3) {
+      setIsSelected(updatedSelected);
+    } else {
+      onShow('최대 3개까지 선택할 수 있습니다.');
+    }
+  };
 
   const onPressPlus = useCallback(() => {
     setNumber(prev => {
@@ -95,14 +126,17 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
   }, []);
 
   const onPressPosting = useCallback(async () => {
+    const workoutPart = getWorkoutPart(isSelected);
+
     const data = {
       workoutPromise: {
         title,
         description,
-        isPrivate: isPrivate,
+        // isPrivate: isPrivate,
         maxParticipants: number,
         promise_time: promiseDateState.date,
-        recruit_end_time: recruitEndDateState.date,
+        workoutPart,
+        // recruit_end_time: recruitEndDateState.date,
       },
       gymInfo,
     };
@@ -110,12 +144,11 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
 
     navigation.navigate('Home');
   }, [
+    isSelected,
     title,
     description,
-    isPrivate,
     number,
     promiseDateState.date,
-    recruitEndDateState.date,
     gymInfo,
     workoutMutation,
     navigation,
@@ -132,7 +165,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
               <Text variant="titleMedium">제목</Text>
               <TextInput
                 mode="outlined"
-                placeholder="운동 모집 글 요약"
+                placeholder="운동 약속 글 요약"
                 error={hasTitleErrors()}
                 value={title}
                 onFocus={() => setTitleFocus(true)}
@@ -148,7 +181,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                 mode="outlined"
                 multiline={true}
                 numberOfLines={5}
-                placeholder="운동 파트너 모집 글 내용"
+                placeholder="운동 친구 모집 글 내용"
                 error={hasContentErrors()}
                 value={description}
                 style={style.textInput}
@@ -237,7 +270,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
               </Button>
             </View>
             {/* 모집 기한 */}
-            <View style={style.infoContainer}>
+            {/* <View style={style.infoContainer}>
               <View style={style.infoBox}>
                 <Icon
                   name="timer-outline"
@@ -262,7 +295,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                       getLocaleTime(recruitEndDateState.date)}
                 </Text>
               </Button>
-            </View>
+            </View> */}
             <View style={style.infoContainer}>
               <View style={style.infoBox}>
                 <Icon
@@ -282,7 +315,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
               </Button>
             </View>
             {/* 공개 여부 */}
-            <View style={style.infoContainer}>
+            {/* <View style={style.infoContainer}>
               <View style={style.infoBox}>
                 <Icon
                   name={isPrivate ? 'lock-closed-outline' : 'lock-open-outline'}
@@ -296,7 +329,46 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                 value={isPrivate}
                 onValueChange={value => setIsPrivate(value)}
               />
+            </View> */}
+            <View style={style.infoContainer}>
+              <View style={style.infoBox}>
+                <Icon
+                  name="barbell-outline"
+                  size={20}
+                  color={theme.colors.onBackground}
+                  style={style.icon}
+                />
+                <Text variant="titleMedium">운동 부위</Text>
+              </View>
+              <Button>
+                <Text
+                  variant="bodyLarge"
+                  style={{ color: theme.colors.onBackground }}>
+                  {isSelected
+                    .filter(item => item.select)
+                    .map(item => item.part)
+                    .join(', ') || '운동 부위를 선택해주세요'}
+                </Text>
+              </Button>
             </View>
+            <ScrollView
+              style={style.horizontalButtonContainer}
+              horizontal
+              showsHorizontalScrollIndicator={false}>
+              {isSelected.map(button => {
+                return (
+                  <Button
+                    key={`select-${button.id}`}
+                    style={[style.button]}
+                    mode={button.select ? 'contained' : 'elevated'}
+                    onPress={() => {
+                      onToggle(button.id);
+                    }}>
+                    {button.part}
+                  </Button>
+                );
+              })}
+            </ScrollView>
           </ScrollView>
           <Button
             mode="contained"
@@ -310,10 +382,10 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
         </View>
       </TouchableWithoutFeedback>
       <DateTimeModal state={promiseDateState} setState={setPromiseDateState} />
-      <DateTimeModal
+      {/* <DateTimeModal
         state={recruitEndDateState}
         setState={setRecruitEndDateState}
-      />
+      /> */}
       <GymBottomSheet
         isBottomSheetOpen={isBottomSheetOpen}
         setIsBottomSheetOpen={setIsBottomSheetOpen}
@@ -344,6 +416,12 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  workoutPartContainer: {
+    paddingHorizontal: 12,
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
+    // alignItems: 'center',
+  },
   numberButtonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -368,6 +446,16 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 2,
+  },
+  horizontalButtonContainer: {
+    flexDirection: 'row',
+    paddingVertical: 12,
+    paddingBottom: 12,
+  },
+  button: {
+    flexDirection: 'row',
+    marginHorizontal: 5,
+    marginVertical: 5,
   },
   chip: {
     alignItems: 'center',
