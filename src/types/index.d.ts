@@ -17,29 +17,26 @@ interface WorkoutGoal {
   select: boolean;
 }
 
+interface WorkoutPart {
+  id: number;
+  part: string;
+  select: boolean;
+}
+
 interface Profile {
   uri: string;
   size: number;
   username: string;
 }
 
-interface WorkoutPromiseBase {
-  title: string; // 제목
-  description: string; // 설명
-  location: string; // 장소
-  date: Date; // 날짜
-  time: Date; // 시간
-  currentNumberOfPeople?: number; // 현재 참여 인원 (default: 1)
-  limitedNumberOfPeople: number; // 제한 인원
-}
-
 interface WorkoutPromiseCreate {
   title: string;
   description: string;
   promise_time: Date;
-  recruit_end_time: Date;
+  // recruit_end_time: Date;
+  workoutPart: string;
   maxParticipants: number;
-  isPrivate: boolean;
+  // isPrivate: boolean;
 }
 
 interface GymCreate {
@@ -62,23 +59,25 @@ interface WorkoutPromiseRead extends timestampMixin {
   description: string;
   maxParticipants: number;
   promiseTime: Date;
-  recruitEndTime: Date;
+  // recruitEndTime: Date;
   status: string;
   chatRoomId: string | null;
   // chatRoom: ChatRoom | null;
-  isPrivate: boolean;
+  // isPrivate: boolean;
   adminUserId: string;
   gymInfo: Gym | null;
+  workoutPart: string;
   participants: WorkoutParticipantsRead[];
 }
 
 interface WorkoutPromiseUpdate {
   title?: string;
   description?: string;
-  isPrivate?: boolean;
+  // isPrivate?: boolean;
   maxParticipants?: number;
   promise_time?: Date;
-  recruit_end_time?: Date | null;
+  workoutPart?: string;
+  // recruit_end_time?: Date | null;
   gymInfo?: Gym | null;
   status?: string;
 }
