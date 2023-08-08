@@ -410,18 +410,31 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                       </View>
                       <View style={style.infoBox}>
                         <Icon
-                          name="people-outline"
+                          name="barbell-outline"
                           size={20}
                           color={theme.colors.onBackground}
                           style={style.icon}
                         />
-                        <Text variant="bodyLarge" style={style.body}>
-                          {
-                            isAcceptedParticipant(query.data.participants)
-                              .length
-                          }
-                          /{query.data.maxParticipants} 참여
-                        </Text>
+                        {query.data.workoutPart ? (
+                          query.data.workoutPart
+                            .split(',')
+                            .map((part, index) => (
+                              <Text
+                                variant="bodyLarge"
+                                style={style.body}
+                                key={index}>
+                                {part}
+                                {index !==
+                                query.data.workoutPart.split(',').length - 1
+                                  ? ', '
+                                  : ''}
+                              </Text>
+                            ))
+                        ) : (
+                          <Text variant="bodyLarge" style={style.body}>
+                            운동 부위 미정
+                          </Text>
+                        )}
                       </View>
                       <Divider />
                       <View style={style.descriptionBox}>
