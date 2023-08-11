@@ -6,7 +6,7 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import { IconButton, List, Text } from 'react-native-paper';
+import { IconButton, List, Text, useTheme } from 'react-native-paper';
 import React, { useCallback, useEffect } from 'react';
 import { useAuthActions, useAuthValue } from 'hooks/context/useAuth';
 import { useGetMyBlockedListQuery } from '/hooks/queries/user.queries';
@@ -15,6 +15,7 @@ import { deleteBlockUser } from '/api/api';
 import { AxiosError } from 'axios';
 import { useSnackBarActions } from '/hooks/context/useSnackbar';
 import { useQueryClient } from '@tanstack/react-query';
+import { getVersion } from 'react-native-device-info';
 
 export default function SettingScreen() {
   const authState = useAuthValue();
@@ -27,7 +28,8 @@ export default function SettingScreen() {
     }
     getPhoneNumber();
   }, [getPhoneNumFromStorage]);
-
+  let version = getVersion();
+  const theme = useTheme();
   // const [isPushAlarmSwitchOn, setIsPushAlarmSwitchOn] = useState(false);
   // const [isMarketingSwitchOn, setIsMarketingSwitchOn] = useState(false);
 
@@ -176,6 +178,14 @@ export default function SettingScreen() {
                   'https://colaboai.notion.site/WeGoGym-cf3200d73cee4f64b917a99b18f0634c',
                 )
               }
+            />
+            <List.Item
+              title="버전 정보"
+              right={props => (
+                <Text {...props} style={{ color: theme.colors.backdrop }}>
+                  v.{version}
+                </Text>
+              )}
             />
             {/* TODO: voc Item 넣기 */}
           </View>
