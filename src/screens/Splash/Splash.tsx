@@ -16,7 +16,7 @@ export default function SplashScreen() {
           WeGoGym
         </Headline>
         <Text style={{ color: theme.colors.secondary, fontWeight: 'bold' }}>
-          운동 파트너 찾을 땐
+          운동 친구 찾을 땐
         </Text>
       </View>
     </View>
