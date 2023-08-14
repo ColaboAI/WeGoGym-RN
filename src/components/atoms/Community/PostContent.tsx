@@ -13,7 +13,7 @@ export default function PostContent({ content }: Props) {
 
   return (
     <Pressable onPress={() => setSeeMore(prev => !prev)}>
-      <Text variant="bodySmall">{contentToShow}</Text>
+      <Text variant="bodyMedium">{contentToShow}</Text>
       {isTextLong && !seeMore && <Text variant="bodySmall">... 더보기</Text>}
     </Pressable>
   );
