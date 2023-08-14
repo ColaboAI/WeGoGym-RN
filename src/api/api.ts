@@ -380,6 +380,7 @@ async function getNotificationWorkout(
 ): Promise<NotificationWorkoutListResponse> {
   const limit = 10;
   try {
+    // FIXME: 맨 앞에 / 가 있어야하지 않나?
     const res = await apiClient.get(`notification/workout`, {
       params: {
         limit,
@@ -496,6 +497,197 @@ async function getLastestAppVersion(): Promise<AppVersion> {
   }
 }
 
+async function getCommunityList(): Promise<Community[]> {
+  try {
+    const res = await apiClient.get('/communities');
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function getCommunity(id: number): Promise<Community> {
+  try {
+    const res = await apiClient.get(`/communities/${id}`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function getPostList({
+  communityId,
+  offset,
+}: {
+  communityId: number | undefined;
+  offset: number;
+}): Promise<PostListRead> {
+  const limit = 10;
+  try {
+    let queryParams = {};
+    if (communityId !== undefined) {
+      queryParams = { ...queryParams, communityId: communityId };
+    }
+    queryParams = { ...queryParams, limit: limit, offset: offset };
+    const res = await apiClient.get('/communities/posts', {
+      params: queryParams,
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function getPost(id: number): Promise<PostRead> {
+  try {
+    const res = await apiClient.get(`/communities/posts/${id}`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function postPost({
+  params,
+  images,
+}: {
+  params: PostCreate;
+  images: FormData;
+}): Promise<PostRead> {
+  try {
+    const res = await apiClient.post('/communities/posts', images, {
+      params,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function patchPost({
+  id,
+  params,
+  images,
+}: {
+  id: number;
+  params: PostUpdate;
+  images: FormData;
+}): Promise<PostRead> {
+  try {
+    const res = await apiClient.patch(`/communities/posts/${id}`, images, {
+      params,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function deletePost(id: number): Promise<void> {
+  try {
+    const res = await apiClient.delete(`/communities/posts/${id}`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function getCommentList({
+  postId,
+  offset,
+}: {
+  postId: number;
+  offset: number;
+}): Promise<CommentListRead> {
+  const limit = 10;
+  try {
+    const res = await apiClient.get(`/communities/comments`, {
+      params: {
+        post_id: postId,
+        limit,
+        offset,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function postComment(params: CommentCreate): Promise<CommentRead> {
+  try {
+    const res = await apiClient.post(`/communities/comments`, params);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function patchComment({
+  id,
+  params,
+}: {
+  id: number;
+  params: CommentUpdate;
+}): Promise<CommentRead> {
+  try {
+    const res = await apiClient.patch(`/communities/comments/${id}`, params);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function deleteComment(id: number): Promise<void> {
+  try {
+    const res = await apiClient.delete(`/communities/comments/${id}`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function postLikePost(id: number): Promise<PostRead> {
+  try {
+    const res = await apiClient.post(`/communities/posts/${id}/like`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function postDisLikePost(id: number): Promise<PostRead> {
+  try {
+    const res = await apiClient.post(`/communities/posts/${id}/unlike`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function postLikeComment(id: number): Promise<CommentRead> {
+  try {
+    const res = await apiClient.post(`/communities/comments/${id}/like`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function postDisLikeComment(id: number): Promise<CommentRead> {
+  try {
+    const res = await apiClient.post(`/communities/comments/${id}/unlike`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
 export {
   postLogin,
   postRegister,
@@ -532,4 +724,19 @@ export {
   deleteBlockUser,
   getMyBlockedList,
   getLastestAppVersion,
+  getCommunityList,
+  getCommunity,
+  getPostList,
+  getPost,
+  postPost,
+  patchPost,
+  deletePost,
+  postComment,
+  patchComment,
+  deleteComment,
+  getCommentList,
+  postLikePost,
+  postDisLikePost,
+  postLikeComment,
+  postDisLikeComment,
 };

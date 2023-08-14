@@ -335,3 +335,59 @@ interface AppVersion {
   updateLinkIOs: str;
   updateLinkAndroid: str;
 }
+
+interface Community extends timestampMixin {
+  id: number;
+  type: int;
+  name: string;
+  description: string;
+}
+
+interface PostCreate {
+  community_id: number;
+  title: string;
+  content: string;
+  video: string[];
+}
+
+interface PostUpdate {
+  title?: string;
+  content?: string;
+  video?: string[];
+}
+
+interface PostRead extends PostCreate, timestampMixin {
+  id: number;
+  image: string[] | null;
+  video: string[];
+  likeCnt: number;
+  available: boolean;
+  user: User;
+  commentCnt: number;
+}
+
+interface PostListRead {
+  total: number;
+  items: PostRead[];
+  nextCursor: int | null;
+}
+
+interface CommentCreate {
+  post_id: number;
+  content: string;
+}
+
+interface CommentUpdate {
+  content?: string;
+}
+
+interface CommentRead extends CommentCreate, timestampMixin {
+  id: number;
+  user: User;
+}
+
+interface CommentListRead {
+  total: number;
+  items: CommentRead[];
+  nextCursor: int | null;
+}
