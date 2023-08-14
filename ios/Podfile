@@ -40,7 +40,13 @@ target 'WeGoGym' do
   pod 'GoogleUtilities', :modular_headers => true
   # Flags change depending on the env values.
   flags = get_default_flags()
-  use_frameworks! :linkage => :static
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseCoreExtension', :modular_headers => true
+  pod 'FirebaseInstallations', :modular_headers => true
+  pod 'GoogleDataTransport', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'nanopb', :modular_headers => true
+  
   $RNFirebaseAsStaticFramework = true
   # React Native Maps dependencies
   # The following line is only needed if building on an Apple silicon Mac without rosetta.
@@ -59,7 +65,7 @@ target 'WeGoGym' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    # :flipper_configuration => flipper_config,
+    :flipper_configuration => flipper_config,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
