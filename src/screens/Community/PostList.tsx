@@ -8,6 +8,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { FallbackProps } from 'react-error-boundary';
 import { usePostListQuery } from '/hooks/queries/post.queries';
 import PostListItem from '/components/organisms/Community/PostListItem';
+import CustomFAB from '/components/molecules/Home/CustomFAB';
 type PostListScreenProps = CommunityStackScreenProps<'PostList'>;
 export default function PostListScreen({ navigation }: PostListScreenProps) {
   const navigateToPostDetail = useCallback(
@@ -51,22 +52,30 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
       <ErrorBoundary
         onReset={reset}
         fallbackRender={props => renderError({ ...props })}>
-        <FlatList
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-          data={data?.pages.flatMap(page => page.items)}
-          renderItem={renderItem}
-          keyExtractor={item => `${item.id}`}
-          ItemSeparatorComponent={renderDivider}
-          // TODO: onEndReadched Debugging , Debounce..
-          // Threshold를 0.7로 설정하면, 스크롤이 끝에 도달했을 때, 70%의 높이를 넘어서야 onEndReached가 호출된다.?
-          onEndReached={() => {
-            if (hasNextPage) {
-              fetchNextPage();
-            }
-          }}
-          onEndReachedThreshold={0.7}
-        />
+        <>
+          <FlatList
+            style={styles.container}
+            contentContainerStyle={styles.contentContainer}
+            data={data?.pages.flatMap(page => page.items)}
+            renderItem={renderItem}
+            keyExtractor={item => `${item.id}`}
+            ItemSeparatorComponent={renderDivider}
+            // TODO: onEndReadched Debugging , Debounce..
+            // Threshold를 0.7로 설정하면, 스크롤이 끝에 도달했을 때, 70%의 높이를 넘어서야 onEndReached가 호출된다.?
+            onEndReached={() => {
+              if (hasNextPage) {
+                fetchNextPage();
+              }
+            }}
+            onEndReachedThreshold={0.7}
+          />
+          <CustomFAB
+            icon="create"
+            onPress={() => {
+              navigation.push('PostCreate');
+            }}
+          />
+        </>
       </ErrorBoundary>
     </Suspense>
   );

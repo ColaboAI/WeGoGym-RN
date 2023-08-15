@@ -343,6 +343,7 @@ interface PostRead extends PostCreate, timestampMixin {
   image: string[] | null;
   video: string[];
   likeCnt: number;
+  isLiked: number;
   available: boolean;
   user: User;
   commentCnt: number;

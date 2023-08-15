@@ -5,12 +5,13 @@ import ImageSlide from '../Common/ImageSlide';
 
 type Props = {
   post: PostRead;
+  onPress: (id: number) => void;
 };
 
-export default function PostBody({ post }: Props) {
+export default function PostBody({ post, onPress }: Props) {
   return (
     <View style={styles.container}>
-      <PostContent content={post.content} />
+      <PostContent postId={post.id} onPress={onPress} content={post.content} />
       {post.image && post.image.length > 0 && (
         <ImageSlide imageUrls={post.image} />
       )}
