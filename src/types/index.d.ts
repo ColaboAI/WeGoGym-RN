@@ -385,6 +385,9 @@ interface CommentUpdate {
 interface CommentRead extends CommentCreate, timestampMixin {
   id: number;
   user: User;
+  likeCnt: number;
+  isLiked: number;
+  available: boolean;
 }
 
 interface CommentListRead {
