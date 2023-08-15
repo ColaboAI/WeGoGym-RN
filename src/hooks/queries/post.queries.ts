@@ -1,4 +1,5 @@
 import {
+  InfiniteData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -119,10 +120,34 @@ export function usePostLikeMutation() {
   const queryClient = useQueryClient();
   const { onShow } = useSnackBarActions();
   return useMutation({
-    mutationFn: ({ postId }: { postId: number }) => postLikePost(postId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['postList']);
+    mutationFn: (postId: number) => postLikePost(postId),
+    onSuccess: (data, variables) => {
+      const postId = variables;
       onShow('게시글 좋아요에 성공하였습니다.', 'success');
+      queryClient.setQueryData<InfiniteData<PostListRead>>(
+        // FIXME: 지금은 전체 쿼리, 나중에는 커뮤니티별 쿼리에도 적용
+        ['postList', undefined],
+        oldData => {
+          console.log(oldData);
+          if (oldData === undefined) {
+            return;
+          }
+          const newData = oldData.pages.map(page => {
+            const newPage = page.items.map(result => {
+              if (result.id === postId) {
+                return {
+                  ...result,
+                  isLiked: data.isLiked,
+                  likeCnt: data.likeCnt,
+                };
+              }
+              return result;
+            });
+            return { ...page, items: newPage };
+          });
+          return { ...oldData, pages: newData };
+        },
+      );
     },
     onError: (error: CustomError) => {
       onShow(
@@ -137,10 +162,34 @@ export function usePostDisLikeMutation() {
   const queryClient = useQueryClient();
   const { onShow } = useSnackBarActions();
   return useMutation({
-    mutationFn: ({ postId }: { postId: number }) => postDisLikePost(postId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['postList']);
+    mutationFn: (postId: number) => postDisLikePost(postId),
+    onSuccess: (data, variables) => {
+      const postId = variables;
       onShow('의견을 게시자에게 공유했습니다.', 'success');
+      queryClient.setQueryData<InfiniteData<PostListRead>>(
+        // FIXME: 지금은 전체 쿼리, 나중에는 커뮤니티별 쿼리에도 적용
+        ['postList', undefined],
+        oldData => {
+          console.log(oldData);
+          if (oldData === undefined) {
+            return;
+          }
+          const newData = oldData.pages.map(page => {
+            const newPage = page.items.map(result => {
+              if (result.id === postId) {
+                return {
+                  ...result,
+                  isLiked: data.isLiked,
+                  likeCnt: data.likeCnt,
+                };
+              }
+              return result;
+            });
+            return { ...page, items: newPage };
+          });
+          return { ...oldData, pages: newData };
+        },
+      );
     },
     onError: (error: CustomError) => {
       onShow(
@@ -155,7 +204,7 @@ export function useDeletePosttMutation() {
   const queryClient = useQueryClient();
   const { onShow } = useSnackBarActions();
   return useMutation({
-    mutationFn: ({ postId }: { postId: number }) => deletePost(postId),
+    mutationFn: (postId: number) => deletePost(postId),
     onSuccess: () => {
       queryClient.invalidateQueries(['postList']);
       onShow('게시글 삭제에 성공하였습니다.', 'success');

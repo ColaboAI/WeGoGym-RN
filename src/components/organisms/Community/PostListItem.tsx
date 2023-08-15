@@ -12,7 +12,7 @@ interface Props {
   onPress: (postId: number) => void;
 }
 
-export default function PostListItem({ post, user }: Props) {
+export default function PostListItem({ post, user, onPress }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
@@ -24,8 +24,14 @@ export default function PostListItem({ post, user }: Props) {
       </View>
       <View style={styles.postContainer}>
         <PostHeader user={user} updatedAt={post.updatedAt} />
-        <PostBody post={post} />
-        <PostFooter likes={post.likeCnt} comments={post.commentCnt} />
+        <PostBody onPress={onPress} post={post} />
+        <PostFooter
+          postId={post.id}
+          likes={post.likeCnt}
+          comments={post.commentCnt}
+          isLiked={post.isLiked}
+          onPress={onPress}
+        />
       </View>
     </View>
   );

@@ -34,7 +34,7 @@ export type HomeStackParamList = {
 
 export type CommunityStackParamList = {
   // CommunityList: undefined;
-  PostList: { communityId: number };
+  PostList: { communityId?: number };
   PostDetail: { postId: number };
   PostCreate: undefined;
   PostEdit: { postId: number };
