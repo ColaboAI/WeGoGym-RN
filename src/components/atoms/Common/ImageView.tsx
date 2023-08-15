@@ -21,10 +21,9 @@ export default function ImageView({ imageUrl, idx, imgLength }: Props) {
   const imageWidth = imgLength < 3 ? (width * 4) / 5 : width / 3;
   const [pressed, setPressed] = React.useState(false);
   const resizeMode = pressed === true ? 'contain' : 'cover';
-  const marginRight = idx === imgLength - 1 ? 0 : 10;
   return (
     <Pressable
-      style={[styles.imageContainer, { marginRight: marginRight as number }]}
+      style={styles.imageContainer}
       key={`img-view-${idx}`}
       onPress={() => setPressed(prev => !prev)}>
       <ImageBackground
@@ -71,6 +70,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    marginRight: 10,
   },
   countText: {
     textAlign: 'right',
