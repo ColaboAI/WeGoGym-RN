@@ -53,6 +53,18 @@ const WorkoutPromiseCard = ({
                     ]}>
                     <Text style={style.tagText}>{getDday(promiseTime)}</Text>
                   </View>
+                  {workoutPart && workoutPart.split(',').length > 0
+                    ? workoutPart.split(',').map((part, index) => (
+                        <View
+                          key={`workout-promise-card-tag-${index}`}
+                          style={[
+                            style.tagBox,
+                            { backgroundColor: theme.colors.surfaceVariant },
+                          ]}>
+                          <Text style={style.tagText}>{part}</Text>
+                        </View>
+                      ))
+                    : null}
                 </>
               ) : (
                 <View
@@ -63,18 +75,6 @@ const WorkoutPromiseCard = ({
                   <Text style={style.tagText}>모집 완료</Text>
                 </View>
               )}
-              {workoutPart && workoutPart.split(',').length > 0
-                ? workoutPart.split(',').map((part, index) => (
-                    <View
-                      key={`workout-promise-card-tag-${index}`}
-                      style={[
-                        style.tagBox,
-                        { backgroundColor: theme.colors.surfaceVariant },
-                      ]}>
-                      <Text style={style.tagText}>{part}</Text>
-                    </View>
-                  ))
-                : null}
             </View>
             <Card.Title
               title={title}
