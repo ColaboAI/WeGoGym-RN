@@ -35,7 +35,7 @@ const GymBottomSheet = (props: Props) => {
         pressBehavior="close"
         appearsOnIndex={0}
         disappearsOnIndex={-1}
-        opacity={0.5}
+        opacity={0.1}
       />
     ),
     [],
@@ -117,7 +117,7 @@ const GymBottomSheet = (props: Props) => {
       index={-1}
       snapPoints={snapPoints}
       backdropComponent={renderBackdrop}
-      handleStyle={{ backgroundColor: theme.colors.background }}
+      handleStyle={{ backgroundColor: theme.colors.inverseOnSurface }}
       backgroundStyle={{ backgroundColor: theme.colors.background }}
       enablePanDownToClose={true}
       onClose={() => {
