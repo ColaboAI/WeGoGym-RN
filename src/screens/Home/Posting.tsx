@@ -25,10 +25,10 @@ import {
   isToday,
 } from 'utils/util';
 import { HomeStackScreenProps } from 'navigators/types';
-import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
 import { useWorkoutMutation } from '/hooks/queries/workout.queries';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import GoogleMapSearch from '/components/organisms/Common/GoogleMapSearch';
 
 const MAX_NUMBER = 10;
 const MIN_NUMBER = 2;
@@ -386,7 +386,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
         state={recruitEndDateState}
         setState={setRecruitEndDateState}
       /> */}
-      <GymBottomSheet
+      <GoogleMapSearch
         isBottomSheetOpen={isBottomSheetOpen}
         setIsBottomSheetOpen={setIsBottomSheetOpen}
         gymInfo={gymInfo}
