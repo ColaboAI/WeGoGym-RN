@@ -2,7 +2,7 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 import { PermissionsAndroid } from 'react-native';
-
+import Geolocation from 'react-native-geolocation-service';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import { Platform } from 'react-native';
 import { mmkv } from '/store/secureStore';
@@ -10,9 +10,14 @@ import { convertObjectKeyToCamelCase } from 'utils/util';
 
 async function checkApplicationPermission() {
   if (Platform.OS === 'android') {
-    await PermissionsAndroid.request(
+    await PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-    );
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    ]);
+  }
+
+  if (Platform.OS === 'ios') {
+    return await Geolocation.requestAuthorization('whenInUse');
   }
 
   const authorizationStatus = await messaging().requestPermission();
