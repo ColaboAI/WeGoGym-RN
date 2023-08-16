@@ -53,6 +53,11 @@ interface Gym extends GymCreate {
   zipCode: string;
 }
 
+interface Location {
+  lat: number;
+  lng: number;
+}
+
 interface WorkoutPromiseRead extends timestampMixin {
   id: string;
   title: string;
@@ -308,6 +313,7 @@ interface CheckUserInfoResponse {
   phoneNumberExists: boolean | null;
   usernameExists: boolean | null;
 }
+
 interface CustomError extends Error {
   response?: {
     data: {
