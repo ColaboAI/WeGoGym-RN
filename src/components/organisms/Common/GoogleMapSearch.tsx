@@ -51,7 +51,7 @@ const GoogleMapSearch = (props: Props) => {
       index={-1}
       snapPoints={snapPoints}
       backdropComponent={renderBackdrop}
-      handleStyle={{ backgroundColor: theme.colors.inverseOnSurface }}
+      handleStyle={{ backgroundColor: theme.colors.background }}
       backgroundStyle={{ backgroundColor: theme.colors.background }}
       enablePanDownToClose={true}
       onClose={() => {
@@ -59,7 +59,6 @@ const GoogleMapSearch = (props: Props) => {
       }}>
       <BottomSheetView style={styles.container}>
         <GoogleMap />
-        {/* <GooglePlacesInput /> */}
       </BottomSheetView>
     </BottomSheet>
   );
