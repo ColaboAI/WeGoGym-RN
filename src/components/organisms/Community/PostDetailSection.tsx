@@ -45,7 +45,11 @@ export default function PostDetailSection({ postId }: Props) {
                 />
               </View>
               <View style={styles.postSection}>
-                <PostDetailHeader user={post.user} updatedAt={post.updatedAt} />
+                <PostDetailHeader
+                  postId={postId}
+                  user={post.user}
+                  updatedAt={post.updatedAt}
+                />
                 <PostDetailBody post={post} />
                 <PostDetailFooter
                   postId={post.id}
