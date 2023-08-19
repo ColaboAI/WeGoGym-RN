@@ -8,7 +8,7 @@ import {
   useWorkoutDeleteMutation,
 } from '/hooks/queries/workout.queries';
 import { useGetUserInfoQuery } from '/hooks/queries/user.queries';
-import { Alert } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { isAdmin } from '/utils/util';
 
 type DetailParams = {
@@ -68,6 +68,7 @@ const DetailsNavBarHeader = ({ navigation, back, route }: Props) => {
               flexDirection: 'row',
               justifyContent: 'center',
             }}
+            contentStyle={styles.menuContainer}
             visible={menuVisible}
             onDismiss={() => setMenuVisible(false)}
             anchor={
@@ -121,3 +122,9 @@ const DetailsNavBarHeader = ({ navigation, back, route }: Props) => {
 };
 
 export default DetailsNavBarHeader;
+
+const styles = StyleSheet.create({
+  menuContainer: {
+    borderRadius: 20,
+  },
+});
