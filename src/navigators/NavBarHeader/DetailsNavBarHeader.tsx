@@ -3,6 +3,7 @@ import { Appbar, Menu } from 'react-native-paper';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { useAuthActions } from '/hooks/context/useAuth';
 import { Route } from '@react-navigation/native';
+import { StyleSheet } from 'react-native';
 type DetailParams = {
   workoutPromiseId?: string;
 };
@@ -27,6 +28,7 @@ const DetailsNavBarHeader = ({ navigation, back, route }: Props) => {
         <Menu
           visible={menuVisible}
           onDismiss={() => setMenuVisible(false)}
+          contentStyle={styles.menuContainer}
           anchor={
             <Appbar.Action
               icon="ellipsis-vertical"
@@ -50,3 +52,9 @@ const DetailsNavBarHeader = ({ navigation, back, route }: Props) => {
 };
 
 export default DetailsNavBarHeader;
+
+const styles = StyleSheet.create({
+  menuContainer: {
+    borderRadius: 20,
+  },
+});

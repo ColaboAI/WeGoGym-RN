@@ -104,6 +104,7 @@ export default function UserScreen({ navigation, route }: Props) {
                   <Menu
                     visible={menuVisible}
                     onDismiss={() => setMenuVisible(false)}
+                    contentStyle={style.reportButton}
                     anchor={
                       <IconButton
                         icon="ellipsis-vertical"
@@ -434,5 +435,8 @@ const style = StyleSheet.create({
   },
   chatAndImageBtn: {
     padding: 12,
+  },
+  reportButton: {
+    borderRadius: 20,
   },
 });
