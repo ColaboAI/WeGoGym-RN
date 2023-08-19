@@ -1,21 +1,22 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Username from '/components/atoms/Common/Username';
-import { IconButton } from 'react-native-paper';
+import CommentReportButton from '../../atoms/Common/ReportButton';
 import RelativeTime from '/components/atoms/Common/RelativeTime';
 type Props = {
+  commentId: number;
   user: User;
   updatedAt: Date;
 };
 
-export default function CommentHeader({ user, updatedAt }: Props) {
+export default function CommentHeader({ user, updatedAt, commentId }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.nameAndTime}>
         <Username username={user.username} />
         <RelativeTime date={updatedAt} />
       </View>
-      <IconButton size={10} icon={'ellipsis-horizontal-sharp'} />
+      <CommentReportButton targetType="Comment" targetId={commentId} />
     </View>
   );
 }

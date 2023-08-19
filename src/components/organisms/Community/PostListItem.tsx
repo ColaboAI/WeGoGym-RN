@@ -23,7 +23,7 @@ export default function PostListItem({ post, user, onPress }: Props) {
         />
       </View>
       <View style={styles.postContainer}>
-        <PostHeader user={user} updatedAt={post.updatedAt} />
+        <PostHeader postId={post.id} user={user} updatedAt={post.updatedAt} />
         <PostBody onPress={onPress} post={post} />
         <PostFooter
           postId={post.id}

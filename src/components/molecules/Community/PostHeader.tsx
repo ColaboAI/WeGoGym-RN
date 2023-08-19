@@ -1,21 +1,22 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Username from '/components/atoms/Common/Username';
-import { IconButton } from 'react-native-paper';
 import RelativeTime from '/components/atoms/Common/RelativeTime';
+import PostReportButton from '../../atoms/Common/ReportButton';
 type Props = {
+  postId: number;
   user: User;
   updatedAt: Date;
 };
 
-function PostHeader({ user, updatedAt }: Props) {
+function PostHeader({ postId, user, updatedAt }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.nameAndTime}>
         <Username username={user.username} />
         <RelativeTime date={updatedAt} />
       </View>
-      <IconButton size={10} icon={'ellipsis-horizontal-sharp'} />
+      <PostReportButton targetType="Post" targetId={postId} />
     </View>
   );
 }
