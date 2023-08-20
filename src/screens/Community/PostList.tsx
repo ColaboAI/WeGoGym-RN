@@ -9,6 +9,7 @@ import { FallbackProps } from 'react-error-boundary';
 import { usePostListQuery } from '/hooks/queries/post.queries';
 import PostListItem from '/components/organisms/Community/PostListItem';
 import CustomFAB from '/components/molecules/Home/CustomFAB';
+
 type PostListScreenProps = CommunityStackScreenProps<'PostList'>;
 export default function PostListScreen({ navigation }: PostListScreenProps) {
   const navigateToPostDetail = useCallback(
