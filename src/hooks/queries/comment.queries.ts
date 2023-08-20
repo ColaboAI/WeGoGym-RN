@@ -77,13 +77,13 @@ export function useCommentUpdateMutation() {
   });
 }
 
-export function useCommentDeleteMutation() {
+export function useCommentDeleteMutation(postId: number) {
   const { onShow } = useSnackBarActions();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteComment,
     onSuccess: () => {
-      queryClient.invalidateQueries(['commentList']);
+      queryClient.invalidateQueries(['commentList', postId]);
     },
     onError: (error: CustomError) => {
       onShow(
@@ -99,8 +99,8 @@ export function useCommentLikeMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: postLikeComment,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['commentList']);
+    onSuccess: data => {
+      queryClient.invalidateQueries(['commentList', data.postId]);
     },
     onError: (error: CustomError) => {
       onShow(
