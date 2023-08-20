@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   useCommentDisLikeMutation,
   useCommentLikeMutation,
-} from '/hooks/queries/comments.queries';
+} from '../../../hooks/queries/comment.queries';
 type Props = {
   commentId: number;
   likes: number;
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: '2%',
+    marginBottom: '1%',
   },
 
   icon: {

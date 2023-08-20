@@ -129,7 +129,6 @@ export function usePostLikeMutation() {
         // FIXME: 지금은 전체 쿼리, 나중에는 커뮤니티별 쿼리에도 적용
         ['postList', undefined],
         oldData => {
-          console.log(oldData);
           if (oldData === undefined) {
             return;
           }
@@ -172,7 +171,6 @@ export function usePostDisLikeMutation() {
         // FIXME: 지금은 전체 쿼리, 나중에는 커뮤니티별 쿼리에도 적용
         ['postList', undefined],
         oldData => {
-          console.log(oldData);
           if (oldData === undefined) {
             return;
           }
@@ -202,7 +200,7 @@ export function usePostDisLikeMutation() {
   });
 }
 
-export function useDeletePosttMutation() {
+export function usePostDeleteMutation() {
   const queryClient = useQueryClient();
   const { onShow } = useSnackBarActions();
   return useMutation({

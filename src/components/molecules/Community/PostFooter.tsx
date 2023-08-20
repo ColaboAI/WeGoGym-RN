@@ -34,7 +34,6 @@ export default function PostFooter({
   const handleDisLike = () => {
     dislikeMutation.mutate(postId);
   };
-  console.log('isLiked', postId, isLiked);
 
   return (
     <View style={styles.container}>
@@ -71,6 +70,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: '2%',
+    marginBottom: '2%',
   },
 
   icon: {
