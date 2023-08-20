@@ -84,6 +84,7 @@ export function useCommentDeleteMutation(postId: number) {
     mutationFn: deleteComment,
     onSuccess: () => {
       queryClient.invalidateQueries(['commentList', postId]);
+      onShow('댓글 삭제에 성공하였습니다.', 'success');
     },
     onError: (error: CustomError) => {
       onShow(

@@ -6,7 +6,7 @@ import PostDetailSection from '/components/organisms/Community/PostDetailSection
 import { CommunityStackScreenProps } from '/navigators/types';
 import { FlatList } from 'react-native-gesture-handler';
 import { Button, Divider } from 'react-native-paper';
-import { useCommentListQuery } from '/hooks/queries/comments.queries';
+import { useCommentListQuery } from '/hooks/queries/comment.queries';
 import CommentListItem from '/components/organisms/Community/CommentListItem';
 
 type PostDetailScreenProps = CommunityStackScreenProps<'PostDetail'>;

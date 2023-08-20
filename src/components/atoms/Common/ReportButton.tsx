@@ -6,9 +6,14 @@ import { useAuthActions } from '/hooks/context/useAuth';
 interface Props {
   targetType: string;
   targetId?: string | number;
+  handleDelete?: () => void;
 }
 
-export default function PostReportButton({ targetType, targetId }: Props) {
+export default function PostReportButton({
+  targetType,
+  targetId,
+  handleDelete,
+}: Props) {
   const theme = useTheme();
   const [menuVisible, setMenuVisible] = React.useState(false);
   const { setReportBottomSheetOpen, setReportTarget } = useAuthActions();
@@ -40,6 +45,15 @@ export default function PostReportButton({ targetType, targetId }: Props) {
         }}
         title="신고하기"
       />
+      {handleDelete && (
+        <Menu.Item
+          onPress={() => {
+            handleDelete();
+            setMenuVisible(false);
+          }}
+          title="삭제하기"
+        />
+      )}
     </Menu>
   );
 }

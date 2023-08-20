@@ -19,9 +19,10 @@ export default function CommentListItem({ comment }: Props) {
       </View>
 
       <View
-        key={`post-${comment.post_id}-cmt-${comment.id}`}
+        key={`post-${comment.postId}-cmt-${comment.id}`}
         style={styles.rightContainer}>
         <CommentHeader
+          postId={comment.postId}
           commentId={comment.id}
           user={comment.user}
           updatedAt={comment.updatedAt}
