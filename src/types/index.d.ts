@@ -356,7 +356,7 @@ interface PostListRead {
 }
 
 interface CommentCreate {
-  post_id: number;
+  postId: number;
   content: string;
 }
 
