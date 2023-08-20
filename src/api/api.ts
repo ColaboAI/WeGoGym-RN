@@ -609,7 +609,7 @@ async function getCommentList({
   try {
     const res = await apiClient.get(`/communities/comments`, {
       params: {
-        post_id: postId,
+        postId,
         limit,
         offset,
       },
