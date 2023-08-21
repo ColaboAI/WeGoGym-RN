@@ -16,15 +16,15 @@ async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
 
 async function postWorkoutPromise({
   workoutPromise,
-  gymInfo,
+  promiseLocation,
 }: {
   workoutPromise: WorkoutPromiseCreate;
-  gymInfo: GymCreate | null;
+  promiseLocation: PromiseLocation | null;
 }): Promise<WorkoutPromiseRead> {
   try {
     const res = await apiClient.post('/workout-promise', {
       workoutPromise,
-      gymInfo,
+      promiseLocation,
     });
     return res.data;
   } catch (e) {
@@ -44,16 +44,16 @@ async function deleteWorkoutPromise(id: string): Promise<void> {
 async function putWorkoutPromiseInfo({
   workoutPromiseId,
   workoutPromise,
-  gymInfo,
+  promiseLocation,
 }: {
   workoutPromiseId: string;
   workoutPromise: WorkoutPromiseUpdate;
-  gymInfo: GymCreate | null;
+  promiseLocation: PromiseLocation | null;
 }): Promise<WorkoutPromiseRead> {
   try {
     const res = await apiClient.patch(`/workout-promise/${workoutPromiseId}`, {
       workoutPromise,
-      gymInfo,
+      promiseLocation,
     });
     return res.data;
   } catch (e) {
