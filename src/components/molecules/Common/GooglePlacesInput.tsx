@@ -36,9 +36,10 @@ const GooglePlacesInput = (props: Props) => {
             icon="search-outline"
             size={15}
             style={styles.searchBtnIcon}
-            disabled={true}
+            rippleColor="transparent"
           />
         ),
+        textColor: 'black',
       }}
       currentLocation={true}
       currentLocationLabel="현재 위치"
