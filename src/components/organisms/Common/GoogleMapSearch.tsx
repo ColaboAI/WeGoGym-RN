@@ -11,8 +11,10 @@ import GoogleMap from '/components/molecules/Common/GoogleMap';
 type Props = {
   isBottomSheetOpen: boolean;
   setIsBottomSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  gymInfo: Gym | null;
-  setGymInfo: React.Dispatch<React.SetStateAction<Gym | null>>;
+  promiseLocation: PromiseLocation | null;
+  setPromiseLocation: React.Dispatch<
+    React.SetStateAction<PromiseLocation | null>
+  >;
 };
 
 const GoogleMapSearch = (props: Props) => {
@@ -58,7 +60,13 @@ const GoogleMapSearch = (props: Props) => {
         props.setIsBottomSheetOpen(false);
       }}>
       <BottomSheetView style={styles.container}>
-        <GoogleMap />
+        <GoogleMap
+          isBottomSheetOpen={props.isBottomSheetOpen}
+          setIsBottomSheetOpen={props.setIsBottomSheetOpen}
+          promiseLocation={props.promiseLocation}
+          setPromiseLocation={props.setPromiseLocation}
+          bottomSheetRef={bottomSheetRef}
+        />
       </BottomSheetView>
     </BottomSheet>
   );

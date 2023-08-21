@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import GooglePlacesInput from './GooglePlacesInput';
@@ -7,10 +7,24 @@ import { Text, useTheme } from 'react-native-paper';
 import CustomCallout from './CustomCallout';
 import CustomMarkerView from './CustomMarkerView';
 import mapStyle from '/asset/json/mapStyle.json';
+import BottomSheet from '@gorhom/bottom-sheet';
 
-const GoogleMap = () => {
+type Props = {
+  isBottomSheetOpen: boolean;
+  setIsBottomSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  promiseLocation: PromiseLocation | null;
+  setPromiseLocation: React.Dispatch<
+    React.SetStateAction<PromiseLocation | null>
+  >;
+  bottomSheetRef: React.RefObject<BottomSheet>;
+};
+
+const GoogleMap = (props: Props) => {
   const theme = useTheme();
-  const [location, setLocation] = useState<Location | undefined>();
+  const [location, setLocation] = useState<Location>({
+    lat: 37.5665,
+    lng: 126.978,
+  });
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
@@ -49,13 +63,15 @@ const GoogleMap = () => {
     _data: any,
     details: { geometry: { location: Location } },
   ) => {
-    if (details.geometry) {
-      const { lat, lng } = details.geometry.location;
-      setLocation({
-        lat: lat,
-        lng: lng,
-      });
-    }
+    console.log('data', _data);
+    console.log('details', details);
+
+    const { lat, lng } = details.geometry.location;
+    setLocation({
+      lat: lat,
+      lng: lng,
+    });
+
     if (_data.structured_formatting) {
       const newTitle = _data.structured_formatting.main_text;
       setTitle(newTitle);
@@ -63,8 +79,19 @@ const GoogleMap = () => {
     } else {
       const newTitle = _data.formatted_address;
       setTitle(newTitle);
-      setDescription('');
+      setDescription(newTitle);
     }
+  };
+
+  const onPressCallout = () => {
+    props.setIsBottomSheetOpen(false);
+    props.bottomSheetRef.current?.close();
+    props.setPromiseLocation({
+      placeName: title,
+      address: description,
+      latitude: location.lat,
+      longitude: location.lng,
+    });
   };
 
   return (
@@ -114,7 +141,7 @@ const GoogleMap = () => {
                 alphaHitTest
                 tooltip
                 onPress={() => {
-                  Alert.alert('클릭', title);
+                  onPressCallout();
                 }}
                 style={styles.calloutView}>
                 <CustomCallout>
