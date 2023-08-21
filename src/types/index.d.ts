@@ -58,6 +58,13 @@ interface Location {
   lng: number;
 }
 
+interface PromiseLocation {
+  placeName: string; // 장소명
+  address: string; // 주소
+  latitude: number; // 위도
+  longitude: number; // 경도
+}
+
 interface WorkoutPromiseRead extends timestampMixin {
   id: string;
   title: string;
@@ -70,7 +77,7 @@ interface WorkoutPromiseRead extends timestampMixin {
   // chatRoom: ChatRoom | null;
   // isPrivate: boolean;
   adminUserId: string;
-  gymInfo: Gym | null;
+  promiseLocation: PromiseLocation | null;
   workoutPart: string;
   participants: WorkoutParticipantsRead[];
 }
@@ -83,7 +90,7 @@ interface WorkoutPromiseUpdate {
   promise_time?: Date;
   workoutPart?: string;
   // recruit_end_time?: Date | null;
-  gymInfo?: Gym | null;
+  promiseLocation?: PromiseLocation | null;
   status?: string;
 }
 
