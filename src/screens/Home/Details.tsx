@@ -124,7 +124,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
             workoutPromise: {
               status: 'RECRUIT_ENDED',
             },
-            gymInfo: null,
+            promiseLocation: null,
           };
           updateWorkoutStatusMutation.mutate(data);
         },
@@ -403,8 +403,8 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                           style={style.icon}
                         />
                         <Text variant="bodyLarge" style={style.body}>
-                          {query.data.gymInfo
-                            ? query.data.gymInfo.name
+                          {query.data.promiseLocation
+                            ? query.data.promiseLocation.placeName
                             : '위치 미정'}
                         </Text>
                       </View>

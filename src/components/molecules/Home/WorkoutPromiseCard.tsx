@@ -19,7 +19,7 @@ const WorkoutPromiseCard = ({
   adminUserId,
   maxParticipants,
   promiseTime,
-  gymInfo,
+  promiseLocation,
   createdAt,
   workoutPart,
   participants,
@@ -49,7 +49,7 @@ const WorkoutPromiseCard = ({
                   <View
                     style={[
                       style.tagBox,
-                      { backgroundColor: theme.colors.surfaceVariant },
+                      { backgroundColor: theme.colors.secondaryContainer },
                     ]}>
                     <Text style={style.tagText}>{getDday(promiseTime)}</Text>
                   </View>
@@ -59,7 +59,9 @@ const WorkoutPromiseCard = ({
                           key={`workout-promise-card-tag-${index}`}
                           style={[
                             style.tagBox,
-                            { backgroundColor: theme.colors.surfaceVariant },
+                            {
+                              backgroundColor: theme.colors.tertiaryContainer,
+                            },
                           ]}>
                           <Text style={style.tagText}>{part}</Text>
                         </View>
@@ -114,7 +116,9 @@ const WorkoutPromiseCard = ({
                     color={theme.colors.onBackground}
                     style={style.icon}
                   />
-                  <Text>{gymInfo ? gymInfo.name : '위치 미정'}</Text>
+                  <Text>
+                    {promiseLocation ? promiseLocation.placeName : '위치 미정'}
+                  </Text>
                 </View>
                 <View
                   style={{
