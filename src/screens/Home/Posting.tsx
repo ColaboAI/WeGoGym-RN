@@ -77,7 +77,8 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
 
   // bottom sheet
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
-  const [gymInfo, setGymInfo] = useState<Gym | null>(null);
+  const [promiseLocation, setPromiseLocation] =
+    useState<PromiseLocation | null>(null);
 
   const hasTitleErrors = useCallback(() => {
     return titleFocus && title.length === 0;
@@ -86,6 +87,10 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
   const hasContentErrors = useCallback(() => {
     return descriptionFocus && description.length === 0;
   }, [descriptionFocus, description]);
+
+  const isNoPartSelected = () => {
+    return isSelected.every(part => !part.select);
+  };
 
   const onToggle = (id: number) => {
     const updatedSelected = isSelected.map(part =>
@@ -138,7 +143,7 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
         workoutPart,
         // recruit_end_time: recruitEndDateState.date,
       },
-      gymInfo,
+      promiseLocation,
     };
     workoutMutation.mutate(data);
 
@@ -149,10 +154,11 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
     description,
     number,
     promiseDateState.date,
-    gymInfo,
+    promiseLocation,
     workoutMutation,
     navigation,
   ]);
+
   return (
     <View style={[style.container, { marginBottom: inset.bottom }]}>
       <TouchableWithoutFeedback
@@ -310,7 +316,9 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                 <Text
                   variant="bodyLarge"
                   style={{ color: theme.colors.onBackground }}>
-                  {gymInfo ? gymInfo.name : '위치를 선택해주세요'}
+                  {promiseLocation
+                    ? promiseLocation.placeName
+                    : '위치를 선택해주세요'}
                 </Text>
               </Button>
             </View>
@@ -373,7 +381,12 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
           <Button
             mode="contained"
             style={style.postingButton}
-            disabled={hasTitleErrors() || hasContentErrors() || !gymInfo}
+            disabled={
+              hasTitleErrors() ||
+              hasContentErrors() ||
+              !promiseLocation ||
+              isNoPartSelected()
+            }
             onPress={() => {
               onPressPosting();
             }}>
@@ -389,8 +402,8 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
       <GoogleMapSearch
         isBottomSheetOpen={isBottomSheetOpen}
         setIsBottomSheetOpen={setIsBottomSheetOpen}
-        gymInfo={gymInfo}
-        setGymInfo={setGymInfo}
+        promiseLocation={promiseLocation}
+        setPromiseLocation={setPromiseLocation}
       />
     </View>
   );
