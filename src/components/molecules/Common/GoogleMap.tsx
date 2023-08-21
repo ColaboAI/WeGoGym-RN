@@ -6,6 +6,7 @@ import GooglePlacesInput from './GooglePlacesInput';
 import { Text, useTheme } from 'react-native-paper';
 import CustomCallout from './CustomCallout';
 import CustomMarkerView from './CustomMarkerView';
+import mapStyle from '/asset/json/mapStyle.json';
 
 const GoogleMap = () => {
   const theme = useTheme();
@@ -56,10 +57,12 @@ const GoogleMap = () => {
       });
     }
     if (_data.structured_formatting) {
-      setTitle(_data.structured_formatting.main_text);
+      const newTitle = _data.structured_formatting.main_text;
+      setTitle(newTitle);
       setDescription(_data.structured_formatting.secondary_text);
     } else {
-      setTitle(_data.formatted_address);
+      const newTitle = _data.formatted_address;
+      setTitle(newTitle);
       setDescription('');
     }
   };
@@ -73,6 +76,7 @@ const GoogleMap = () => {
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
+          customMapStyle={theme.dark ? mapStyle.darkMapStyle : []}
           region={{
             latitude: location.lat,
             longitude: location.lng,
@@ -88,7 +92,10 @@ const GoogleMap = () => {
             calloutOffset={{ x: -8, y: 20 }}
             calloutAnchor={{ x: 0.5, y: 0.25 }}
             title={title}
-            description={description}>
+            description={description}
+            ref={marker => {
+              marker && marker.showCallout();
+            }}>
             <CustomMarkerView>
               <Text
                 style={[
@@ -101,12 +108,13 @@ const GoogleMap = () => {
                 {title}
               </Text>
             </CustomMarkerView>
-            {title !== '' ? (
+            {title ? (
               <Callout
+                key={title}
                 alphaHitTest
                 tooltip
                 onPress={() => {
-                  Alert.alert('클릭');
+                  Alert.alert('클릭', title);
                 }}
                 style={styles.calloutView}>
                 <CustomCallout>
