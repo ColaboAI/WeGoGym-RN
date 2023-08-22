@@ -487,6 +487,15 @@ async function getMyBlockedList(): Promise<RecommendedMate[]> {
   }
 }
 
+async function getLastestAppVersion(): Promise<AppVersion> {
+  try {
+    const res = await apiClient.get('/version');
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export {
   postLogin,
   postRegister,
@@ -522,4 +531,5 @@ export {
   postBlockUser,
   deleteBlockUser,
   getMyBlockedList,
+  getLastestAppVersion,
 };
