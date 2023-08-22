@@ -15,6 +15,7 @@ export type ChatParamList = {
 
 export type CommunityParamList = {
   communityId?: number;
+  communityName?: string;
   postId?: number;
 };
 

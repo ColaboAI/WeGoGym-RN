@@ -1,59 +1,117 @@
-import {
-  useWindowDimensions,
-  ImageBackground,
-  StyleSheet,
-  View,
-  Pressable,
-} from 'react-native';
-import React from 'react';
-import { Text, useTheme } from 'react-native-paper';
+import { ImageBackground, StyleSheet, View, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { ActivityIndicator, Text, useTheme } from 'react-native-paper';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
 type Props = {
   imageUrl: string;
   idx: number;
   imgLength: number;
+  imageWidth: number;
 };
 
-export default function ImageView({ imageUrl, idx, imgLength }: Props) {
+export default function ImageView({
+  imageUrl,
+  idx,
+  imgLength,
+  imageWidth,
+}: Props) {
   const theme = useTheme();
-  const width = useWindowDimensions().width;
   // FIXME: image width
-  const imageWidth = imgLength < 3 ? (width * 4) / 5 : width / 3;
   const [pressed, setPressed] = React.useState(false);
   const resizeMode = pressed === true ? 'contain' : 'cover';
+  const scale = useSharedValue(1);
+  const savedScale = useSharedValue(1);
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+
+  const zoomGesture = Gesture.Pinch()
+    .onUpdate(e => {
+      scale.value = savedScale.value * e.scale;
+    })
+    .onEnd(() => {
+      savedScale.value = withSpring(1);
+      scale.value = withSpring(1);
+    });
+
+  const dragGesture = Gesture.Pan()
+    .minPointers(2)
+    .onUpdate(e => {
+      translateX.value = e.translationX;
+      translateY.value = e.translationY;
+    })
+    .onEnd(() => {
+      translateX.value = withSpring(0);
+      translateY.value = withSpring(0);
+    });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: scale.value,
+      },
+      {
+        translateX: translateX.value,
+      },
+      {
+        translateY: translateY.value,
+      },
+    ],
+  }));
+
+  const composedGesture = Gesture.Simultaneous(zoomGesture, dragGesture);
+  const [loading, setLoading] = useState(true);
   return (
     <Pressable
       style={styles.imageContainer}
       key={`img-view-${idx}`}
       onPress={() => setPressed(prev => !prev)}>
-      <ImageBackground
-        resizeMode={resizeMode}
-        key={`img-${idx}`}
-        source={{ uri: imageUrl }}
-        alt={`img-${idx}`}
-        style={[
-          styles.image,
-          {
-            width: imageWidth,
-            height: imageWidth,
-          },
-        ]}>
-        <View
-          style={[
-            {
-              backgroundColor: theme.colors.inverseSurface,
-            },
-            styles.countContainer,
-          ]}>
-          <Text
+      <GestureDetector gesture={composedGesture}>
+        <Animated.View style={[animatedStyle]}>
+          <ImageBackground
+            onLoadStart={() => setLoading(true)}
+            onLoadEnd={() => setLoading(false)}
+            progressiveRenderingEnabled={true}
+            resizeMode={resizeMode}
+            key={`img-${idx}`}
+            source={{ uri: imageUrl }}
+            alt={`img-${idx}`}
             style={[
-              styles.countText,
-              { color: theme.colors.inverseOnSurface },
+              styles.image,
+              {
+                width: imageWidth,
+                height: imageWidth,
+              },
             ]}>
-            {idx + 1}/{imgLength}
-          </Text>
-        </View>
-      </ImageBackground>
+            {loading ? (
+              <View style={styles.indicator}>
+                <ActivityIndicator animating={loading} size="large" />
+              </View>
+            ) : (
+              <View
+                style={[
+                  {
+                    backgroundColor: theme.colors.inverseSurface,
+                  },
+                  styles.countContainer,
+                ]}>
+                <Text
+                  style={[
+                    styles.countText,
+                    { color: theme.colors.inverseOnSurface },
+                  ]}>
+                  {idx + 1}/{imgLength}
+                </Text>
+              </View>
+            )}
+          </ImageBackground>
+        </Animated.View>
+      </GestureDetector>
     </Pressable>
   );
 }
@@ -70,7 +128,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    marginRight: 10,
+    marginHorizontal: 10,
   },
   countText: {
     textAlign: 'right',
@@ -83,5 +141,10 @@ const styles = StyleSheet.create({
   },
   image: {
     borderRadius: 20,
+  },
+  indicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
   },
 });

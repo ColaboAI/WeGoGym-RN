@@ -208,8 +208,22 @@ export function usePostDeleteMutation() {
   const { onShow } = useSnackBarActions();
   return useMutation({
     mutationFn: (postId: number) => deletePost(postId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['postList']);
+    onSuccess: (_, variables) => {
+      queryClient.setQueriesData<InfiniteData<PostListRead>>(
+        ['postList', undefined],
+        oldData => {
+          if (oldData === undefined) {
+            return;
+          }
+          const newData = oldData.pages.map(page => {
+            const newPage = page.items.filter(
+              result => result.id !== variables,
+            );
+            return { ...page, items: newPage };
+          });
+          return { ...oldData, pages: newData };
+        },
+      );
       onShow('게시글 삭제에 성공하였습니다.', 'success');
     },
     onError: (error: CustomError) => {

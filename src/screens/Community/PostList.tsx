@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { Suspense, useCallback } from 'react';
+import React, { Suspense, useCallback, useState } from 'react';
 import { CommunityStackScreenProps } from '/navigators/types';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { Button, Divider } from 'react-native-paper';
 import { ErrorBoundary } from 'react-error-boundary';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, RefreshControl } from 'react-native-gesture-handler';
 import { FallbackProps } from 'react-error-boundary';
 import { usePostListQuery } from '/hooks/queries/post.queries';
 import PostListItem from '/components/organisms/Community/PostListItem';
@@ -19,7 +19,8 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
     [navigation],
   );
   const communityId = undefined;
-  const { data, hasNextPage, fetchNextPage } = usePostListQuery(communityId);
+  const { data, hasNextPage, fetchNextPage, refetch } =
+    usePostListQuery(communityId);
 
   const { reset } = useQueryErrorResetBoundary();
 
@@ -48,6 +49,14 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
     return <Divider />;
   }, []);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    refetch();
+    setIsRefreshing(false);
+  }, [refetch]);
+
   return (
     <Suspense fallback={<Text>Loading...</Text>}>
       <ErrorBoundary
@@ -61,6 +70,9 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
             renderItem={renderItem}
             keyExtractor={item => `${item.id}`}
             ItemSeparatorComponent={renderDivider}
+            refreshControl={
+              <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+            }
             // TODO: onEndReadched Debugging , Debounce..
             // Threshold를 0.7로 설정하면, 스크롤이 끝에 도달했을 때, 70%의 높이를 넘어서야 onEndReached가 호출된다.?
             onEndReached={() => {
