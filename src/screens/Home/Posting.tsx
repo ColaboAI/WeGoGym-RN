@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
-  ScrollView,
   Keyboard,
 } from 'react-native';
 import {
@@ -29,6 +28,7 @@ import { useWorkoutMutation } from '/hooks/queries/workout.queries';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import GoogleMapSearch from '/components/organisms/Common/GoogleMapSearch';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const MAX_NUMBER = 10;
 const MIN_NUMBER = 2;
@@ -160,123 +160,124 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
   ]);
 
   return (
-    <View style={[style.container, { marginBottom: inset.bottom }]}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}>
-        <View style={style.container}>
-          <ScrollView>
-            <View style={style.titleContainer}>
-              <Text variant="titleMedium">제목</Text>
-              <TextInput
-                mode="outlined"
-                placeholder="운동 약속 글 요약"
-                error={hasTitleErrors()}
-                value={title}
-                onFocus={() => setTitleFocus(true)}
-                onChangeText={value => setTitle(value)}
-              />
-            </View>
-            <HelperText type="error" visible={hasTitleErrors()}>
-              ⚠️ 운동 모집 글의 제목을 입력해주세요!
-            </HelperText>
-            <View style={style.descriptionContainer}>
-              <Text variant="titleMedium">내용</Text>
-              <TextInput
-                mode="outlined"
-                multiline={true}
-                numberOfLines={5}
-                placeholder="운동 친구 모집 글 내용"
-                error={hasContentErrors()}
-                value={description}
-                style={style.textInput}
-                onFocus={() => setDescriptionFocus(true)}
-                onChangeText={value => setDescription(value)}
-              />
-            </View>
-            <HelperText type="error" visible={hasContentErrors()}>
-              ⚠️ 운동 모집 글의 내용을 입력해주세요!
-            </HelperText>
-            <View style={style.infoContainer}>
-              <View style={style.infoBox}>
-                <Icon
-                  name="people-outline"
-                  size={20}
-                  color={theme.colors.onBackground}
-                  style={style.icon}
-                />
-                <Text variant="titleMedium">인원</Text>
-              </View>
-              <View style={style.numberButtonContainer}>
-                <IconButton
-                  icon="remove-circle-outline"
-                  disabled={number === MIN_NUMBER}
-                  iconColor={theme.colors.primary}
-                  size={20}
-                  onPress={onPressMinus}
-                />
-                <Text variant="bodyLarge">{number}명</Text>
-                <IconButton
-                  icon="add-circle-outline"
-                  disabled={number === MAX_NUMBER}
-                  iconColor={theme.colors.primary}
-                  size={20}
-                  onPress={onPressPlus}
+    <>
+      <ScrollView>
+        <View style={[style.container, { marginBottom: inset.bottom }]}>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
+            }}>
+            <View style={style.container}>
+              <View style={style.titleContainer}>
+                <Text variant="titleMedium">제목</Text>
+                <TextInput
+                  mode="outlined"
+                  placeholder="운동 약속 글 요약"
+                  error={hasTitleErrors()}
+                  value={title}
+                  onFocus={() => setTitleFocus(true)}
+                  onChangeText={value => setTitle(value)}
                 />
               </View>
-            </View>
-            {/* 운동 날짜 */}
-            <View style={style.infoContainer}>
-              <View style={style.infoBox}>
-                <Icon
-                  name="calendar-outline"
-                  size={20}
-                  color={theme.colors.onBackground}
-                  style={style.icon}
+              <HelperText type="error" visible={hasTitleErrors()}>
+                ⚠️ 운동 모집 글의 제목을 입력해주세요!
+              </HelperText>
+              <View style={style.descriptionContainer}>
+                <Text variant="titleMedium">내용</Text>
+                <TextInput
+                  mode="outlined"
+                  multiline={true}
+                  numberOfLines={5}
+                  placeholder="운동 친구 모집 글 내용"
+                  error={hasContentErrors()}
+                  value={description}
+                  style={style.textInput}
+                  onFocus={() => setDescriptionFocus(true)}
+                  onChangeText={value => setDescription(value)}
                 />
-                <Text variant="titleMedium">약속 날짜</Text>
               </View>
-              <Button
-                onPress={() => {
-                  setPromiseDateState(prev => ({
-                    ...prev,
-                    visible: true,
-                    mode: 'date',
-                  }));
-                }}>
-                <Text variant="bodyLarge">
-                  {isToday(promiseDateState.date)
-                    ? '오늘'
-                    : getLocaleDate(promiseDateState.date)}
-                </Text>
-              </Button>
-            </View>
-            <View style={style.infoContainer}>
-              <View style={style.infoBox}>
-                <Icon
-                  name="alarm-outline"
-                  size={20}
-                  color={theme.colors.onBackground}
-                  style={style.icon}
-                />
-                <Text variant="titleMedium">약속 시간</Text>
+              <HelperText type="error" visible={hasContentErrors()}>
+                ⚠️ 운동 모집 글의 내용을 입력해주세요!
+              </HelperText>
+              <View style={style.infoContainer}>
+                <View style={style.infoBox}>
+                  <Icon
+                    name="people-outline"
+                    size={20}
+                    color={theme.colors.onBackground}
+                    style={style.icon}
+                  />
+                  <Text variant="titleMedium">인원</Text>
+                </View>
+                <View style={style.numberButtonContainer}>
+                  <IconButton
+                    icon="remove-circle-outline"
+                    disabled={number === MIN_NUMBER}
+                    iconColor={theme.colors.primary}
+                    size={20}
+                    onPress={onPressMinus}
+                  />
+                  <Text variant="bodyLarge">{number}명</Text>
+                  <IconButton
+                    icon="add-circle-outline"
+                    disabled={number === MAX_NUMBER}
+                    iconColor={theme.colors.primary}
+                    size={20}
+                    onPress={onPressPlus}
+                  />
+                </View>
               </View>
-              <Button
-                onPress={() => {
-                  setPromiseDateState(prev => ({
-                    ...prev,
-                    visible: true,
-                    mode: 'time',
-                  }));
-                }}>
-                <Text variant="bodyLarge">
-                  {getLocaleTime(promiseDateState.date)}
-                </Text>
-              </Button>
-            </View>
-            {/* 모집 기한 */}
-            {/* <View style={style.infoContainer}>
+              {/* 운동 날짜 */}
+              <View style={style.infoContainer}>
+                <View style={style.infoBox}>
+                  <Icon
+                    name="calendar-outline"
+                    size={20}
+                    color={theme.colors.onBackground}
+                    style={style.icon}
+                  />
+                  <Text variant="titleMedium">약속 날짜</Text>
+                </View>
+                <Button
+                  onPress={() => {
+                    setPromiseDateState(prev => ({
+                      ...prev,
+                      visible: true,
+                      mode: 'date',
+                    }));
+                  }}>
+                  <Text variant="bodyLarge">
+                    {isToday(promiseDateState.date)
+                      ? '오늘'
+                      : getLocaleDate(promiseDateState.date)}
+                  </Text>
+                </Button>
+              </View>
+              <View style={style.infoContainer}>
+                <View style={style.infoBox}>
+                  <Icon
+                    name="alarm-outline"
+                    size={20}
+                    color={theme.colors.onBackground}
+                    style={style.icon}
+                  />
+                  <Text variant="titleMedium">약속 시간</Text>
+                </View>
+                <Button
+                  onPress={() => {
+                    setPromiseDateState(prev => ({
+                      ...prev,
+                      visible: true,
+                      mode: 'time',
+                    }));
+                  }}>
+                  <Text variant="bodyLarge">
+                    {getLocaleTime(promiseDateState.date)}
+                  </Text>
+                </Button>
+              </View>
+              {/* 모집 기한 */}
+              {/* <View style={style.infoContainer}>
               <View style={style.infoBox}>
                 <Icon
                   name="timer-outline"
@@ -302,28 +303,28 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                 </Text>
               </Button>
             </View> */}
-            <View style={style.infoContainer}>
-              <View style={style.infoBox}>
-                <Icon
-                  name="location-outline"
-                  size={20}
-                  color={theme.colors.onBackground}
-                  style={style.icon}
-                />
-                <Text variant="titleMedium">위치</Text>
+              <View style={style.infoContainer}>
+                <View style={style.infoBox}>
+                  <Icon
+                    name="location-outline"
+                    size={20}
+                    color={theme.colors.onBackground}
+                    style={style.icon}
+                  />
+                  <Text variant="titleMedium">위치</Text>
+                </View>
+                <Button onPress={onPressLocation}>
+                  <Text
+                    variant="bodyLarge"
+                    style={{ color: theme.colors.onBackground }}>
+                    {promiseLocation
+                      ? promiseLocation.placeName
+                      : '위치를 선택해주세요'}
+                  </Text>
+                </Button>
               </View>
-              <Button onPress={onPressLocation}>
-                <Text
-                  variant="bodyLarge"
-                  style={{ color: theme.colors.onBackground }}>
-                  {promiseLocation
-                    ? promiseLocation.placeName
-                    : '위치를 선택해주세요'}
-                </Text>
-              </Button>
-            </View>
-            {/* 공개 여부 */}
-            {/* <View style={style.infoContainer}>
+              {/* 공개 여부 */}
+              {/* <View style={style.infoContainer}>
               <View style={style.infoBox}>
                 <Icon
                   name={isPrivate ? 'lock-closed-outline' : 'lock-open-outline'}
@@ -338,46 +339,62 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
                 onValueChange={value => setIsPrivate(value)}
               />
             </View> */}
-            <View style={style.infoContainer}>
-              <View style={style.infoBox}>
-                <Icon
-                  name="barbell-outline"
-                  size={20}
-                  color={theme.colors.onBackground}
-                  style={style.icon}
-                />
-                <Text variant="titleMedium">운동 부위</Text>
+              <View style={style.infoContainer}>
+                <View style={style.infoBox}>
+                  <Icon
+                    name="barbell-outline"
+                    size={20}
+                    color={theme.colors.onBackground}
+                    style={style.icon}
+                  />
+                  <Text variant="titleMedium">운동 부위</Text>
+                </View>
+                <Button>
+                  <Text
+                    variant="bodyLarge"
+                    style={{ color: theme.colors.onBackground }}>
+                    {isSelected
+                      .filter(item => item.select)
+                      .map(item => item.part)
+                      .join(', ') || '운동 부위를 선택해주세요'}
+                  </Text>
+                </Button>
               </View>
-              <Button>
-                <Text
-                  variant="bodyLarge"
-                  style={{ color: theme.colors.onBackground }}>
-                  {isSelected
-                    .filter(item => item.select)
-                    .map(item => item.part)
-                    .join(', ') || '운동 부위를 선택해주세요'}
-                </Text>
-              </Button>
+              <ScrollView
+                style={style.horizontalButtonContainer}
+                horizontal
+                showsHorizontalScrollIndicator={false}>
+                {isSelected.map(button => {
+                  return (
+                    <Button
+                      key={`select-${button.id}`}
+                      style={[style.button]}
+                      mode={button.select ? 'contained' : 'elevated'}
+                      onPress={() => {
+                        onToggle(button.id);
+                      }}>
+                      {button.part}
+                    </Button>
+                  );
+                })}
+              </ScrollView>
             </View>
-            <ScrollView
-              style={style.horizontalButtonContainer}
-              horizontal
-              showsHorizontalScrollIndicator={false}>
-              {isSelected.map(button => {
-                return (
-                  <Button
-                    key={`select-${button.id}`}
-                    style={[style.button]}
-                    mode={button.select ? 'contained' : 'elevated'}
-                    onPress={() => {
-                      onToggle(button.id);
-                    }}>
-                    {button.part}
-                  </Button>
-                );
-              })}
-            </ScrollView>
-          </ScrollView>
+          </TouchableWithoutFeedback>
+        </View>
+      </ScrollView>
+      <DateTimeModal state={promiseDateState} setState={setPromiseDateState} />
+      {/* <DateTimeModal
+        state={recruitEndDateState}
+        setState={setRecruitEndDateState}
+      /> */}
+      <GoogleMapSearch
+        isBottomSheetOpen={isBottomSheetOpen}
+        setIsBottomSheetOpen={setIsBottomSheetOpen}
+        promiseLocation={promiseLocation}
+        setPromiseLocation={setPromiseLocation}
+      />
+      {!isBottomSheetOpen ? (
+        <View style={{ marginBottom: inset.bottom }}>
           <Button
             mode="contained"
             style={style.postingButton}
@@ -393,19 +410,10 @@ export default function PostingScreen({ navigation }: HomeScreenProps) {
             작성 완료
           </Button>
         </View>
-      </TouchableWithoutFeedback>
-      <DateTimeModal state={promiseDateState} setState={setPromiseDateState} />
-      {/* <DateTimeModal
-        state={recruitEndDateState}
-        setState={setRecruitEndDateState}
-      /> */}
-      <GoogleMapSearch
-        isBottomSheetOpen={isBottomSheetOpen}
-        setIsBottomSheetOpen={setIsBottomSheetOpen}
-        promiseLocation={promiseLocation}
-        setPromiseLocation={setPromiseLocation}
-      />
-    </View>
+      ) : (
+        <></>
+      )}
+    </>
   );
 }
 
