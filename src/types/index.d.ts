@@ -329,3 +329,9 @@ interface CustomError extends Error {
     };
   };
 }
+
+interface AppVersion {
+  versionNumber: str;
+  updateLinkIOs: str;
+  updateLinkAndroid: str;
+}
