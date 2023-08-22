@@ -48,6 +48,7 @@ import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import CustomFAB from '/components/molecules/Home/CustomFAB';
 import { useChatRoomMutation } from '/hooks/queries/chat.queries';
 import { postChatRoomMember } from '/api/api';
+import GoogleMapSnapShot from '/components/molecules/Common/GoogleMapSnapShot';
 type HomeScreenProps = HomeStackScreenProps<'Details'>;
 
 export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
@@ -449,6 +450,13 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                           ),
                         )}
                       </View>
+                      {query.data.promiseLocation ? (
+                        <View style={style.googleMapSnapShotContainer}>
+                          <GoogleMapSnapShot
+                            promiseLocation={query.data.promiseLocation}
+                          />
+                        </View>
+                      ) : null}
                     </View>
                   </ScrollView>
                   {isAdmin(myInfo.id, query.data.adminUserId) &&
@@ -584,6 +592,7 @@ const style = StyleSheet.create({
   participantList: {
     flexWrap: 'wrap',
     flexDirection: 'row',
+    marginBottom: 12,
   },
   participantBox: {
     flexDirection: 'row',
@@ -591,6 +600,10 @@ const style = StyleSheet.create({
   avatarBox: {
     alignItems: 'center',
     marginRight: 8,
+  },
+  googleMapSnapShotContainer: {
+    width: '100%',
+    height: 300,
   },
   usernameBox: {},
   adminIconBox: {
