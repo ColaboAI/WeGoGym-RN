@@ -69,6 +69,11 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
               }
             }}
             onEndReachedThreshold={0.7}
+            ListEmptyComponent={
+              <View style={styles.errorContainer}>
+                <Text>커뮤니티 글이 없습니다.</Text>
+              </View>
+            }
           />
           <CustomFAB
             icon="create"
