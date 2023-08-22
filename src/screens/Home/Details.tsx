@@ -518,13 +518,15 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
               style={style.button}>
               참여 취소
             </Button>
-          ) : (
+          ) : !isBottomSheetOpen ? (
             <Button
               mode="contained"
               onPress={onPressParticipation}
               style={style.button}>
               참여 요청
             </Button>
+          ) : (
+            <></>
           )}
         </View>
       ) : (
