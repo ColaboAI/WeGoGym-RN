@@ -1,28 +1,26 @@
 import React, { ReactNode } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 interface CustomMarkerViewProps {
   children: ReactNode;
+  customMarkerStyle?: StyleProp<ViewStyle>;
+  size?: number;
 }
 
-const CustomMarkerView: React.FC<CustomMarkerViewProps> = ({ children }) => {
+const CustomMarkerView = (props: CustomMarkerViewProps) => {
   const theme = useTheme();
   return (
     <View style={styles.customMarkerContainer}>
-      <View
-        style={[
-          styles.customMarker,
-          { backgroundColor: theme.colors.tertiary },
-        ]}>
+      <View style={props.customMarkerStyle}>
         <Icon
           name="barbell-outline"
-          size={24}
+          size={props.size ? props.size : 24}
           color={theme.colors.onTertiary}
         />
       </View>
-      <View style={styles.childrenContainer}>{children}</View>
+      <View style={styles.childrenContainer}>{props.children}</View>
     </View>
   );
 };
@@ -30,13 +28,6 @@ const CustomMarkerView: React.FC<CustomMarkerViewProps> = ({ children }) => {
 const styles = StyleSheet.create({
   customMarkerContainer: {
     alignItems: 'center',
-  },
-  customMarker: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   childrenContainer: {
     marginTop: 5,

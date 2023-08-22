@@ -123,7 +123,11 @@ const GoogleMap = (props: Props) => {
             ref={marker => {
               marker && marker.showCallout();
             }}>
-            <CustomMarkerView>
+            <CustomMarkerView
+              customMarkerStyle={[
+                styles.customMarker,
+                { backgroundColor: theme.colors.tertiary },
+              ]}>
               <Text
                 style={[
                   styles.customMarkerText,
