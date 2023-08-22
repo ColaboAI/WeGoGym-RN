@@ -31,7 +31,6 @@ import {
 } from 'utils/util';
 import {
   useGetWorkoutByIdQuery,
-  useWorkoutDeleteMutation,
   useWorkoutParticipantDeleteMutation,
   usePutWorkoutStatusMutation,
 } from '/hooks/queries/workout.queries';
@@ -57,7 +56,6 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const { workoutPromiseId } = route.params;
   const query = useGetWorkoutByIdQuery(workoutPromiseId);
   const { data: myInfo } = useGetUserInfoQuery('me');
-  const deleteWorkoutMutation = useWorkoutDeleteMutation();
   const deleteParticipationMutation =
     useWorkoutParticipantDeleteMutation(workoutPromiseId);
   const updateWorkoutStatusMutation = usePutWorkoutStatusMutation();
@@ -69,30 +67,6 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
   const onPressParticipation = useCallback(async () => {
     setIsBottomSheetOpen(true);
   }, []);
-
-  const navigationToPromiseEdit = useCallback(
-    (workoutInfo: WorkoutPromiseRead) => {
-      navigation.navigate('PromiseEdit', { workoutInfo });
-    },
-    [navigation],
-  );
-
-  const onDeleteWorkout = () => {
-    Alert.alert('게시글을 삭제하시겠습니까?', '', [
-      {
-        text: '취소',
-        style: 'cancel',
-      },
-      {
-        text: '확인',
-        onPress: async () => {
-          deleteWorkoutMutation.mutate(workoutPromiseId);
-          navigation.goBack();
-        },
-        style: 'destructive',
-      },
-    ]);
-  };
 
   const onDeleteParticipation = (userId: string) => {
     Alert.alert('참여를 취소하시겠습니까?', '', [
@@ -353,24 +327,6 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                             모집 완료
                           </Chip>
                         )}
-                      </View>
-                      <View style={style.iconBox}>
-                        {isAdmin(myInfo.id, query.data.adminUserId) ? (
-                          <>
-                            {isRecruiting(query.data.status) ? (
-                              <IconButton
-                                icon="create-outline"
-                                onPress={() => {
-                                  navigationToPromiseEdit(query.data);
-                                }}
-                              />
-                            ) : null}
-                            <IconButton
-                              icon="trash-outline"
-                              onPress={onDeleteWorkout}
-                            />
-                          </>
-                        ) : null}
                       </View>
                     </View>
                     <View style={style.titleBox}>
@@ -655,6 +611,6 @@ const style = StyleSheet.create({
     position: 'absolute',
     margin: 16,
     right: 0,
-    bottom: 30,
+    bottom: 40,
   },
 });
