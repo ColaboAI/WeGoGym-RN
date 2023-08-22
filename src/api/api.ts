@@ -32,7 +32,7 @@ async function postWorkoutPromise({
   }
 }
 
-async function deleteWorkoutPromise(id: string): Promise<void> {
+async function deleteWorkoutPromise(id: string | undefined): Promise<void> {
   try {
     const res = await apiClient.delete(`/workout-promise/${id}`);
     return res.data;
@@ -127,7 +127,9 @@ async function getRecruitingWorkoutPromise(
   }
 }
 
-async function getWorkoutPromiseById(id: string): Promise<WorkoutPromiseRead> {
+async function getWorkoutPromiseById(
+  id: string | undefined,
+): Promise<WorkoutPromiseRead> {
   try {
     const res = await apiClient.get(`/workout-promise/${id}`);
     return res.data;

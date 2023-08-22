@@ -168,7 +168,7 @@ export function useGetRecruitingWorkoutQuery() {
   });
 }
 
-export function useGetWorkoutByIdQuery(id: string) {
+export function useGetWorkoutByIdQuery(id: string | undefined) {
   const { onShow } = useSnackBarActions();
   return useQuery({
     queryKey: ['getWorkoutById', id],
