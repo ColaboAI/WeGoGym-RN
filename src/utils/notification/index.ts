@@ -1,12 +1,14 @@
 import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
-import { PermissionsAndroid } from 'react-native';
+import { Alert, Linking, PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import { Platform } from 'react-native';
 import { mmkv } from '/store/secureStore';
 import { convertObjectKeyToCamelCase } from 'utils/util';
+import { getLastestAppVersion } from '/api/api';
+import { getVersion } from 'react-native-device-info';
 
 async function checkApplicationPermission() {
   if (Platform.OS === 'android') {
@@ -134,9 +136,39 @@ async function onMessageInForeground(
   await notifee.incrementBadgeCount();
 }
 
+async function checkIsLatestVersion() {
+  const latestVersion = await getLastestAppVersion();
+  console.log('최신', latestVersion);
+  const currentVersion = getVersion();
+  console.log('현재', currentVersion);
+  if (latestVersion && latestVersion.versionNumber > currentVersion) {
+    Alert.alert(
+      '업데이트 필요',
+      `새로운 버전(${latestVersion.versionNumber})이 있습니다. 업데이트하시겠습니까?`,
+      [
+        {
+          text: '나중에',
+          onPress: () => console.log('나중에 업데이트'),
+          style: 'cancel',
+        },
+        {
+          text: '업데이트',
+          onPress: () => {
+            if (Platform.OS === 'ios') {
+              Linking.openURL(latestVersion.updateLinkIOs);
+            }
+            Linking.openURL(latestVersion.updateLinkAndroid);
+          },
+        },
+      ],
+    );
+  }
+}
+
 export {
   checkApplicationPermission,
   requestUserPermission,
   onMessageInBackground,
   onMessageInForeground,
+  checkIsLatestVersion,
 };

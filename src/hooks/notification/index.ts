@@ -3,6 +3,7 @@ import messaging from '@react-native-firebase/messaging';
 import { putMyFCMToken } from '/api/api';
 import {
   checkApplicationPermission,
+  checkIsLatestVersion,
   onMessageInForeground,
 } from '/utils/notification';
 import { getValueFor, save, secureMmkv } from '/store/secureStore';
@@ -35,6 +36,10 @@ export async function onAppBootstrap() {
 async function checkPermission() {
   await checkApplicationPermission();
   await requestPermissionToAnalytics();
+}
+
+async function checkAppVersion() {
+  await checkIsLatestVersion();
 }
 
 export function useNotification() {
@@ -120,6 +125,7 @@ export function useNotification() {
   useEffect(() => {
     if (AppState.currentState === 'active') {
       checkPermission();
+      checkAppVersion();
       return () => {};
     }
 
