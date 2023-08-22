@@ -5,7 +5,7 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import PostDetailSection from '/components/organisms/Community/PostDetailSection';
 import { CommunityStackScreenProps } from '/navigators/types';
 import { FlatList } from 'react-native-gesture-handler';
-import { Button, Divider } from 'react-native-paper';
+import { ActivityIndicator, Button, Divider } from 'react-native-paper';
 import { useCommentListQuery } from '/hooks/queries/comment.queries';
 import CommentListItem from '/components/organisms/Community/CommentListItem';
 
@@ -35,7 +35,7 @@ const PostDetail = ({ route }: PostDetailScreenProps) => {
   }, []);
 
   return (
-    <Suspense fallback={<Text>Loading...</Text>}>
+    <Suspense fallback={<ActivityIndicator />}>
       <ErrorBoundary
         onReset={reset}
         fallbackRender={props => renderCommentError({ ...props })}>
