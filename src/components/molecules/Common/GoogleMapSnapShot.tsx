@@ -21,10 +21,9 @@ const GoogleMapSnapShot = (props: Props) => {
         region={{
           latitude: props.promiseLocation.latitude,
           longitude: props.promiseLocation.longitude,
-          latitudeDelta: 0.09,
-          longitudeDelta: 0.04,
-        }}
-        zoomTapEnabled={false}>
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}>
         <Marker
           coordinate={{
             latitude: props.promiseLocation.latitude,
