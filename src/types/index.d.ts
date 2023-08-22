@@ -344,10 +344,11 @@ interface Community extends timestampMixin {
 }
 
 interface PostCreate {
-  community_id: number;
+  communityId: number;
   title: string;
   content: string;
-  video: string[];
+  video?: string[];
+  wantAiCoach: boolean;
 }
 
 interface PostUpdate {

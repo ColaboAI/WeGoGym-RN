@@ -3,6 +3,7 @@ import { GYM_OPEN_API_KEY } from '@env';
 import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid';
 import { camelCase } from 'camel-case';
+import { snakeCase } from 'snake-case';
 
 export function convertObjectKeyToCamelCase<T>(obj: { [x: string]: any }) {
   const convertedData = Object.keys(obj).reduce((acc, key) => {
@@ -317,4 +318,16 @@ export function getAge(birth: string) {
     age--;
   }
   return age;
+}
+
+export function makeSnakeKeyObject<T extends Record<string, any>>(
+  obj: T,
+): string {
+  const convertedData = Object.entries(obj).reduce((acc, [key, value]) => {
+    return {
+      ...acc,
+      [snakeCase(key)]: value,
+    };
+  }, {} as T);
+  return JSON.stringify(convertedData);
 }
