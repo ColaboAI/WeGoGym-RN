@@ -156,6 +156,7 @@ async function checkIsLatestVersion() {
           onPress: () => {
             if (Platform.OS === 'ios') {
               Linking.openURL(latestVersion.updateLinkIOs);
+              return;
             }
             Linking.openURL(latestVersion.updateLinkAndroid);
           },
