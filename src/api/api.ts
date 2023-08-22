@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import { apiClient } from './client';
 import { snakeCase } from 'snake-case';
 import { Alert } from 'react-native';
+import { makeSnakeKeyObject } from '/utils/util';
 // TODO: change to https, deployed url
 async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
   try {
@@ -223,24 +224,9 @@ async function putMyInfo(
   params: UserUpdate,
   formData: FormData,
 ): Promise<MyInfoRead> {
-  // TODO: Refactor
-  const data = {} as UserUpdate;
   try {
-    Object.keys(params).forEach(key => {
-      if (params[key] !== undefined && params[key] !== null) {
-        const value = params[key];
-        const newKey = snakeCase(key);
-        // if (newKey === 'gym_info') {
-        //   console.log('GymInfo: ', value);
-        // }
-        if (typeof value === 'string') {
-          data[newKey] = value.trim();
-        } else {
-          data[newKey] = value;
-        }
-      }
-    });
-    formData.append('data', JSON.stringify(data));
+    const data = makeSnakeKeyObject<UserUpdate>(params);
+    formData.append('data', data);
     const res = await apiClient.patch('/user/me', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -544,8 +530,9 @@ async function postPost({
   images: FormData;
 }): Promise<PostRead> {
   try {
+    const data = makeSnakeKeyObject<PostCreate>(params);
+    images.append('post', data);
     const res = await apiClient.post('/communities/posts', images, {
-      params,
       headers: {
         'Content-Type': 'multipart/form-data',
       },
