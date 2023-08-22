@@ -84,7 +84,7 @@ const ParticipationBottomSheet = ({
       <BottomSheetView style={styles.container}>
         <View style={styles.titleBox}>
           <Text style={[styles.title, { color: theme.colors.onBackground }]}>
-            운동 파트너에게 보낼 메세지를{'\n'}작성해주세요
+            운동 친구에게 보낼 메세지를{'\n'}작성해주세요
           </Text>
           <IconButton
             icon="close"
