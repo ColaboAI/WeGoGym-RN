@@ -26,9 +26,9 @@ import {
   getWorkoutPart,
   isToday,
 } from '/utils/util';
-import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSnackBarActions } from '/hooks/context/useSnackbar';
+import GoogleMapSearch from '/components/organisms/Common/GoogleMapSearch';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;
@@ -87,6 +87,10 @@ export default function PromiseEditScreen({
     ),
   );
 
+  const isNoPartSelected = () => {
+    return myWorkoutPartState.every(part => !part.select);
+  };
+
   const onToggle = (id: number) => {
     const updatedSelected = myWorkoutPartState.map(part =>
       part.id === id ? { ...part, select: !part.select } : part,
@@ -119,7 +123,8 @@ export default function PromiseEditScreen({
   //   });
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
-  const [gymInfo, setGymInfo] = useState<Gym | null>(promiseInfo.gymInfo);
+  const [promiseLocation, setPromiseLocation] =
+    useState<PromiseLocation | null>(promiseInfo.promiseLocation);
 
   const hasTitleErrors = useCallback(() => {
     return titleFocus && title.length === 0;
@@ -167,7 +172,7 @@ export default function PromiseEditScreen({
         workout_part: workoutPart,
         // recruit_end_time: recruitEndDateState.date,
       },
-      gymInfo,
+      promiseLocation,
     };
     updateWorkoutMutation.mutate(data);
     navigation.goBack();
@@ -178,7 +183,7 @@ export default function PromiseEditScreen({
     maxParticipants,
     promiseDateState.date,
     myWorkoutPartState,
-    gymInfo,
+    promiseLocation,
     updateWorkoutMutation,
     navigation,
   ]);
@@ -338,7 +343,9 @@ export default function PromiseEditScreen({
                 <Text
                   variant="bodyLarge"
                   style={{ color: theme.colors.onBackground }}>
-                  {gymInfo ? gymInfo.name : '위치를 선택해주세요'}
+                  {promiseLocation
+                    ? promiseLocation.placeName
+                    : '위치를 선택해주세요'}
                 </Text>
               </Button>
             </View>
@@ -400,7 +407,12 @@ export default function PromiseEditScreen({
           <Button
             mode="contained-tonal"
             style={style.postingButton}
-            disabled={hasTitleErrors() || hasContentErrors() || !gymInfo}
+            disabled={
+              hasTitleErrors() ||
+              hasContentErrors() ||
+              !promiseLocation ||
+              isNoPartSelected()
+            }
             onPress={() => {
               onPressEdit();
             }}>
@@ -413,11 +425,11 @@ export default function PromiseEditScreen({
         state={recruitEndDateState}
         setState={setRecruitEndDateState}
       /> */}
-      <GymBottomSheet
+      <GoogleMapSearch
         isBottomSheetOpen={isBottomSheetOpen}
         setIsBottomSheetOpen={setIsBottomSheetOpen}
-        gymInfo={gymInfo}
-        setGymInfo={setGymInfo}
+        promiseLocation={promiseLocation}
+        setPromiseLocation={setPromiseLocation}
       />
     </View>
   );
