@@ -3,6 +3,7 @@ import { getCommunity, getCommunityList } from '/api/api';
 
 export function useGetCommunityListQuery() {
   return useQuery({
+    queryKey: ['getCommunityList'],
     queryFn: getCommunityList,
     retry: 0,
     suspense: true,

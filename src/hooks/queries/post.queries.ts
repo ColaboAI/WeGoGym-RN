@@ -17,6 +17,7 @@ import {
 } from '/api/api';
 
 import { useSnackBarActions } from '../context/useSnackbar';
+import { useNavigation } from '@react-navigation/native';
 
 export function usePostListQuery(communityId: number | undefined) {
   const { onShow } = useSnackBarActions();
@@ -68,6 +69,7 @@ export function usePostQuery(postId: number) {
 
 export function usePostMutation() {
   const queryClient = useQueryClient();
+  const nav = useNavigation();
   const { onShow } = useSnackBarActions();
   return useMutation({
     mutationFn: ({
@@ -80,6 +82,7 @@ export function usePostMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries(['postList']);
       onShow('게시글 작성에 성공하였습니다.', 'success');
+      nav.goBack();
     },
     onError: (error: CustomError) => {
       onShow(
