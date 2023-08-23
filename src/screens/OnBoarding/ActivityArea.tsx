@@ -36,6 +36,7 @@ export default function ActivityAreaScreen({ navigation }: Props) {
           setCity={setSelectedCity}
           setDistrict={setSelectedDistrict}
           customStyle={{ height: 50, width: 180 }}
+          customItemStyle={{ color: theme.colors.onBackground }}
         />
       </View>
       <View style={style.buttonBox}>

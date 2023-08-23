@@ -139,7 +139,7 @@ interface UserBase {
 }
 
 interface UserCreate extends UserBase {
-  [key: string]: string | number | null | undefined;
+  [key: string]: string | number | null | undefined | Gym;
   // TODO: remove ID
   username: string;
   gender: string;

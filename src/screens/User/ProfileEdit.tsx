@@ -339,7 +339,10 @@ export default function ProfileEdit({ navigation, route }: Props) {
                     setCity={setSelectedCity}
                     setDistrict={setSelectedDistrict}
                     customStyle={style.pickerStyle}
-                    customItemStyle={style.pickerItemStyle}
+                    customItemStyle={[
+                      style.pickerItemStyle,
+                      { color: theme.colors.onBackground },
+                    ]}
                   />
                 </View>
                 {gymInfo !== null ? (
