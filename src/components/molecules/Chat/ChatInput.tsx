@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { TextInput, useTheme } from 'react-native-paper';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, ViewStyle } from 'react-native';
 import { ChatParamList, ChatStackScreenProps } from '/navigators/types';
 import {
   InfiniteData,
@@ -12,6 +12,7 @@ import { WS_URL } from '/api/client';
 import { useSnackBarActions } from '/hooks/context/useSnackbar';
 import { convertObjectKeyToCamelCase } from '/utils/util';
 import { useNavigation } from '@react-navigation/native';
+import { AnimatedStyleProp } from 'react-native-reanimated';
 export type ChatInputProps = ChatParamList & {
   inputText: string;
   setInputText: (text: string) => void;
@@ -23,6 +24,7 @@ export type ChatInputProps = ChatParamList & {
     ChatRoomCreate,
     unknown
   >;
+  animatedStyle: AnimatedStyleProp<ViewStyle>;
 };
 
 /*
@@ -245,7 +247,7 @@ const ChatInput = (props: ChatInputProps) => {
               mode="contained"
               icon="arrow-up"
               containerColor={theme.colors.primaryContainer}
-              iconColor={theme.colors.onPrimaryContainer}
+              color={theme.colors.onPrimaryContainer}
               onPress={() => handleSubmit()}
               disabled={chatRoomMutation.isLoading}
             />

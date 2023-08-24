@@ -126,7 +126,6 @@ export function usePostLikeMutation() {
     mutationFn: (postId: number) => postLikePost(postId),
     onSuccess: (data, variables) => {
       const postId = variables;
-      onShow('게시글 좋아요에 성공하였습니다.', 'success');
       queryClient.setQueryData<PostRead>(['post', postId], data);
       queryClient.setQueryData<InfiniteData<PostListRead>>(
         // FIXME: 지금은 전체 쿼리, 나중에는 커뮤니티별 쿼리에도 적용
@@ -168,7 +167,6 @@ export function usePostDisLikeMutation() {
     mutationFn: (postId: number) => postDisLikePost(postId),
     onSuccess: (data, variables) => {
       const postId = variables;
-      onShow('의견을 게시자에게 공유했습니다.', 'success');
       queryClient.setQueryData<PostRead>(['post', postId], data);
       queryClient.setQueryData<InfiniteData<PostListRead>>(
         // FIXME: 지금은 전체 쿼리, 나중에는 커뮤니티별 쿼리에도 적용

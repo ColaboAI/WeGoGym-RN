@@ -1,5 +1,10 @@
-import { Alert, Platform, StyleSheet, View } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, Keyboard, Platform, StyleSheet, View } from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useLayoutEffect,
+} from 'react';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetTextInput,
@@ -40,9 +45,10 @@ function ReportBottomSheet({ targetId, type }: Props) {
     [],
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isBottomSheetOpen) {
       bottomSheetRef.current?.expand();
+      Keyboard.dismiss();
     } else {
       bottomSheetRef.current?.close();
     }

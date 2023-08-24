@@ -2,6 +2,7 @@ import {
   useMutation,
   useQueryClient,
   useInfiniteQuery,
+  InfiniteData,
 } from '@tanstack/react-query';
 import { useSnackBarActions } from 'hooks/context/useSnackbar';
 import {
@@ -47,8 +48,8 @@ export function useCommentMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: postComment,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['commentList']);
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries(['commentList', variables.postId]);
     },
     onError: (error: CustomError) => {
       onShow(
@@ -65,8 +66,32 @@ export function useCommentUpdateMutation() {
   return useMutation({
     mutationFn: ({ id, params }: { id: number; params: CommentUpdate }) =>
       patchComment({ id, params }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['commentList']);
+    onSuccess: (data, variables) => {
+      queryClient.setQueriesData<InfiniteData<CommentListRead>>(
+        ['commentList', data.postId],
+        old => {
+          if (old) {
+            return {
+              ...old,
+              pages: old.pages.map(page => {
+                return {
+                  ...page,
+                  items: page.items.map(comment => {
+                    if (comment.id === variables.id) {
+                      return {
+                        ...comment,
+                        ...variables.params,
+                      };
+                    }
+                    return comment;
+                  }),
+                };
+              }),
+            };
+          }
+          return old;
+        },
+      );
     },
     onError: (error: CustomError) => {
       onShow(
@@ -84,7 +109,6 @@ export function useCommentDeleteMutation(postId: number) {
     mutationFn: deleteComment,
     onSuccess: () => {
       queryClient.invalidateQueries(['commentList', postId]);
-      onShow('댓글 삭제에 성공하였습니다.', 'success');
     },
     onError: (error: CustomError) => {
       onShow(
@@ -117,8 +141,8 @@ export function useCommentDisLikeMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: postDisLikeComment,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['commentList']);
+    onSuccess: data => {
+      queryClient.invalidateQueries(['commentList', data.postId]);
     },
     onError: (error: CustomError) => {
       onShow(

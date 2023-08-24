@@ -1,10 +1,9 @@
-import { InputAccessoryView, StyleSheet, View, Platform } from 'react-native';
-import React, { Suspense, useCallback, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import React, { Suspense, useCallback, useEffect, useMemo } from 'react';
 import { ChatStackScreenProps } from 'navigators/types';
 import { ActivityIndicator, Button, Text } from 'react-native-paper';
 import Bubble from '/components/molecules/Chat/Bubble';
 import InputToolbar from '/components/organisms/Chat/InputToolbar';
-import { FlatList } from 'react-native-gesture-handler';
 import {
   useChatRoomMessagesQuery,
   useChatRoomQuery,
@@ -14,6 +13,8 @@ import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { useChatRoomState } from '/hooks/chat/hook';
 import GymInfoLoader from '/components/molecules/Home/GymInfoLoader';
 import { mmkv } from '/store/secureStore';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 
@@ -63,10 +64,18 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
       />
     );
   };
-
-  const inputAccessoryStyle = {
-    height: 50 + inset.bottom,
-  };
+  const { height } = useReanimatedKeyboardAnimation();
+  const inputAccessoryStyle = useAnimatedStyle(() => {
+    return {
+      paddingBottom: height.value === 0 ? inset.bottom : 5,
+      transform: [{ translateY: height.value }],
+    };
+  });
+  const contentContainerPadding = useMemo(() => {
+    return {
+      paddingTop: inset.bottom + 65,
+    };
+  }, [inset.bottom]);
 
   return (
     <Suspense fallback={<GymInfoLoader />}>
@@ -79,8 +88,11 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
           </Text>
         )}>
         <View style={[styles.chatRoomContainer]}>
-          <FlatList
-            contentContainerStyle={styles.contentContainer}
+          <Animated.FlatList
+            contentContainerStyle={[
+              styles.contentContainer,
+              contentContainerPadding,
+            ]}
             style={styles.flatList}
             data={data?.pages.flatMap(page => page.items)}
             keyExtractor={item => item.id}
@@ -104,37 +116,18 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
             automaticallyAdjustContentInsets={false}
             automaticallyAdjustKeyboardInsets={true}
             contentInsetAdjustmentBehavior="never"
-            viewabilityConfig={{
-              viewAreaCoveragePercentThreshold: 1,
+          />
+          <InputToolbar
+            {...route.params}
+            {...{
+              inputText,
+              setInputText,
+              isTyping,
+              setIsTyping,
+              chatRoomMutation,
+              animatedStyle: inputAccessoryStyle,
             }}
           />
-          <View style={inputAccessoryStyle}>
-            {Platform.OS === 'ios' ? (
-              <InputAccessoryView>
-                <InputToolbar
-                  {...route.params}
-                  {...{
-                    inputText,
-                    setInputText,
-                    isTyping,
-                    setIsTyping,
-                    chatRoomMutation,
-                  }}
-                />
-              </InputAccessoryView>
-            ) : (
-              <InputToolbar
-                {...route.params}
-                {...{
-                  inputText,
-                  setInputText,
-                  isTyping,
-                  setIsTyping,
-                  chatRoomMutation,
-                }}
-              />
-            )}
-          </View>
         </View>
       </ErrorBoundary>
     </Suspense>
