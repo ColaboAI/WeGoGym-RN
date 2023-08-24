@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { Suspense, useCallback, useState } from 'react';
 import { CommunityStackScreenProps } from '/navigators/types';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
-import { Button, Divider } from 'react-native-paper';
+import { ActivityIndicator, Button, Divider } from 'react-native-paper';
 import { ErrorBoundary } from 'react-error-boundary';
 import { FlatList, RefreshControl } from 'react-native-gesture-handler';
 import { FallbackProps } from 'react-error-boundary';
@@ -19,8 +19,14 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
     [navigation],
   );
   const communityId = undefined;
-  const { data, hasNextPage, fetchNextPage, refetch } =
-    usePostListQuery(communityId);
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+    isLoading,
+    isFetchingNextPage,
+  } = usePostListQuery(communityId);
 
   const { reset } = useQueryErrorResetBoundary();
 
@@ -58,7 +64,7 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
   }, [refetch]);
 
   return (
-    <Suspense fallback={<Text>Loading...</Text>}>
+    <Suspense fallback={<ActivityIndicator animating={isLoading} />}>
       <ErrorBoundary
         onReset={reset}
         fallbackRender={props => renderError({ ...props })}>
@@ -85,6 +91,9 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
               <View style={styles.errorContainer}>
                 <Text>커뮤니티 글이 없습니다.</Text>
               </View>
+            }
+            ListFooterComponent={
+              <ActivityIndicator animating={isFetchingNextPage} />
             }
           />
           <CustomFAB

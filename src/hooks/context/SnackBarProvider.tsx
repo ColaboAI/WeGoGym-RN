@@ -120,7 +120,7 @@ export default function SnackBarProvider({ children }: SnackBarProviderProps) {
           onDismiss={snackBarActions.onDismiss}
           duration={3000}
           wrapperStyle={wrapperStyle}
-          style={{ backgroundColor: style.backgroundColor }}
+          style={{ backgroundColor: style.backgroundColor, zIndex: 1000 }}
           action={{
             labelStyle: { color: style.textColor },
             label: '확인',

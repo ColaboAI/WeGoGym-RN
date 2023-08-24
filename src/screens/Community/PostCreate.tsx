@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native';
 import {
-  ActivityIndicator,
   Button,
   HelperText,
   Switch,
