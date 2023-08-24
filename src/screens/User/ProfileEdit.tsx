@@ -474,7 +474,6 @@ const style = StyleSheet.create({
     fontSize: 12,
   },
   chip: {
-    flexDirection: 'row',
     alignItems: 'center',
     maxHeight: 50,
     padding: 5,
@@ -482,7 +481,6 @@ const style = StyleSheet.create({
     borderRadius: 20,
   },
   horizontalChipContainer: {
-    flexDirection: 'row',
     marginBottom: 16,
     paddingTop: 12,
     // 칩 양 옆 여백

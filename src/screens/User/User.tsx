@@ -403,7 +403,6 @@ const style = StyleSheet.create({
   },
 
   chip: {
-    flexDirection: 'row',
     alignItems: 'center',
     maxHeight: 50,
     padding: 5,
@@ -411,7 +410,6 @@ const style = StyleSheet.create({
     borderRadius: 20,
   },
   horizontalChipContainer: {
-    flexDirection: 'row',
     paddingTop: 12,
     paddingBottom: 16,
   },
