@@ -15,6 +15,8 @@ import {
 import { Alert } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import ReportBottomSheet from '/components/organisms/Common/ReportBottomSheet';
+import auth from '@react-native-firebase/auth';
+
 type AuthState = {
   token: string | null;
   isLoading: boolean;
@@ -111,6 +113,12 @@ function AuthProvider({ children }: AuthProviderProps) {
         secureMmkv.deleteAllKeys();
         mmkv.deleteAllKeys();
         queryClient.clear();
+        const fbAuth = auth();
+        try {
+          await fbAuth.signOut();
+        } catch (e) {
+          console.log(e);
+        }
 
         setAuthState(prevState => ({
           ...prevState,
@@ -192,6 +200,12 @@ function AuthProvider({ children }: AuthProviderProps) {
         secureMmkv.deleteAllKeys();
         mmkv.deleteAllKeys();
         queryClient.clear();
+        const fbAuth = auth();
+        try {
+          await fbAuth.signOut();
+        } catch (e) {
+          console.log(e);
+        }
 
         setAuthState(prevState => ({
           ...prevState,
