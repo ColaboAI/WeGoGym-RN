@@ -6,7 +6,7 @@ import {
   AndroidSoftInputModes,
 } from 'react-native-keyboard-controller';
 
-function useKeyboardAnimation() {
+function useResizeMode() {
   useFocusEffect(
     useCallback(() => {
       KeyboardController.setInputMode(
@@ -22,4 +22,20 @@ function useKeyboardAnimation() {
   return context.animated;
 }
 
-export { useKeyboardAnimation };
+function usePanMode() {
+  useFocusEffect(
+    useCallback(() => {
+      KeyboardController.setInputMode(
+        AndroidSoftInputModes.SOFT_INPUT_ADJUST_PAN,
+      );
+
+      return () => KeyboardController.setDefaultMode();
+    }, []),
+  );
+
+  const context = useContext(KeyboardContext);
+
+  return context.animated;
+}
+
+export { useResizeMode, usePanMode };

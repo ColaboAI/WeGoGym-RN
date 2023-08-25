@@ -1,5 +1,11 @@
-import { StyleSheet, View } from 'react-native';
-import React, { Suspense, useCallback, useEffect, useMemo } from 'react';
+import { Platform, StyleSheet, View } from 'react-native';
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { ChatStackScreenProps } from 'navigators/types';
 import { ActivityIndicator, Button, Text, useTheme } from 'react-native-paper';
 import Bubble from '/components/molecules/Chat/Bubble';
@@ -19,6 +25,11 @@ import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 
 function ChatRoom({ route }: ChatRoomScreenProps) {
+  const ref = useRef<Animated.FlatList<Message>>(null);
+  const scrollToBottom = useCallback(() => {
+    ref.current?.scrollToEnd({ animated: true });
+  }, []);
+
   const {
     inset,
     inputText,
@@ -77,6 +88,13 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
     };
   }, [inset.bottom]);
 
+  const fakeView = useAnimatedStyle(
+    () => ({
+      height: height.value ? Math.abs(height.value) : 0,
+    }),
+    [height.value],
+  );
+
   return (
     <Suspense
       fallback={
@@ -122,6 +140,7 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
             automaticallyAdjustContentInsets={false}
             automaticallyAdjustKeyboardInsets={true}
             contentInsetAdjustmentBehavior="never"
+            onContentSizeChange={scrollToBottom}
           />
           <InputToolbar
             {...route.params}
@@ -134,6 +153,7 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
               animatedStyle: inputAccessoryStyle,
             }}
           />
+          {Platform.OS === 'android' && <Animated.View style={[fakeView]} />}
         </View>
       </ErrorBoundary>
     </Suspense>

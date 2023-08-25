@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignSelf: 'center',
     marginHorizontal: 10,
-    marginVertical: 5,
+    marginBottom: 5,
   },
   outline: {
     borderRadius: 20,

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import React, { Suspense, useCallback, useMemo } from 'react';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
@@ -12,6 +12,7 @@ import CommentInput from '/components/molecules/Community/CommentInput';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useResizeMode } from '/hooks/common/keyboard';
 
 type PostDetailScreenProps = CommunityStackScreenProps<'PostDetail'>;
 
@@ -19,6 +20,7 @@ const PostDetail = ({ route }: PostDetailScreenProps) => {
   const { postId } = route.params;
   const flatlistRef = React.useRef<Animated.FlatList<CommentRead>>(null);
   useScrollToTop(flatlistRef);
+  useResizeMode();
 
   const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
     useCommentListQuery(postId);
@@ -26,12 +28,26 @@ const PostDetail = ({ route }: PostDetailScreenProps) => {
   const inset = useSafeAreaInsets();
   const { reset } = useQueryErrorResetBoundary();
   const { height } = useReanimatedKeyboardAnimation();
+
   const commentInputStyle = useAnimatedStyle(() => {
     return {
       paddingBottom: height.value === 0 ? inset.bottom : 5,
       transform: [{ translateY: height.value }],
     };
   });
+
+  const contentPaddingBottom = useMemo(
+    () => ({
+      paddingBottom: 50,
+    }),
+    [],
+  );
+  const fakeView = useAnimatedStyle(
+    () => ({
+      height: height.value ? Math.abs(height.value) : 0,
+    }),
+    [height.value],
+  );
 
   //#region render
   const renderCommentError = useCallback(
@@ -59,11 +75,6 @@ const PostDetail = ({ route }: PostDetailScreenProps) => {
     ) : null;
   }, [isFetchingNextPage]);
   //#endregion
-  const contentContainerPadding = useMemo(() => {
-    return {
-      paddingBottom: inset.bottom + 50,
-    };
-  }, [inset.bottom]);
 
   return (
     <Suspense fallback={<ActivityIndicator animating={isLoading} />}>
@@ -73,10 +84,10 @@ const PostDetail = ({ route }: PostDetailScreenProps) => {
         <View style={styles.postDetailContainer}>
           <Animated.FlatList
             ref={flatlistRef}
-            style={styles.container}
+            style={[styles.container]}
             contentContainerStyle={[
               styles.contentContainer,
-              contentContainerPadding,
+              contentPaddingBottom,
             ]}
             ListHeaderComponent={<PostDetailSection postId={postId} />}
             ListFooterComponent={renderFooter}
@@ -91,14 +102,21 @@ const PostDetail = ({ route }: PostDetailScreenProps) => {
             }}
             nestedScrollEnabled={true}
             onEndReachedThreshold={0.1}
-            keyboardDismissMode="interactive"
-            automaticallyAdjustKeyboardInsets
+            keyboardDismissMode={'interactive'}
             automaticallyAdjustContentInsets={false}
-            contentInsetAdjustmentBehavior="never"
+            automaticallyAdjustKeyboardInsets={true}
+            contentInsetAdjustmentBehavior="always"
+            keyboardShouldPersistTaps="handled"
             maxToRenderPerBatch={5}
+            maintainVisibleContentPosition={{
+              minIndexForVisible: 0,
+              autoscrollToTopThreshold: 10,
+            }}
           />
+
+          <CommentInput animatedStyle={commentInputStyle} postId={postId} />
+          {Platform.OS === 'android' && <Animated.View style={[fakeView]} />}
         </View>
-        <CommentInput animatedStyle={commentInputStyle} postId={postId} />
       </ErrorBoundary>
     </Suspense>
   );
@@ -122,6 +140,5 @@ const styles = StyleSheet.create({
   postDetailContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between',
   },
 });
