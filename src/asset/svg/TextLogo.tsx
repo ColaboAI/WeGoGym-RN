@@ -1,8 +1,12 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import Animated, { AnimatedStyleProp } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
-export default function TextLogo() {
+interface Props {
+  customStyle?: AnimatedStyleProp<StyleProp<ViewStyle>>;
+}
+export default function TextLogo({ customStyle }: Props) {
   const theme = useTheme();
   const DarkLogo = (
     <Svg width="120" height="15" viewBox="0 0 120 15" fill="none">
@@ -22,9 +26,9 @@ export default function TextLogo() {
   );
 
   return (
-    <View style={[styles.container, { width: 120 }]}>
+    <Animated.View style={[styles.container, { width: 120 }, customStyle]}>
       {theme.dark === true ? DarkLogo : LightLogo}
-    </View>
+    </Animated.View>
   );
 }
 
