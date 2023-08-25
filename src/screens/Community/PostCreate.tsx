@@ -17,7 +17,7 @@ import {
 } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImageSlideWithGesture from '/components/molecules/Common/ImageSlideWithGesture';
-import CommunityChips from '/components/molecules/Community/CommunityChips';
+import CommunityChips from '../../components/molecules/Community/CommunityChips';
 import { usePostMutation } from '/hooks/queries/post.queries';
 
 type PostCreateScreenProps = CommunityStackScreenProps<'PostCreate'>;
