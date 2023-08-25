@@ -108,10 +108,6 @@ const PostDetail = ({ route }: PostDetailScreenProps) => {
             contentInsetAdjustmentBehavior="always"
             keyboardShouldPersistTaps="handled"
             maxToRenderPerBatch={5}
-            maintainVisibleContentPosition={{
-              minIndexForVisible: 0,
-              autoscrollToTopThreshold: 10,
-            }}
           />
 
           <CommentInput animatedStyle={commentInputStyle} postId={postId} />
