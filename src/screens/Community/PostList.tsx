@@ -21,6 +21,7 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
+import { trigger } from 'react-native-haptic-feedback';
 
 type PostListScreenProps = CommunityStackScreenProps<'PostList'>;
 
@@ -31,8 +32,10 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
     },
     [navigation],
   );
-
-  const communityId = useSharedValue(undefined);
+  const [selectedCommunity, setSelectedCommunity] = useState<
+    Community | undefined
+  >(undefined);
+  const communityId = useSharedValue<number | undefined>(undefined);
   const {
     data,
     hasNextPage,
@@ -40,7 +43,7 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
     refetch,
     isLoading,
     isFetchingNextPage,
-  } = usePostListQuery(communityId.value);
+  } = usePostListQuery(selectedCommunity?.id);
 
   const { reset } = useQueryErrorResetBoundary();
 
@@ -78,10 +81,6 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
   }, [refetch]);
 
   const inset = useSafeAreaInsets();
-
-  const [selectedCommunity, setSelectedCommunity] = useState<
-    Community | undefined
-  >(undefined);
 
   const translateY = useSharedValue(0);
   const lastContentOffset = useSharedValue(0);
@@ -165,6 +164,19 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
     };
   });
 
+  const handleCommunityChange = useCallback(
+    (community: Community | undefined) => {
+      communityId.value = community?.id;
+      setSelectedCommunity(community);
+      trigger('impactLight', {
+        enableVibrateFallback: true,
+        ignoreAndroidSystemSettings: false,
+      });
+      onRefresh();
+    },
+    [communityId, onRefresh],
+  );
+
   const renderHeader = useCallback(
     () => (
       <Animated.View style={[styles.headerContainer, headerAnim]}>
@@ -172,18 +184,18 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
         <Animated.View style={[styles.iconContainer]}>
           <CommunityChipsHeader
             selected={selectedCommunity}
-            setSelected={setSelectedCommunity}
+            handleSelect={handleCommunityChange}
           />
         </Animated.View>
       </Animated.View>
     ),
-    [headerAnim, selectedCommunity],
+    [headerAnim, handleCommunityChange, selectedCommunity],
   );
   return (
-    <Suspense fallback={<ActivityIndicator animating={isLoading} />}>
-      <ErrorBoundary
-        onReset={reset}
-        fallbackRender={props => renderError({ ...props })}>
+    <ErrorBoundary
+      onReset={reset}
+      fallbackRender={props => renderError({ ...props })}>
+      <Suspense fallback={<ActivityIndicator animating={isLoading} />}>
         <>
           {renderHeader()}
           <Animated.FlatList
@@ -220,8 +232,8 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
             }}
           />
         </>
-      </ErrorBoundary>
-    </Suspense>
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 

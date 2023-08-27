@@ -13,10 +13,10 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 type Props = {
   selected?: Community;
-  setSelected: (c: Community) => void;
+  handleSelect: (c: Community | undefined) => void;
 };
 
-const CommunityChipsHeader = (props: Props) => {
+const CommunityChipsHeader = ({ selected, handleSelect }: Props) => {
   const theme = useTheme();
   const q = useGetCommunityListQuery();
   const { reset } = useQueryErrorResetBoundary();
@@ -33,24 +33,36 @@ const CommunityChipsHeader = (props: Props) => {
     },
     [],
   );
+  const renderAllChip = useCallback(() => {
+    return (
+      <Chip
+        mode="outlined"
+        style={styles.chip}
+        selected={selected === undefined}
+        onPress={() => handleSelect(undefined)}>
+        <Text>전체</Text>
+      </Chip>
+    );
+  }, [handleSelect, selected]);
 
   return (
-    <Suspense fallback={<ActivityIndicator />}>
+    <Suspense fallback={<ActivityIndicator animating={q.isLoading} />}>
       <ErrorBoundary
         onReset={reset}
         fallbackRender={p => renderError({ ...p })}>
         <ScrollView horizontal contentContainerStyle={styles.container}>
+          {renderAllChip()}
           {q.data &&
             q.data.map((community, idx) => (
               <Chip
                 key={`community-chip-${idx}`}
                 mode="flat"
                 style={[styles.chip]}
-                selected={community.id === props.selected?.id}
+                selected={community.id === selected?.id}
                 showSelectedCheck={false}
                 showSelectedOverlay={true}
                 selectedColor={theme.colors.tertiaryContainer}
-                onPress={() => props.setSelected(community)}>
+                onPress={() => handleSelect(community)}>
                 <Text>{community.name}</Text>
               </Chip>
             ))}
