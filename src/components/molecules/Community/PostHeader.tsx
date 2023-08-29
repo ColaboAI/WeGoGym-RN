@@ -5,13 +5,15 @@ import RelativeTime from '/components/atoms/Common/RelativeTime';
 import PostReportButton from '../../atoms/Common/ReportButton';
 import { useAuthValue } from '/hooks/context/useAuth';
 import { usePostDeleteMutation } from '/hooks/queries/post.queries';
+
 type Props = {
   postId: number;
   user: User;
   updatedAt: Date;
+  onPressEdit: (postId: number) => void;
 };
 
-function PostHeader({ postId, user, updatedAt }: Props) {
+function PostHeader({ postId, user, updatedAt, onPressEdit }: Props) {
   const myId = useAuthValue().userId;
   const isMine = myId === user.id;
 
@@ -20,6 +22,7 @@ function PostHeader({ postId, user, updatedAt }: Props) {
   const handleDelete = useCallback(() => {
     deletePost(postId);
   }, [postId, deletePost]);
+
   return (
     <View style={styles.container}>
       <View style={styles.nameAndTime}>
@@ -29,7 +32,9 @@ function PostHeader({ postId, user, updatedAt }: Props) {
       <PostReportButton
         targetType="Post"
         targetId={postId}
-        handleDelete={isMine === true ? handleDelete : undefined}
+        isMine={isMine}
+        handleDelete={handleDelete}
+        handleEdit={() => onPressEdit?.(postId)}
       />
     </View>
   );

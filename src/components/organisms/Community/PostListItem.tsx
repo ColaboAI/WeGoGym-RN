@@ -11,10 +11,16 @@ import { useAuthValue } from '/hooks/context/useAuth';
 interface Props {
   post: PostRead;
   user: User;
-  onPress: (postId: number) => void;
+  onPressDetail: (postId: number) => void;
+  onPressEdit: (postId: number) => void;
 }
 
-export default function PostListItem({ post, user, onPress }: Props) {
+export default function PostListItem({
+  post,
+  user,
+  onPressDetail,
+  onPressEdit,
+}: Props) {
   const authInfo = useAuthValue();
 
   const nav = useNavigation();
@@ -41,14 +47,19 @@ export default function PostListItem({ post, user, onPress }: Props) {
         />
       </View>
       <View style={styles.postContainer}>
-        <PostHeader postId={post.id} user={user} updatedAt={post.updatedAt} />
-        <PostBody onPress={onPress} post={post} />
+        <PostHeader
+          postId={post.id}
+          user={user}
+          updatedAt={post.updatedAt}
+          onPressEdit={onPressEdit}
+        />
+        <PostBody onPress={onPressDetail} post={post} />
         <PostFooter
           postId={post.id}
           likes={post.likeCnt}
           comments={post.commentCnt}
           isLiked={post.isLiked}
-          onPress={onPress}
+          onPress={onPressDetail}
         />
       </View>
     </View>

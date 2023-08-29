@@ -16,7 +16,7 @@ import { useResizeMode } from '/hooks/common/keyboard';
 
 type PostDetailScreenProps = CommunityStackScreenProps<'PostDetail'>;
 
-const PostDetail = ({ route }: PostDetailScreenProps) => {
+const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
   const { postId } = route.params;
   const flatlistRef = React.useRef<Animated.FlatList<CommentRead>>(null);
   useScrollToTop(flatlistRef);
@@ -76,6 +76,13 @@ const PostDetail = ({ route }: PostDetailScreenProps) => {
   }, [isFetchingNextPage]);
   //#endregion
 
+  const navigateToPostEdit = useCallback(
+    (id: number) => {
+      navigation.push('PostEdit', { postId: id });
+    },
+    [navigation],
+  );
+
   return (
     <Suspense fallback={<ActivityIndicator animating={isLoading} />}>
       <ErrorBoundary
@@ -89,7 +96,12 @@ const PostDetail = ({ route }: PostDetailScreenProps) => {
               styles.contentContainer,
               contentPaddingBottom,
             ]}
-            ListHeaderComponent={<PostDetailSection postId={postId} />}
+            ListHeaderComponent={
+              <PostDetailSection
+                postId={postId}
+                onPressEdit={navigateToPostEdit}
+              />
+            }
             ListFooterComponent={renderFooter}
             data={data?.pages.flatMap(page => page.items)}
             keyExtractor={item => item.id.toString()}

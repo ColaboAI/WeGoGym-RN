@@ -32,7 +32,12 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
     },
     [navigation],
   );
-
+  const navigateToPostEdit = useCallback(
+    (postId: number) => {
+      navigation.push('PostEdit', { postId });
+    },
+    [navigation],
+  );
   const [selectedCommunity, setSelectedCommunity] = useState<
     Community | undefined
   >(undefined);
@@ -64,10 +69,11 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
       <PostListItem
         post={item}
         user={item.user}
-        onPress={navigateToPostDetail}
+        onPressDetail={navigateToPostDetail}
+        onPressEdit={navigateToPostEdit}
       />
     ),
-    [navigateToPostDetail],
+    [navigateToPostDetail, navigateToPostEdit],
   );
   const renderDivider = useCallback(() => {
     return <Divider />;

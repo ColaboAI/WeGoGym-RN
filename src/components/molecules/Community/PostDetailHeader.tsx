@@ -11,9 +11,15 @@ type Props = {
   postId: number;
   user: User;
   updatedAt: Date;
+  onPressEdit: (postId: number) => void;
 };
 
-export default function PostDetailHeader({ postId, user, updatedAt }: Props) {
+export default function PostDetailHeader({
+  postId,
+  user,
+  updatedAt,
+  onPressEdit,
+}: Props) {
   const nav = useNavigation();
   const myId = useAuthValue().userId;
   const isMine = myId === user.id;
@@ -33,7 +39,9 @@ export default function PostDetailHeader({ postId, user, updatedAt }: Props) {
       <PostReportButton
         targetType="Post"
         targetId={postId}
-        handleDelete={isMine === true ? handleDelete : undefined}
+        isMine={isMine}
+        handleDelete={handleDelete}
+        handleEdit={() => onPressEdit?.(postId)}
       />
     </View>
   );
