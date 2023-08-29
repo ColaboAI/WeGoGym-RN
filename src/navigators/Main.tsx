@@ -58,16 +58,16 @@ const MainNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="채팅"
-        component={ChatStackScreen}
+        name="커뮤니티"
+        component={CommunityStackScreen}
         options={{
           tabBarIconStyle: { display: 'flex' },
           tabBarLabelPosition: 'below-icon',
         }}
       />
       <Tab.Screen
-        name="커뮤니티"
-        component={CommunityStackScreen}
+        name="채팅"
+        component={ChatStackScreen}
         options={{
           tabBarIconStyle: { display: 'flex' },
           tabBarLabelPosition: 'below-icon',
