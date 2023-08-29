@@ -1,11 +1,12 @@
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import React from 'react';
-import { Avatar, useTheme } from 'react-native-paper';
+import React, { useMemo } from 'react';
+import { Avatar, TouchableRipple, useTheme } from 'react-native-paper';
 
 interface Props {
-  profilePic?: string;
   username: string;
   size: number;
+  onPress?: () => void;
+  profilePic?: string;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -18,29 +19,46 @@ function CustomAvatar(props: Props) {
     },
   };
 
-  return (
-    <View style={styles.avatarContainer}>
-      {props.profilePic ? (
-        <Avatar.Image
-          size={props.size}
-          source={{
-            uri: props.profilePic,
-          }}
-          style={props.style ? props.style : styles.avatar}
-        />
-      ) : (
-        <Avatar.Text
-          size={props.size}
-          label={props.username[0] ?? '?'}
-          style={
-            props.style
-              ? [customStyleFromTheme.text, props.style]
-              : [customStyleFromTheme.text, styles.avatar]
-          }
-        />
-      )}
-    </View>
-  );
+  const renderAvatar = useMemo(() => {
+    return props.profilePic ? (
+      <Avatar.Image
+        size={props.size}
+        source={{
+          uri: props.profilePic,
+        }}
+        style={props.style ? props.style : styles.avatar}
+      />
+    ) : (
+      <Avatar.Text
+        size={props.size}
+        label={props.username[0] ?? '?'}
+        style={
+          props.style
+            ? [customStyleFromTheme.text, props.style]
+            : [customStyleFromTheme.text, styles.avatar]
+        }
+      />
+    );
+  }, [
+    props.profilePic,
+    props.size,
+    props.style,
+    props.username,
+    customStyleFromTheme.text,
+  ]);
+
+  if (props.onPress) {
+    return (
+      <TouchableRipple
+        style={styles.avatarContainer}
+        borderless
+        onPress={props.onPress}>
+        {renderAvatar}
+      </TouchableRipple>
+    );
+  } else {
+    return <View style={styles.avatarContainer}>{renderAvatar}</View>;
+  }
 }
 
 export default CustomAvatar;
