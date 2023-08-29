@@ -8,6 +8,8 @@ import { Divider, Text } from 'react-native-paper';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { usePostQuery } from '/hooks/queries/post.queries';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import { useNavigation } from '@react-navigation/native';
+import { useAuthValue } from '/hooks/context/useAuth';
 
 type Props = {
   postId: number;
@@ -16,6 +18,22 @@ type Props = {
 export default function PostDetailSection({ postId }: Props) {
   const { data: post } = usePostQuery(postId);
   const { reset } = useQueryErrorResetBoundary();
+
+  const nav = useNavigation();
+  const authInfo = useAuthValue();
+  const navigateToUser = useCallback(() => {
+    if (!post) return;
+
+    nav.navigate('MainNavigator', {
+      screen: '커뮤니티',
+      params: {
+        screen: 'User',
+        params: {
+          userId: post.user.id === authInfo?.userId ? 'me' : post.user.id,
+        },
+      },
+    });
+  }, [nav, post, authInfo?.userId]);
 
   const renderPostError = useCallback(
     ({ error, resetErrorBoundary }: FallbackProps) => {
@@ -42,6 +60,7 @@ export default function PostDetailSection({ postId }: Props) {
                   size={30}
                   profilePic={post.user.profilePic}
                   username={post.user.username}
+                  onPress={navigateToUser}
                 />
               </View>
               <View style={styles.postSection}>

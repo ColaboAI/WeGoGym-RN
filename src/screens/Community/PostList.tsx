@@ -32,6 +32,7 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
     },
     [navigation],
   );
+
   const [selectedCommunity, setSelectedCommunity] = useState<
     Community | undefined
   >(undefined);

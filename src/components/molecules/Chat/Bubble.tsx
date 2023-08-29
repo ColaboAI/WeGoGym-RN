@@ -1,9 +1,10 @@
 import { StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Surface, Text, useTheme } from 'react-native-paper';
 import { getValueFor } from '/store/secureStore';
 import { getLocaleTime, getRelativeTime, isToday } from '/utils/util';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
+import { useNavigation } from '@react-navigation/native';
 type Props = {
   getUserInfo: (id: string) => User | undefined;
 } & Message;
@@ -15,6 +16,22 @@ const Bubble = ({ text, createdAt, userId, getUserInfo }: Props) => {
   const isLeft = myId !== userId;
   const userInfo = getUserInfo(userId);
 
+  const navigation = useNavigation();
+
+  const handlePressAvatar = useCallback(() => {
+    if (userInfo?.id !== undefined) {
+      navigation.navigate('MainNavigator', {
+        screen: '채팅',
+        params: {
+          screen: 'User',
+          params: {
+            userId: userInfo.id,
+          },
+        },
+      });
+    }
+  }, [navigation, userInfo]);
+
   return (
     <View style={styles.bubbleContainer}>
       {isLeft && (
@@ -22,6 +39,7 @@ const Bubble = ({ text, createdAt, userId, getUserInfo }: Props) => {
           <CustomAvatar
             username={userInfo?.username ?? '알 수 없음'}
             profilePic={userInfo?.profilePic}
+            onPress={handlePressAvatar}
             size={30}
             style={styles.avatar}
           />

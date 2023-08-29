@@ -22,7 +22,7 @@ export type CommunityParamList = {
 export type ChatStackParamList = {
   ChatList: undefined;
   ChatRoom: ChatParamList;
-};
+} & UserStackParamList;
 
 export type HomeStackParamList = {
   Home: undefined;
