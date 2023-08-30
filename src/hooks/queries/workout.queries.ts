@@ -179,7 +179,6 @@ export function useGetWorkoutByIdQuery(id: string | undefined) {
         `운동 약속 정보를 가져오는데 실패하였습니다: ${error.response?.data.message}`,
         'error',
       );
-      console.log(error);
     },
     suspense: true,
   });

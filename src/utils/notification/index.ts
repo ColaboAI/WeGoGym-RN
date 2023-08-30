@@ -148,7 +148,6 @@ async function checkIsLatestVersion() {
       [
         {
           text: '나중에',
-          onPress: () => console.log('나중에 업데이트'),
           style: 'cancel',
         },
         {

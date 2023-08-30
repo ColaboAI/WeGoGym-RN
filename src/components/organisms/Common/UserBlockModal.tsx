@@ -52,7 +52,6 @@ const UserBlockModal = (props: Props) => {
       queryClient.invalidateQueries(['chatList']);
       closeModal();
     } catch (error) {
-      console.log(error);
       onShow('차단에 실패했습니다.', 'error');
     }
   }, [props.userId, onShow, queryClient, closeModal]);

@@ -50,7 +50,6 @@ export default function UserScreen({ navigation, route }: Props) {
         params: navParams,
       });
     } catch (e) {
-      console.log('New chat Room has to be created');
       navigation.navigate('채팅', {
         screen: 'ChatRoom',
         params: {

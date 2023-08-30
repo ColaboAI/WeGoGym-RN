@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import MapView, {
   Callout,
@@ -13,6 +13,7 @@ import CustomCallout from './CustomCallout';
 import CustomMarkerView from './CustomMarkerView';
 import mapStyle from '/asset/json/mapStyle.json';
 import BottomSheet from '@gorhom/bottom-sheet';
+import { useSnackBarActions } from '/hooks/context/useSnackbar';
 
 type Props = {
   isBottomSheetOpen: boolean;
@@ -27,15 +28,16 @@ type Props = {
 const GoogleMap = (props: Props) => {
   const markerRef = React.useRef<MapMarker>(null);
   const theme = useTheme();
+  const { onShow } = useSnackBarActions();
   const [location, setLocation] = useState<Location>({
-    lat: 27.5665,
+    lat: 37.5665,
     lng: 126.978,
   });
   const [title, setTitle] = useState<string>('현재 위치');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [description, setDescription] = useState<string>('');
 
-  const getLocation = () => {
+  const getLocation = useCallback(() => {
     Geolocation.getCurrentPosition(
       position => {
         const {
@@ -45,10 +47,9 @@ const GoogleMap = (props: Props) => {
           lat: latitude,
           lng: longitude,
         });
-        console.log('현재 위치', position);
       },
       error => {
-        console.log(error);
+        onShow('위치 정보를 가져올 수 없습니다. ' + error.message, 'error');
       },
       {
         accuracy: {
@@ -60,13 +61,13 @@ const GoogleMap = (props: Props) => {
         maximumAge: 1000,
       },
     );
-  };
+  }, [onShow]);
 
   useEffect(() => {
     setIsLoading(true);
     getLocation();
     setIsLoading(false);
-  }, []);
+  }, [getLocation]);
 
   const handlePlaceSelected = (
     _data: any,
