@@ -115,6 +115,7 @@ export function useCommentUpdateMutation() {
           return old;
         },
       );
+      onShow('댓글이 수정되었습니다', 'success');
     },
     onError: (error: CustomError) => {
       onShow(
@@ -132,6 +133,7 @@ export function useCommentDeleteMutation(postId: number) {
     mutationFn: deleteComment,
     onSuccess: () => {
       queryClient.invalidateQueries(['commentList', postId]);
+      onShow('댓글이 삭제되었습니다', 'success');
     },
     onError: (error: CustomError) => {
       onShow(
