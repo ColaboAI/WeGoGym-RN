@@ -7,6 +7,7 @@ import {
   UserScreen,
   SettingScreen,
   ProfileEditScreen,
+  PostEditScreen,
 } from 'screens';
 import CommunityHeader from './NavBarHeader/Community';
 import { CommunityStackParamList, CustomTabScreenProps } from './types';
@@ -47,7 +48,7 @@ function Community({ navigation, route }: Props) {
       />
       <Stack.Screen name="PostDetail" component={PostDetailScreen} />
       <Stack.Screen name="PostCreate" component={PostCreateScreen} />
-      {/* <Stack.Screen name="PostEdit" component={PostEditScreen} /> */}
+      <Stack.Screen name="PostEdit" component={PostEditScreen} />
       <Stack.Screen
         name="User"
         component={UserScreen}
