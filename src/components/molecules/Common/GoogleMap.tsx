@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, {
+  Callout,
+  MapMarker,
+  Marker,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import GooglePlacesInput from './GooglePlacesInput';
-import { Text, useTheme } from 'react-native-paper';
+import { ActivityIndicator, Text, useTheme } from 'react-native-paper';
 import CustomCallout from './CustomCallout';
 import CustomMarkerView from './CustomMarkerView';
 import mapStyle from '/asset/json/mapStyle.json';
@@ -20,12 +25,14 @@ type Props = {
 };
 
 const GoogleMap = (props: Props) => {
+  const markerRef = React.useRef<MapMarker>(null);
   const theme = useTheme();
   const [location, setLocation] = useState<Location>({
-    lat: 37.5665,
+    lat: 27.5665,
     lng: 126.978,
   });
-  const [title, setTitle] = useState<string>('');
+  const [title, setTitle] = useState<string>('현재 위치');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [description, setDescription] = useState<string>('');
 
   const getLocation = () => {
@@ -56,16 +63,15 @@ const GoogleMap = (props: Props) => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     getLocation();
+    setIsLoading(false);
   }, []);
 
   const handlePlaceSelected = (
     _data: any,
     details: { geometry: { location: Location } },
   ) => {
-    console.log('data', _data);
-    console.log('details', details);
-
     const { lat, lng } = details.geometry.location;
     setLocation({
       lat: lat,
@@ -96,10 +102,12 @@ const GoogleMap = (props: Props) => {
 
   return (
     <View style={styles.container}>
+      <ActivityIndicator animating={isLoading} />
       <View style={styles.search}>
         <GooglePlacesInput onSelectPlace={handlePlaceSelected} />
       </View>
-      {location && (
+
+      {location && isLoading !== true && (
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -120,9 +128,10 @@ const GoogleMap = (props: Props) => {
             calloutAnchor={{ x: 0.5, y: 0.25 }}
             title={title}
             description={description}
-            ref={marker => {
-              marker && marker.showCallout();
-            }}>
+            onLayout={() => {
+              markerRef.current?.showCallout();
+            }}
+            ref={markerRef}>
             <CustomMarkerView
               customMarkerStyle={[
                 styles.customMarker,
@@ -139,38 +148,36 @@ const GoogleMap = (props: Props) => {
                 {title}
               </Text>
             </CustomMarkerView>
-            {title ? (
-              <Callout
-                key={title}
-                alphaHitTest
-                tooltip
-                onPress={() => {
-                  onPressCallout();
-                }}
-                style={styles.calloutView}>
-                <CustomCallout>
-                  <Text
-                    style={[
-                      styles.calloutTitle,
-                      {
-                        color: theme.colors.background,
-                      },
-                    ]}
-                    numberOfLines={1}>
-                    {title}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.buttonText,
-                      {
-                        color: theme.colors.background,
-                      },
-                    ]}>
-                    선택
-                  </Text>
-                </CustomCallout>
-              </Callout>
-            ) : null}
+            <Callout
+              key={title}
+              alphaHitTest
+              tooltip
+              onPress={() => {
+                onPressCallout();
+              }}
+              style={styles.calloutView}>
+              <CustomCallout>
+                <Text
+                  style={[
+                    styles.calloutTitle,
+                    {
+                      color: theme.colors.background,
+                    },
+                  ]}
+                  numberOfLines={1}>
+                  {title}
+                </Text>
+                <Text
+                  style={[
+                    styles.buttonText,
+                    {
+                      color: theme.colors.background,
+                    },
+                  ]}>
+                  선택
+                </Text>
+              </CustomCallout>
+            </Callout>
           </Marker>
         </MapView>
       )}

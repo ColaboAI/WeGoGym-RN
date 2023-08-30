@@ -1,10 +1,8 @@
-import React, { ReactNode } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
-interface CustomCalloutProps {
-  children: ReactNode;
-}
+interface CustomCalloutProps extends PropsWithChildren {}
 
 const CustomCallout: React.FC<CustomCalloutProps> = ({ children }) => {
   const theme = useTheme();
