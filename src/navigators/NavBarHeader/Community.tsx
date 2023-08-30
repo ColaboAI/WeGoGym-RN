@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useMemo } from 'react';
-import { Appbar, useTheme } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { Route } from '@react-navigation/native';
 import { CommunityParamList } from '../types';
