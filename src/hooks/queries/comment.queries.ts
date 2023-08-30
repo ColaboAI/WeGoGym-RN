@@ -3,6 +3,7 @@ import {
   useQueryClient,
   useInfiniteQuery,
   InfiniteData,
+  useQuery,
 } from '@tanstack/react-query';
 import { useSnackBarActions } from 'hooks/context/useSnackbar';
 import {
@@ -12,6 +13,7 @@ import {
   deleteComment,
   postLikeComment,
   postDisLikeComment,
+  getComment,
 } from '/api/api';
 
 export function useCommentListQuery(postId: number) {
@@ -39,6 +41,27 @@ export function useCommentListQuery(postId: number) {
         return undefined;
       }
       return firstPage.nextCursor;
+    },
+  });
+}
+
+export function useCommentByIdQuery(id: number | null) {
+  const { onShow } = useSnackBarActions();
+  return useQuery({
+    queryKey: ['comment', id],
+    queryFn: () => {
+      if (id) {
+        return getComment(id);
+      }
+      return null;
+    },
+    retry: 1,
+    suspense: true,
+    onError: (error: CustomError) => {
+      onShow(
+        `댓글을 가져오는데 실패하였습니다: ${error.response?.data.message}`,
+        'error',
+      );
     },
   });
 }
