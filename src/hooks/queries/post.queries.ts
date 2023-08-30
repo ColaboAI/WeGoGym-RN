@@ -95,6 +95,7 @@ export function usePostMutation() {
 
 export function usePostUpdateMutation() {
   const queryClient = useQueryClient();
+  const nav = useNavigation();
   const { onShow } = useSnackBarActions();
   return useMutation({
     mutationFn: ({
@@ -109,6 +110,7 @@ export function usePostUpdateMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries(['postList']);
       onShow('게시글 수정에 성공하였습니다.', 'success');
+      nav.goBack();
     },
     onError: (error: CustomError) => {
       onShow(

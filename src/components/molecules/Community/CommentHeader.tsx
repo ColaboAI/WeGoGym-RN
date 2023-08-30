@@ -10,6 +10,7 @@ type Props = {
   commentId: number;
   user: User;
   updatedAt: Date;
+  onPressEditComment: (commentId: number) => void;
 };
 
 export default function CommentHeader({
@@ -17,6 +18,7 @@ export default function CommentHeader({
   updatedAt,
   commentId,
   postId,
+  onPressEditComment,
 }: Props) {
   const myId = useAuthValue().userId;
   const isMine = myId === user.id;
@@ -27,6 +29,10 @@ export default function CommentHeader({
     deleteComment(commentId);
   }, [commentId, deleteComment]);
 
+  const handleEditComment = () => {
+    onPressEditComment(commentId);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.nameAndTime}>
@@ -36,7 +42,9 @@ export default function CommentHeader({
       <CommentReportButton
         targetType="Comment"
         targetId={commentId}
-        handleDelete={isMine === true ? handleDelete : undefined}
+        isMine={isMine}
+        handleDelete={handleDelete}
+        handleEdit={handleEditComment}
       />
     </View>
   );

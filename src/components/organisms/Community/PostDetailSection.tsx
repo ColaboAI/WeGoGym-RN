@@ -13,9 +13,10 @@ import { useAuthValue } from '/hooks/context/useAuth';
 
 type Props = {
   postId: number;
+  onPressEdit: (postId: number) => void;
 };
 
-export default function PostDetailSection({ postId }: Props) {
+export default function PostDetailSection({ postId, onPressEdit }: Props) {
   const { data: post } = usePostQuery(postId);
   const { reset } = useQueryErrorResetBoundary();
 
@@ -49,6 +50,7 @@ export default function PostDetailSection({ postId }: Props) {
     },
     [],
   );
+
   return (
     <Suspense fallback={<Text>Loading...</Text>}>
       <ErrorBoundary onReset={reset} fallbackRender={renderPostError}>
@@ -68,6 +70,7 @@ export default function PostDetailSection({ postId }: Props) {
                   postId={postId}
                   user={post.user}
                   updatedAt={post.updatedAt}
+                  onPressEdit={onPressEdit}
                 />
                 <PostDetailBody post={post} />
                 <PostDetailFooter

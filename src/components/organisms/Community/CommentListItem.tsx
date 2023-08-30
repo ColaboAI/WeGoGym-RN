@@ -7,9 +7,15 @@ import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthValue } from '/hooks/context/useAuth';
 
-type Props = { comment: CommentRead };
+type Props = {
+  comment: CommentRead;
+  onPressEditComment: (commentId: number) => void;
+};
 
-export default function CommentListItem({ comment }: Props) {
+export default function CommentListItem({
+  comment,
+  onPressEditComment,
+}: Props) {
   const nav = useNavigation();
   const authInfo = useAuthValue();
   const navigateToUser = useCallback(() => {
@@ -43,6 +49,7 @@ export default function CommentListItem({ comment }: Props) {
           commentId={comment.id}
           user={comment.user}
           updatedAt={comment.updatedAt}
+          onPressEditComment={onPressEditComment}
         />
         <CommentContent content={comment.content} />
         <CommentFooter

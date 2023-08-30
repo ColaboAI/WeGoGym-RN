@@ -27,3 +27,4 @@ export { default as ProfileImageScreen } from './OnBoarding/ProfileImage';
 export { default as PostListScreen } from './Community/PostList';
 export { default as PostDetailScreen } from './Community/PostDetail';
 export { default as PostCreateScreen } from './Community/PostCreate';
+export { default as PostEditScreen } from './Community/PostEdit';

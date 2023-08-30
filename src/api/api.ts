@@ -607,6 +607,15 @@ async function getCommentList({
   }
 }
 
+async function getComment(id: number): Promise<CommentRead> {
+  try {
+    const res = await apiClient.get(`/communities/comments/${id}`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 async function postComment(params: CommentCreate): Promise<CommentRead> {
   try {
     const res = await apiClient.post(`/communities/comments`, params);
@@ -718,6 +727,7 @@ export {
   postPost,
   patchPost,
   deletePost,
+  getComment,
   postComment,
   patchComment,
   deleteComment,
