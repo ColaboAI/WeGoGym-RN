@@ -71,7 +71,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Camera Roll.</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>$(PRODUCT_NAME)는 이용자에게 최적화된 광고를 제공과 앱 개선을 위해 사용자의 앱 활동 정보를 수집합니다.</string>
+	<string>$(PRODUCT_NAME)는 이용자에게 최적화된 광고 제공과 앱 개선을 위해 사용자의 앱 활동 정보를 수집합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
