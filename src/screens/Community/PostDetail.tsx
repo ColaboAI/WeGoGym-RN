@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import React, { Suspense, useCallback, useMemo } from 'react';
+import React, { Suspense, useCallback, useMemo, useState } from 'react';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import PostDetailSection from '/components/organisms/Community/PostDetailSection';
@@ -60,9 +60,20 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
     ),
     [],
   );
+
+  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
+    null,
+  );
+
+  const onPressEditComment = useCallback((commentId: number) => {
+    setSelectedCommentId(commentId);
+  }, []);
+
   const renderItem = useCallback(
-    ({ item }: { item: CommentRead }) => <CommentListItem comment={item} />,
-    [],
+    ({ item }: { item: CommentRead }) => (
+      <CommentListItem comment={item} onPressEditComment={onPressEditComment} />
+    ),
+    [onPressEditComment],
   );
 
   const renderDivider = useCallback(() => {
@@ -121,8 +132,12 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
             keyboardShouldPersistTaps="handled"
             maxToRenderPerBatch={5}
           />
-
-          <CommentInput animatedStyle={commentInputStyle} postId={postId} />
+          <CommentInput
+            animatedStyle={commentInputStyle}
+            postId={postId}
+            selectedCommentId={selectedCommentId}
+            setSelectedCommentId={setSelectedCommentId}
+          />
           {Platform.OS === 'android' && <Animated.View style={[fakeView]} />}
         </View>
       </ErrorBoundary>

@@ -1,35 +1,77 @@
-import { Keyboard, Platform, StyleSheet, View, ViewStyle } from 'react-native';
-import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { TextInput, useTheme } from 'react-native-paper';
-import { useCommentMutation } from '/hooks/queries/comment.queries';
+import {
+  Keyboard,
+  Platform,
+  StyleSheet,
+  View,
+  ViewStyle,
+  TextInput,
+} from 'react-native';
+import React, { useCallback, useLayoutEffect, useState, useRef } from 'react';
+import { TextInput as RNTextInput, useTheme } from 'react-native-paper';
+import {
+  useCommentByIdQuery,
+  useCommentMutation,
+  useCommentUpdateMutation,
+} from '/hooks/queries/comment.queries';
 import Animated, { AnimatedStyleProp } from 'react-native-reanimated';
+
 type Props = {
   postId: number;
   focusable?: boolean;
   animatedStyle: AnimatedStyleProp<ViewStyle>;
+  selectedCommentId: number | null;
+  setSelectedCommentId: (id: number | null) => void;
 };
 
 export default function CommentInput({
   postId,
   animatedStyle,
   focusable = true,
+  selectedCommentId,
+  setSelectedCommentId,
 }: Props) {
   const theme = useTheme();
   const mutation = useCommentMutation();
+  const updateMutation = useCommentUpdateMutation();
+  const { data: comment } = useCommentByIdQuery(selectedCommentId);
   const [inputText, setInputText] = useState<string>('');
+  const inputRef = useRef<TextInput>(null);
 
   const handleSubmit = useCallback(() => {
-    if (inputText.length > 0) {
-      mutation.mutate({ postId, content: inputText });
+    if (inputText.length === 0) {
+      return;
     }
-  }, [inputText, mutation, postId]);
+    if (selectedCommentId) {
+      updateMutation.mutate({
+        id: selectedCommentId,
+        params: { content: inputText },
+      });
+      setSelectedCommentId(null);
+    } else {
+      mutation.mutate({
+        postId,
+        content: inputText,
+      });
+    }
+    Keyboard.dismiss();
+    setInputText('');
+  }, [
+    inputText,
+    mutation,
+    postId,
+    selectedCommentId,
+    setSelectedCommentId,
+    updateMutation,
+  ]);
 
   useLayoutEffect(() => {
-    if (mutation.isSuccess) {
-      Keyboard.dismiss();
+    if (selectedCommentId !== null) {
+      setInputText(comment?.content ?? '');
+      inputRef.current?.focus();
+    } else {
       setInputText('');
     }
-  }, [mutation.isSuccess, setInputText]);
+  }, [comment, selectedCommentId]);
 
   return (
     <Animated.View
@@ -39,11 +81,12 @@ export default function CommentInput({
         animatedStyle,
       ]}>
       <View style={styles.textInputContainer}>
-        <TextInput
+        <RNTextInput
+          ref={inputRef}
           mode="outlined"
           dense={true}
           right={
-            <TextInput.Icon
+            <RNTextInput.Icon
               style={styles.sendBtnIcon}
               mode="contained"
               icon="send"
