@@ -17,13 +17,18 @@ import {
   HelperText,
   IconButton,
   Button,
-  Switch,
 } from 'react-native-paper';
 import { usePutWorkoutMutation } from '/hooks/queries/workout.queries';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getLocaleDate, getLocaleTime, isToday } from '/utils/util';
-import GymBottomSheet from '/components/organisms/User/GymBottomSheet';
+import {
+  getLocaleDate,
+  getLocaleTime,
+  getWorkoutPart,
+  isToday,
+} from '/utils/util';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useSnackBarActions } from '/hooks/context/useSnackbar';
+import GoogleMapSearch from '/components/organisms/Common/GoogleMapSearch';
 
 const MAX_NUMBER = 5;
 const MIN_NUMBER = 1;
@@ -49,7 +54,56 @@ export default function PromiseEditScreen({
   const [maxParticipants, setMaxParticipants] = useState<number>(
     promiseInfo.maxParticipants,
   );
-  const [isPrivate, setIsPrivate] = useState<boolean>(promiseInfo.isPrivate);
+  // const [isPrivate, setIsPrivate] = useState<boolean>(promiseInfo.isPrivate);
+
+  const workoutPartList = [
+    { id: 0, part: '가슴', select: false },
+    { id: 1, part: '등', select: false },
+    { id: 2, part: '어깨', select: false },
+    { id: 3, part: '하체', select: false },
+    { id: 4, part: '이두', select: false },
+    { id: 5, part: '삼두', select: false },
+    { id: 6, part: '팔', select: false },
+    { id: 7, part: '상체', select: false },
+    { id: 8, part: '유산소', select: false },
+  ];
+
+  const { onShow } = useSnackBarActions();
+
+  const initWorkoutPart = (parts: string[]) => {
+    const newWorkoutPartList = workoutPartList.map(item => {
+      if (parts.includes(item.part)) {
+        return { ...item, select: true };
+      } else {
+        return { ...item, select: false };
+      }
+    });
+    return newWorkoutPartList;
+  };
+
+  const [myWorkoutPartState, setMyWorkoutPartState] = useState(
+    initWorkoutPart(
+      promiseInfo.workoutPart ? promiseInfo.workoutPart.split(',') : [],
+    ),
+  );
+
+  const isNoPartSelected = () => {
+    return myWorkoutPartState.every(part => !part.select);
+  };
+
+  const onToggle = (id: number) => {
+    const updatedSelected = myWorkoutPartState.map(part =>
+      part.id === id ? { ...part, select: !part.select } : part,
+    );
+
+    const selectedCount = updatedSelected.filter(part => part.select).length;
+
+    if (selectedCount <= 3) {
+      setMyWorkoutPartState(updatedSelected);
+    } else {
+      onShow('최대 3개까지 선택할 수 있습니다.');
+    }
+  };
 
   const initialDatePickerState: DatePickerState = {
     date: new Date(promiseInfo.promiseTime),
@@ -61,15 +115,16 @@ export default function PromiseEditScreen({
     initialDatePickerState,
   );
 
-  const [recruitEndDateState, setRecruitEndDateState] =
-    useState<DatePickerState>({
-      date: new Date(promiseInfo.recruitEndTime),
-      mode: 'datetime',
-      visible: false,
-    });
+  // const [recruitEndDateState, setRecruitEndDateState] =
+  //   useState<DatePickerState>({
+  //     date: new Date(promiseInfo.recruitEndTime),
+  //     mode: 'datetime',
+  //     visible: false,
+  //   });
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
-  const [gymInfo, setGymInfo] = useState<Gym | null>(promiseInfo.gymInfo);
+  const [promiseLocation, setPromiseLocation] =
+    useState<PromiseLocation | null>(promiseInfo.promiseLocation);
 
   const hasTitleErrors = useCallback(() => {
     return titleFocus && title.length === 0;
@@ -104,17 +159,20 @@ export default function PromiseEditScreen({
   }, []);
 
   const onPressEdit = useCallback(async () => {
+    const workoutPart = getWorkoutPart(myWorkoutPartState);
+
     const data = {
       workoutPromiseId: promiseInfo.id,
       workoutPromise: {
         title,
         description,
-        isPrivate,
+        // isPrivate,
         maxParticipants,
         promise_time: promiseDateState.date,
-        recruit_end_time: recruitEndDateState.date,
+        workout_part: workoutPart,
+        // recruit_end_time: recruitEndDateState.date,
       },
-      gymInfo,
+      promiseLocation,
     };
     updateWorkoutMutation.mutate(data);
     navigation.goBack();
@@ -122,11 +180,10 @@ export default function PromiseEditScreen({
     promiseInfo.id,
     title,
     description,
-    isPrivate,
     maxParticipants,
     promiseDateState.date,
-    recruitEndDateState.date,
-    gymInfo,
+    myWorkoutPartState,
+    promiseLocation,
     updateWorkoutMutation,
     navigation,
   ]);
@@ -246,7 +303,7 @@ export default function PromiseEditScreen({
                 </Text>
               </Button>
             </View>
-            <View style={style.infoContainer}>
+            {/* <View style={style.infoContainer}>
               <View style={style.infoBox}>
                 <Icon
                   name="timer-outline"
@@ -271,7 +328,7 @@ export default function PromiseEditScreen({
                       getLocaleTime(recruitEndDateState.date)}
                 </Text>
               </Button>
-            </View>
+            </View> */}
             <View style={style.infoContainer}>
               <View style={style.infoBox}>
                 <Icon
@@ -286,11 +343,13 @@ export default function PromiseEditScreen({
                 <Text
                   variant="bodyLarge"
                   style={{ color: theme.colors.onBackground }}>
-                  {gymInfo ? gymInfo.name : '위치를 선택해주세요'}
+                  {promiseLocation
+                    ? promiseLocation.placeName
+                    : '위치를 선택해주세요'}
                 </Text>
               </Button>
             </View>
-            <View style={style.infoContainer}>
+            {/* <View style={style.infoContainer}>
               <View style={style.infoBox}>
                 <Icon
                   name={isPrivate ? 'lock-closed-outline' : 'lock-open-outline'}
@@ -304,12 +363,56 @@ export default function PromiseEditScreen({
                 value={isPrivate}
                 onValueChange={value => setIsPrivate(value)}
               />
+            </View> */}
+            <View style={style.infoContainer}>
+              <View style={style.infoBox}>
+                <Icon
+                  name="barbell-outline"
+                  size={20}
+                  color={theme.colors.onBackground}
+                  style={style.icon}
+                />
+                <Text variant="titleMedium">운동 부위</Text>
+              </View>
+              <Button>
+                <Text
+                  variant="bodyLarge"
+                  style={{ color: theme.colors.onBackground }}>
+                  {myWorkoutPartState
+                    .filter(item => item.select)
+                    .map(item => item.part)
+                    .join(', ') || '운동 부위를 선택해주세요'}
+                </Text>
+              </Button>
             </View>
+            <ScrollView
+              style={style.horizontalButtonContainer}
+              horizontal
+              showsHorizontalScrollIndicator={false}>
+              {myWorkoutPartState.map(button => {
+                return (
+                  <Button
+                    key={`select-${button.id}`}
+                    style={[style.button]}
+                    mode={button.select ? 'contained' : 'elevated'}
+                    onPress={() => {
+                      onToggle(button.id);
+                    }}>
+                    {button.part}
+                  </Button>
+                );
+              })}
+            </ScrollView>
           </ScrollView>
           <Button
             mode="contained-tonal"
             style={style.postingButton}
-            disabled={hasTitleErrors() || hasContentErrors() || !gymInfo}
+            disabled={
+              hasTitleErrors() ||
+              hasContentErrors() ||
+              !promiseLocation ||
+              isNoPartSelected()
+            }
             onPress={() => {
               onPressEdit();
             }}>
@@ -318,15 +421,15 @@ export default function PromiseEditScreen({
         </View>
       </TouchableWithoutFeedback>
       <DateTimeModal state={promiseDateState} setState={setPromiseDateState} />
-      <DateTimeModal
+      {/* <DateTimeModal
         state={recruitEndDateState}
         setState={setRecruitEndDateState}
-      />
-      <GymBottomSheet
+      /> */}
+      <GoogleMapSearch
         isBottomSheetOpen={isBottomSheetOpen}
         setIsBottomSheetOpen={setIsBottomSheetOpen}
-        gymInfo={gymInfo}
-        setGymInfo={setGymInfo}
+        promiseLocation={promiseLocation}
+        setPromiseLocation={setPromiseLocation}
       />
     </View>
   );
@@ -375,6 +478,16 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 2,
+  },
+  horizontalButtonContainer: {
+    flexDirection: 'row',
+    paddingVertical: 12,
+    paddingBottom: 12,
+  },
+  button: {
+    flexDirection: 'row',
+    marginHorizontal: 5,
+    marginVertical: 5,
   },
   chip: {
     alignItems: 'center',

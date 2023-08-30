@@ -9,6 +9,7 @@ import {
   Button,
   Chip,
   Menu,
+  useTheme,
 } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -35,7 +36,7 @@ export default function UserScreen({ navigation, route }: Props) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { setReportBottomSheetOpen, setReportTarget } = useAuthActions();
-
+  const theme = useTheme();
   const handleDirectChatNav = useCallback(async () => {
     try {
       const chatRoomData = await getDirectChatRoom(id);
@@ -49,7 +50,6 @@ export default function UserScreen({ navigation, route }: Props) {
         params: navParams,
       });
     } catch (e) {
-      console.log('New chat Room has to be created');
       navigation.navigate('채팅', {
         screen: 'ChatRoom',
         params: {
@@ -72,7 +72,13 @@ export default function UserScreen({ navigation, route }: Props) {
   );
 
   return (
-    <Suspense fallback={<GymInfoLoader />}>
+    <Suspense
+      fallback={
+        <GymInfoLoader
+          backgroundColor={theme.colors.background}
+          foregroundColor={theme.colors.surfaceVariant}
+        />
+      }>
       <ErrorBoundary
         onReset={reset}
         fallbackRender={({ resetErrorBoundary }) =>

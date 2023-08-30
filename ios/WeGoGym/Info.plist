@@ -47,19 +47,14 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CodePushDeploymentKey</key>
 	<string>$(CODEPUSH_KEY)</string>
+	<key>GOOGLE_MAPS_API_KEY</key>
+	<string>$(GOOGLE_MAPS_API_KEY)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<!-- <key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-			</dict> -->
 			<key>openapi.seoul.go.kr</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
@@ -75,6 +70,8 @@
 	<string>위치정보 권한이 필요합니다. (앱을 사용하는 동안에만 위치정보를 수신합니다.)</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Camera Roll.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>$(PRODUCT_NAME)는 이용자에게 최적화된 광고 제공과 앱 개선을 위해 사용자의 앱 활동 정보를 수집합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -113,7 +110,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSUserTrackingUsageDescription</key>
-  	<string>$(PRODUCT_NAME)는 이용자에게 최적화된 광고를 제공과 앱 개선을 위해 사용자의 앱 활동 정보를 수집합니다.</string>
 </dict>
 </plist>

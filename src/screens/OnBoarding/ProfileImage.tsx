@@ -40,7 +40,6 @@ export default function ProfileImageScreen() {
     if (res.didCancel) {
       console.log('User cancelled image picker');
     } else if (res.errorCode) {
-      console.log('ImagePicker Error: ', res.errorCode);
       throw new Error(res.errorMessage);
     } else {
       if (res.assets && res.assets.length > 0 && res.assets[0].uri) {

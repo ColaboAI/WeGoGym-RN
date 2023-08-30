@@ -16,15 +16,15 @@ async function postLogin(phoneNumber: string): Promise<UserLoginResponse> {
 
 async function postWorkoutPromise({
   workoutPromise,
-  gymInfo,
+  promiseLocation,
 }: {
   workoutPromise: WorkoutPromiseCreate;
-  gymInfo: GymCreate | null;
+  promiseLocation: PromiseLocation | null;
 }): Promise<WorkoutPromiseRead> {
   try {
     const res = await apiClient.post('/workout-promise', {
       workoutPromise,
-      gymInfo,
+      promiseLocation,
     });
     return res.data;
   } catch (e) {
@@ -32,7 +32,7 @@ async function postWorkoutPromise({
   }
 }
 
-async function deleteWorkoutPromise(id: string): Promise<void> {
+async function deleteWorkoutPromise(id: string | undefined): Promise<void> {
   try {
     const res = await apiClient.delete(`/workout-promise/${id}`);
     return res.data;
@@ -44,16 +44,16 @@ async function deleteWorkoutPromise(id: string): Promise<void> {
 async function putWorkoutPromiseInfo({
   workoutPromiseId,
   workoutPromise,
-  gymInfo,
+  promiseLocation,
 }: {
   workoutPromiseId: string;
   workoutPromise: WorkoutPromiseUpdate;
-  gymInfo: GymCreate | null;
+  promiseLocation: PromiseLocation | null;
 }): Promise<WorkoutPromiseRead> {
   try {
     const res = await apiClient.patch(`/workout-promise/${workoutPromiseId}`, {
       workoutPromise,
-      gymInfo,
+      promiseLocation,
     });
     return res.data;
   } catch (e) {
@@ -127,7 +127,9 @@ async function getRecruitingWorkoutPromise(
   }
 }
 
-async function getWorkoutPromiseById(id: string): Promise<WorkoutPromiseRead> {
+async function getWorkoutPromiseById(
+  id: string | undefined,
+): Promise<WorkoutPromiseRead> {
   try {
     const res = await apiClient.get(`/workout-promise/${id}`);
     return res.data;
@@ -485,6 +487,15 @@ async function getMyBlockedList(): Promise<RecommendedMate[]> {
   }
 }
 
+async function getLastestAppVersion(): Promise<AppVersion> {
+  try {
+    const res = await apiClient.get('/version');
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export {
   postLogin,
   postRegister,
@@ -520,4 +531,5 @@ export {
   postBlockUser,
   deleteBlockUser,
   getMyBlockedList,
+  getLastestAppVersion,
 };

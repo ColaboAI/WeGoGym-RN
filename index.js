@@ -13,6 +13,8 @@ TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.autoCorrect = false;
 TextInput.defaultProps.allowFontScaling = false;
 
+navigator.geolocation = require('react-native-geolocation-service');
+
 messaging().setBackgroundMessageHandler(onMessageInBackground);
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   const { notification, pressAction } = detail;

@@ -17,29 +17,26 @@ interface WorkoutGoal {
   select: boolean;
 }
 
+interface WorkoutPart {
+  id: number;
+  part: string;
+  select: boolean;
+}
+
 interface Profile {
   uri: string;
   size: number;
   username: string;
 }
 
-interface WorkoutPromiseBase {
-  title: string; // 제목
-  description: string; // 설명
-  location: string; // 장소
-  date: Date; // 날짜
-  time: Date; // 시간
-  currentNumberOfPeople?: number; // 현재 참여 인원 (default: 1)
-  limitedNumberOfPeople: number; // 제한 인원
-}
-
 interface WorkoutPromiseCreate {
   title: string;
   description: string;
   promise_time: Date;
-  recruit_end_time: Date;
+  // recruit_end_time: Date;
+  workoutPart: string;
   maxParticipants: number;
-  isPrivate: boolean;
+  // isPrivate: boolean;
 }
 
 interface GymCreate {
@@ -56,30 +53,44 @@ interface Gym extends GymCreate {
   zipCode: string;
 }
 
+interface Location {
+  lat: number;
+  lng: number;
+}
+
+interface PromiseLocation {
+  placeName: string; // 장소명
+  address: string; // 주소
+  latitude: number; // 위도
+  longitude: number; // 경도
+}
+
 interface WorkoutPromiseRead extends timestampMixin {
   id: string;
   title: string;
   description: string;
   maxParticipants: number;
   promiseTime: Date;
-  recruitEndTime: Date;
+  // recruitEndTime: Date;
   status: string;
   chatRoomId: string | null;
   // chatRoom: ChatRoom | null;
-  isPrivate: boolean;
+  // isPrivate: boolean;
   adminUserId: string;
-  gymInfo: Gym | null;
+  promiseLocation: PromiseLocation | null;
+  workoutPart: string;
   participants: WorkoutParticipantsRead[];
 }
 
 interface WorkoutPromiseUpdate {
   title?: string;
   description?: string;
-  isPrivate?: boolean;
+  // isPrivate?: boolean;
   maxParticipants?: number;
   promise_time?: Date;
-  recruit_end_time?: Date | null;
-  gymInfo?: Gym | null;
+  workoutPart?: string;
+  // recruit_end_time?: Date | null;
+  promiseLocation?: PromiseLocation | null;
   status?: string;
 }
 
@@ -309,6 +320,7 @@ interface CheckUserInfoResponse {
   phoneNumberExists: boolean | null;
   usernameExists: boolean | null;
 }
+
 interface CustomError extends Error {
   response?: {
     data: {
@@ -316,4 +328,10 @@ interface CustomError extends Error {
       message: string;
     };
   };
+}
+
+interface AppVersion {
+  versionNumber: str;
+  updateLinkIOs: str;
+  updateLinkAndroid: str;
 }

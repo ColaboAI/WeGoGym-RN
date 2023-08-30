@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, View } from 'react-native';
+import { Keyboard, Platform, StyleSheet, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -76,6 +76,7 @@ const ParticipationBottomSheet = ({
       backgroundStyle={{ backgroundColor: theme.colors.background }}
       enablePanDownToClose={true}
       onClose={() => {
+        Keyboard.dismiss();
         setIsBottomSheetOpen(false);
         bottomSheetRef.current?.close();
       }}
@@ -83,7 +84,7 @@ const ParticipationBottomSheet = ({
       <BottomSheetView style={styles.container}>
         <View style={styles.titleBox}>
           <Text style={[styles.title, { color: theme.colors.onBackground }]}>
-            운동 파트너에게 보낼 메세지를{'\n'}작성해주세요
+            운동 친구에게 보낼 메세지를{'\n'}작성해주세요
           </Text>
           <IconButton
             icon="close"
@@ -126,6 +127,7 @@ const ParticipationBottomSheet = ({
           onPressPostParticipation();
           setIsBottomSheetOpen(false);
           bottomSheetRef.current?.close();
+          Keyboard.dismiss();
         }}>
         참여하기
       </Button>

@@ -168,7 +168,7 @@ export function useGetRecruitingWorkoutQuery() {
   });
 }
 
-export function useGetWorkoutByIdQuery(id: string) {
+export function useGetWorkoutByIdQuery(id: string | undefined) {
   const { onShow } = useSnackBarActions();
   return useQuery({
     queryKey: ['getWorkoutById', id],
@@ -179,7 +179,6 @@ export function useGetWorkoutByIdQuery(id: string) {
         `운동 약속 정보를 가져오는데 실패하였습니다: ${error.response?.data.message}`,
         'error',
       );
-      console.log(error);
     },
     suspense: true,
   });

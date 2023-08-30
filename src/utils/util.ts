@@ -21,6 +21,13 @@ export function getGoal(goals: WorkoutGoal[]) {
     .join(',');
 }
 
+export function getWorkoutPart(parts: WorkoutPart[]) {
+  return parts
+    .filter(part => part.select === true)
+    .map(part => part.part)
+    .join(',');
+}
+
 export function getInfo(): UserCreate {
   const phoneNumber = getValueFor('phoneNumber') ?? '';
   const username = getValueFor('username') ?? '';
@@ -187,6 +194,23 @@ export function getRelativeTime(date: Date | string) {
       month: 'short',
       day: 'numeric',
     });
+  }
+}
+
+export function getDday(date: Date | string) {
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+  const today = new Date();
+  const delta = date.getTime() - today.getTime();
+
+  let differDay = delta / (1000 * 3600 * 24);
+  if (Math.abs(differDay) < 1) {
+    return '오늘';
+  } else if (differDay < 0) {
+    return `D+${Math.floor(Math.abs(differDay))}`;
+  } else {
+    return `D-${Math.floor(differDay)}`;
   }
 }
 

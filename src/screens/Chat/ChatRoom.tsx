@@ -1,7 +1,7 @@
 import { InputAccessoryView, StyleSheet, View, Platform } from 'react-native';
 import React, { Suspense, useCallback, useEffect } from 'react';
 import { ChatStackScreenProps } from 'navigators/types';
-import { ActivityIndicator, Button, Text } from 'react-native-paper';
+import { ActivityIndicator, Button, Text, useTheme } from 'react-native-paper';
 import Bubble from '/components/molecules/Chat/Bubble';
 import InputToolbar from '/components/organisms/Chat/InputToolbar';
 import { FlatList } from 'react-native-gesture-handler';
@@ -26,7 +26,7 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
     setIsTyping,
     chatRoomMutation,
   } = useChatRoomState();
-
+  const theme = useTheme();
   useEffect(() => {
     mmkv.setItem('currentChatRoomId', route.params.chatRoomId || '');
     return () => {
@@ -69,7 +69,13 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
   };
 
   return (
-    <Suspense fallback={<GymInfoLoader />}>
+    <Suspense
+      fallback={
+        <GymInfoLoader
+          backgroundColor={theme.colors.background}
+          foregroundColor={theme.colors.surfaceVariant}
+        />
+      }>
       <ErrorBoundary
         onReset={reset}
         fallbackRender={({ resetErrorBoundary }) => (
