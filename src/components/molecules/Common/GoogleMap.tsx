@@ -47,9 +47,11 @@ const GoogleMap = (props: Props) => {
           lat: latitude,
           lng: longitude,
         });
+        setIsLoading(false);
       },
       error => {
         onShow('위치 정보를 가져올 수 없습니다. ' + error.message, 'error');
+        setIsLoading(false);
       },
       {
         accuracy: {
@@ -66,7 +68,6 @@ const GoogleMap = (props: Props) => {
   useEffect(() => {
     setIsLoading(true);
     getLocation();
-    setIsLoading(false);
   }, [getLocation]);
 
   const handlePlaceSelected = (
@@ -103,12 +104,11 @@ const GoogleMap = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator animating={isLoading} />
       <View style={styles.search}>
         <GooglePlacesInput onSelectPlace={handlePlaceSelected} />
       </View>
 
-      {location && isLoading !== true && (
+      {location && isLoading === false ? (
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -181,6 +181,8 @@ const GoogleMap = (props: Props) => {
             </Callout>
           </Marker>
         </MapView>
+      ) : (
+        <ActivityIndicator animating={true} />
       )}
     </View>
   );
