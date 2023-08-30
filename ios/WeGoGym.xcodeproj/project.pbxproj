@@ -12,8 +12,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140E68E129E5715C002BDAE0 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 140E68E029E5715B002BDAE0 /* BootSplash.storyboard */; };
-		6449A5082A9DD08C000EB376 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6449A5072A9DD08C000EB376 /* Config.xcconfig */; };
 		596083D56FBF19E6AE82D454 /* libPods-WeGoGym-WeGoGymTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6192D078D69C969A787FCD89 /* libPods-WeGoGym-WeGoGymTests.a */; };
+		6449A5082A9DD08C000EB376 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6449A5072A9DD08C000EB376 /* Config.xcconfig */; };
 		671E561851281302A60AB6C6 /* libPods-WeGoGym.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F8257CBF6C42BBB9259350 /* libPods-WeGoGym.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
