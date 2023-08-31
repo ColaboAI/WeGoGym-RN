@@ -13,13 +13,15 @@ type Props = {
   idx: number;
   imgLength: number;
   onPressDelete: (id: number) => void;
+  onDrag: () => void;
 };
 
 const AnimateImageView = ({
   imageUri,
-  idx,
   imgLength,
   onPressDelete,
+  idx,
+  onDrag,
 }: Props) => {
   const theme = useTheme();
   const [touched, setTouched] = useState(false);
@@ -32,6 +34,7 @@ const AnimateImageView = ({
   return (
     <View style={{ marginRight: marginRight }}>
       <Pressable
+        onLongPress={onDrag}
         onPress={() => {
           setTouched(prev => !prev);
         }}>

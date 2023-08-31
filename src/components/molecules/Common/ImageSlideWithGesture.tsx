@@ -2,8 +2,12 @@ import { StyleSheet } from 'react-native';
 import React, { useCallback } from 'react';
 
 import AnimateImageView from '/components/atoms/Common/AnimateImageView';
-import Animated from 'react-native-reanimated';
 import { Asset } from 'react-native-image-picker';
+
+import DraggableFlatList, {
+  RenderItemParams,
+  ScaleDecorator,
+} from 'react-native-draggable-flatlist';
 
 type Props = {
   images: Asset[];
@@ -19,29 +23,31 @@ export default function ImageSlideWithGesture({ images, setImages }: Props) {
     [images, setImages],
   );
 
+  const renderItem = ({ item, drag, getIndex }: RenderItemParams<Asset>) => {
+    return (
+      <ScaleDecorator activeScale={0.9}>
+        <AnimateImageView
+          imageUri={item.uri || ''}
+          imgLength={images.length}
+          onPressDelete={onPressDelete}
+          onDrag={drag}
+          idx={getIndex() || 0}
+        />
+      </ScaleDecorator>
+    );
+  };
+
   return (
-    <>
-      <Animated.ScrollView
-        style={styles.container}
-        horizontal={true}
-        contentContainerStyle={styles.contentContainer}
-        showsHorizontalScrollIndicator={false}>
-        {images.map((asset, index) => {
-          if (!asset.uri) {
-            return null;
-          }
-          return (
-            <AnimateImageView
-              imageUri={asset.uri}
-              idx={index}
-              key={`img-view-${index}`}
-              imgLength={images.length}
-              onPressDelete={onPressDelete}
-            />
-          );
-        })}
-      </Animated.ScrollView>
-    </>
+    <DraggableFlatList
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      horizontal={true}
+      data={images}
+      showsHorizontalScrollIndicator={false}
+      renderItem={renderItem}
+      keyExtractor={(_, index) => `draggable-item-${index}`}
+      onDragEnd={({ data }) => setImages(data)}
+    />
   );
 }
 
@@ -53,13 +59,6 @@ const styles = StyleSheet.create({
     marginTop: '5%',
   },
   contentContainer: {
-    flexGrow: 1,
-    alignItems: 'center',
     paddingHorizontal: 12,
-  },
-  box: {
-    width: 100,
-    height: 100,
-    backgroundColor: 'red',
   },
 });
