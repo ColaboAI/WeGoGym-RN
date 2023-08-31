@@ -39,7 +39,7 @@ export default function ImageSlideWithGesture({ images, setImages }: Props) {
 
   return (
     <DraggableFlatList
-      style={styles.container}
+      containerStyle={styles.container}
       contentContainerStyle={styles.contentContainer}
       horizontal={true}
       data={images}
