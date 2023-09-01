@@ -6,11 +6,10 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { CommunityStackScreenProps } from '/navigators/types';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
-  Asset,
   ImageLibraryOptions,
   launchImageLibrary,
 } from 'react-native-image-picker';
@@ -27,13 +26,26 @@ export default function PostUpdate({ route }: PostEditScreenProps) {
   const theme = useTheme();
   const { postId } = route.params;
   const { data: post } = usePostQuery(postId);
+  const imageFromServer = useMemo(() => {
+    return (
+      post?.image?.map(
+        (image, index) =>
+          ({
+            uri: image,
+            order: index,
+          } as ImageType),
+      ) ?? []
+    );
+  }, [post?.image]);
 
   const [form, setForm] = useState({
     title: post?.title ?? '',
     content: post?.content ?? '',
+    imageList: [] as ImageType[],
   });
 
-  const [selectedAssets, setSelectedAssets] = useState<Asset[]>([]);
+  const [selectedAssets, setSelectedAssets] =
+    useState<ImageType[]>(imageFromServer);
 
   const [focuses, setFocuses] = useState({
     title: false,
@@ -63,8 +75,8 @@ export default function PostUpdate({ route }: PostEditScreenProps) {
       } else {
         const assets = response.assets?.filter(
           asset => asset.fileSize !== 0,
-        ) as Asset[];
-        setSelectedAssets([...assets]);
+        ) as ImageType[];
+        setSelectedAssets(prev => [...prev, ...assets]);
       }
     });
   }, []);
@@ -85,13 +97,27 @@ export default function PostUpdate({ route }: PostEditScreenProps) {
 
   const { mutate: updatePost, isLoading } = usePostUpdateMutation();
 
+  const getSelectedServerImages = useCallback(() => {
+    let imageList: ImageType[] = [];
+    selectedAssets.forEach((asset, index) => {
+      if (asset.uri && !asset.fileName && !asset.type && !asset.fileSize) {
+        imageList.push({ uri: asset.uri, order: index });
+      }
+    });
+    return imageList;
+  }, [selectedAssets]);
+
   const makeFormData = useCallback(() => {
     const formData = new FormData();
-    selectedAssets.forEach(asset => {
+    selectedAssets.forEach((asset, index) => {
+      if (!asset.uri || !asset.fileName || !asset.type || !asset.fileSize) {
+        return;
+      }
       formData.append('images', {
         uri: asset.uri,
-        name: asset.fileName,
+        name: `${asset.fileName}_${index}`,
         type: asset.type,
+        size: asset.fileSize,
       });
     });
     return formData;
@@ -103,10 +129,18 @@ export default function PostUpdate({ route }: PostEditScreenProps) {
       params: {
         title: form.title,
         content: form.content,
+        imageList: getSelectedServerImages(),
       },
       images: makeFormData(),
     });
-  }, [updatePost, postId, form.title, form.content, makeFormData]);
+  }, [
+    updatePost,
+    postId,
+    form.title,
+    form.content,
+    getSelectedServerImages,
+    makeFormData,
+  ]);
 
   return (
     <View style={styles.container}>

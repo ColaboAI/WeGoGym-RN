@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 import React, { useCallback } from 'react';
 
 import AnimateImageView from '/components/atoms/Common/AnimateImageView';
-import { Asset } from 'react-native-image-picker';
 
 import DraggableFlatList, {
   RenderItemParams,
@@ -10,8 +9,8 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 
 type Props = {
-  images: Asset[];
-  setImages: (urls: Asset[]) => void;
+  images: ImageType[];
+  setImages: (urls: ImageType[]) => void;
 };
 
 export default function ImageSlideWithGesture({ images, setImages }: Props) {
@@ -23,7 +22,11 @@ export default function ImageSlideWithGesture({ images, setImages }: Props) {
     [images, setImages],
   );
 
-  const renderItem = ({ item, drag, getIndex }: RenderItemParams<Asset>) => {
+  const renderItem = ({
+    item,
+    drag,
+    getIndex,
+  }: RenderItemParams<ImageType>) => {
     return (
       <ScaleDecorator activeScale={0.9}>
         <AnimateImageView

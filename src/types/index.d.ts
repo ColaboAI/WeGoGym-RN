@@ -350,11 +350,18 @@ interface PostCreate {
   video?: string[];
   wantAiCoach: boolean;
 }
-
+interface ImageType {
+  order?: number;
+  uri: string;
+  fileName?: string;
+  type?: string;
+  fileSize?: number;
+}
 interface PostUpdate {
   title?: string;
   content?: string;
   video?: string[];
+  imageList?: ImageType[];
 }
 
 interface PostRead extends PostCreate, timestampMixin {

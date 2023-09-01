@@ -554,7 +554,7 @@ async function postPost({
   }
 }
 
-async function patchPost({
+async function updatePost({
   id,
   params,
   images,
@@ -564,12 +564,19 @@ async function patchPost({
   images: FormData;
 }): Promise<PostRead> {
   try {
-    const res = await apiClient.patch(`/communities/posts/${id}`, images, {
-      params,
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    console.log('updatePost', params, images);
+
+    const data = makeSnakeKeyObject<PostUpdate>(params);
+    images.append('post_update', data);
+    const res = await apiClient.post(
+      `/communities/posts/${id}/update`,
+      images,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    });
+    );
     return res.data;
   } catch (e) {
     throw e;
@@ -725,7 +732,7 @@ export {
   getPostList,
   getPost,
   postPost,
-  patchPost,
+  updatePost,
   deletePost,
   getComment,
   postComment,

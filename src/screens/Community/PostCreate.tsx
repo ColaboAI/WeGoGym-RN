@@ -11,7 +11,6 @@ import React, { useCallback, useState } from 'react';
 import { CommunityStackScreenProps } from '/navigators/types';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
-  Asset,
   ImageLibraryOptions,
   launchImageLibrary,
 } from 'react-native-image-picker';
@@ -30,7 +29,7 @@ export default function PostCreate({ navigation }: PostCreateScreenProps) {
     wantAiCoach: true,
   });
 
-  const [selectedAssets, setSelectedAssets] = useState<Asset[]>([]);
+  const [selectedAssets, setSelectedAssets] = useState<ImageType[]>([]);
   const [focuses, setFocuses] = useState({
     title: false,
     content: false,
@@ -60,7 +59,7 @@ export default function PostCreate({ navigation }: PostCreateScreenProps) {
       } else {
         const assets = response.assets?.filter(
           asset => asset.fileSize !== 0,
-        ) as Asset[];
+        ) as ImageType[];
         setSelectedAssets([...assets]);
       }
     });

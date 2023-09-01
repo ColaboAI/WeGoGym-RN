@@ -9,7 +9,7 @@ import {
 import {
   getPostList,
   postPost,
-  patchPost,
+  updatePost,
   postDisLikePost,
   postLikePost,
   getPost,
@@ -106,9 +106,10 @@ export function usePostUpdateMutation() {
       postId: number;
       params: PostUpdate;
       images: FormData;
-    }) => patchPost({ id: postId, params, images }),
-    onSuccess: () => {
+    }) => updatePost({ id: postId, params, images }),
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries(['postList']);
+      queryClient.invalidateQueries(['post', variables.postId]);
       onShow('게시글 수정에 성공하였습니다.', 'success');
       nav.goBack();
     },
