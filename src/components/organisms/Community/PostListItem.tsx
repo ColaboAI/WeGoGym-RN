@@ -11,7 +11,13 @@ import { useAuthValue } from '/hooks/context/useAuth';
 interface Props {
   post: PostRead;
   user: User;
-  onPressDetail: (postId: number) => void;
+  onPressDetail: ({
+    postId,
+    communityId,
+  }: {
+    postId: number;
+    communityId: number;
+  }) => void;
   onPressEdit: (postId: number) => void;
 }
 
@@ -56,6 +62,7 @@ export default function PostListItem({
         <PostBody onPress={onPressDetail} post={post} />
         <PostFooter
           postId={post.id}
+          communityId={post.communityId}
           likes={post.likeCnt}
           comments={post.commentCnt}
           isLiked={post.isLiked}

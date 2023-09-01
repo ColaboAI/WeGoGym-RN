@@ -6,16 +6,26 @@ import { Text } from 'react-native-paper';
 
 type Props = {
   post: PostRead;
-  onPress: (id: number) => void;
+  onPress: ({
+    postId,
+    communityId,
+  }: {
+    postId: number;
+    communityId: number;
+  }) => void;
 };
 
 export default function PostBody({ post, onPress }: Props) {
   return (
-    <Pressable onPress={() => onPress(post.id)}>
+    <Pressable
+      onPress={() =>
+        onPress({ postId: post.id, communityId: post.communityId })
+      }>
       <View style={styles.container}>
         <Text style={styles.title}>{post.title}</Text>
         <PostContent
           postId={post.id}
+          communityId={post.communityId}
           onPress={onPress}
           content={post.content}
         />

@@ -27,8 +27,11 @@ type PostListScreenProps = CommunityStackScreenProps<'PostList'>;
 
 export default function PostListScreen({ navigation }: PostListScreenProps) {
   const navigateToPostDetail = useCallback(
-    (postId: number) => {
-      navigation.push('PostDetail', { postId });
+    ({ postId, communityId }: { postId: number; communityId: number }) => {
+      navigation.push('PostDetail', {
+        postId,
+        communityId,
+      });
     },
     [navigation],
   );

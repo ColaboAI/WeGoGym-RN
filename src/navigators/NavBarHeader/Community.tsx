@@ -4,20 +4,23 @@ import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { Route } from '@react-navigation/native';
 import { CommunityParamList } from '../types';
 import { StyleSheet } from 'react-native';
+import { useGetCommunityInfoQuery } from '/hooks/queries/community.queries';
 type Props = NativeStackHeaderProps & {
   route: Route<string, CommunityParamList | undefined>;
 };
 
 const CustomNavBarHeader = ({ navigation, back, route }: Props) => {
   const [newBack, setNewBack] = React.useState(back);
+
+  const communityQuery = useGetCommunityInfoQuery(route.params?.communityId);
+
   const headerTitle = useMemo(() => {
     const routeName = route.name;
     switch (routeName) {
       case 'PostList':
         return '커뮤니티';
       case 'PostDetail':
-        // FIXME: 커뮤니티 이름을 표기해야 함
-        return '게시물';
+        return communityQuery.data?.name ?? '게시글';
       case 'PostCreate':
         return '글쓰기';
       case 'PostEdit':
@@ -25,7 +28,7 @@ const CustomNavBarHeader = ({ navigation, back, route }: Props) => {
       default:
         return '';
     }
-  }, [route]);
+  }, [communityQuery.data?.name, route.name]);
 
   useLayoutEffect(() => {
     if (
@@ -53,9 +56,19 @@ const CustomNavBarHeader = ({ navigation, back, route }: Props) => {
 export default CustomNavBarHeader;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, flexDirection: 'row' },
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyItems: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 12,
+    fontWeight: 'normal',
   },
 });

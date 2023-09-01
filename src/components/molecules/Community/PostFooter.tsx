@@ -8,14 +8,22 @@ import {
 } from '/hooks/queries/post.queries';
 type Props = {
   postId: number;
+  communityId: number;
   likes: number;
   comments: number;
   isLiked: number;
-  onPress: (id: number) => void;
+  onPress: ({
+    postId,
+    communityId,
+  }: {
+    postId: number;
+    communityId: number;
+  }) => void;
 };
 
 export default function PostFooter({
   postId,
+  communityId,
   likes,
   comments,
   isLiked,
@@ -57,7 +65,7 @@ export default function PostFooter({
         size={ICON_SIZE}
         color={iconColor}
         style={styles.icon}
-        onPress={() => onPress(postId)}>
+        onPress={() => onPress({ postId, communityId })}>
         <Text variant="labelMedium">{comments}</Text>
       </Icon>
     </View>

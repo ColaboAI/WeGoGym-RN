@@ -10,11 +10,12 @@ export function useGetCommunityListQuery() {
   });
 }
 
-export function useGetCommunityInfoQuery(id: number) {
+export function useGetCommunityInfoQuery(id: number | undefined) {
   return useQuery({
     queryKey: ['getCommunityInfo', id],
     queryFn: () => getCommunity(id),
     retry: 0,
     suspense: true,
+    enabled: id !== undefined,
   });
 }

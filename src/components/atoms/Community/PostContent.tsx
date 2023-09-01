@@ -4,11 +4,23 @@ import { Text } from 'react-native-paper';
 
 type Props = {
   postId: number;
+  communityId: number;
   content: string;
-  onPress: (id: number) => void;
+  onPress: ({
+    postId,
+    communityId,
+  }: {
+    postId: number;
+    communityId: number;
+  }) => void;
 };
 
-export default function PostContent({ postId, content, onPress }: Props) {
+export default function PostContent({
+  postId,
+  content,
+  communityId,
+  onPress,
+}: Props) {
   const [seeMore, setSeeMore] = useState(false);
   const isTextLong = content.length > 100;
   const contentToShow = seeMore ? content : content.slice(0, 100);
@@ -18,10 +30,10 @@ export default function PostContent({ postId, content, onPress }: Props) {
       return;
     }
     if (isTextLong && seeMore) {
-      onPress(postId);
+      onPress({ postId, communityId });
       return;
     }
-    onPress(postId);
+    onPress({ postId, communityId });
   };
 
   return (

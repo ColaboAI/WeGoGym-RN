@@ -492,8 +492,11 @@ async function getCommunityList(): Promise<Community[]> {
   }
 }
 
-async function getCommunity(id: number): Promise<Community> {
+async function getCommunity(id: number | undefined): Promise<Community> {
   try {
+    if (id === undefined) {
+      throw new Error('id is undefined');
+    }
     const res = await apiClient.get(`/communities/${id}`);
     return res.data;
   } catch (e) {
