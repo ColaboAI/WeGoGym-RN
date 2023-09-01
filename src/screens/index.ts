@@ -24,3 +24,7 @@ export { default as WorkoutStyleAndRoutineScreen } from './OnBoarding/WorkoutSty
 export { default as ActivityAreaScreen } from './OnBoarding/ActivityArea';
 export { default as WorkoutPartnerGenderScreen } from './OnBoarding/WorkoutPartnerGender';
 export { default as ProfileImageScreen } from './OnBoarding/ProfileImage';
+export { default as PostListScreen } from './Community/PostList';
+export { default as PostDetailScreen } from './Community/PostDetail';
+export { default as PostCreateScreen } from './Community/PostCreate';
+export { default as PostEditScreen } from './Community/PostEdit';

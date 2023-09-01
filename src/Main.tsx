@@ -26,6 +26,7 @@ import RNBootSplash from 'react-native-bootsplash';
 import App from './App';
 import { useRef } from 'react';
 import analytics from '@react-native-firebase/analytics';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 // https://callstack.github.io/react-native-paper/theming.html
 
@@ -72,49 +73,55 @@ function Main() {
   let theme = isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme;
   return (
     // Add Store Provider here
-    <GestureHandlerRootView style={style.container}>
-      <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <PaperProvider
-            settings={{
-              icon: props => <Ionicons {...props} />,
-            }}
-            theme={theme}>
-            <AuthProvider>
-              <NavigationContainer
-                ref={navigationRef}
-                theme={theme}
-                onReady={() => {
-                  routeNameRef.current = navigationRef.getCurrentRoute()?.name;
-                  RNBootSplash.hide({
-                    fade: true,
-                    duration: 500,
-                  });
-                }}
-                onStateChange={async () => {
-                  const previousRouteName = routeNameRef.current;
-                  const currentRoute = navigationRef.getCurrentRoute();
-                  const currentRouteName = `${
-                    currentRoute?.name
-                  }_${Object.values(currentRoute?.params || {}).join('/')}`;
-
-                  if (currentRoute && previousRouteName !== currentRouteName) {
-                    await analytics().logScreenView({
-                      screen_class: currentRoute.name,
-                      screen_name: currentRouteName,
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={style.container}>
+        <KeyboardProvider>
+          <QueryClientProvider client={queryClient}>
+            <PaperProvider
+              settings={{
+                icon: props => <Ionicons {...props} />,
+              }}
+              theme={theme}>
+              <AuthProvider>
+                <NavigationContainer
+                  ref={navigationRef}
+                  theme={theme}
+                  onReady={() => {
+                    routeNameRef.current =
+                      navigationRef.getCurrentRoute()?.name;
+                    RNBootSplash.hide({
+                      fade: true,
+                      duration: 500,
                     });
-                  }
+                  }}
+                  onStateChange={async () => {
+                    const previousRouteName = routeNameRef.current;
+                    const currentRoute = navigationRef.getCurrentRoute();
+                    const currentRouteName = `${
+                      currentRoute?.name
+                    }_${Object.values(currentRoute?.params || {}).join('/')}`;
 
-                  // Save the current route name for later comparision
-                  routeNameRef.current = currentRouteName;
-                }}>
-                <App />
-              </NavigationContainer>
-            </AuthProvider>
-          </PaperProvider>
-        </QueryClientProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+                    if (
+                      currentRoute &&
+                      previousRouteName !== currentRouteName
+                    ) {
+                      await analytics().logScreenView({
+                        screen_class: currentRoute.name,
+                        screen_name: currentRouteName,
+                      });
+                    }
+
+                    // Save the current route name for later comparision
+                    routeNameRef.current = currentRouteName;
+                  }}>
+                  <App />
+                </NavigationContainer>
+              </AuthProvider>
+            </PaperProvider>
+          </QueryClientProvider>
+        </KeyboardProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }
 

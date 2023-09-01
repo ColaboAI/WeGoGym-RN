@@ -51,7 +51,6 @@ export default function PhoneNumberScreen({ navigation }: Props) {
         // Actually, if he/she tries to enter it, he/she will get an error message because the code was already used in the background.
         // In this function, make sure you hide the component(s) for entering the code and/or navigate away from this screen.
         // It is also recommended to display a message to the user informing him/her that he/she has successfully logged in.
-        Alert.alert('인증이 완료되었습니다.');
         navigation.navigate('Username');
       }
     },
@@ -60,7 +59,7 @@ export default function PhoneNumberScreen({ navigation }: Props) {
 
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged);
-    return unsubscribe;
+    return unsubscribe();
     // unsubscribe on unmount
   }, [onAuthStateChanged]);
 
@@ -146,13 +145,13 @@ export default function PhoneNumberScreen({ navigation }: Props) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={style.container}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={style.container}>
         {confirm === null ? (
           <>
             <View style={style.headlineBox}>
@@ -287,8 +286,8 @@ export default function PhoneNumberScreen({ navigation }: Props) {
             </CustomToolbar>
           </>
         )}
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 const style = StyleSheet.create({

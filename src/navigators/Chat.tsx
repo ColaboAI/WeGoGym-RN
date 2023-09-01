@@ -2,7 +2,13 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { useLayoutEffect } from 'react';
-import { ChatListScreen, ChatRoomScreen } from 'screens';
+import {
+  ChatListScreen,
+  ChatRoomScreen,
+  ProfileEditScreen,
+  SettingScreen,
+  UserScreen,
+} from 'screens';
 import CustomNavBarHeader from './NavBarHeader/CustomNavBarHeader';
 import { ChatStackParamList, CustomTabScreenProps } from './types';
 const Stack = createNativeStackNavigator<ChatStackParamList>();
@@ -26,6 +32,13 @@ function Chat({ navigation, route }: Props) {
       }}>
       <Stack.Screen name="ChatList" component={ChatListScreen} />
       <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
+      <Stack.Screen
+        name="User"
+        component={UserScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="Setting" component={SettingScreen} />
+      <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
     </Stack.Navigator>
   );
 }

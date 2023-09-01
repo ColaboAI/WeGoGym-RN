@@ -1,10 +1,15 @@
-import { InputAccessoryView, StyleSheet, View, Platform } from 'react-native';
-import React, { Suspense, useCallback, useEffect } from 'react';
+import { Platform, StyleSheet, View } from 'react-native';
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { ChatStackScreenProps } from 'navigators/types';
 import { ActivityIndicator, Button, Text, useTheme } from 'react-native-paper';
 import Bubble from '/components/molecules/Chat/Bubble';
 import InputToolbar from '/components/organisms/Chat/InputToolbar';
-import { FlatList } from 'react-native-gesture-handler';
 import {
   useChatRoomMessagesQuery,
   useChatRoomQuery,
@@ -14,10 +19,17 @@ import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { useChatRoomState } from '/hooks/chat/hook';
 import GymInfoLoader from '/components/molecules/Home/GymInfoLoader';
 import { mmkv } from '/store/secureStore';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 
 type ChatRoomScreenProps = ChatStackScreenProps<'ChatRoom'>;
 
 function ChatRoom({ route }: ChatRoomScreenProps) {
+  const ref = useRef<Animated.FlatList<Message>>(null);
+  const scrollToBottom = useCallback(() => {
+    ref.current?.scrollToEnd({ animated: true });
+  }, []);
+
   const {
     inset,
     inputText,
@@ -63,10 +75,25 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
       />
     );
   };
+  const { height } = useReanimatedKeyboardAnimation();
+  const inputAccessoryStyle = useAnimatedStyle(() => {
+    return {
+      paddingBottom: height.value === 0 ? inset.bottom : 5,
+      transform: [{ translateY: height.value }],
+    };
+  });
+  const contentContainerPadding = useMemo(() => {
+    return {
+      paddingTop: inset.bottom + 65,
+    };
+  }, [inset.bottom]);
 
-  const inputAccessoryStyle = {
-    height: 50 + inset.bottom,
-  };
+  const fakeView = useAnimatedStyle(
+    () => ({
+      height: height.value ? Math.abs(height.value) : 0,
+    }),
+    [height.value],
+  );
 
   return (
     <Suspense
@@ -85,8 +112,11 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
           </Text>
         )}>
         <View style={[styles.chatRoomContainer]}>
-          <FlatList
-            contentContainerStyle={styles.contentContainer}
+          <Animated.FlatList
+            contentContainerStyle={[
+              styles.contentContainer,
+              contentContainerPadding,
+            ]}
             style={styles.flatList}
             data={data?.pages.flatMap(page => page.items)}
             keyExtractor={item => item.id}
@@ -110,37 +140,20 @@ function ChatRoom({ route }: ChatRoomScreenProps) {
             automaticallyAdjustContentInsets={false}
             automaticallyAdjustKeyboardInsets={true}
             contentInsetAdjustmentBehavior="never"
-            viewabilityConfig={{
-              viewAreaCoveragePercentThreshold: 1,
+            onContentSizeChange={scrollToBottom}
+          />
+          <InputToolbar
+            {...route.params}
+            {...{
+              inputText,
+              setInputText,
+              isTyping,
+              setIsTyping,
+              chatRoomMutation,
+              animatedStyle: inputAccessoryStyle,
             }}
           />
-          <View style={inputAccessoryStyle}>
-            {Platform.OS === 'ios' ? (
-              <InputAccessoryView>
-                <InputToolbar
-                  {...route.params}
-                  {...{
-                    inputText,
-                    setInputText,
-                    isTyping,
-                    setIsTyping,
-                    chatRoomMutation,
-                  }}
-                />
-              </InputAccessoryView>
-            ) : (
-              <InputToolbar
-                {...route.params}
-                {...{
-                  inputText,
-                  setInputText,
-                  isTyping,
-                  setIsTyping,
-                  chatRoomMutation,
-                }}
-              />
-            )}
-          </View>
+          {Platform.OS === 'android' && <Animated.View style={[fakeView]} />}
         </View>
       </ErrorBoundary>
     </Suspense>

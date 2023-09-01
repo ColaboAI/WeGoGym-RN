@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HomeStackScreen, ChatStackScreen, UserStackScreen } from '.';
+import {
+  HomeStackScreen,
+  ChatStackScreen,
+  UserStackScreen,
+  CommunityStackScreen,
+} from '.';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { BottomTabParamList } from './types';
 import { useTheme } from 'react-native-paper';
@@ -32,6 +37,8 @@ const MainNavigator = () => {
             iconName = focused
               ? 'person-circle-sharp'
               : 'person-circle-outline';
+          } else if (route.name === '커뮤니티') {
+            iconName = focused ? 'ios-people' : 'ios-people-outline';
           } else {
             iconName = focused
               ? 'person-circle-sharp'
@@ -45,6 +52,14 @@ const MainNavigator = () => {
       <Tab.Screen
         name="홈"
         component={HomeStackScreen}
+        options={{
+          tabBarIconStyle: { display: 'flex' },
+          tabBarLabelPosition: 'below-icon',
+        }}
+      />
+      <Tab.Screen
+        name="커뮤니티"
+        component={CommunityStackScreen}
         options={{
           tabBarIconStyle: { display: 'flex' },
           tabBarLabelPosition: 'below-icon',

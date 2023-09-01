@@ -105,6 +105,11 @@ function ChatList({ navigation }: ChatListScreenProps) {
           data={data?.pages.flatMap(page => page.items)}
           renderItem={renderItem}
           keyExtractor={item => item.id}
+          ListEmptyComponent={
+            <View style={style.errorContainer}>
+              <Text>참여하신 채팅방이 없습니다. 채팅방을 만들어보세요!</Text>
+            </View>
+          }
           // TODO: onEndReadched Debugging , Debounce..
           // Threshold를 0.7로 설정하면, 스크롤이 끝에 도달했을 때, 70%의 높이를 넘어서야 onEndReached가 호출된다.?
           onEndReached={() => {

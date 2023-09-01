@@ -139,7 +139,7 @@ interface UserBase {
 }
 
 interface UserCreate extends UserBase {
-  [key: string]: string | number | null | undefined;
+  [key: string]: string | number | null | undefined | Gym;
   // TODO: remove ID
   username: string;
   gender: string;
@@ -334,4 +334,72 @@ interface AppVersion {
   versionNumber: str;
   updateLinkIOs: str;
   updateLinkAndroid: str;
+}
+
+interface Community extends timestampMixin {
+  id: number;
+  type: int;
+  name: string;
+  description: string;
+}
+
+interface PostCreate {
+  communityId: number;
+  title: string;
+  content: string;
+  video?: string[];
+  wantAiCoach: boolean;
+}
+interface ImageType {
+  order?: number;
+  uri: string;
+  fileName?: string;
+  type?: string;
+  fileSize?: number;
+}
+interface PostUpdate {
+  title?: string;
+  content?: string;
+  video?: string[];
+  imageList?: ImageType[];
+}
+
+interface PostRead extends PostCreate, timestampMixin {
+  id: number;
+  image: string[] | null;
+  video: string[];
+  likeCnt: number;
+  isLiked: number;
+  available: boolean;
+  user: User;
+  commentCnt: number;
+}
+
+interface PostListRead {
+  total: number;
+  items: PostRead[];
+  nextCursor: int | null;
+}
+
+interface CommentCreate {
+  postId: number;
+  content: string;
+}
+
+interface CommentUpdate {
+  content?: string;
+}
+
+interface CommentRead extends CommentCreate, timestampMixin {
+  id: number;
+  user: User;
+  likeCnt: number;
+  isLiked: number;
+  available: boolean;
+}
+
+interface CommentListRead {
+  total: number;
+  items: CommentRead[];
+  nextCursor: int | null;
 }

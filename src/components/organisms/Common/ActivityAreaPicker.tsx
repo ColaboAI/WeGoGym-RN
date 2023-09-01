@@ -1,6 +1,12 @@
 import { Picker } from '@react-native-picker/picker';
 import React from 'react';
-import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 type Props = {
   city: string;
@@ -8,7 +14,7 @@ type Props = {
   setCity: React.Dispatch<React.SetStateAction<string>>;
   setDistrict: React.Dispatch<React.SetStateAction<string>>;
   customStyle?: ViewStyle;
-  customItemStyle?: TextStyle;
+  customItemStyle?: StyleProp<TextStyle>;
 };
 
 export const ActivityAreaPicker = (props: Props) => {

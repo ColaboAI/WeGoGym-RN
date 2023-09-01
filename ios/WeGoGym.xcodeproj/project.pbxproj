@@ -12,10 +12,10 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140E68E129E5715C002BDAE0 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 140E68E029E5715B002BDAE0 /* BootSplash.storyboard */; };
+		596083D56FBF19E6AE82D454 /* libPods-WeGoGym-WeGoGymTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6192D078D69C969A787FCD89 /* libPods-WeGoGym-WeGoGymTests.a */; };
 		6449A5082A9DD08C000EB376 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6449A5072A9DD08C000EB376 /* Config.xcconfig */; };
+		671E561851281302A60AB6C6 /* libPods-WeGoGym.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F8257CBF6C42BBB9259350 /* libPods-WeGoGym.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		C218F679AC50DB61217E7C72 /* Pods_WeGoGym_WeGoGymTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A58978BFBFCE364B18A5679 /* Pods_WeGoGym_WeGoGymTests.framework */; };
-		F5A21C9F7369880B91439076 /* Pods_WeGoGym.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58BEEC5D32F87C4B487254F9 /* Pods_WeGoGym.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,10 +40,10 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = WeGoGym/main.m; sourceTree = "<group>"; };
 		140E68E029E5715B002BDAE0 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = WeGoGym/BootSplash.storyboard; sourceTree = "<group>"; };
 		14605921295D7C7E0077C855 /* WeGoGym.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = WeGoGym.entitlements; path = WeGoGym/WeGoGym.entitlements; sourceTree = "<group>"; };
-		3A58978BFBFCE364B18A5679 /* Pods_WeGoGym_WeGoGymTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeGoGym_WeGoGymTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		16F8257CBF6C42BBB9259350 /* libPods-WeGoGym.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WeGoGym.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		511358E6B89F80B304DD5205 /* Pods-WeGoGym-WeGoGymTests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.staging.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.staging.xcconfig"; sourceTree = "<group>"; };
 		53D162462AC66259A8263F02 /* Pods-WeGoGym-WeGoGymTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.release.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.release.xcconfig"; sourceTree = "<group>"; };
-		58BEEC5D32F87C4B487254F9 /* Pods_WeGoGym.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeGoGym.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6192D078D69C969A787FCD89 /* libPods-WeGoGym-WeGoGymTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WeGoGym-WeGoGymTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		641E689A29E681E3003FFEF7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		643CE69529443D24002FE9BB /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		643CE69629443D24002FE9BB /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
@@ -76,7 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C218F679AC50DB61217E7C72 /* Pods_WeGoGym_WeGoGymTests.framework in Frameworks */,
+				596083D56FBF19E6AE82D454 /* libPods-WeGoGym-WeGoGymTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,7 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5A21C9F7369880B91439076 /* Pods_WeGoGym.framework in Frameworks */,
+				671E561851281302A60AB6C6 /* libPods-WeGoGym.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,8 +130,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				58BEEC5D32F87C4B487254F9 /* Pods_WeGoGym.framework */,
-				3A58978BFBFCE364B18A5679 /* Pods_WeGoGym_WeGoGymTests.framework */,
+				16F8257CBF6C42BBB9259350 /* libPods-WeGoGym.a */,
+				6192D078D69C969A787FCD89 /* libPods-WeGoGym-WeGoGymTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

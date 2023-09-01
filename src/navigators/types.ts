@@ -13,10 +13,16 @@ export type ChatParamList = {
   chatRoomMembers?: ChatRoomMember[];
 };
 
+export type CommunityParamList = {
+  communityId?: number;
+  communityName?: string;
+  postId?: number;
+};
+
 export type ChatStackParamList = {
   ChatList: undefined;
   ChatRoom: ChatParamList;
-};
+} & UserStackParamList;
 
 export type HomeStackParamList = {
   Home: undefined;
@@ -25,6 +31,14 @@ export type HomeStackParamList = {
   Notifications: undefined;
   MyWorkoutPromises: undefined;
   PromiseEdit: { workoutInfo: WorkoutPromiseRead };
+} & UserStackParamList;
+
+export type CommunityStackParamList = {
+  // CommunityList: undefined;
+  PostList: { communityId?: number };
+  PostDetail: { postId: number; communityId?: number; communityName?: string };
+  PostCreate: undefined;
+  PostEdit: { postId: number; communityId?: number };
 } & UserStackParamList;
 
 export type AuthStackParamList = {
@@ -61,6 +75,7 @@ export type RootStackParamList = {
 export type BottomTabParamList = {
   홈: NavigatorScreenParams<HomeStackParamList>;
   채팅: NavigatorScreenParams<ChatStackParamList>;
+  커뮤니티: NavigatorScreenParams<CommunityStackParamList>;
   마이: NavigatorScreenParams<UserStackParamList>;
 };
 
@@ -88,6 +103,12 @@ export type UserStackScreenProps<T extends keyof UserStackParamList> =
 export type HomeStackScreenProps<T extends keyof HomeStackParamList> =
   CompositeScreenProps<
     NativeStackScreenProps<HomeStackParamList, T>,
+    CustomTabScreenProps<keyof BottomTabParamList>
+  >;
+
+export type CommunityStackScreenProps<T extends keyof CommunityStackParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<CommunityStackParamList, T>,
     CustomTabScreenProps<keyof BottomTabParamList>
   >;
 
