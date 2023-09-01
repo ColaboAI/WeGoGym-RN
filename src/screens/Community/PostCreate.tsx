@@ -21,7 +21,7 @@ import { usePostMutation } from '/hooks/queries/post.queries';
 
 type PostCreateScreenProps = CommunityStackScreenProps<'PostCreate'>;
 
-export default function PostCreate({ navigation }: PostCreateScreenProps) {
+export default function PostCreate({}: PostCreateScreenProps) {
   const theme = useTheme();
   const [form, setForm] = useState({
     title: '',
