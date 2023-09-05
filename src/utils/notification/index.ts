@@ -138,9 +138,7 @@ async function onMessageInForeground(
 
 async function checkIsLatestVersion() {
   const latestVersion = await getLastestAppVersion();
-  console.log('최신', latestVersion);
   const currentVersion = getVersion();
-  console.log('현재', currentVersion);
   if (latestVersion && latestVersion.versionNumber > currentVersion) {
     Alert.alert(
       '업데이트 필요',
