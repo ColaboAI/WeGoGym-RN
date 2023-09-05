@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WeGoGym</string>
+    <string name="facebook_app_id">957103225533562</string>
+    <string name="facebook_client_token">329d63c0b10a6c740339a25907a23bac</string>
 </resources>

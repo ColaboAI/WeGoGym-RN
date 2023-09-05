@@ -43,6 +43,21 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+  		<dict>
+  		<key>CFBundleURLSchemes</key>
+  		<array>
+    		<string>957103225533562</string>
+  		</array>
+  		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>957103225533562</string>
+	<key>FacebookClientToken</key>
+	<string>329d63c0b10a6c740339a25907a23bac</string>
+	<key>FacebookDisplayName</key>
+	<string>WeGoGym</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CodePushDeploymentKey</key>
