@@ -43,6 +43,11 @@ const GooglePlacesInput = (props: Props) => {
         ),
         textColor: 'black',
       }}
+      styles={{
+        description: {
+          color: 'black',
+        },
+      }}
       currentLocation={true}
       currentLocationLabel="현재 위치"
     />
