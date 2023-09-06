@@ -1,8 +1,8 @@
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import React, { Suspense, useCallback, useMemo, useState } from 'react';
 import { CommunityStackScreenProps } from '/navigators/types';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
-import { ActivityIndicator, Button, Divider } from 'react-native-paper';
+import { ActivityIndicator, Button, Divider, Text } from 'react-native-paper';
 import { ErrorBoundary } from 'react-error-boundary';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { FallbackProps } from 'react-error-boundary';
