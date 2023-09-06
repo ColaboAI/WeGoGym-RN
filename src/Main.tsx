@@ -97,9 +97,9 @@ function Main() {
                   onStateChange={async () => {
                     const previousRouteName = routeNameRef.current;
                     const currentRoute = navigationRef.getCurrentRoute();
-                    const currentRouteName = `${
-                      currentRoute?.name
-                    }_${Object.values(currentRoute?.params || {}).join('/')}`;
+                    const currentRouteName = `${Object.values(
+                      currentRoute?.params ?? {},
+                    ).join('/')}`;
 
                     if (
                       currentRoute &&
