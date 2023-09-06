@@ -190,7 +190,9 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
   const renderHeader = useCallback(
     () => (
       <Animated.View style={[styles.headerContainer, headerAnim]}>
-        <TextLogo customStyle={[styles.logo]} />
+        <Animated.View style={[styles.stickyHeaderContainer]}>
+          <TextLogo customStyle={[styles.logo]} />
+        </Animated.View>
         <Animated.View style={[styles.iconContainer]}>
           <CommunityChipsHeader
             selected={selectedCommunity}
@@ -261,6 +263,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingVertical: 15,
   },
   contentContainer: {
     flexGrow: 1,
@@ -268,7 +271,8 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexShrink: 1,
     flexDirection: 'column',
-    marginLeft: 12,
+    paddingLeft: 12,
+    marginBottom: 35,
   },
   iconContainer: {
     flexDirection: 'row',
@@ -276,6 +280,6 @@ const styles = StyleSheet.create({
   },
   logo: {
     marginLeft: 5,
-    marginBottom: Platform.OS === 'android' ? 15 : 0,
+    // marginBottom: Platform.OS === 'android' ? 15 : 0,
   },
 });
