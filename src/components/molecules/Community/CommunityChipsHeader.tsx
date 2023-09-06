@@ -50,7 +50,10 @@ const CommunityChipsHeader = ({ selected, handleSelect }: Props) => {
       <ErrorBoundary
         onReset={reset}
         fallbackRender={p => renderError({ ...p })}>
-        <ScrollView horizontal contentContainerStyle={styles.container}>
+        <ScrollView
+          horizontal
+          contentContainerStyle={styles.container}
+          showsHorizontalScrollIndicator={false}>
           {renderAllChip()}
           {q.data &&
             q.data.map((community, idx) => (
@@ -76,7 +79,7 @@ export default CommunityChipsHeader;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     flexDirection: 'row',
     alignItems: 'center',
     height: 40,
