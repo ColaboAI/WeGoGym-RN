@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Pressable,
+  Platform,
 } from 'react-native';
 import React, { Suspense, useCallback, useMemo, useState } from 'react';
 import { HomeStackScreenProps } from 'navigators/types';
@@ -642,6 +643,6 @@ const style = StyleSheet.create({
     position: 'absolute',
     margin: 16,
     right: 0,
-    bottom: 80,
+    bottom: Platform.OS === 'ios' ? 80 : 50,
   },
 });
