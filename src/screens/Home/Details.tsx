@@ -460,7 +460,9 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                               promiseLocation={query.data.promiseLocation}
                             />
                           </View>
-                        ) : null}
+                        ) : (
+                          <></>
+                        )}
                       </View>
                     </View>
                   ) : (
@@ -470,16 +472,6 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                     />
                   )}
                 </TouchableWithoutFeedback>
-                {myInfo ? (
-                  <ParticipationBottomSheet
-                    isBottomSheetOpen={isBottomSheetOpen}
-                    setIsBottomSheetOpen={setIsBottomSheetOpen}
-                    workoutPromiseId={workoutPromiseId}
-                    username={myInfo.username}
-                  />
-                ) : (
-                  <></>
-                )}
               </View>
             </>
           </ErrorBoundary>
@@ -543,6 +535,16 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
             onPressChat(myInfo?.id, query.data?.adminUserId);
           }}
         />
+      )}
+      {myInfo ? (
+        <ParticipationBottomSheet
+          isBottomSheetOpen={isBottomSheetOpen}
+          setIsBottomSheetOpen={setIsBottomSheetOpen}
+          workoutPromiseId={workoutPromiseId}
+          username={myInfo.username}
+        />
+      ) : (
+        <></>
       )}
     </>
   );
