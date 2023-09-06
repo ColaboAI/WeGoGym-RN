@@ -90,6 +90,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   chip: {
-    margin: 5,
+    marginHorizontal: 5,
   },
 });
