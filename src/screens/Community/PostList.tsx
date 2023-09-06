@@ -111,7 +111,7 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
         lastContentOffset.value < event.contentOffset.y &&
         isScrolling.value
       ) {
-        translateY.value = -inset.top - 15 - 40;
+        translateY.value = -inset.top - 15 - 60;
       }
       lastContentOffset.value = event.contentOffset.y;
 
@@ -149,6 +149,12 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
       [initialMarginTop, inset.top],
       Extrapolate.CLAMP,
     );
+    const marginBottom = interpolate(
+      translateY.value,
+      [0, -100],
+      [35, 0],
+      Extrapolate.CLAMP,
+    );
 
     return {
       transform: [
@@ -168,6 +174,10 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
         easing: Easing.inOut(Easing.ease),
       }),
       marginTop: withTiming(marginTop, {
+        duration: 400,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      marginBottom: withTiming(marginBottom, {
         duration: 400,
         easing: Easing.inOut(Easing.ease),
       }),
@@ -201,7 +211,7 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
         </Animated.View>
       </Animated.View>
     ),
-    [headerAnim, handleCommunityChange, selectedCommunity],
+    [headerAnim, selectedCommunity, handleCommunityChange],
   );
   return (
     <ErrorBoundary
@@ -272,7 +282,6 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexDirection: 'column',
     paddingLeft: 12,
-    marginBottom: 35,
   },
   iconContainer: {
     flexDirection: 'row',
@@ -280,6 +289,5 @@ const styles = StyleSheet.create({
   },
   logo: {
     marginLeft: 5,
-    // marginBottom: Platform.OS === 'android' ? 15 : 0,
   },
 });
