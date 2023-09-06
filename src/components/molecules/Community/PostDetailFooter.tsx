@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default function PostDetailFooter({ postId, likes, isLiked }: Props) {
-  const ICON_SIZE = 10;
+  const ICON_SIZE = 15;
   const theme = useTheme();
   const iconColor = theme.colors.onBackground;
   const likeMutation = usePostLikeMutation();
