@@ -61,7 +61,7 @@ export default function ProfileImageScreen() {
     }
     const info = getInfo();
     if (info) {
-      signUp(info, data);
+      await signUp(info, data);
     } else {
       Alert.alert('회원가입에 실패했습니다.');
     }

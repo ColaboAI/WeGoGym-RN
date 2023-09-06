@@ -31,9 +31,9 @@ type AuthState = {
 };
 
 type AuthActions = {
-  signIn: (phoneNumber: string | null) => void;
+  signIn: (phoneNumber: string | null) => Promise<void>;
   signOut: () => void;
-  signUp: (userInfo: UserCreate, formData: FormData) => void;
+  signUp: (userInfo: UserCreate, formData: FormData) => Promise<void>;
   getTokenFromStorage: () => Promise<boolean>;
   refreshToken: (a: string, b: string) => void;
   setLoading: (b: boolean) => void;
@@ -56,9 +56,9 @@ const initialAuthState: AuthState = {
 };
 
 const initialAuthActions: AuthActions = {
-  signIn: () => {},
+  signIn: async () => {},
   signOut: () => {},
-  signUp: () => {},
+  signUp: async () => {},
   getTokenFromStorage: async () => {
     return false;
   },
