@@ -4,7 +4,7 @@ import { useTheme } from 'react-native-paper';
 
 interface CustomCalloutProps extends PropsWithChildren {}
 
-const CustomCallout: React.FC<CustomCalloutProps> = ({ children }) => {
+const CustomCallout = (props: CustomCalloutProps) => {
   const theme = useTheme();
   return (
     <View style={styles.container}>
@@ -16,7 +16,7 @@ const CustomCallout: React.FC<CustomCalloutProps> = ({ children }) => {
             borderColor: theme.colors.secondary,
           },
         ]}>
-        <View style={styles.childrenContainer}>{children}</View>
+        <View style={styles.childrenContainer}>{props.children}</View>
       </View>
       <View
         style={[

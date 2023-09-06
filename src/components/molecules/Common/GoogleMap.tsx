@@ -107,7 +107,6 @@ const GoogleMap = (props: Props) => {
       <View style={styles.search}>
         <GooglePlacesInput onSelectPlace={handlePlaceSelected} />
       </View>
-
       {location && isLoading === false ? (
         <MapView
           provider={PROVIDER_GOOGLE}
@@ -121,6 +120,7 @@ const GoogleMap = (props: Props) => {
           }}
           zoomTapEnabled={false}>
           <Marker
+            key={title}
             coordinate={{
               latitude: location.lat,
               longitude: location.lng,
