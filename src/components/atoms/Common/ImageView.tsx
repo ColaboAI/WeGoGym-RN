@@ -1,4 +1,4 @@
-import { ImageBackground, StyleSheet, View, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import { ActivityIndicator, Text, useTheme } from 'react-native-paper';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -7,6 +7,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import FastImage from 'react-native-fast-image';
 
 type Props = {
   imageUrl: string;
@@ -72,15 +73,13 @@ export default function ImageView({
       key={`img-view-${idx}`}
       onPress={() => setPressed(prev => !prev)}>
       <GestureDetector gesture={composedGesture}>
-        <Animated.View style={[animatedStyle]}>
-          <ImageBackground
-            onLoadStart={() => setLoading(true)}
+        <Animated.View style={animatedStyle}>
+          <FastImage
             onLoadEnd={() => setLoading(false)}
-            progressiveRenderingEnabled={true}
+            onLoadStart={() => setLoading(true)}
             resizeMode={resizeMode}
             key={`img-${idx}`}
             source={{ uri: imageUrl }}
-            alt={`img-${idx}`}
             style={[
               styles.image,
               {
@@ -109,7 +108,7 @@ export default function ImageView({
                 </Text>
               </View>
             )}
-          </ImageBackground>
+          </FastImage>
         </Animated.View>
       </GestureDetector>
     </Pressable>

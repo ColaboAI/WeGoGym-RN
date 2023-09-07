@@ -1,6 +1,7 @@
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import React, { useMemo } from 'react';
 import { Avatar, TouchableRipple, useTheme } from 'react-native-paper';
+import FastImage from 'react-native-fast-image';
 
 interface Props {
   username: string;
@@ -21,13 +22,26 @@ function CustomAvatar(props: Props) {
 
   const renderAvatar = useMemo(() => {
     return props.profilePic ? (
-      <Avatar.Image
-        size={props.size}
-        source={{
-          uri: props.profilePic,
-        }}
-        style={props.style ? props.style : styles.avatar}
-      />
+      <View
+        style={[
+          props.style ? props.style : styles.avatar,
+          {
+            width: props.size,
+            height: props.size,
+            borderRadius: props.size / 2,
+          },
+        ]}>
+        <FastImage
+          style={{
+            width: props.size,
+            height: props.size,
+            borderRadius: props.size / 2,
+          }}
+          source={{
+            uri: props.profilePic,
+          }}
+        />
+      </View>
     ) : (
       <Avatar.Text
         size={props.size}
