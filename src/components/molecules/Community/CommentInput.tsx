@@ -84,7 +84,6 @@ export default function CommentInput({
         <RNTextInput
           ref={inputRef}
           mode="outlined"
-          dense={true}
           right={
             <RNTextInput.Icon
               style={styles.sendBtnIcon}
@@ -101,7 +100,6 @@ export default function CommentInput({
           style={styles.inputBar}
           outlineStyle={styles.outline}
           multiline={true}
-          placeholder="댓글 남기기"
           onChangeText={t => {
             setInputText(t);
           }}
@@ -111,6 +109,7 @@ export default function CommentInput({
           disabled={mutation.isLoading}
           onSubmitEditing={handleSubmit}
           focusable={focusable}
+          label={'댓글을 입력하세요'}
         />
       </View>
     </Animated.View>
@@ -126,7 +125,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     paddingBottom: 5,
     position: 'absolute',
-    bottom: 0,
+    bottom: 5,
     left: 0,
     width: '100%',
   },
