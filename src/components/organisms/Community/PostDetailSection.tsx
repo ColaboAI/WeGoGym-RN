@@ -67,6 +67,7 @@ export default function PostDetailSection({ postId, onPressEdit }: Props) {
               </View>
               <View style={styles.postSection}>
                 <PostDetailHeader
+                  communityId={post.communityId}
                   postId={postId}
                   user={post.user}
                   updatedAt={post.updatedAt}
@@ -74,6 +75,7 @@ export default function PostDetailSection({ postId, onPressEdit }: Props) {
                 />
                 <PostDetailBody post={post} />
                 <PostDetailFooter
+                  communityId={post.communityId}
                   postId={post.id}
                   likes={post.likeCnt}
                   isLiked={post.isLiked}

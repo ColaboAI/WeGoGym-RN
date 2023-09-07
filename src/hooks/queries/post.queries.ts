@@ -122,7 +122,31 @@ export function usePostUpdateMutation() {
   });
 }
 
-export function usePostLikeMutation() {
+function postLikeUpdater(
+  oldData: InfiniteData<PostListRead> | undefined,
+  data: PostRead,
+  postId: number,
+) {
+  if (oldData === undefined) {
+    return;
+  }
+  const newData = oldData.pages.map(page => {
+    const newPage = page.items.map(result => {
+      if (result.id === postId) {
+        return {
+          ...result,
+          isLiked: data.isLiked,
+          likeCnt: data.likeCnt,
+        };
+      }
+      return result;
+    });
+    return { ...page, items: newPage };
+  });
+  return { ...oldData, pages: newData };
+}
+
+export function usePostLikeMutation(communityId: number | undefined) {
   const queryClient = useQueryClient();
   const { onShow } = useSnackBarActions();
   return useMutation({
@@ -131,28 +155,19 @@ export function usePostLikeMutation() {
       const postId = variables;
       queryClient.setQueryData<PostRead>(['post', postId], data);
       queryClient.setQueryData<InfiniteData<PostListRead>>(
-        // FIXME: 지금은 전체 쿼리, 나중에는 커뮤니티별 쿼리에도 적용
         ['postList', undefined],
-        oldData => {
-          if (oldData === undefined) {
-            return;
-          }
-          const newData = oldData.pages.map(page => {
-            const newPage = page.items.map(result => {
-              if (result.id === postId) {
-                return {
-                  ...result,
-                  isLiked: data.isLiked,
-                  likeCnt: data.likeCnt,
-                };
-              }
-              return result;
-            });
-            return { ...page, items: newPage };
-          });
-          return { ...oldData, pages: newData };
+        (oldData: InfiniteData<PostListRead> | undefined) => {
+          return postLikeUpdater(oldData, data, postId);
         },
       );
+      if (communityId !== undefined) {
+        queryClient.setQueryData<InfiniteData<PostListRead>>(
+          ['postList', communityId],
+          (oldData: InfiniteData<PostListRead> | undefined) => {
+            return postLikeUpdater(oldData, data, postId);
+          },
+        );
+      }
     },
     onError: (error: CustomError) => {
       onShow(
@@ -163,7 +178,7 @@ export function usePostLikeMutation() {
   });
 }
 
-export function usePostDisLikeMutation() {
+export function usePostDisLikeMutation(communityId: number | undefined) {
   const queryClient = useQueryClient();
   const { onShow } = useSnackBarActions();
   return useMutation({
@@ -172,28 +187,19 @@ export function usePostDisLikeMutation() {
       const postId = variables;
       queryClient.setQueryData<PostRead>(['post', postId], data);
       queryClient.setQueryData<InfiniteData<PostListRead>>(
-        // FIXME: 지금은 전체 쿼리, 나중에는 커뮤니티별 쿼리에도 적용
         ['postList', undefined],
-        oldData => {
-          if (oldData === undefined) {
-            return;
-          }
-          const newData = oldData.pages.map(page => {
-            const newPage = page.items.map(result => {
-              if (result.id === postId) {
-                return {
-                  ...result,
-                  isLiked: data.isLiked,
-                  likeCnt: data.likeCnt,
-                };
-              }
-              return result;
-            });
-            return { ...page, items: newPage };
-          });
-          return { ...oldData, pages: newData };
+        (oldData: InfiniteData<PostListRead> | undefined) => {
+          return postLikeUpdater(oldData, data, postId);
         },
       );
+      if (communityId !== undefined) {
+        queryClient.setQueryData<InfiniteData<PostListRead>>(
+          ['postList', communityId],
+          (oldData: InfiniteData<PostListRead> | undefined) => {
+            return postLikeUpdater(oldData, data, postId);
+          },
+        );
+      }
     },
     onError: (error: CustomError) => {
       onShow(
@@ -204,14 +210,14 @@ export function usePostDisLikeMutation() {
   });
 }
 
-export function usePostDeleteMutation() {
+export function usePostDeleteMutation(communityId: number | undefined) {
   const queryClient = useQueryClient();
   const { onShow } = useSnackBarActions();
   return useMutation({
     mutationFn: (postId: number) => deletePost(postId),
     onSuccess: (_, variables) => {
       queryClient.setQueriesData<InfiniteData<PostListRead>>(
-        ['postList', undefined],
+        ['postList', communityId, undefined],
         oldData => {
           if (oldData === undefined) {
             return;

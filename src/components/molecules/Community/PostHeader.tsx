@@ -7,17 +7,24 @@ import { useAuthValue } from '/hooks/context/useAuth';
 import { usePostDeleteMutation } from '/hooks/queries/post.queries';
 
 type Props = {
+  communityId: number;
   postId: number;
   user: User;
   updatedAt: Date;
   onPressEdit: (postId: number) => void;
 };
 
-function PostHeader({ postId, user, updatedAt, onPressEdit }: Props) {
+function PostHeader({
+  communityId,
+  postId,
+  user,
+  updatedAt,
+  onPressEdit,
+}: Props) {
   const myId = useAuthValue().userId;
   const isMine = myId === user.id;
 
-  const { mutate: deletePost } = usePostDeleteMutation();
+  const { mutate: deletePost } = usePostDeleteMutation(communityId);
 
   const handleDelete = useCallback(() => {
     deletePost(postId);

@@ -54,6 +54,7 @@ export default function PostListItem({
       </View>
       <View style={styles.postContainer}>
         <PostHeader
+          communityId={post.communityId}
           postId={post.id}
           user={user}
           updatedAt={post.updatedAt}

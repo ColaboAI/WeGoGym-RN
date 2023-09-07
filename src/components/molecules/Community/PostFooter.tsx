@@ -32,8 +32,8 @@ export default function PostFooter({
   const ICON_SIZE = 15;
   const theme = useTheme();
   const iconColor = theme.colors.onBackground;
-  const likeMutation = usePostLikeMutation();
-  const dislikeMutation = usePostDisLikeMutation();
+  const likeMutation = usePostLikeMutation(communityId);
+  const dislikeMutation = usePostDisLikeMutation(communityId);
 
   const handleLike = () => {
     likeMutation.mutate(postId);

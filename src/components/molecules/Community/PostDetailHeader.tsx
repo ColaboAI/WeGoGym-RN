@@ -8,6 +8,7 @@ import { usePostDeleteMutation } from '/hooks/queries/post.queries';
 import { useNavigation } from '@react-navigation/native';
 
 type Props = {
+  communityId: number;
   postId: number;
   user: User;
   updatedAt: Date;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export default function PostDetailHeader({
+  communityId,
   postId,
   user,
   updatedAt,
@@ -23,7 +25,7 @@ export default function PostDetailHeader({
   const nav = useNavigation();
   const myId = useAuthValue().userId;
   const isMine = myId === user.id;
-  const { mutate: deletePost } = usePostDeleteMutation();
+  const { mutate: deletePost } = usePostDeleteMutation(communityId);
   const handleDelete = useCallback(() => {
     deletePost(postId);
     if (nav.canGoBack()) {
