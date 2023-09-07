@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { Suspense, useCallback, useMemo, useState } from 'react';
 import { CommunityStackScreenProps } from '/navigators/types';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
@@ -17,7 +17,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  Easing,
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
@@ -95,9 +94,6 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
   const translateY = useSharedValue(0);
   const lastContentOffset = useSharedValue(0);
   const isScrolling = useSharedValue(false);
-  const initialMarginTop = useMemo(() => {
-    return Platform.OS === 'android' ? 15 : inset.top;
-  }, [inset.top]);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
@@ -132,26 +128,22 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
   const headerAnim = useAnimatedStyle(() => {
     const opacity = interpolate(
       translateY.value,
-      [0, -100],
+      [0, -65],
       [1, 0],
       Extrapolate.CLAMP,
     );
     const height = interpolate(
       translateY.value,
-      [0, -100],
+      [0, -65],
       [40 + 15, 0],
       Extrapolate.CLAMP,
     );
 
-    const marginTop = interpolate(
-      translateY.value,
-      [0, -100],
-      [initialMarginTop, inset.top],
-      Extrapolate.CLAMP,
-    );
+    const marginTop = inset.top;
+
     const marginBottom = interpolate(
       translateY.value,
-      [0, -100],
+      [0, -65],
       [35, 0],
       Extrapolate.CLAMP,
     );
@@ -161,25 +153,21 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
         {
           translateY: withTiming(translateY.value, {
             duration: 400,
-            easing: Easing.inOut(Easing.ease),
           }),
         },
       ],
       opacity: withTiming(opacity, {
         duration: 400,
-        easing: Easing.inOut(Easing.ease),
       }),
       height: withTiming(height, {
         duration: 400,
-        easing: Easing.inOut(Easing.ease),
+      }),
+
+      marginBottom: withTiming(marginBottom, {
+        duration: 400,
       }),
       marginTop: withTiming(marginTop, {
         duration: 400,
-        easing: Easing.inOut(Easing.ease),
-      }),
-      marginBottom: withTiming(marginBottom, {
-        duration: 400,
-        easing: Easing.inOut(Easing.ease),
       }),
     };
   });
@@ -213,6 +201,21 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
     ),
     [headerAnim, selectedCommunity, handleCommunityChange],
   );
+
+  const onEndReached = useCallback(() => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage]);
+  const refreshControl = useMemo(
+    () => <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />,
+    [isRefreshing, onRefresh],
+  );
+  const moreLoadingIndicator = useMemo(() => {
+    return <ActivityIndicator animating={isFetchingNextPage} />;
+  }, [isFetchingNextPage]);
+
+  const keyExtractor = useCallback((item: PostRead) => `${item.id}`, []);
   return (
     <ErrorBoundary
       onReset={reset}
@@ -225,26 +228,18 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
             contentContainerStyle={styles.contentContainer}
             data={data?.pages.flatMap(page => page.items)}
             renderItem={renderItem}
-            keyExtractor={item => `${item.id}`}
+            keyExtractor={keyExtractor}
             ItemSeparatorComponent={renderDivider}
-            refreshControl={
-              <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
-            }
+            refreshControl={refreshControl}
             refreshing={isRefreshing}
-            onEndReached={() => {
-              if (hasNextPage) {
-                fetchNextPage();
-              }
-            }}
+            onEndReached={onEndReached}
             onEndReachedThreshold={0.7}
             ListEmptyComponent={
               <View style={styles.errorContainer}>
                 <Text>커뮤니티 글이 없습니다.</Text>
               </View>
             }
-            ListFooterComponent={
-              <ActivityIndicator animating={isFetchingNextPage} />
-            }
+            ListFooterComponent={moreLoadingIndicator}
             onScroll={scrollHandler}
           />
           <CustomFAB

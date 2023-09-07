@@ -1,7 +1,8 @@
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Button, Headline, Text, useTheme } from 'react-native-paper';
 import { AuthStackScreenProps } from 'navigators/types';
+import FastImage from 'react-native-fast-image';
 
 type Props = AuthStackScreenProps<'Login'>;
 export default function LoginScreen({ navigation }: Props) {
@@ -30,7 +31,7 @@ export default function LoginScreen({ navigation }: Props) {
         </Text>
       </View>
       <View style={style.imageBox}>
-        <Image
+        <FastImage
           style={{ height: 300, width: 300 }}
           resizeMode="contain"
           source={require('../asset/image/gymmate.png')}

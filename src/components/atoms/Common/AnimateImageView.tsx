@@ -7,6 +7,7 @@ import Animated, {
   StretchOutY,
 } from 'react-native-reanimated';
 import { IconButton, useTheme } from 'react-native-paper';
+import FastImage, { FastImageProps } from 'react-native-fast-image';
 
 type Props = {
   imageUri: string;
@@ -15,7 +16,9 @@ type Props = {
   onPressDelete: (id: number) => void;
   onDrag: () => void;
 };
-
+const AnimatedFastImage = Animated.createAnimatedComponent<FastImageProps>(
+  FastImage as any,
+);
 const AnimateImageView = ({
   imageUri,
   imgLength,
@@ -38,7 +41,7 @@ const AnimateImageView = ({
         onPress={() => {
           setTouched(prev => !prev);
         }}>
-        <Animated.Image
+        <AnimatedFastImage
           resizeMode={resizeMode}
           entering={BounceIn}
           exiting={StretchOutY}
