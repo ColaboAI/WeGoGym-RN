@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import React, { Suspense, useCallback, useMemo, useState } from 'react';
 import { CommunityStackScreenProps } from '/navigators/types';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
@@ -19,6 +19,7 @@ import Animated, {
   withTiming,
   interpolate,
   Extrapolate,
+  Easing,
 } from 'react-native-reanimated';
 import { trigger } from 'react-native-haptic-feedback';
 
@@ -153,36 +154,47 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
         {
           translateY: withTiming(translateY.value, {
             duration: 400,
+            easing: Easing.inOut(Easing.ease),
           }),
         },
       ],
       opacity: withTiming(opacity, {
         duration: 400,
+        easing: Easing.inOut(Easing.ease),
       }),
       height: withTiming(height, {
         duration: 400,
+        easing: Easing.inOut(Easing.ease),
       }),
 
       marginBottom: withTiming(marginBottom, {
         duration: 400,
+        easing: Easing.inOut(Easing.ease),
       }),
       marginTop: withTiming(marginTop, {
         duration: 400,
+        easing: Easing.inOut(Easing.ease),
       }),
     };
+  });
+
+  const hapticTriggerType = Platform.select({
+    ios: 'selection',
+    android: 'impactMedium',
   });
 
   const handleCommunityChange = useCallback(
     (community: Community | undefined) => {
       communityId.value = community?.id;
       setSelectedCommunity(community);
-      trigger('impactLight', {
+
+      trigger(hapticTriggerType, {
         enableVibrateFallback: true,
-        ignoreAndroidSystemSettings: false,
+        ignoreAndroidSystemSettings: true,
       });
       onRefresh();
     },
-    [communityId, onRefresh],
+    [communityId, hapticTriggerType, onRefresh],
   );
 
   const renderHeader = useCallback(
