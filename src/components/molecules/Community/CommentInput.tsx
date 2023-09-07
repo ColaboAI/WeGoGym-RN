@@ -1,11 +1,4 @@
-import {
-  Keyboard,
-  Platform,
-  StyleSheet,
-  View,
-  ViewStyle,
-  TextInput,
-} from 'react-native';
+import { Keyboard, StyleSheet, View, ViewStyle, TextInput } from 'react-native';
 import React, { useCallback, useLayoutEffect, useState, useRef } from 'react';
 import { TextInput as RNTextInput, useTheme } from 'react-native-paper';
 import {
@@ -86,7 +79,6 @@ export default function CommentInput({
           mode="outlined"
           right={
             <RNTextInput.Icon
-              style={styles.sendBtnIcon}
               mode="contained"
               icon="send"
               containerColor={'transparent'}
@@ -142,8 +134,5 @@ const styles = StyleSheet.create({
   },
   outline: {
     borderRadius: 20,
-  },
-  sendBtnIcon: {
-    top: Platform.OS === 'ios' ? 2 : 0,
   },
 });
