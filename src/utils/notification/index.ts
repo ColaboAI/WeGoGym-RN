@@ -19,7 +19,7 @@ async function checkApplicationPermission() {
   }
 
   if (Platform.OS === 'ios') {
-    return await Geolocation.requestAuthorization('whenInUse');
+    await Geolocation.requestAuthorization('whenInUse');
   }
 
   const authorizationStatus = await messaging().requestPermission();
