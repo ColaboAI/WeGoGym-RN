@@ -9,6 +9,7 @@ import {
   UserScreen,
   SettingScreen,
   ProfileEditScreen,
+  PostCreateScreen,
 } from '../screens';
 import DetailsNavBarHeader from './NavBarHeader/DetailsNavBarHeader';
 import { HomeStackParamList, CustomTabScreenProps } from './types';
@@ -98,6 +99,7 @@ function Home({ navigation, route }: Props) {
         component={ProfileEditScreen}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="PostCreate" component={PostCreateScreen} />
     </Stack.Navigator>
   );
 }
