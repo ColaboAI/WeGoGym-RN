@@ -21,7 +21,7 @@ const PostDetailAiBody = ({
             styles.chipBox,
             { backgroundColor: theme.colors.tertiaryContainer },
           ]}>
-          <Text style={styles.chipText}>✨ AI 요약 </Text>
+          <Text style={styles.chipText}>✨ AI 답변 </Text>
         </View>
         <View style={styles.contentBox}>
           <Text
