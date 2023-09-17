@@ -10,7 +10,6 @@ import {
 import React, { Suspense, useCallback, useState } from 'react';
 import WorkoutPromiseCard from 'components/molecules/Home/WorkoutPromiseCard';
 import { HomeStackScreenProps } from 'navigators/types';
-import CustomFAB from 'components/molecules/Home/CustomFAB';
 import { FlatList, RefreshControl } from 'react-native-gesture-handler';
 import WorkoutPromiseLoader from 'components/molecules/Home/WorkoutPromiseLoader';
 import ScreenWrapper from 'components/template/Common/ScreenWrapper';
@@ -22,6 +21,7 @@ import GymMateRecommendation from '/components/organisms/User/GymMateRecommend';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import TextLogo from '/asset/svg/TextLogo';
+import CustomFABGroup from '/components/molecules/Home/CustomFABGroup';
 type HomeScreenProps = HomeStackScreenProps<'Home'>;
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {
@@ -46,6 +46,15 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { reset } = useQueryErrorResetBoundary();
   const [refreshing, setRefreshing] = useState(false);
   const theme = useTheme();
+
+  const navigateToPosting = useCallback(() => {
+    navigation.navigate('Posting');
+  }, [navigation]);
+
+  const navigateToPostCreate = useCallback(() => {
+    navigation.navigate('PostCreate');
+  }, [navigation]);
+
   const navigateToPromiseDetails = useCallback(
     (id: string) => {
       navigation.navigate('Details', { workoutPromiseId: id });
@@ -203,11 +212,9 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           </ErrorBoundary>
         </Suspense>
       </ScreenWrapper>
-      <CustomFAB
-        icon="barbell-outline"
-        onPress={() => {
-          navigation.navigate('Posting');
-        }}
+      <CustomFABGroup
+        onPressPosting={navigateToPosting}
+        onPressPostCreate={navigateToPostCreate}
       />
     </>
   );
