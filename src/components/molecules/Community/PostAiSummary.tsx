@@ -5,6 +5,7 @@ import { Text, useTheme } from 'react-native-paper';
 type Props = {
   postId: number;
   communityId: number;
+  // summary: string;
   content: string;
   onPress: ({
     postId,
@@ -15,7 +16,13 @@ type Props = {
   }) => void;
 };
 
-const PostAiSummary = ({ postId, communityId, content, onPress }: Props) => {
+const PostAiSummary = ({
+  postId,
+  communityId,
+  // summary,
+  content,
+  onPress,
+}: Props) => {
   const theme = useTheme();
   const [seeMore, setSeeMore] = useState(false);
   const isTextLong = content.length > 25;
