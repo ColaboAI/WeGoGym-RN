@@ -13,6 +13,7 @@ import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useResizeMode } from '/hooks/common/keyboard';
+import PostDetailAiSection from '/components/organisms/Community/PostDetailAiSection';
 
 type PostDetailScreenProps = CommunityStackScreenProps<'PostDetail'>;
 
@@ -108,10 +109,13 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
               contentPaddingBottom,
             ]}
             ListHeaderComponent={
-              <PostDetailSection
-                postId={postId}
-                onPressEdit={navigateToPostEdit}
-              />
+              <>
+                <PostDetailSection
+                  postId={postId}
+                  onPressEdit={navigateToPostEdit}
+                />
+                <PostDetailAiSection postId={postId} />
+              </>
             }
             ListFooterComponent={renderFooter}
             data={data?.pages.flatMap(page => page.items)}
