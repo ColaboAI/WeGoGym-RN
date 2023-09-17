@@ -7,6 +7,7 @@ import PostFooter from '/components/molecules/Community/PostFooter';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthValue } from '/hooks/context/useAuth';
+import PostAiSummary from '/components/molecules/Community/PostAiSummary';
 
 interface Props {
   post: PostRead;
@@ -67,6 +68,12 @@ export default function PostListItem({
           likes={post.likeCnt}
           comments={post.commentCnt}
           isLiked={post.isLiked}
+          onPress={onPressDetail}
+        />
+        <PostAiSummary
+          postId={post.id}
+          communityId={post.communityId}
+          content={post.content}
           onPress={onPressDetail}
         />
       </View>
