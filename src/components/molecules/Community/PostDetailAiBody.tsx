@@ -39,7 +39,7 @@ const PostDetailAiBody = ({
         <View
           style={[
             styles.chipBox,
-            { backgroundColor: theme.colors.tertiaryContainer },
+            { backgroundColor: theme.colors.errorContainer },
           ]}>
           <Text style={styles.chipText}>🔥 동기 부여</Text>
         </View>
