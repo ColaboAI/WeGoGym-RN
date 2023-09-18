@@ -25,18 +25,24 @@ const CustomFABGroup = ({ onPressPosting, onPressPostCreate }: Props) => {
         {
           icon: 'barbell-outline',
           label: '운동 약속',
+          color: theme.colors.onBackground,
+          style: { backgroundColor: theme.colors.background },
+          containerStyle: { backgroundColor: theme.colors.background },
+          labelTextColor: theme.colors.onBackground,
           onPress: onPressPosting,
         },
         {
           icon: 'pencil-outline',
           label: '운동 질문',
+          color: theme.colors.onBackground,
+          style: { backgroundColor: theme.colors.background },
+          containerStyle: { backgroundColor: theme.colors.background },
+          labelTextColor: theme.colors.onBackground,
           onPress: onPressPostCreate,
         },
       ]}
       onStateChange={onStateChange}
-      color={theme.colors.onPrimary}
       backdropColor={theme.colors.backdrop}
-      fabStyle={{ backgroundColor: theme.colors.primary }}
       style={styles.fabGroup}
     />
   );
