@@ -34,7 +34,8 @@ const CustomFABGroup = ({ onPressPosting, onPressPostCreate }: Props) => {
         },
       ]}
       onStateChange={onStateChange}
-      color={theme.colors.surface}
+      color={theme.colors.onPrimary}
+      backdropColor={theme.colors.backdrop}
       fabStyle={{ backgroundColor: theme.colors.primary }}
       style={styles.fabGroup}
     />
