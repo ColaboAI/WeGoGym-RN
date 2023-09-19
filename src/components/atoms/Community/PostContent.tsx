@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 
 type Props = {
@@ -38,8 +38,15 @@ export default function PostContent({
 
   return (
     <Pressable onPress={handlePress}>
-      <Text variant="bodyMedium">{contentToShow}</Text>
+      <Text style={styles.text} variant="bodyMedium">
+        {contentToShow}
+      </Text>
       {isTextLong && !seeMore && <Text variant="bodySmall">... 더보기</Text>}
     </Pressable>
   );
 }
+const styles = StyleSheet.create({
+  text: {
+    textAlign: 'justify',
+  },
+});
