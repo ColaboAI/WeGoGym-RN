@@ -1,30 +1,25 @@
 import { StyleSheet, View } from 'react-native';
 import React, { Suspense, useCallback } from 'react';
-import { Divider, Text } from 'react-native-paper';
+import { ActivityIndicator, Button, Divider, Text } from 'react-native-paper';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-import { usePostQuery } from '/hooks/queries/post.queries';
-import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import PostDetailAiBody from '/components/molecules/Community/PostDetailAiBody';
 import PostDetailAiFooter from '/components/molecules/Community/PostDetailAiFooter';
-
+import { useGetAiCoachingQuery } from '/hooks/queries/ai.queries';
+import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 type Props = {
   postId: number;
 };
 
 export default function PostDetailAiSection({ postId }: Props) {
-  // const { data: aiCoaching } = useAiCoachingQuery(postId);
-  const { data: post } = usePostQuery(postId);
+  const { data: aiCoaching } = useGetAiCoachingQuery(postId);
   const { reset } = useQueryErrorResetBoundary();
-
-  const renderPostError = useCallback(
+  const renderAiCoachingError = useCallback(
     ({ error, resetErrorBoundary }: FallbackProps) => {
       return (
-        <View>
+        <View style={styles.errorContainer}>
           AI 답변을 불러올 수 없습니다.
-          <br />
-          <br />
           <Text>{error.message}</Text>
-          <button onClick={() => resetErrorBoundary()}>다시 시도하기</button>
+          <Button onPress={() => resetErrorBoundary()}>다시 시도하기</Button>
         </View>
       );
     },
@@ -32,32 +27,30 @@ export default function PostDetailAiSection({ postId }: Props) {
   );
 
   return (
-    <Suspense fallback={<Text>Loading...</Text>}>
-      <ErrorBoundary onReset={reset} fallbackRender={renderPostError}>
-        <>
-          {post && (
-            <View style={styles.container}>
-              <View style={styles.aiSection}>
-                <PostDetailAiBody
-                  post={post}
-                  // aiCoaching={aiCoaching}
-                />
-                <PostDetailAiFooter
-                  // aiCoachingId={aiCoaching.id}
-                  // likes={aiCoaching.likeCnt}
-                  // isLiked={aiCoaching.isLiked}
-                  communityId={post.communityId}
-                  postId={post.id}
-                  likes={post.likeCnt}
-                  isLiked={post.isLiked}
-                />
-              </View>
+    <ErrorBoundary onReset={reset} fallbackRender={renderAiCoachingError}>
+      <Suspense fallback={<ActivityIndicator animating />}>
+        {aiCoaching && (
+          <View style={styles.container}>
+            <View style={styles.aiSection}>
+              <PostDetailAiBody aiCoaching={aiCoaching} />
+              <PostDetailAiFooter
+                aiCoachingId={aiCoaching.id}
+                likes={aiCoaching.likeCnt}
+                isLiked={aiCoaching.isLiked}
+              />
             </View>
-          )}
-          <Divider />
-        </>
-      </ErrorBoundary>
-    </Suspense>
+          </View>
+        )}
+        {/* TODO: RETRY ai coaching request ? */}
+        {/* {!aiCoaching && (
+          <View style={styles.errorContainer}>
+            <Text>AI 답변이 없습니다.</Text>
+            <Button onPress={() => reset()}>생성 요청하기</Button>
+          </View>
+        )} */}
+        <Divider />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
@@ -70,5 +63,10 @@ const styles = StyleSheet.create({
   aiSection: {
     flex: 6,
     flexDirection: 'column',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

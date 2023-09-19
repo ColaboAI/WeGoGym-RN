@@ -5,8 +5,7 @@ import { Text, useTheme } from 'react-native-paper';
 type Props = {
   postId: number;
   communityId: number;
-  // summary: string;
-  content: string;
+  summary: string;
   onPress: ({
     postId,
     communityId,
@@ -16,17 +15,11 @@ type Props = {
   }) => void;
 };
 
-const PostAiSummary = ({
-  postId,
-  communityId,
-  // summary,
-  content,
-  onPress,
-}: Props) => {
+const PostAiSummary = ({ postId, communityId, summary, onPress }: Props) => {
   const theme = useTheme();
   const [seeMore, setSeeMore] = useState(false);
-  const isTextLong = content.length > 25;
-  const contentToShow = seeMore ? content : content.slice(0, 25);
+  const isTextLong = summary && summary.length > 25;
+  const summaryToShow = seeMore ? summary : summary.slice(0, 25);
   const handlePress = () => {
     if (isTextLong && !seeMore) {
       setSeeMore(!seeMore);
@@ -62,7 +55,7 @@ const PostAiSummary = ({
               color: theme.colors.onBackground,
             },
           ]}>
-          {contentToShow}
+          {summaryToShow}
         </Text>
         {isTextLong && !seeMore && (
           <Text style={styles.seeMoreText}>... 더보기</Text>

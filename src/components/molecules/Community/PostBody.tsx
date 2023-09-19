@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    width: '100%',
+    marginRight: 12,
   },
   title: {
     fontSize: 16,

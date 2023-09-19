@@ -1,10 +1,10 @@
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import React, { Suspense, useCallback, useMemo, useState } from 'react';
-import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import PostDetailSection from '/components/organisms/Community/PostDetailSection';
 import { CommunityStackScreenProps } from '/navigators/types';
-import { ActivityIndicator, Button, Divider } from 'react-native-paper';
+import { ActivityIndicator, Button, Divider, Text } from 'react-native-paper';
 import { useCommentListQuery } from '/hooks/queries/comment.queries';
 import CommentListItem from '/components/organisms/Community/CommentListItem';
 import { useScrollToTop } from '@react-navigation/native';
@@ -27,7 +27,6 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
     useCommentListQuery(postId);
 
   const inset = useSafeAreaInsets();
-  const { reset } = useQueryErrorResetBoundary();
   const { height } = useReanimatedKeyboardAnimation();
 
   const commentInputStyle = useAnimatedStyle(() => {
@@ -39,7 +38,7 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
 
   const contentPaddingBottom = useMemo(
     () => ({
-      paddingBottom: 50,
+      paddingBottom: 60,
     }),
     [],
   );
@@ -96,56 +95,62 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
   );
 
   return (
-    <Suspense fallback={<ActivityIndicator animating={isLoading} />}>
-      <ErrorBoundary
-        onReset={reset}
-        fallbackRender={props => renderCommentError({ ...props })}>
-        <View style={styles.postDetailContainer}>
-          <Animated.FlatList
-            ref={flatlistRef}
-            style={[styles.container]}
-            contentContainerStyle={[
-              styles.contentContainer,
-              contentPaddingBottom,
-            ]}
-            ListHeaderComponent={
-              <>
-                <PostDetailSection
-                  postId={postId}
-                  onPressEdit={navigateToPostEdit}
-                />
-                <PostDetailAiSection postId={postId} />
-              </>
-            }
-            ListFooterComponent={renderFooter}
-            data={data?.pages.flatMap(page => page.items)}
-            keyExtractor={item => item.id.toString()}
-            renderItem={renderItem}
-            ItemSeparatorComponent={renderDivider}
-            onEndReached={() => {
-              if (hasNextPage) {
-                fetchNextPage();
-              }
-            }}
-            nestedScrollEnabled={true}
-            onEndReachedThreshold={0.1}
-            keyboardDismissMode={'interactive'}
-            automaticallyAdjustContentInsets={false}
-            automaticallyAdjustKeyboardInsets={true}
-            contentInsetAdjustmentBehavior="always"
-            keyboardShouldPersistTaps="handled"
-            maxToRenderPerBatch={5}
-          />
-          <CommentInput
-            animatedStyle={commentInputStyle}
-            postId={postId}
-            selectedCommentId={selectedCommentId}
-            setSelectedCommentId={setSelectedCommentId}
-          />
-          {Platform.OS === 'android' && <Animated.View style={[fakeView]} />}
-        </View>
-      </ErrorBoundary>
-    </Suspense>
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary
+          onReset={reset}
+          fallbackRender={props => renderCommentError({ ...props })}>
+          <Suspense fallback={<ActivityIndicator animating={isLoading} />}>
+            <View style={styles.postDetailContainer}>
+              <Animated.FlatList
+                ref={flatlistRef}
+                style={[styles.container]}
+                contentContainerStyle={[
+                  styles.contentContainer,
+                  contentPaddingBottom,
+                ]}
+                ListHeaderComponent={
+                  <>
+                    <PostDetailSection
+                      postId={postId}
+                      onPressEdit={navigateToPostEdit}
+                    />
+                    <PostDetailAiSection postId={postId} />
+                  </>
+                }
+                ListFooterComponent={renderFooter}
+                data={data?.pages.flatMap(page => page.items)}
+                keyExtractor={item => item.id.toString()}
+                renderItem={renderItem}
+                ItemSeparatorComponent={renderDivider}
+                onEndReached={() => {
+                  if (hasNextPage) {
+                    fetchNextPage();
+                  }
+                }}
+                nestedScrollEnabled={true}
+                onEndReachedThreshold={0.1}
+                keyboardDismissMode={'interactive'}
+                automaticallyAdjustContentInsets={false}
+                automaticallyAdjustKeyboardInsets={true}
+                contentInsetAdjustmentBehavior="always"
+                keyboardShouldPersistTaps="handled"
+                maxToRenderPerBatch={5}
+              />
+              <CommentInput
+                animatedStyle={commentInputStyle}
+                postId={postId}
+                selectedCommentId={selectedCommentId}
+                setSelectedCommentId={setSelectedCommentId}
+              />
+              {Platform.OS === 'android' && (
+                <Animated.View style={[fakeView]} />
+              )}
+            </View>
+          </Suspense>
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
   );
 };
 

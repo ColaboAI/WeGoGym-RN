@@ -4,7 +4,7 @@ import PostDetailHeader from '/components/molecules/Community/PostDetailHeader';
 import PostDetailBody from '/components/molecules/Community/PostDetailBody';
 import PostDetailFooter from '/components/molecules/Community/PostDetailFooter';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
-import { Divider, Text } from 'react-native-paper';
+import { Button, Divider, Text } from 'react-native-paper';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { usePostQuery } from '/hooks/queries/post.queries';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
@@ -19,7 +19,6 @@ type Props = {
 export default function PostDetailSection({ postId, onPressEdit }: Props) {
   const { data: post } = usePostQuery(postId);
   const { reset } = useQueryErrorResetBoundary();
-
   const nav = useNavigation();
   const authInfo = useAuthValue();
   const navigateToUser = useCallback(() => {
@@ -44,7 +43,7 @@ export default function PostDetailSection({ postId, onPressEdit }: Props) {
           <br />
           <br />
           <Text>{error.message}</Text>
-          <button onClick={() => resetErrorBoundary()}>다시 시도하기</button>
+          <Button onPress={() => resetErrorBoundary()}>다시 시도하기</Button>
         </View>
       );
     },
@@ -52,8 +51,8 @@ export default function PostDetailSection({ postId, onPressEdit }: Props) {
   );
 
   return (
-    <Suspense fallback={<Text>Loading...</Text>}>
-      <ErrorBoundary onReset={reset} fallbackRender={renderPostError}>
+    <ErrorBoundary onReset={reset} fallbackRender={renderPostError}>
+      <Suspense fallback={<Text>Loading...</Text>}>
         <>
           {post && (
             <View style={styles.container}>
@@ -85,8 +84,8 @@ export default function PostDetailSection({ postId, onPressEdit }: Props) {
           )}
           <Divider />
         </>
-      </ErrorBoundary>
-    </Suspense>
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 

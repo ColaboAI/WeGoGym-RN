@@ -1,60 +1,61 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 
 type Props = {
-  // aiCoaching: AiCoachingRead;
-  post: PostRead;
+  aiCoaching: AiCoachingRead;
 };
-
-const PostDetailAiBody = ({
-  // aiCoaching,
-  post,
-}: Props) => {
+type AiCoachingOption = {
+  [key: string]: { title: string; bgStyle: string };
+};
+const PostDetailAiBody = ({ aiCoaching }: Props) => {
   const theme = useTheme();
+
+  const options: AiCoachingOption = useMemo(() => {
+    return {
+      summary: { title: '💡 AI 요약', bgStyle: theme.colors.tertiaryContainer },
+      answer: { title: '✨ AI 답변', bgStyle: theme.colors.tertiaryContainer },
+      motivation: {
+        title: '🔥 동기 부여',
+        bgStyle: theme.colors.errorContainer,
+      },
+    };
+  }, [theme.colors.errorContainer, theme.colors.tertiaryContainer]);
+
+  const renderAiCoachingInfo = useCallback(
+    (key: string) => {
+      if (!aiCoaching[key]) return null;
+      return (
+        <View style={styles.contentContainer}>
+          <View
+            style={[styles.chipBox, { backgroundColor: options[key].bgStyle }]}>
+            <Text style={styles.chipText}>{options[key].title}</Text>
+          </View>
+          <View style={styles.contentBox}>
+            <Text
+              style={[
+                styles.contentText,
+                {
+                  color: theme.colors.onBackground,
+                },
+              ]}>
+              {aiCoaching[key]}
+            </Text>
+          </View>
+        </View>
+      );
+    },
+    [aiCoaching, options, theme.colors.onBackground],
+  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <View
-          style={[
-            styles.chipBox,
-            { backgroundColor: theme.colors.tertiaryContainer },
-          ]}>
-          <Text style={styles.chipText}>✨ AI 답변 </Text>
-        </View>
-        <View style={styles.contentBox}>
-          <Text
-            style={[
-              styles.contentText,
-              {
-                color: theme.colors.onBackground,
-              },
-            ]}>
-            {post.content}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.contentContainer}>
-        <View
-          style={[
-            styles.chipBox,
-            { backgroundColor: theme.colors.errorContainer },
-          ]}>
-          <Text style={styles.chipText}>🔥 동기 부여</Text>
-        </View>
-        <View style={styles.contentBox}>
-          <Text
-            style={[
-              styles.contentText,
-              {
-                color: theme.colors.onBackground,
-              },
-            ]}>
-            {post.content}
-          </Text>
-        </View>
-      </View>
+      {/* Question Summary */}
+      {renderAiCoachingInfo('summary')}
+      {/* Answer */}
+      {renderAiCoachingInfo('answer')}
+      {/* Motivation */}
+      {renderAiCoachingInfo('motivation')}
     </View>
   );
 };
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
   contentText: {
     fontSize: 12,
     fontWeight: 'normal',
+    textAlign: 'justify',
   },
   chipBox: {
     alignItems: 'center',

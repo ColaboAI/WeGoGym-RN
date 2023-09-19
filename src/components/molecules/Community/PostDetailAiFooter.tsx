@@ -3,41 +3,33 @@ import React from 'react';
 import { Text, useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
-  usePostDisLikeMutation,
-  usePostLikeMutation,
-} from '/hooks/queries/post.queries';
+  useAiCoachingDisLikeMutation,
+  useAiCoachingLikeMutation,
+} from '/hooks/queries/ai.queries';
 
 type Props = {
-  // aiCoachingId: number;
-  communityId: number;
-  postId: number;
+  aiCoachingId: number;
   likes: number;
   isLiked: number;
 };
 
 export default function PostDetailAiFooter({
-  // aiCoachingId,
-  communityId,
-  postId,
+  aiCoachingId,
   likes,
   isLiked,
 }: Props) {
   const ICON_SIZE = 15;
   const theme = useTheme();
   const iconColor = theme.colors.onBackground;
-  // const likeMutation = useAiCoachingLikeMutation(aiCoachingId);
-  // const dislikeMutation = useAiCoachingDisLikeMutation(aiCoachingId);
-  const likeMutation = usePostLikeMutation(communityId);
-  const dislikeMutation = usePostDisLikeMutation(communityId);
+  const likeMutation = useAiCoachingLikeMutation();
+  const dislikeMutation = useAiCoachingDisLikeMutation();
 
   const handleLike = () => {
-    // likeMutation.mutate(aiCoachingId);
-    likeMutation.mutate(postId);
+    likeMutation.mutate(aiCoachingId);
   };
 
   const handleDisLike = () => {
-    // dislikeMutation.mutate(aiCoachingId);
-    dislikeMutation.mutate(postId);
+    dislikeMutation.mutate(aiCoachingId);
   };
 
   return (

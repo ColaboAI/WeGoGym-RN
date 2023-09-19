@@ -11,7 +11,6 @@ import PostAiSummary from '/components/molecules/Community/PostAiSummary';
 
 interface Props {
   post: PostRead;
-  // aiCoaching: AiCoachingRead;
   user: User;
   onPressDetail: ({
     postId,
@@ -25,7 +24,6 @@ interface Props {
 
 export default function PostListItem({
   post,
-  // aiCoaching,
   user,
   onPressDetail,
   onPressEdit,
@@ -72,13 +70,14 @@ export default function PostListItem({
           isLiked={post.isLiked}
           onPress={onPressDetail}
         />
-        <PostAiSummary
-          postId={post.id}
-          communityId={post.communityId}
-          // summary={aiCoaching.summary}
-          content={post.content}
-          onPress={onPressDetail}
-        />
+        {post.summary && (
+          <PostAiSummary
+            postId={post.id}
+            communityId={post.communityId}
+            summary={post.summary}
+            onPress={onPressDetail}
+          />
+        )}
       </View>
     </View>
   );
