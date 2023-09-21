@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { FAB, useTheme } from 'react-native-paper';
 
 type Props = {
@@ -51,7 +51,7 @@ const CustomFABGroup = ({ onPressPosting, onPressPostCreate }: Props) => {
 const styles = StyleSheet.create({
   fabGroup: {
     position: 'absolute',
-    bottom: 0,
+    bottom: Platform.OS === 'ios' ? -30 : 0,
     right: 0,
   },
 });
