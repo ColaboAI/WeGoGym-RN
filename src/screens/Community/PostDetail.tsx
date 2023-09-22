@@ -1,10 +1,10 @@
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import React, { Suspense, useCallback, useMemo, useState } from 'react';
-import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import PostDetailSection from '/components/organisms/Community/PostDetailSection';
 import { CommunityStackScreenProps } from '/navigators/types';
-import { ActivityIndicator, Button, Divider } from 'react-native-paper';
+import { ActivityIndicator, Button, Divider, Text } from 'react-native-paper';
 import { useCommentListQuery } from '/hooks/queries/comment.queries';
 import CommentListItem from '/components/organisms/Community/CommentListItem';
 import { useScrollToTop } from '@react-navigation/native';
@@ -13,6 +13,10 @@ import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useResizeMode } from '/hooks/common/keyboard';
+import PostDetailAiSection from '/components/organisms/Community/PostDetailAiSection';
+import { RefreshControl } from 'react-native-gesture-handler';
+import { defaultHapticOptions, useLightHapticType } from '/hooks/common/haptic';
+import { trigger } from 'react-native-haptic-feedback';
 
 type PostDetailScreenProps = CommunityStackScreenProps<'PostDetail'>;
 
@@ -22,11 +26,17 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
   useScrollToTop(flatlistRef);
   useResizeMode();
 
-  const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
-    useCommentListQuery(postId);
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isLoading,
+    isFetchingNextPage,
+    isRefetching,
+    refetch,
+  } = useCommentListQuery(postId);
 
   const inset = useSafeAreaInsets();
-  const { reset } = useQueryErrorResetBoundary();
   const { height } = useReanimatedKeyboardAnimation();
 
   const commentInputStyle = useAnimatedStyle(() => {
@@ -38,7 +48,7 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
 
   const contentPaddingBottom = useMemo(
     () => ({
-      paddingBottom: 50,
+      paddingBottom: 60,
     }),
     [],
   );
@@ -94,54 +104,83 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
     [navigation],
   );
 
+  const [refreshing, setRefreshing] = useState(false);
+  const hapticType = useLightHapticType();
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch();
+    trigger(hapticType, defaultHapticOptions);
+    setRefreshing(false);
+  }, [hapticType, refetch]);
+
   return (
-    <Suspense fallback={<ActivityIndicator animating={isLoading} />}>
-      <ErrorBoundary
-        onReset={reset}
-        fallbackRender={props => renderCommentError({ ...props })}>
-        <View style={styles.postDetailContainer}>
-          <Animated.FlatList
-            ref={flatlistRef}
-            style={[styles.container]}
-            contentContainerStyle={[
-              styles.contentContainer,
-              contentPaddingBottom,
-            ]}
-            ListHeaderComponent={
-              <PostDetailSection
-                postId={postId}
-                onPressEdit={navigateToPostEdit}
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary
+          onReset={reset}
+          fallbackRender={props => renderCommentError({ ...props })}>
+          <Suspense fallback={<ActivityIndicator animating={isLoading} />}>
+            <View style={styles.postDetailContainer}>
+              <Animated.FlatList
+                ref={flatlistRef}
+                style={[styles.container]}
+                contentContainerStyle={[
+                  styles.contentContainer,
+                  contentPaddingBottom,
+                ]}
+                ListHeaderComponent={
+                  <>
+                    <PostDetailSection
+                      postId={postId}
+                      onPressEdit={navigateToPostEdit}
+                      isRefreshing={isRefetching}
+                    />
+                    <PostDetailAiSection
+                      postId={postId}
+                      isRefreshing={isRefetching}
+                    />
+                  </>
+                }
+                ListFooterComponent={renderFooter}
+                data={data?.pages.flatMap(page => page.items)}
+                keyExtractor={item => item.id.toString()}
+                renderItem={renderItem}
+                ItemSeparatorComponent={renderDivider}
+                onEndReached={() => {
+                  if (hasNextPage) {
+                    fetchNextPage();
+                  }
+                }}
+                nestedScrollEnabled={true}
+                onEndReachedThreshold={0.1}
+                keyboardDismissMode={'interactive'}
+                automaticallyAdjustContentInsets={false}
+                automaticallyAdjustKeyboardInsets={true}
+                contentInsetAdjustmentBehavior="always"
+                keyboardShouldPersistTaps="handled"
+                maxToRenderPerBatch={5}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
               />
-            }
-            ListFooterComponent={renderFooter}
-            data={data?.pages.flatMap(page => page.items)}
-            keyExtractor={item => item.id.toString()}
-            renderItem={renderItem}
-            ItemSeparatorComponent={renderDivider}
-            onEndReached={() => {
-              if (hasNextPage) {
-                fetchNextPage();
-              }
-            }}
-            nestedScrollEnabled={true}
-            onEndReachedThreshold={0.1}
-            keyboardDismissMode={'interactive'}
-            automaticallyAdjustContentInsets={false}
-            automaticallyAdjustKeyboardInsets={true}
-            contentInsetAdjustmentBehavior="always"
-            keyboardShouldPersistTaps="handled"
-            maxToRenderPerBatch={5}
-          />
-          <CommentInput
-            animatedStyle={commentInputStyle}
-            postId={postId}
-            selectedCommentId={selectedCommentId}
-            setSelectedCommentId={setSelectedCommentId}
-          />
-          {Platform.OS === 'android' && <Animated.View style={[fakeView]} />}
-        </View>
-      </ErrorBoundary>
-    </Suspense>
+              <CommentInput
+                animatedStyle={commentInputStyle}
+                postId={postId}
+                selectedCommentId={selectedCommentId}
+                setSelectedCommentId={setSelectedCommentId}
+              />
+              {Platform.OS === 'android' && (
+                <Animated.View style={[fakeView]} />
+              )}
+            </View>
+          </Suspense>
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
   );
 };
 

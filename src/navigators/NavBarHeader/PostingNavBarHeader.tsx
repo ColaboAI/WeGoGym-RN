@@ -20,7 +20,7 @@ const PostingNavBarHeader = ({ navigation, back, title }: Props) => {
         ) : null}
         <Appbar.Content
           title={title}
-          titleStyle={{ fontSize: 20, fontWeight: '600' }}
+          titleStyle={{ fontSize: 16, fontWeight: 'bold' }}
         />
       </Appbar.Header>
     </>

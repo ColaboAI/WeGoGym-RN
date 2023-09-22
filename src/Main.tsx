@@ -64,7 +64,16 @@ const CombinedDarkTheme = {
     card: myDarkTheme.colors.background,
   },
 };
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+      staleTime: 1000 * 60 * 5,
+      suspense: true,
+      useErrorBoundary: true,
+    },
+  },
+});
 
 function Main() {
   const isDarkMode = useColorScheme() === 'dark';

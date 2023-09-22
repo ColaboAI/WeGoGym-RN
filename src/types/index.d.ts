@@ -367,7 +367,8 @@ interface PostUpdate {
 interface PostRead extends PostCreate, timestampMixin {
   id: number;
   image: string[] | null;
-  video: string[];
+  video: string[] | null;
+  summary: string | null;
   likeCnt: number;
   isLiked: number;
   available: boolean;
@@ -402,4 +403,14 @@ interface CommentListRead {
   total: number;
   items: CommentRead[];
   nextCursor: int | null;
+}
+
+interface AiCoachingRead {
+  [key: string]: string | number;
+  id: number;
+  summary: string | null;
+  answer: string | null;
+  motivation: string | null;
+  likeCnt: number;
+  isLiked: number;
 }

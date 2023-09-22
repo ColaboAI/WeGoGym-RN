@@ -9,6 +9,7 @@ import {
   UserScreen,
   SettingScreen,
   ProfileEditScreen,
+  PostCreateScreen,
 } from '../screens';
 import DetailsNavBarHeader from './NavBarHeader/DetailsNavBarHeader';
 import { HomeStackParamList, CustomTabScreenProps } from './types';
@@ -16,6 +17,8 @@ import DefaultNavBarHeader from './NavBarHeader/DefaultNavBarHeader';
 import MyWorkoutPromisesScreen from '/screens/Home/MyWorkoutPromises';
 import PromiseEditScreen from '/screens/Home/PromiseEdit';
 import PostingNavBarHeader from './NavBarHeader/PostingNavBarHeader';
+import CommunityHeader from './NavBarHeader/Community';
+
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 type Props = CustomTabScreenProps<'홈'>;
 
@@ -97,6 +100,13 @@ function Home({ navigation, route }: Props) {
         name="ProfileEdit"
         component={ProfileEditScreen}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PostCreate"
+        component={PostCreateScreen}
+        options={{
+          header: props => <CommunityHeader {...props} />,
+        }}
       />
     </Stack.Navigator>
   );

@@ -31,7 +31,8 @@ export type HomeStackParamList = {
   Notifications: undefined;
   MyWorkoutPromises: undefined;
   PromiseEdit: { workoutInfo: WorkoutPromiseRead };
-} & UserStackParamList;
+} & UserStackParamList &
+  CommunityStackParamList;
 
 export type CommunityStackParamList = {
   // CommunityList: undefined;

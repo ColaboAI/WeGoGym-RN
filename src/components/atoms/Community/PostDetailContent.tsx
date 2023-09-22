@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 
 type Props = {
@@ -7,5 +8,15 @@ type Props = {
 };
 
 export default function PostDetailContent({ content }: Props) {
-  return <Text variant="bodyMedium">{content}</Text>;
+  return (
+    <Text style={styles.text} variant="bodyMedium">
+      {content}
+    </Text>
+  );
 }
+
+const styles = StyleSheet.create({
+  text: {
+    textAlign: 'justify',
+  },
+});

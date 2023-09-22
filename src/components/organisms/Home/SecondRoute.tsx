@@ -7,6 +7,8 @@ import { ActivityIndicator, Button, Text, useTheme } from 'react-native-paper';
 import WorkoutPromiseCard from '/components/molecules/Home/WorkoutPromiseCard';
 import WorkoutPromiseLoader from '/components/molecules/Home/WorkoutPromiseLoader';
 import { useGetWorkoutJoinedByUserIdQuery } from '/hooks/queries/workout.queries';
+import { defaultHapticOptions, useLightHapticType } from '/hooks/common/haptic';
+import { trigger } from 'react-native-haptic-feedback';
 
 type Props = {
   navigateToPromiseDetails: (id: string) => void;
@@ -29,12 +31,13 @@ const SecondRoute = ({ navigateToPromiseDetails }: Props) => {
     ),
     [],
   );
-
+  const hapticType = useLightHapticType();
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     refetch();
+    trigger(hapticType, defaultHapticOptions);
     setRefreshing(false);
-  }, [refetch]);
+  }, [refetch, hapticType]);
 
   return (
     <Suspense

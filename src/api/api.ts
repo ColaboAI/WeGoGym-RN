@@ -694,6 +694,37 @@ async function postDisLikeComment(id: number): Promise<CommentRead> {
     throw e;
   }
 }
+
+async function getAiCoaching(postId: number): Promise<AiCoachingRead> {
+  try {
+    const res = await apiClient.get('ai/coachings', {
+      params: {
+        postId,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+async function postLikeAiCoaching(postId: number): Promise<AiCoachingRead> {
+  try {
+    const res = await apiClient.post(`/ai/coachings/${postId}/like`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function postDisLikeAiCoaching(postId: number): Promise<AiCoachingRead> {
+  try {
+    const res = await apiClient.post(`/ai/coachings/${postId}/unlike`);
+    return res.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export {
   postLogin,
   postRegister,
@@ -746,4 +777,7 @@ export {
   postDisLikePost,
   postLikeComment,
   postDisLikeComment,
+  getAiCoaching,
+  postLikeAiCoaching,
+  postDisLikeAiCoaching,
 };

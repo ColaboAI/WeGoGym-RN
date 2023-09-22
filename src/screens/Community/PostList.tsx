@@ -22,6 +22,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { trigger } from 'react-native-haptic-feedback';
+import { useLightHapticType } from '/hooks/common/haptic';
 
 type PostListScreenProps = CommunityStackScreenProps<'PostList'>;
 
@@ -83,12 +84,16 @@ export default function PostListScreen({ navigation }: PostListScreenProps) {
   }, []);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
-
+  const hapticType = useLightHapticType();
   const onRefresh = useCallback(() => {
     setIsRefreshing(true);
     refetch();
+    trigger(hapticType, {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: true,
+    });
     setIsRefreshing(false);
-  }, [refetch]);
+  }, [hapticType, refetch]);
 
   const inset = useSafeAreaInsets();
 

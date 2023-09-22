@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   useTheme,
+  IconButton,
 } from 'react-native-paper';
 import React, { useCallback, useState } from 'react';
 import { CommunityStackScreenProps } from '/navigators/types';
@@ -18,6 +19,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ImageSlideWithGesture from '/components/molecules/Common/ImageSlideWithGesture';
 import CommunityChips from '../../components/molecules/Community/CommunityChips';
 import { usePostMutation } from '/hooks/queries/post.queries';
+import CustomTooltip from '/components/molecules/Common/CustomTooltip';
 
 type PostCreateScreenProps = CommunityStackScreenProps<'PostCreate'>;
 
@@ -26,7 +28,7 @@ export default function PostCreate({}: PostCreateScreenProps) {
   const [form, setForm] = useState({
     title: '',
     content: '',
-    wantAiCoach: true,
+    wantAiCoach: false,
   });
 
   const [selectedAssets, setSelectedAssets] = useState<ImageType[]>([]);
@@ -117,6 +119,8 @@ export default function PostCreate({}: PostCreateScreenProps) {
     makeFormData,
   ]);
 
+  const [visible, setVisible] = useState(false);
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -204,6 +208,12 @@ export default function PostCreate({}: PostCreateScreenProps) {
               style={styles.icon}
             />
             <Text variant="titleMedium">AI 코칭</Text>
+            <IconButton
+              icon="help-circle-outline"
+              selected
+              size={20}
+              onPress={() => setVisible(true)}
+            />
           </View>
           <Switch
             value={form.wantAiCoach}
@@ -211,6 +221,15 @@ export default function PostCreate({}: PostCreateScreenProps) {
               setForm(prev => ({ ...prev, wantAiCoach: !prev.wantAiCoach }));
             }}
           />
+        </View>
+        <View style={{ height: visible ? 'auto' : 100 }}>
+          {visible ? (
+            <CustomTooltip
+              title="AI 코칭 서비스"
+              description="위고짐에서 제공하는 AI 코칭 서비스로, 작성한 게시글의 내용을 분석하여 운동, 식단 등에 대한 상세한 피드백을 제공합니다."
+              setVisible={setVisible}
+            />
+          ) : null}
         </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
@@ -241,6 +260,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     justifyContent: 'space-between',
+    paddingBottom: '10%',
   },
   textInputContainer: {
     flex: 1,
