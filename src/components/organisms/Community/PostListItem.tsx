@@ -1,13 +1,12 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import PostHeader from '/components/molecules/Community/PostHeader';
 import PostBody from '/components/molecules/Community/PostBody';
 import PostFooter from '/components/molecules/Community/PostFooter';
 import CustomAvatar from '/components/atoms/Common/CustomAvatar';
-import { useNavigation } from '@react-navigation/native';
-import { useAuthValue } from '/hooks/context/useAuth';
 import PostAiSummary from '/components/molecules/Community/PostAiSummary';
+import { useNavigateToUser } from '/hooks/common/navToUserProfile';
 
 interface Props {
   post: PostRead;
@@ -28,20 +27,7 @@ export default function PostListItem({
   onPressDetail,
   onPressEdit,
 }: Props) {
-  const authInfo = useAuthValue();
-
-  const nav = useNavigation();
-  const navigateToUser = useCallback(() => {
-    nav.navigate('MainNavigator', {
-      screen: '커뮤니티',
-      params: {
-        screen: 'User',
-        params: {
-          userId: user.id === authInfo?.userId ? 'me' : user.id,
-        },
-      },
-    });
-  }, [authInfo?.userId, nav, user.id]);
+  const navigateToUser = useNavigateToUser(user.id);
 
   return (
     <View style={styles.container}>
