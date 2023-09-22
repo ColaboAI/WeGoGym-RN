@@ -8,6 +8,8 @@ import { useGetNotificationWorkoutQuery } from '/hooks/queries/notification.quer
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { FlatList, RefreshControl } from 'react-native-gesture-handler';
 import { HomeStackScreenProps } from '/navigators/types';
+import { defaultHapticOptions, useLightHapticType } from '/hooks/common/haptic';
+import { trigger } from 'react-native-haptic-feedback';
 
 type HomeScreenProps = HomeStackScreenProps<'Notifications'>;
 
@@ -56,12 +58,14 @@ export default function NotificationsScreen({ navigation }: HomeScreenProps) {
     ),
     [],
   );
+  const hapticType = useLightHapticType();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     refetch();
+    trigger(hapticType, defaultHapticOptions);
     setRefreshing(false);
-  }, [refetch]);
+  }, [hapticType, refetch]);
 
   return (
     <Suspense

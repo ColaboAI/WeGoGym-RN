@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { Suspense, useCallback } from 'react';
+import React, { Suspense, useCallback, useEffect } from 'react';
 import { ActivityIndicator, Button, Divider, Text } from 'react-native-paper';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import PostDetailAiBody from '/components/molecules/Community/PostDetailAiBody';
@@ -8,10 +8,11 @@ import { useGetAiCoachingQuery } from '/hooks/queries/ai.queries';
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 type Props = {
   postId: number;
+  isRefreshing: boolean;
 };
 
-export default function PostDetailAiSection({ postId }: Props) {
-  const { data: aiCoaching } = useGetAiCoachingQuery(postId);
+export default function PostDetailAiSection({ postId, isRefreshing }: Props) {
+  const { data: aiCoaching, refetch } = useGetAiCoachingQuery(postId);
   const { reset } = useQueryErrorResetBoundary();
   const renderAiCoachingError = useCallback(
     ({ error, resetErrorBoundary }: FallbackProps) => {
@@ -25,6 +26,12 @@ export default function PostDetailAiSection({ postId }: Props) {
     },
     [],
   );
+
+  useEffect(() => {
+    if (isRefreshing) {
+      refetch();
+    }
+  }, [refetch, isRefreshing]);
 
   return (
     <ErrorBoundary onReset={reset} fallbackRender={renderAiCoachingError}>

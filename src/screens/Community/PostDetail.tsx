@@ -14,6 +14,9 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useResizeMode } from '/hooks/common/keyboard';
 import PostDetailAiSection from '/components/organisms/Community/PostDetailAiSection';
+import { RefreshControl } from 'react-native-gesture-handler';
+import { defaultHapticOptions, useLightHapticType } from '/hooks/common/haptic';
+import { trigger } from 'react-native-haptic-feedback';
 
 type PostDetailScreenProps = CommunityStackScreenProps<'PostDetail'>;
 
@@ -23,8 +26,15 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
   useScrollToTop(flatlistRef);
   useResizeMode();
 
-  const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
-    useCommentListQuery(postId);
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isLoading,
+    isFetchingNextPage,
+    isRefetching,
+    refetch,
+  } = useCommentListQuery(postId);
 
   const inset = useSafeAreaInsets();
   const { height } = useReanimatedKeyboardAnimation();
@@ -94,6 +104,16 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
     [navigation],
   );
 
+  const [refreshing, setRefreshing] = useState(false);
+  const hapticType = useLightHapticType();
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch();
+    trigger(hapticType, defaultHapticOptions);
+    setRefreshing(false);
+  }, [hapticType, refetch]);
+
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
@@ -114,8 +134,12 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
                     <PostDetailSection
                       postId={postId}
                       onPressEdit={navigateToPostEdit}
+                      isRefreshing={isRefetching}
                     />
-                    <PostDetailAiSection postId={postId} />
+                    <PostDetailAiSection
+                      postId={postId}
+                      isRefreshing={isRefetching}
+                    />
                   </>
                 }
                 ListFooterComponent={renderFooter}
@@ -136,6 +160,12 @@ const PostDetail = ({ navigation, route }: PostDetailScreenProps) => {
                 contentInsetAdjustmentBehavior="always"
                 keyboardShouldPersistTaps="handled"
                 maxToRenderPerBatch={5}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
               />
               <CommentInput
                 animatedStyle={commentInputStyle}

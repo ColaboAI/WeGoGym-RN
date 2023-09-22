@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { Suspense, useCallback } from 'react';
+import React, { Suspense, useCallback, useEffect } from 'react';
 import PostDetailHeader from '/components/molecules/Community/PostDetailHeader';
 import PostDetailBody from '/components/molecules/Community/PostDetailBody';
 import PostDetailFooter from '/components/molecules/Community/PostDetailFooter';
@@ -14,10 +14,15 @@ import { useAuthValue } from '/hooks/context/useAuth';
 type Props = {
   postId: number;
   onPressEdit: (postId: number) => void;
+  isRefreshing: boolean;
 };
 
-export default function PostDetailSection({ postId, onPressEdit }: Props) {
-  const { data: post } = usePostQuery(postId);
+export default function PostDetailSection({
+  postId,
+  onPressEdit,
+  isRefreshing,
+}: Props) {
+  const { data: post, refetch } = usePostQuery(postId);
   const { reset } = useQueryErrorResetBoundary();
   const nav = useNavigation();
   const authInfo = useAuthValue();
@@ -49,6 +54,12 @@ export default function PostDetailSection({ postId, onPressEdit }: Props) {
     },
     [],
   );
+
+  useEffect(() => {
+    if (isRefreshing) {
+      refetch();
+    }
+  }, [refetch, isRefreshing]);
 
   return (
     <ErrorBoundary onReset={reset} fallbackRender={renderPostError}>
