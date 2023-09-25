@@ -18,7 +18,7 @@ const CustomNavBarHeader = ({ navigation, back, route }: Props) => {
     const routeName = route.name;
     switch (routeName) {
       case 'ChatList':
-        return '채팅';
+        return '덤벨챗';
       case 'ChatRoom':
         return route.params?.chatRoomName || '채팅방';
     }

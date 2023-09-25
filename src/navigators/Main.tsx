@@ -32,7 +32,7 @@ const MainNavigator = () => {
           let iconName;
           if (route.name === '홈') {
             iconName = focused ? 'ios-home' : 'ios-home-outline';
-          } else if (route.name === '채팅') {
+          } else if (route.name === '덤벨챗') {
             iconName = focused ? 'chatbubble-sharp' : 'chatbubble-outline';
           } else if (route.name === '마이') {
             iconName = focused
@@ -67,7 +67,7 @@ const MainNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="채팅"
+        name="덤벨챗"
         component={ChatStackScreen}
         options={{
           tabBarIconStyle: { display: 'flex' },

@@ -12,7 +12,7 @@ import {
 import CustomNavBarHeader from './NavBarHeader/CustomNavBarHeader';
 import { ChatStackParamList, CustomTabScreenProps } from './types';
 const Stack = createNativeStackNavigator<ChatStackParamList>();
-type Props = CustomTabScreenProps<'채팅'>;
+type Props = CustomTabScreenProps<'덤벨챗'>;
 
 function Chat({ navigation, route }: Props) {
   useLayoutEffect(() => {

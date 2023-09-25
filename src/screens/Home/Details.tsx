@@ -170,7 +170,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
               text: '확인',
               onPress: () => {
                 navigation.navigate('MainNavigator', {
-                  screen: '채팅',
+                  screen: '덤벨챗',
                   params: {
                     screen: 'ChatRoom',
                     params: {
@@ -196,7 +196,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                 await postChatRoomMember(chatRoomId, myId);
 
                 navigation.navigate('MainNavigator', {
-                  screen: '채팅',
+                  screen: '덤벨챗',
                   params: {
                     screen: 'ChatRoom',
                     params: {
@@ -247,7 +247,7 @@ export default function DetailsScreen({ navigation, route }: HomeScreenProps) {
                 },
               );
 
-              navigation.navigate('채팅', {
+              navigation.navigate('덤벨챗', {
                 screen: 'ChatRoom',
                 params: {
                   chatRoomId: res.id,

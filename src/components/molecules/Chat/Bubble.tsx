@@ -21,7 +21,7 @@ const Bubble = ({ text, createdAt, userId, getUserInfo }: Props) => {
   const handlePressAvatar = useCallback(() => {
     if (userInfo?.id !== undefined) {
       navigation.navigate('MainNavigator', {
-        screen: '채팅',
+        screen: '덤벨챗',
         params: {
           screen: 'User',
           params: {

@@ -45,12 +45,12 @@ export default function UserScreen({ navigation, route }: Props) {
         chatRoomName: chatRoomData.name ? chatRoomData.name : data?.username,
         isGroupChat: false,
       };
-      navigation.navigate('채팅', {
+      navigation.navigate('덤벨챗', {
         screen: 'ChatRoom',
         params: navParams,
       });
     } catch (e) {
-      navigation.navigate('채팅', {
+      navigation.navigate('덤벨챗', {
         screen: 'ChatRoom',
         params: {
           userId: data?.id,
@@ -191,7 +191,7 @@ export default function UserScreen({ navigation, route }: Props) {
                     onPress={() => {
                       handleDirectChatNav();
                     }}>
-                    채팅하기
+                    덤벨챗하기
                   </Button>
                 )}
               </View>

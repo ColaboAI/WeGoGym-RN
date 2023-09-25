@@ -85,7 +85,7 @@ function ChatList({ navigation }: ChatListScreenProps) {
   const renderError = useCallback(
     (resetErrorBoundary: () => void) => (
       <View style={style.errorContainer}>
-        <Text>채팅 목록을 불러올 수 없습니다.</Text>
+        <Text>덤벨챗 목록을 불러올 수 없습니다.</Text>
         <Button onPress={() => resetErrorBoundary()}>다시 시도</Button>
       </View>
     ),

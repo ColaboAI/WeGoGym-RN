@@ -75,7 +75,7 @@ export type RootStackParamList = {
 
 export type BottomTabParamList = {
   홈: NavigatorScreenParams<HomeStackParamList>;
-  채팅: NavigatorScreenParams<ChatStackParamList>;
+  덤벨챗: NavigatorScreenParams<ChatStackParamList>;
   커뮤니티: NavigatorScreenParams<CommunityStackParamList>;
   마이: NavigatorScreenParams<UserStackParamList>;
 };

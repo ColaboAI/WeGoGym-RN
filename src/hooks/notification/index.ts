@@ -72,7 +72,7 @@ export function useNotification() {
       if (data.chat_room_id) {
         const chatRoomId = data.chat_room_id as string;
         navigation.navigate('MainNavigator', {
-          screen: '채팅',
+          screen: '덤벨챗',
           params: {
             screen: 'ChatRoom',
             params: { chatRoomId },
