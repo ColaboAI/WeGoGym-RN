@@ -15,6 +15,7 @@ export const requestPermissionToAnalytics = async () => {
         if (myId) {
           await analytics().setUserId(myId);
         }
+        return;
       }
     } else if (result === RESULTS.GRANTED) {
       const myId = getValueFor('userId');
@@ -22,6 +23,12 @@ export const requestPermissionToAnalytics = async () => {
       if (myId) {
         await analytics().setUserId(myId);
       }
+      return;
+    }
+    const myId = getValueFor('userId');
+    await analytics().setAnalyticsCollectionEnabled(true);
+    if (myId) {
+      await analytics().setUserId(myId);
     }
   } else if (Platform.OS === 'android') {
     const myId = getValueFor('userId');
