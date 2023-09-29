@@ -2,7 +2,10 @@ import React from 'react';
 import { AppRegistry, Text, TextInput } from 'react-native';
 import { name as appName } from './app.json';
 import Main from './src/Main';
-import { onMessageInBackground } from '/utils/notification';
+import {
+  onMessageInBackground,
+  onMessageInForeground,
+} from '/utils/notification';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { EventType } from '@notifee/react-native';
 
@@ -16,6 +19,8 @@ TextInput.defaultProps.allowFontScaling = false;
 navigator.geolocation = require('react-native-geolocation-service');
 
 messaging().setBackgroundMessageHandler(onMessageInBackground);
+// 앱이 foreground에서 Notification을 받았을 때
+messaging().onMessage(onMessageInForeground);
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   const { notification, pressAction } = detail;
   if (
