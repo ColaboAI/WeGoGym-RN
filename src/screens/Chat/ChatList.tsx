@@ -45,12 +45,12 @@ function ChatList({ navigation }: ChatListScreenProps) {
               found.lastMessageCreatedAt = message.createdAt;
               found.unreadCount = found.unreadCount ? found.unreadCount + 1 : 1;
             } else {
-              queryClient.invalidateQueries(['chatList']);
+              queryClient.invalidateQueries({ queryKey: ['chatList'] });
             }
             return prev;
           },
         );
-        queryClient.invalidateQueries(['chatMessage', message.chatRoomId]);
+        queryClient.invalidateQueries(['chatMessages', message.chatRoomId]);
       });
       setCurrentMessage([]);
     }

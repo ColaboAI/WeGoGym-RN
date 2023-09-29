@@ -113,17 +113,23 @@ export function useNotification() {
       }
     };
     AppState.addEventListener('change', handleAppStateChange);
-  }, [queryClient]);
-  useEffect(() => {
-    // 알람을 눌러서 앱이 실행되었을 때
-    onInitialNotification();
-  }, [onInitialNotification]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     // 앱이 foreground에서 실행되고 있을 때
     const unsub = messaging().onMessage(onMessageInForeground);
-    return unsub;
+    return () => {
+      unsub();
+    };
   }, []);
+
+  useEffect(() => {
+    const unsub = messaging().onNotificationOpenedApp(onInitialNotification);
+    return () => {
+      unsub();
+    };
+  }, [onInitialNotification]);
 
   useEffect(() => {
     if (AppState.currentState === 'active') {
