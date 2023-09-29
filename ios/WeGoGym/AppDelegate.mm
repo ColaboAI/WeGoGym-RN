@@ -3,6 +3,7 @@
 #import <GoogleMaps/GoogleMaps.h>
 #import <React/RCTBundleURLProvider.h>
 #import <CodePush/CodePush.h>
+#import "RNFBMessagingModule.h"
 #import "RNBootSplash.h"
 #import <AuthenticationServices/AuthenticationServices.h>
 #import <SafariServices/SafariServices.h>
@@ -16,6 +17,7 @@
   self.moduleName=@"WeGoGym";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
+  self.initialProps = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
   [FIRApp configure];
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:self.window.rootViewController.view];
   [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
