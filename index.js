@@ -36,12 +36,4 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
   }
 });
 
-function HeadlessCheck({ isHeadless }) {
-  if (isHeadless) {
-    // App has been launched in the background by iOS, ignore
-    return null;
-  }
-  return <Main />;
-}
-
-AppRegistry.registerComponent(appName, () => HeadlessCheck);
+AppRegistry.registerComponent(appName, () => Main);
