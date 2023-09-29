@@ -1,4 +1,8 @@
 {
   "name": "WeGoGym",
-  "displayName": "WeGoGym"
+  "displayName": "WeGoGym",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-5905165537349771~3249369540",
+    "ios_app_id": "ca-app-pub-5905165537349771~2949986646"
+  }
 }
