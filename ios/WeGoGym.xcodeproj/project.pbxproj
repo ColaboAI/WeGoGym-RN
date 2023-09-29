@@ -13,7 +13,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140E68E129E5715C002BDAE0 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 140E68E029E5715B002BDAE0 /* BootSplash.storyboard */; };
 		596083D56FBF19E6AE82D454 /* libPods-WeGoGym-WeGoGymTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6192D078D69C969A787FCD89 /* libPods-WeGoGym-WeGoGymTests.a */; };
+		5A6EF17B7EE03756FEDD5FA9 /* libPods-NotifeeNotificationService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E13D6A98E7F7BBC25AA3DE0A /* libPods-NotifeeNotificationService.a */; };
 		6449A5082A9DD08C000EB376 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6449A5072A9DD08C000EB376 /* Config.xcconfig */; };
+		64B5DE6F2AC6F7F100CBF65C /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 64B5DE6E2AC6F7F100CBF65C /* NotificationService.m */; };
+		64B5DE732AC6F7F100CBF65C /* NotifeeNotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 64B5DE6B2AC6F7F100CBF65C /* NotifeeNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		671E561851281302A60AB6C6 /* libPods-WeGoGym.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F8257CBF6C42BBB9259350 /* libPods-WeGoGym.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -26,7 +29,28 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = WeGoGym;
 		};
+		64B5DE712AC6F7F100CBF65C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 64B5DE6A2AC6F7F100CBF65C;
+			remoteInfo = NotifeeNotificationService;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		64B5DE742AC6F7F100CBF65C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				64B5DE732AC6F7F100CBF65C /* NotifeeNotificationService.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* WeGoGymTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeGoGymTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -43,6 +67,7 @@
 		16F8257CBF6C42BBB9259350 /* libPods-WeGoGym.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WeGoGym.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		511358E6B89F80B304DD5205 /* Pods-WeGoGym-WeGoGymTests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.staging.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.staging.xcconfig"; sourceTree = "<group>"; };
 		53D162462AC66259A8263F02 /* Pods-WeGoGym-WeGoGymTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.release.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.release.xcconfig"; sourceTree = "<group>"; };
+		551D84720AF44184FF9E7172 /* Pods-NotifeeNotificationService.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotifeeNotificationService.staging.xcconfig"; path = "Target Support Files/Pods-NotifeeNotificationService/Pods-NotifeeNotificationService.staging.xcconfig"; sourceTree = "<group>"; };
 		6192D078D69C969A787FCD89 /* libPods-WeGoGym-WeGoGymTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WeGoGym-WeGoGymTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		641E689A29E681E3003FFEF7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		643CE69529443D24002FE9BB /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
@@ -63,12 +88,19 @@
 		643CE6A429443D27002FE9BB /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		6449A5072A9DD08C000EB376 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		6473EDA429C9E50300100247 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		64B5DE6B2AC6F7F100CBF65C /* NotifeeNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotifeeNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		64B5DE6D2AC6F7F100CBF65C /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
+		64B5DE6E2AC6F7F100CBF65C /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
+		64B5DE702AC6F7F100CBF65C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7C7E173099907F514E0B36F9 /* Pods-NotifeeNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotifeeNotificationService.debug.xcconfig"; path = "Target Support Files/Pods-NotifeeNotificationService/Pods-NotifeeNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = WeGoGym/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		820138491D6F4BE6A319E189 /* Pods-WeGoGym-WeGoGymTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym-WeGoGymTests.debug.xcconfig"; path = "Target Support Files/Pods-WeGoGym-WeGoGymTests/Pods-WeGoGym-WeGoGymTests.debug.xcconfig"; sourceTree = "<group>"; };
 		913F89F57A673D0D9AE14977 /* Pods-WeGoGym.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym.debug.xcconfig"; path = "Target Support Files/Pods-WeGoGym/Pods-WeGoGym.debug.xcconfig"; sourceTree = "<group>"; };
+		E13D6A98E7F7BBC25AA3DE0A /* libPods-NotifeeNotificationService.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NotifeeNotificationService.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4A85BFAC382F3F263430DC1 /* Pods-WeGoGym.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym.release.xcconfig"; path = "Target Support Files/Pods-WeGoGym/Pods-WeGoGym.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F6E1A305E8C619C9375D51FE /* Pods-WeGoGym.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGoGym.staging.xcconfig"; path = "Target Support Files/Pods-WeGoGym/Pods-WeGoGym.staging.xcconfig"; sourceTree = "<group>"; };
+		F9054F59CD929F91AB0B28B6 /* Pods-NotifeeNotificationService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotifeeNotificationService.release.xcconfig"; path = "Target Support Files/Pods-NotifeeNotificationService/Pods-NotifeeNotificationService.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +117,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				671E561851281302A60AB6C6 /* libPods-WeGoGym.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		64B5DE682AC6F7F100CBF65C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A6EF17B7EE03756FEDD5FA9 /* libPods-NotifeeNotificationService.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,6 +172,7 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				16F8257CBF6C42BBB9259350 /* libPods-WeGoGym.a */,
 				6192D078D69C969A787FCD89 /* libPods-WeGoGym-WeGoGymTests.a */,
+				E13D6A98E7F7BBC25AA3DE0A /* libPods-NotifeeNotificationService.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -185,6 +226,16 @@
 			name = Fonts;
 			sourceTree = "<group>";
 		};
+		64B5DE6C2AC6F7F100CBF65C /* NotifeeNotificationService */ = {
+			isa = PBXGroup;
+			children = (
+				64B5DE6D2AC6F7F100CBF65C /* NotificationService.h */,
+				64B5DE6E2AC6F7F100CBF65C /* NotificationService.m */,
+				64B5DE702AC6F7F100CBF65C /* Info.plist */,
+			);
+			path = NotifeeNotificationService;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -198,6 +249,7 @@
 				13B07FAE1A68108700A75B9A /* WeGoGym */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* WeGoGymTests */,
+				64B5DE6C2AC6F7F100CBF65C /* NotifeeNotificationService */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -212,6 +264,7 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* WeGoGym.app */,
 				00E356EE1AD99517003FC87E /* WeGoGymTests.xctest */,
+				64B5DE6B2AC6F7F100CBF65C /* NotifeeNotificationService.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -225,6 +278,9 @@
 				53D162462AC66259A8263F02 /* Pods-WeGoGym-WeGoGymTests.release.xcconfig */,
 				F6E1A305E8C619C9375D51FE /* Pods-WeGoGym.staging.xcconfig */,
 				511358E6B89F80B304DD5205 /* Pods-WeGoGym-WeGoGymTests.staging.xcconfig */,
+				7C7E173099907F514E0B36F9 /* Pods-NotifeeNotificationService.debug.xcconfig */,
+				F9054F59CD929F91AB0B28B6 /* Pods-NotifeeNotificationService.release.xcconfig */,
+				551D84720AF44184FF9E7172 /* Pods-NotifeeNotificationService.staging.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -267,15 +323,35 @@
 				F064E6565F855D234A53AD07 /* [CP] Embed Pods Frameworks */,
 				F5F9E3B738322A9C3F6FF89E /* [CP] Copy Pods Resources */,
 				F6A9E4CC26BE7B8D1D125B50 /* [CP-User] [RNFB] Core Configuration */,
+				64B5DE742AC6F7F100CBF65C /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				64B5DE722AC6F7F100CBF65C /* PBXTargetDependency */,
 			);
 			name = WeGoGym;
 			productName = WeGoGym;
 			productReference = 13B07F961A680F5B00A75B9A /* WeGoGym.app */;
 			productType = "com.apple.product-type.application";
+		};
+		64B5DE6A2AC6F7F100CBF65C /* NotifeeNotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 64B5DE782AC6F7F100CBF65C /* Build configuration list for PBXNativeTarget "NotifeeNotificationService" */;
+			buildPhases = (
+				53984FABBBFF47D97B1EDB28 /* [CP] Check Pods Manifest.lock */,
+				64B5DE672AC6F7F100CBF65C /* Sources */,
+				64B5DE682AC6F7F100CBF65C /* Frameworks */,
+				64B5DE692AC6F7F100CBF65C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NotifeeNotificationService;
+			productName = NotifeeNotificationService;
+			productReference = 64B5DE6B2AC6F7F100CBF65C /* NotifeeNotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -291,6 +367,9 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1120;
+					};
+					64B5DE6A2AC6F7F100CBF65C = {
+						CreatedOnToolsVersion = 14.3.1;
 					};
 				};
 			};
@@ -310,6 +389,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* WeGoGym */,
 				00E356ED1AD99517003FC87E /* WeGoGymTests */,
+				64B5DE6A2AC6F7F100CBF65C /* NotifeeNotificationService */,
 			);
 		};
 /* End PBXProject section */
@@ -330,6 +410,13 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				140E68E129E5715C002BDAE0 /* BootSplash.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		64B5DE692AC6F7F100CBF65C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,6 +472,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-WeGoGym-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		53984FABBBFF47D97B1EDB28 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-NotifeeNotificationService-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -534,6 +643,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		64B5DE672AC6F7F100CBF65C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64B5DE6F2AC6F7F100CBF65C /* NotificationService.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -541,6 +658,11 @@
 			isa = PBXTargetDependency;
 			target = 13B07F861A680F5B00A75B9A /* WeGoGym */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
+		};
+		64B5DE722AC6F7F100CBF65C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 64B5DE6A2AC6F7F100CBF65C /* NotifeeNotificationService */;
+			targetProxy = 64B5DE712AC6F7F100CBF65C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -748,6 +870,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q68P8SP4K3;
 				INFOPLIST_FILE = WeGoGym/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WeGoGym;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -789,6 +913,117 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WeGoGym.app/WeGoGym";
+			};
+			name = Staging;
+		};
+		64B5DE752AC6F7F100CBF65C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C7E173099907F514E0B36F9 /* Pods-NotifeeNotificationService.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = Q68P8SP4K3;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotifeeNotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotifeeNotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ml.colabo.WeGoGym.dev.NotifeeNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		64B5DE762AC6F7F100CBF65C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F9054F59CD929F91AB0B28B6 /* Pods-NotifeeNotificationService.release.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q68P8SP4K3;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotifeeNotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotifeeNotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ml.colabo.WeGoGym.NotifeeNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		64B5DE772AC6F7F100CBF65C /* Staging */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 551D84720AF44184FF9E7172 /* Pods-NotifeeNotificationService.staging.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q68P8SP4K3;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotifeeNotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotifeeNotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ml.colabo.WeGoGym.NotifeeNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Staging;
 		};
@@ -954,6 +1189,16 @@
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
 				643ED1F729C3609C002A998F /* Staging */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		64B5DE782AC6F7F100CBF65C /* Build configuration list for PBXNativeTarget "NotifeeNotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				64B5DE752AC6F7F100CBF65C /* Debug */,
+				64B5DE762AC6F7F100CBF65C /* Release */,
+				64B5DE772AC6F7F100CBF65C /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
