@@ -2,10 +2,7 @@ import React from 'react';
 import { AppRegistry, Text, TextInput } from 'react-native';
 import { name as appName } from './app.json';
 import Main from './src/Main';
-import {
-  onMessageInBackground,
-  onMessageInForeground,
-} from '/utils/notification';
+import { onMessageInBackground } from '/utils/notification';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { EventType } from '@notifee/react-native';
 

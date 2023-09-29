@@ -32,6 +32,7 @@ export async function onAppBootstrap() {
   // Save the token to the server, and save it to the store
   save('fcmToken', token);
   // 어떤 Notification을 눌러서 앱이 실행되었는지 확인, 그에 따라 화면 이동
+  await checkPermission();
 }
 async function checkPermission() {
   await checkApplicationPermission();
