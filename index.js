@@ -20,7 +20,6 @@ navigator.geolocation = require('react-native-geolocation-service');
 
 messaging().setBackgroundMessageHandler(onMessageInBackground);
 // 앱이 foreground에서 Notification을 받았을 때
-messaging().onMessage(onMessageInForeground);
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   const { notification, pressAction } = detail;
   if (

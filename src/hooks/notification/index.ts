@@ -4,6 +4,7 @@ import { putMyFCMToken } from '/api/api';
 import {
   checkApplicationPermission,
   checkIsLatestVersion,
+  onMessageInForeground,
 } from '/utils/notification';
 import { getValueFor, save, secureMmkv } from '/store/secureStore';
 import notifee from '@notifee/react-native';
@@ -116,6 +117,12 @@ export function useNotification() {
     // 알람을 눌러서 앱이 실행되었을 때
     onInitialNotification();
   }, [onInitialNotification]);
+
+  useEffect(() => {
+    // 앱이 foreground에서 실행되고 있을 때
+    const unsub = messaging().onMessage(onMessageInForeground);
+    return unsub;
+  }, []);
 
   useEffect(() => {
     if (AppState.currentState === 'active') {
