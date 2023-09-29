@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { TextInput, useTheme } from 'react-native-paper';
-import { Platform, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 import { ChatParamList, ChatStackScreenProps } from '/navigators/types';
 import {
   InfiniteData,
@@ -243,7 +243,6 @@ const ChatInput = (props: ChatInputProps) => {
           // }
           right={
             <TextInput.Icon
-              style={styles.sendBtnIcon}
               mode="contained"
               icon="arrow-up"
               containerColor={theme.colors.primaryContainer}
@@ -259,6 +258,11 @@ const ChatInput = (props: ChatInputProps) => {
           style={styles.chatInputBar}
           outlineStyle={styles.outline}
           multiline={true}
+          textAlign="left"
+          textAlignVertical="center"
+          verticalAlign="middle"
+          focusable={true}
+          label={'메시지를 입력하세요'}
         />
       </View>
     </View>
@@ -278,7 +282,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignSelf: 'center',
     marginHorizontal: 10,
-    marginBottom: 5,
+    marginVertical: 5,
   },
   outline: {
     borderRadius: 20,
@@ -288,8 +292,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'center',
-  },
-  sendBtnIcon: {
-    top: Platform.OS === 'ios' ? 2 : 0,
   },
 });
