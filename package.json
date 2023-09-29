@@ -46,6 +46,7 @@
     "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-get-random-values": "^1.8.0",
+    "react-native-google-mobile-ads": "^12.2.0",
     "react-native-google-places-autocomplete": "^2.5.1",
     "react-native-haptic-feedback": "^2.0.3",
     "react-native-image-picker": "^5.3.1",

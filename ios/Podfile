@@ -48,6 +48,7 @@ target 'WeGoGym' do
   pod 'nanopb', :modular_headers => true
   
   $RNFirebaseAsStaticFramework = true
+  $RNGoogleMobileAdsAsStaticFramework = true
   # React Native Maps dependencies
   # The following line is only needed if building on an Apple silicon Mac without rosetta.
   pod 'GoogleMaps'
