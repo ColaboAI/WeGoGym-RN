@@ -58,6 +58,8 @@ export default function PostCreate({}: PostCreateScreenProps) {
     launchImageLibrary(options, response => {
       if (response.errorCode) {
         throw new Error('ImagePicker Error: ${}' + response.errorMessage);
+      } else if (response.didCancel) {
+        return;
       } else {
         const assets = response.assets?.filter(
           asset => asset.fileSize !== 0,
