@@ -74,14 +74,17 @@ async function onMessageInBackground(
     }
   }
   await notifee.displayNotification({
-    title: message.notification?.title || 'Wegogym',
-    body: message.notification?.body || 'Wegogym',
+    title: message.notification?.title || data?.title || 'Wegogym',
+    body: message.notification?.body || data?.body || 'Wegogym',
     android: {
       channelId: channelId,
+      smallIcon: 'ic_small_icon',
       pressAction: {
         id: 'mark-as-read',
         launchActivity: 'default',
       },
+      vibrationPattern: [100, 300],
+      autoCancel: true,
       sound: 'default',
     },
     ios: {
@@ -117,16 +120,17 @@ async function onMessageInForeground(
     }
   }
   await notifee.displayNotification({
-    title: message.notification?.title || 'Wegogym',
-    body: message.notification?.body || 'Wegogym',
+    title: message.notification?.title || data?.title || 'Wegogym',
+    body: message.notification?.body || data?.body || 'Wegogym',
     android: {
       channelId: channelId,
+      smallIcon: 'ic_small_icon',
       pressAction: {
         id: 'mark-as-read',
         launchActivity: 'default',
       },
       sound: 'default',
-      vibrationPattern: [300, 500],
+      vibrationPattern: [100, 300],
     },
     ios: {
       categoryId: 'mark-as-read',
