@@ -60,12 +60,38 @@ async function saveMessageToMMKV(data: { [key: string]: string }) {
 async function onMessageInBackground(
   message: FirebaseMessagingTypes.RemoteMessage,
 ) {
+  const channelId =
+    (await notifee.getChannel('wegogym'))?.id ??
+    (await notifee.createChannel({
+      id: 'wegogym',
+      name: 'Wegogym',
+      importance: AndroidImportance.HIGH,
+    }));
   const { data } = message;
   if (data) {
     if (data.type === 'text_message') {
       await saveMessageToMMKV(data);
     }
   }
+  await notifee.displayNotification({
+    title: message.notification?.title || data?.title || 'Wegogym',
+    body: message.notification?.body || data?.body || 'Wegogym',
+    android: {
+      channelId: channelId,
+      smallIcon: 'ic_small_icon',
+      pressAction: {
+        id: 'mark-as-read',
+        launchActivity: 'default',
+      },
+      vibrationPattern: [100, 300],
+      autoCancel: true,
+      sound: 'default',
+    },
+    ios: {
+      categoryId: 'mark-as-read',
+      sound: 'default',
+    },
+  });
   await notifee.incrementBadgeCount();
 }
 
